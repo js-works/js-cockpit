@@ -1,0 +1,34 @@
+{
+  "name": "sx-widgets",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/js-works/sx-widgets.git"
+  },
+  "author": "",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/js-works/sx-widgets/issues"
+  },
+  "homepage": "https://github.com/js-works/sx-widgets#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-essentials": "^6.1.11",
+    "@storybook/addon-links": "^6.1.11",
+    "@storybook/web-components": "^6.1.11",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.2.2",
+    "lit-html": "^1.3.0",
+    "to-string-loader": "^1.1.6",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {}
+}

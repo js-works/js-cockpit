@@ -1,0 +1,5 @@
+table > tbody > tr > td {
+  font-family: var(--sl-font-sans);
+  xbackground-color: var(--sl-color-primary-500);
+  xborder: 1px solid var(--sl-color-primary-200);
+}
