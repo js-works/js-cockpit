@@ -21,6 +21,7 @@ const columns = [
         type: 'column',
         text: 'Last name',
         field: 'lastName',
+        sortable: true,
       },
     ],
   },
@@ -37,11 +38,13 @@ const columns = [
         type: 'column',
         text: 'Postcode',
         field: 'postcode',
+        sortable: true,
       },
       {
         type: 'column',
         text: 'City',
         field: 'city',
+        sortable: true,
       },
     ],
   },
@@ -91,4 +94,10 @@ const data = [
 ]
 
 export const example_1 = () =>
-  h('sx-data-table', { columns, data, selectMode: 'mutli' })
+  h('sx-data-table', {
+    columns,
+    data,
+    selectMode: 'mutli',
+    sortField: 'lastName',
+    sortDir: 'desc',
+  })

@@ -8,6 +8,11 @@ table {
   font-size: 12pt;
 }
 
+table {
+  cursor: default;
+  user-select: none;
+}
+
 table thead tr th {
   border: 0 solid #ddd;
   border-bottom-width: 1px;
@@ -20,9 +25,65 @@ table thead tr th:first-child {
   border-left-width: 1px;
 }
 
-table thead tr th {
+table > thead > tr > th.sortable {
+  cursor: pointer;
+}
+
+table > thead > tr > th {
   border-style: 0 solid #ddd;
   border-right-width: 1px;
+}
+
+table > thead > tr > th.sortable.sorted {
+  background-color: #f6f6f6;
+}
+
+table thead tr th.sortable:hover {
+  background-color: #f4f4f4;
+}
+
+table > thead > tr > th.sortable.sorted-asc > label {
+  background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='20,40 32,56 44,40 '/%3E%3Cpolyline stroke-miterlimit='10' points='32,16 32,56'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right;
+  padding-right: 20px;
+
+  /*
+    Encode with: https://yoksel.github.io/url-encoder/
+
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,40 32,56 44,40 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg>
+  */
+}
+
+table > thead > tr > th.sortable.sorted-desc > label {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='20,32 32,16 44,32 '/%3E%3Cpolyline stroke-miterlimit='10' points='32,16 32,56'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right;
+  padding-right: 20px;
+
+  /*
+    Encode with: https://yoksel.github.io/url-encoder/
+
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,32 32,16 44,32 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg>
+  */
+}
+
+table > thead > tr > th > .select-all-checkbox {
+  cursor: pointer;
+}
+
+table > tbody > tr > td > .select-row-checkbox {
+  cursor: pointer;
 }
 
 table tbody tr:first-child td {
@@ -33,12 +94,28 @@ table > tbody > tr:nth-child(even) {
   background-color: #f6f6f6;
 }
 
-table > tbody > tr.selected-row {
-  background-color: #90c8d8;
+table > tbody > tr.selected {
+  background-color: #a0d8e8;
 }
 
-table > tbody > tr:nth-child(even).selected-row {
-  background-color: #a0d8e8 !important;
+table > tbody > tr:nth-child(even).selected {
+  background-color: #b0e8f8;
+}
+
+table > tbody > tr > td.sorted {
+  background-color: #f8f8f8;
+}
+
+table > tbody > tr:nth-child(even) > td.sorted {
+  background-color: #f0f0f0;
+}
+
+table > tbody > tr.selected > td.sorted {
+  background-color: #92cada;
+}
+
+table > tbody > tr:nth-child(even).selected > td.sorted {
+  background-color: #a6e0ed;
 }
 
 table > tbody > tr:last-child > td {

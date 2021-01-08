@@ -21,19 +21,22 @@ function createDateFieldClass(
   config: DateFieldConfig
 ): CustomElementConstructor {
   class DateField extends HTMLElement {
-    constructor(...args: any[]) {
+    constructor() {
       super()
       this.attachShadow({ mode: 'open' })
+
       this.connectedCallback = () => {
         const styleElem = h('style', null, calendarStyles)
         this.shadowRoot!.appendChild(styleElem)
         refresh()
       }
+  
       const refresh = () => {
         const root = this.shadowRoot!
         const calendar = renderCalendar({
           date: new Date()
         })
+
         if (root.children.length > 1) {
           root.removeChild(root.children[1])
         }
