@@ -5,12 +5,14 @@ table {
   border-collapse: collapse;
   font-family: Metropolis, Selawik, 'Segoe UI', Tahoma, Lato, Roboto,
     'Open Sans', 'Liberation Sans', Arial, Helvetica, sans-serif;
+  font-size: 12pt;
 }
 
 table thead tr th {
   border: 0 solid #ddd;
   border-bottom-width: 1px;
   padding: 3px 5px;
+  font-weight: 600;
 }
 
 table thead tr th:first-child {
@@ -25,19 +27,21 @@ table thead tr th {
 
 table tbody tr:first-child td {
   border: 0 solid #ddd;
-  xxxxborder-width: 1px 0 0 0;
-}
-
-table thead th {
-  font-weight: 400;
 }
 
 table > tbody > tr:nth-child(even) {
-  background-color: #f8f8f8;
+  background-color: #f6f6f6;
+}
+
+table > tbody > tr.selected-row {
+  background-color: #90c8d8;
+}
+
+table > tbody > tr:nth-child(even).selected-row {
+  background-color: #a0d8e8 !important;
 }
 
 table > tbody > tr:last-child > td {
-  xxxborder: 0 solid #ddd;
   border-bottom-width: 1px;
 }
 

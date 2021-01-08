@@ -44,6 +44,7 @@ type Column =
       type: 'column'
       text?: string
       field?: number | string | null
+      width?: number
       align?: 'start' | 'center' | 'end'
       sortable?: boolean
     }
@@ -66,6 +67,7 @@ type DataTableViewModel = {
     text: string
     field: number | string | null
     align: 'start' | 'center' | 'end'
+    width: number
   }[]
 
   sortDir: 'asc' | 'desc'
@@ -73,6 +75,8 @@ type DataTableViewModel = {
   selectMode: 'single' | 'multi' | 'none'
   selectedRows: Set<number | string>
   data: any[][] | object[]
+  onToggleSelectAll: () => void
+  onToggleSelectRow: (rowIdx: number) => void
 }
 
 // === createDataTableClass ==========================================
@@ -89,27 +93,85 @@ function createDataTableClass(
 
     constructor() {
       super()
-
-      const selectedRows = new Set<number | string>()
       this.attachShadow({ mode: 'open' })
+
+      const shadowRoot = this.shadowRoot!
+      const selectedRows = new Set<number | string>()
 
       this.connectedCallback = () => {
         const styleElem = h('style', null, dataTableStyles)
-        this.shadowRoot!.appendChild(styleElem)
+        shadowRoot.appendChild(styleElem)
         refresh()
       }
 
       const refresh = () => {
-        const root = this.shadowRoot!
-
-        if (root.children.length > 1) {
-          root.removeChild(root.children[1])
+        if (shadowRoot.children.length > 1) {
+          shadowRoot.removeChild(shadowRoot.children[1])
         }
 
-        const model = buildDataTableViewModel(this, selectedRows)
+        const model = buildDataTableViewModel(
+          this,
+          selectedRows,
+          onToggleSelectAll,
+          onToggleSelectRow
+        )
 
         console.log('model:', model)
-        root.appendChild(h('div', null, renderDataTable(model)))
+        shadowRoot.appendChild(h('div', null, renderDataTable(model)))
+      }
+
+      const onToggleSelectAll = () => {
+        if (selectedRows.size === this.data!.length) {
+          selectedRows.clear()
+
+          shadowRoot
+            .querySelectorAll('table:first-of-type > tbody > tr')
+            .forEach((tr) => {
+              tr.classList.remove('selected-row')
+              ;(tr.firstChild!.firstChild as any).checked = false
+            })
+        } else {
+          for (let i = 0; i < this.data!.length; ++i) {
+            selectedRows.add(i)
+          }
+
+          shadowRoot
+            .querySelectorAll('table:first-of-type > tbody > tr')
+            .forEach((tr) => {
+              tr.classList.add('selected-row')
+              ;(tr.firstChild!.firstChild as any).checked = true
+            })
+        }
+      }
+
+      const onToggleSelectRow = (rowIdx: number) => {
+        const isSelected = !selectedRows.has(rowIdx)
+
+        if (isSelected) {
+          selectedRows.add(rowIdx)
+        } else {
+          selectedRows.delete(rowIdx)
+        }
+
+        const tr = shadowRoot.querySelector(
+          `table:first-of-type > tbody > tr:nth-child(${rowIdx + 1})`
+        )!
+
+        if (isSelected) {
+          tr.classList.add('selected-row')
+        } else {
+          tr.classList.remove('selected-row')
+        }
+
+        const selectAllCheckBox: any = shadowRoot.querySelector(
+          'table:first-of-type > thead > tr:first-child > th > input'
+        )
+
+        if (selectedRows.size === this.data!.length) {
+          selectAllCheckBox.checked = true
+        } else {
+          selectAllCheckBox.checked = false
+        }
       }
     }
 
@@ -123,7 +185,9 @@ function createDataTableClass(
 
 function buildDataTableViewModel(
   props: DataTableProps,
-  selectedRows: Set<number | string>
+  selectedRows: Set<number | string>,
+  onToggleSelectAll: () => void,
+  onToggleSelectRow: (rowIdx: number) => void
 ): DataTableViewModel {
   console.log(1111, props.data)
   const headerCells: DataTableViewModel['headerCells'] = []
@@ -152,6 +216,8 @@ function buildDataTableViewModel(
     sortDir: props.sortDir || 'asc',
     sortField: props.sortField === undefined ? null : props.sortField,
     data: props.data || [],
+    onToggleSelectAll,
+    onToggleSelectRow,
   }
 }
 
@@ -206,6 +272,11 @@ function addColumns(
         text: column.text || '',
         field: column.field || null,
         align: column.align || 'start',
+
+        width:
+          typeof column.width !== 'number' || column.width < 0
+            ? 100
+            : column.width,
       })
     } else {
       addColumns(modelColumns, column.columns)
@@ -216,7 +287,13 @@ function addColumns(
 // === render methods ================================================
 
 function renderDataTable(model: DataTableViewModel): Node {
-  const ret = h('table', null, renderTableHead(model), renderTableBody(model))
+  const ret = h(
+    'table',
+    null,
+    renderTableHead(model),
+    renderColGroup(model),
+    renderTableBody(model)
+  )
 
   return ret
 }
@@ -227,6 +304,16 @@ function renderTableHead(model: DataTableViewModel) {
 
   for (const headerRow of model.headerCells) {
     const row: Node[] = []
+
+    if (model.selectMode !== 'none' && rows.length === 0) {
+      const cell = h(
+        'th',
+        { rowSpan: model.headerCells.length, valign: 'bottom' },
+        renderSelectAllCheckBox(model)
+      )
+
+      row.push(cell)
+    }
 
     for (const headerCol of headerRow) {
       const cell = h('th', null, headerCol.text)
@@ -241,11 +328,37 @@ function renderTableHead(model: DataTableViewModel) {
   return h('thead', null, rows)
 }
 
+function renderColGroup(model: DataTableViewModel) {
+  const cols: Node[] = []
+
+  const totalWidth = model.columns.reduce(
+    (prev, column) => prev + column.width,
+    0
+  )
+
+  if (model.selectMode !== 'none') {
+    cols.push(h('col', { style: 'width: 0' }))
+  }
+
+  for (const column of model.columns) {
+    cols.push(
+      h('col', { style: `width: ${(column.width * 100) / totalWidth}%` })
+    )
+  }
+
+  return h('colgroup', null, cols)
+}
+
 function renderTableBody(model: DataTableViewModel): Node {
   const rows: Node[] = []
 
-  for (const rec of model.data) {
+  model.data.forEach((rec, idx) => {
     const cells: (Node | null)[] = []
+
+    if (model.selectMode !== 'none') {
+      const cell = h('td', null, renderSelectRowCheckBox(model, idx))
+      cells.push(cell)
+    }
 
     for (let colIdx = 0; colIdx < model.columns.length; ++colIdx) {
       const column = model.columns[colIdx]
@@ -257,7 +370,29 @@ function renderTableBody(model: DataTableViewModel): Node {
     }
 
     rows.push(h('tr', null, cells))
-  }
+  })
 
   return h('tbody', null, rows)
+}
+
+function renderSelectAllCheckBox(model: DataTableViewModel): Node {
+  const checkBox = h('input', {
+    type: 'checkbox',
+    checked: model.selectedRows.size === model.data.length,
+    onclick: () => model.onToggleSelectAll(),
+  })
+
+  return checkBox
+}
+
+function renderSelectRowCheckBox(
+  model: DataTableViewModel,
+  rowIdx: number
+): Node {
+  const checkBox = h('input', {
+    type: 'checkbox',
+    onclick: () => model.onToggleSelectRow(rowIdx),
+  })
+
+  return checkBox
 }
