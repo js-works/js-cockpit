@@ -1,0 +1,29 @@
+.x-paginationBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.x-paginationBar-paginator {
+  padding: 2px 4px;
+}
+
+.x-paginationBar-moveToFirstPage {
+}
+
+.x-paginationBar-moveToPreviousPage {
+}
+
+.x-paginationBar-moveToNextPage {
+}
+
+.x-paginationBar-moveToLastPage {
+}
+
+.x-paginationBar-pageSizeSelector {
+}
+
+.x-paginationBar-paginationInfo {
+  flex-grow: 2;
+  text-align: right;
+}

@@ -321,7 +321,7 @@ function renderTableHead(model: DataTableViewModel) {
         if (headerCol.field === model.sortField) {
           className = 'sortable sorted sorted-' + model.sortDir
         } else {
-          className = 'sortable '
+          className = 'sortable unsorted'
         }
       }
 

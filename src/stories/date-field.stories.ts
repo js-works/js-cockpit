@@ -1,5 +1,5 @@
 import { h, defineElement } from '../main/utils/dom'
-import { DateField } from '../main/components/date-field/date-field'
+import { DateField } from '../main/core/date-field/date-field'
 
 defineElement('sx-date-field', DateField)
 

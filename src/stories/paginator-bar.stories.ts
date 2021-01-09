@@ -1,7 +1,5 @@
 import { h, defineElement } from '../main/utils/dom'
-import { PaginationBar } from '../main/components/pagination-bar/pagination-bar'
-
-defineElement('sx-pagination-bar', PaginationBar)
+import '../main/custom/pagination-bar/pagination-bar.custom'
 
 export default {
   title: 'pagianation-bar',

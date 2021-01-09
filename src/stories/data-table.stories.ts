@@ -1,5 +1,5 @@
 import { h, defineElement } from '../main/utils/dom'
-import { DataTable } from '../main/components/data-table/data-table'
+import { DataTable } from '../main/core/data-table/data-table'
 
 defineElement('sx-data-table', DataTable)
 
