@@ -1,5 +1,5 @@
 import { h, defineElement } from '../main/utils/dom'
-import '../main/custom/pagination-bar/pagination-bar.custom'
+import '../main/shoelace/pagination-bar/pagination-bar.shoelace'
 
 export default {
   title: 'pagianation-bar',

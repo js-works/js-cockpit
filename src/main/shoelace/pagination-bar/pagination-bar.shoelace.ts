@@ -3,7 +3,7 @@ import { PaginationBarCore } from '../../core/pagination-bar/pagination-bar.core
 
 @customElement('sx-pagination-bar')
 export class CustomElement extends LitElement {
-  #core: PaginationBarCore
+  private core: PaginationBarCore
 
   @property()
   pageIndex: number = -1
@@ -17,18 +17,18 @@ export class CustomElement extends LitElement {
   constructor() {
     super()
 
-    this.#core = new PaginationBarCore({
+    this.core = new PaginationBarCore({
       refresh: () => this.requestUpdate(),
       onPageIndexChangeRequest: () => {},
       onPageSizeChageRequest: () => {},
     })
 
-    this.#core.setPageIndex(this.pageIndex)
-    this.#core.setPageSize(this.pageSize)
-    this.#core.setTotalItemCount(this.totalItemCount)
+    this.core.setPageIndex(this.pageIndex)
+    this.core.setPageSize(this.pageSize)
+    this.core.setTotalItemCount(this.totalItemCount)
   }
 
   render() {
-    return this.#core.render()
+    return this.core.render()
   }
 }

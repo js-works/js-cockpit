@@ -1,7 +1,5 @@
 import { h, defineElement } from '../main/utils/dom'
-import { DataTable } from '../main/core/data-table/data-table'
-
-defineElement('sx-data-table', DataTable)
+import '../main/shoelace/data-table/data-table.shoelace'
 
 export default {
   title: 'data-table',
