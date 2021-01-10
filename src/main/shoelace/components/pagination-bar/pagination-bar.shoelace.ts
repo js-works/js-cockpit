@@ -1,5 +1,6 @@
 // external imports
 import { html, TemplateResult } from 'lit-html'
+
 import {
   SlInput,
   SlMenuItem,

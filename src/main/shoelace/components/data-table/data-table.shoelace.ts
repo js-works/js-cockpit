@@ -11,7 +11,7 @@ class DataTableProps {
   data?: any[][] | object[] | null
 }
 
-define('sx-data-table', DataTableProps, (p) => {
+export const DataTable = define('sx-data-table', DataTableProps, (p) => {
   const core = new DataTableCore()
   const containerRef = createRef<Node>()
 

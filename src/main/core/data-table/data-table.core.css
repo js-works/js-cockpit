@@ -79,7 +79,7 @@ table > thead > tr > th.sortable.sorted-desc > label {
 }
 
 table > thead > tr > th.sortable.unsorted > label {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' opacity='0.15' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='6,32 18,16 30,32 '/%3E%3Cpolyline stroke-miterlimit='10' points='18,16 18,56'/%3E%3Cpolyline stroke-linejoin='bevel' points='34,40 46,56 58,40 '/%3E%3Cpolyline stroke-miterlimit='10' points='46,16 46,56'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' opacity='0.2' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='7,32 19,16 32,32 '/%3E%3Cpolyline stroke-miterlimit='10' points='19,16 19,56'/%3E%3Cpolyline stroke-linejoin='bevel' points='33,40 45,56 57,40 '/%3E%3Cpolyline stroke-miterlimit='10' points='45,16 45,56'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right;
   padding-right: 28px;
@@ -87,12 +87,12 @@ table > thead > tr > th.sortable.unsorted > label {
   /*
     Encode with: https://yoksel.github.io/url-encoder/
 
-    <svg opacity="0.15" width="20px" height="20px" viewBox="0 0 64 64">
+    <svg opacity="0.2" width="20px" height="20px" viewBox="0 0 64 64">
       <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
-        <polyline stroke-linejoin="bevel" points="6,32 18,16 30,32 "/>
-        <polyline stroke-miterlimit="10" points="18,16 18,56"/>      
-        <polyline stroke-linejoin="bevel" points="34,40 46,56 58,40 "/>
-        <polyline stroke-miterlimit="10" points="46,16 46,56"/>
+        <polyline stroke-linejoin="bevel" points="7,32 19,16 32,32 "/>
+        <polyline stroke-miterlimit="10" points="19,16 19,56"/>      
+        <polyline stroke-linejoin="bevel" points="33,40 45,56 57,40 "/>
+        <polyline stroke-miterlimit="10" points="45,16 45,56"/>
       </g>
     </svg>
 
