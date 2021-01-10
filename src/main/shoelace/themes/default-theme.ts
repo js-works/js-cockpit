@@ -1,4 +1,4 @@
-export const defaultTheme = {
+const theme = {
   '--sl-color-black': '#000',
   '--sl-color-white': '#fff',
   '--sl-color-gray-50': '#f9fafb',
@@ -193,3 +193,18 @@ export const defaultTheme = {
   '--sl-z-index-toast': '950',
   '--sl-z-index-tooltip': '1000',
 }
+
+// === exports =======================================================
+
+const lines1 = Object.entries(theme)
+  .map(
+    ([k, v]) =>
+      `  --sl-default-${k.substr(5)}: ${v.replace('--sl-', '--sl-default-')};`
+  )
+  .join('\n')
+
+const lines2 = Object.keys(theme)
+  .map((k) => `  ${k}: var(--sl-default-${k.substr(5)});`)
+  .join('\n')
+
+export default `:host {\n${lines1}\n\n${lines2}\n}\n`

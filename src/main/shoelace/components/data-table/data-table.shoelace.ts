@@ -1,7 +1,7 @@
 import { define, h } from 'js-elements'
 import { useEffect, useOnMount } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
-import { DataTableCore, Column } from '../../core/data-table/data-table.core'
+import { DataTableCore, Column } from '../../../core/data-table/data-table.core'
 
 class DataTableProps {
   columns?: Column[]

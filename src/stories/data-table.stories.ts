@@ -1,5 +1,5 @@
-import { h, defineElement } from '../main/utils/dom'
-import '../main/shoelace/data-table/data-table.shoelace'
+import { h, registerElement } from '../main/utils/dom'
+import '../main/shoelace/components/data-table/data-table.shoelace'
 
 export default {
   title: 'data-table',

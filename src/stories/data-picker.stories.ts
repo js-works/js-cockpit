@@ -1,5 +1,5 @@
-import { h, defineElement } from '../main/utils/dom'
-import '../main/shoelace/date-picker/date-picker.shoelace'
+import { h, registerElement } from '../main/utils/dom'
+import '../main/shoelace/components/date-picker/date-picker.shoelace'
 
 export default {
   title: 'date-picker',

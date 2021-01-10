@@ -1,4 +1,4 @@
-import { h, defineElement } from '../../utils/dom'
+import { h, registerElement } from '../../utils/dom'
 
 import {
   getFirstDayOfMonth,

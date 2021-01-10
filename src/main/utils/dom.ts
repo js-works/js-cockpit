@@ -42,7 +42,7 @@ function addNodes(target: Node, ...children: Renderable[]) {
 
 // === defineElement =================================================
 
-export function defineElement(
+export function registerElement(
   tagName: string,
   elementClass: CustomElementConstructor
 ) {

@@ -1,7 +1,7 @@
 import { attr, define, h } from 'js-elements'
 import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
-import { DatePickerCore } from '../../core/date-picker/date-picker.core'
+import { DatePickerCore } from '../../../core/date-picker/date-picker.core'
 
 class DatePickerProps {
   date: Date = new Date(1970, 1, 1)
