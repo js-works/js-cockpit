@@ -79,10 +79,51 @@ class DataTableCore {
   ) {}
 
   refresh() {
-    const model = this.buildViewModel(
-      this.onToggleSelectAll,
-      this.onToggleSelectRow
-    )
+    const model = this.buildViewModel({
+      onToggleSelectAll: () => {
+        const selectAll = this.selectedRows.size !== this.props.data!.length
+
+        if (!selectAll) {
+          this.selectedRows.clear()
+        }
+
+        const trs = this.element.querySelectorAll(
+          `table:first-of-type > tbody > tr`
+        )
+
+        trs.forEach((tr, rowIdx) => {
+          if (selectAll) {
+            this.selectedRows.add(rowIdx)
+            tr.classList.add('x-dataTable-tr--selected')
+            ;(tr.firstChild?.firstChild as any).checked = true
+          } else {
+            tr.classList.remove('x-dataTable-tr--selected')
+            ;(tr.firstChild?.firstChild as any).checked = false
+          }
+        })
+      },
+
+      onToggleSelectRow: (rowIdx: number) => {
+        const selectAllCheckbox = this.element.querySelector(
+          'table:first-of-type > thead > tr:first-child > th > input'
+        ) as HTMLInputElement
+
+        const tr = this.element.querySelector(
+          `table:first-of-type > tbody > tr:nth-child(${rowIdx + 1})`
+        )!
+
+        if (this.selectedRows.has(rowIdx)) {
+          this.selectedRows.delete(rowIdx)
+          tr.classList.remove('x-dataTable-tr--selected')
+        } else {
+          this.selectedRows.add(rowIdx)
+          tr.classList.add('x-dataTable-tr--selected')
+        }
+
+        selectAllCheckbox.checked =
+          this.selectedRows.size === this.props.data!.length
+      },
+    })
 
     this.element.innerHTML = ''
     this.element.appendChild(renderDataTable(model))
@@ -103,10 +144,10 @@ class DataTableCore {
 
   // --- private methods ---------------------------------------------
 
-  private buildViewModel(
-    onToggleSelectAll: () => void,
+  private buildViewModel(params: {
+    onToggleSelectAll: () => void
     onToggleSelectRow: (rowIdx: number) => void
-  ): DataTableViewModel {
+  }): DataTableViewModel {
     const headerCells: DataTableViewModel['headerCells'] = []
 
     const deepestCells: [
@@ -134,8 +175,8 @@ class DataTableCore {
       sortField:
         this.props.sortField === undefined ? null : this.props.sortField,
       data: this.props.data || [],
-      onToggleSelectAll,
-      onToggleSelectRow,
+      onToggleSelectAll: params.onToggleSelectAll,
+      onToggleSelectRow: params.onToggleSelectRow,
     }
 
     function addHeaderCells(
