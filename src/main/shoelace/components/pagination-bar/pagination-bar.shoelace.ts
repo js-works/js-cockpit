@@ -1,5 +1,6 @@
 // external imports
-import { html, TemplateResult } from 'lit-html'
+import { attr, define, html, VNode } from 'js-elements'
+import { useStyles } from 'js-elements/hooks'
 
 import {
   SlInput,
@@ -9,7 +10,6 @@ import {
 } from '@shoelace-style/shoelace'
 
 // internal imports
-import { property, unsafeCSS, LitElement } from 'lit-element'
 import { PaginationBarCore } from '../../../core/pagination-bar/pagination-bar.core'
 import { Localizer } from '../../../utils/i18n'
 import { registerElement } from '../../../utils/dom'
@@ -18,74 +18,71 @@ import { registerElement } from '../../../utils/dom'
 import paginationBarCustomStyles from './pagination-bar.shoelace.css'
 import defaultTheme from '../../themes/default-theme'
 
-export class PaginationBar extends LitElement {
-  private core: PaginationBarCore
+// === exports =======================================================
 
-  static styles = [
-    unsafeCSS(defaultTheme),
-    unsafeCSS(PaginationBarCore.coreStyles),
-    unsafeCSS(paginationBarCustomStyles),
-  ]
+export { PaginationBar }
 
-  @property()
+// === PaginationBar =================================================
+
+class PaginationBarProps {
+  @attr(Number)
   pageIndex = -1
 
-  @property()
+  @attr(Number)
   pageSize = -1
 
-  @property()
+  @attr(Number)
   totalItemCount = -1
 
-  @property()
+  @attr(Boolean)
   disabled = false
-
-  constructor() {
-    super()
-
-    this.core = new PaginationBarCore({
-      localizer: Localizer.default,
-      refresh: () => this.requestUpdate(),
-      handlePageIndexChangeRequest: () => {},
-      handlePageSizeChageRequest: () => {},
-
-      renderTextField: () => {
-        return html`<sl-input type="text" size="small">123</sl-input>`
-      },
-
-      renderSelectField: ({ options }) => {
-        const items: TemplateResult[] = []
-
-        for (const option of options.values()) {
-          items.push(
-            html`<sl-menu-item value=${option}>${option}</sl-menu-item>`
-          )
-        }
-
-        return html`<sl-select size="small">${items}</sl-select>`
-      },
-    })
-
-    this.syncProps()
-  }
-
-  private syncProps() {
-    this.core.setProps({
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      totalItemCount: this.totalItemCount,
-      disabled: this.disabled,
-    })
-  }
-
-  render() {
-    this.syncProps()
-
-    return this.core.render()
-  }
 }
+
+const PaginationBar = define('sx-pagination-bar', PaginationBarProps, (p) => {
+  useStyles([
+    defaultTheme,
+    PaginationBarCore.coreStyles,
+    paginationBarCustomStyles,
+  ])
+
+  const core = new PaginationBarCore({
+    localizer: Localizer.default,
+    refresh: () => {},
+    handlePageIndexChangeRequest: () => {},
+    handlePageSizeChageRequest: () => {},
+
+    renderTextField: () => {
+      return html`<sl-input type="text" size="small">123</sl-input>`
+    },
+
+    renderSelectField: ({ options }) => {
+      const items: VNode[] = []
+
+      for (const option of options.values()) {
+        items.push(html`<sl-menu-item value=${option}>${option}</sl-menu-item>`)
+      }
+
+      return html`<sl-select size="small">${items}</sl-select>`
+    },
+  })
+
+  function syncProps() {
+    core.setProps({
+      pageIndex: p.pageIndex,
+      pageSize: p.pageSize,
+      totalItemCount: p.totalItemCount,
+      disabled: p.disabled,
+    })
+  }
+
+  return () => {
+    syncProps()
+
+    return core.render()
+  }
+})
 
 registerElement('sl-input', SlInput)
 registerElement('sl-select', SlSelect)
 registerElement('sl-menu-item', SlMenuItem)
 registerElement('sl-dropdown', SlDropdown)
-registerElement('sx-pagination-bar', PaginationBar)

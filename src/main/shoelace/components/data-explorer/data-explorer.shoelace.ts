@@ -1,31 +1,31 @@
-import { html, property, LitElement } from 'lit-element'
-import { registerElement } from '../../../utils/dom'
-import {
-  DataExplorerCore,
-  DataExplorerProps,
-} from '../../../core/data-explorer/data-explorer.core'
+// external imports
+import { define, html } from 'js-elements'
+import { useEffect, useOnMount } from 'js-elements/hooks'
+
+import { DataExplorerCore } from '../../../core/data-explorer/data-explorer.core'
 
 import '../data-table/data-table.shoelace'
 
 // === types =========================================================
 
-class DataExplorer extends LitElement {
-  private core = new DataExplorerCore({
-    refresh: () => {
-      this.requestUpdate()
+class DataExplorerProps {}
+
+// === DataExplorer ==================================================
+
+export const DataExplorer = define('sx-data-explorer', DataExplorerProps, (
+  p
+) => {
+  const core = new DataExplorerCore({
+    refresh: () => {},
+
+    renderDataTable: () => {
+      return html`<div>DataTable</div>`
     },
-    renderDataTable: () => html`<div>DataTable</div>`,
-    renderPaginationBar: () => html`<div>PaginationBar</div>`,
+
+    renderPaginationBar: () => {
+      return html`<div>PaginationBar</div>`
+    },
   })
 
-  render() {
-    return html`
-      <div>
-        ${this.core.render()}
-      </div>
-    `
-  }
-}
-
-registerElement('sx-data-explorer', DataExplorer)
-//registerElement('sx-data-table', DataTable)
+  return () => core.render()
+})

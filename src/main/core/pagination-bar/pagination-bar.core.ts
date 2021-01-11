@@ -1,5 +1,5 @@
 // external imports
-import { html, TemplateResult } from 'lit-html'
+import { html, VNode } from 'js-elements'
 
 // internal imports
 import { Localizer } from '../../utils/i18n'
@@ -46,15 +46,9 @@ class PaginationBarCore {
       handlePageIndexChangeRequest(pageIdx: number): void
       handlePageSizeChageRequest(pageSize: number): void
 
-      renderTextField(params: {
-        value: string
-        disabled: boolean
-      }): TemplateResult
+      renderTextField(params: { value: string; disabled: boolean }): VNode
 
-      renderSelectField(params: {
-        value: number
-        options: Set<number>
-      }): TemplateResult
+      renderSelectField(params: { value: number; options: Set<number> }): VNode
     }
   ) {}
 
@@ -63,7 +57,7 @@ class PaginationBarCore {
     this.config.refresh()
   }
 
-  render(): TemplateResult {
+  render(): VNode {
     return this.renderPaginationBar()
   }
 
@@ -97,7 +91,7 @@ class PaginationBarCore {
       : -1
   }
 
-  private renderPaginationBar(): TemplateResult {
+  private renderPaginationBar(): VNode {
     const paginator = this.renderPaginator()
     const pageSizeSelector = this.renderPageSizeSelector()
     const paginationInfo = this.renderPaginationInfo()
@@ -170,7 +164,7 @@ class PaginationBarCore {
 
   private renderPageSizeSelector() {
     const loc = this.config.localizer
-    const options: TemplateResult[] = []
+    const options: VNode[] = []
 
     for (const size of ALLOWED_PAGE_SIZES.values()) {
       options.push(html`<sl-menu-item value=${size}>${size}</sl-menu-item>`)

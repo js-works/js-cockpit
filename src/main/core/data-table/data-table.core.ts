@@ -208,7 +208,7 @@ class DataTableCore {
 function renderDataTable(model: DataTableViewModel): Element {
   const ret = h(
     'table',
-    null,
+    { className: 'x-dataTable' },
     renderTableHead(model),
     renderColGroup(model),
     renderTableBody(model)
@@ -227,21 +227,25 @@ function renderTableHead(model: DataTableViewModel) {
     if (model.selectMode !== 'none' && rows.length === 0) {
       const cell = h(
         'th',
-        { rowSpan: model.headerCells.length, valign: 'bottom' },
-        renderSelectAllCheckBox(model)
+        {
+          className: 'x-dataTable-th',
+          rowSpan: model.headerCells.length,
+          valign: 'bottom',
+        },
+        renderSelectAllCheckbox(model)
       )
 
       row.push(cell)
     }
 
     for (const headerCol of headerRow) {
-      let className = null
-      console.log(headerCol.field, model.sortField)
+      let className = 'x-dataTable-th'
+
       if (headerCol.sortable) {
         if (headerCol.field === model.sortField) {
-          className = 'sortable sorted sorted-' + model.sortDir
+          className += ' x-dataTable-th--sorted-' + model.sortDir
         } else {
-          className = 'sortable unsorted'
+          className += ' x-dataTable-th--unsorted'
         }
       }
 
@@ -293,7 +297,11 @@ function renderTableBody(model: DataTableViewModel): Node {
     const cells: (Node | null)[] = []
 
     if (model.selectMode !== 'none') {
-      const cell = h('td', null, renderSelectRowCheckBox(model, idx))
+      const cell = h(
+        'td',
+        { className: 'x-dataTable-td' },
+        renderSelectRowCheckbox(model, idx)
+      )
       cells.push(cell)
     }
 
@@ -301,37 +309,38 @@ function renderTableBody(model: DataTableViewModel): Node {
       const column = model.columns[colIdx]
       const field = column.field
       const content = field ? h('div', null, (rec as any)[field]) : h('span') // TODO
-      const className = field && model.sortField === field ? 'sorted' : null
+      const className =
+        field && model.sortField === field ? 'x-dataTable-td--sorted' : null
       const cell = h('td', { className }, content)
       cells.push(cell)
     }
 
-    rows.push(h('tr', null, cells))
+    rows.push(h('tr', { className: 'x-dataTable-tr' }, cells))
   })
 
   return h('tbody', null, rows)
 }
 
-function renderSelectAllCheckBox(model: DataTableViewModel): Node {
-  const checkBox = h('input', {
+function renderSelectAllCheckbox(model: DataTableViewModel): Node {
+  const checkbox = h('input', {
     type: 'checkbox',
-    className: 'select-all-checkbox',
+    className: 'x-dataTable-selectAllCheckbox',
     checked: model.selectedRows.size === model.data.length,
     onclick: () => model.onToggleSelectAll(),
   })
 
-  return checkBox
+  return checkbox
 }
 
-function renderSelectRowCheckBox(
+function renderSelectRowCheckbox(
   model: DataTableViewModel,
   rowIdx: number
 ): Node {
-  const checkBox = h('input', {
+  const checkbox = h('input', {
     type: 'checkbox',
-    className: 'select-row-checkbox',
+    className: 'x-dataTable-selectRowCheckbox',
     onclick: () => model.onToggleSelectRow(rowIdx),
   })
 
-  return checkBox
+  return checkbox
 }

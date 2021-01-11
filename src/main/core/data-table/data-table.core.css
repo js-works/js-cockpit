@@ -1,4 +1,4 @@
-table {
+.x-dataTable {
   width: 100%;
   border: 1px solid #ddd;
   border-spacing: 0;
@@ -6,43 +6,35 @@ table {
   font-family: Metropolis, Selawik, 'Segoe UI', Tahoma, Lato, Roboto,
     'Open Sans', 'Liberation Sans', Arial, Helvetica, sans-serif;
   font-size: 12pt;
-}
-
-table {
   cursor: default;
   user-select: none;
 }
 
-table thead tr th {
+.x-dataTable-th {
   border: 0 solid #ddd;
   border-bottom-width: 1px;
   padding: 3px 5px;
   font-weight: 600;
 }
 
-table thead tr th:first-child {
+.x-dataTable-th {
   border-style: 0 solid #ddd;
   border-left-width: 1px;
 }
 
-table > thead > tr > th.sortable {
+.x-dataTable-th--unsorted,
+.x-dataTable-th--sorted-asc,
+.x-dataTable-th--sorted-desc {
   cursor: pointer;
 }
 
-table > thead > tr > th {
-  border-style: 0 solid #ddd;
-  border-right-width: 1px;
-}
-
-table > thead > tr > th.sortable.sorted {
-  xbackground-color: #f6f6f6;
-}
-
-table thead tr th.sortable:hover {
+.x-dataTable-th--unsorted:hover,
+.x-dataTable-th--sorted-asc:hover,
+.x-dataTable-th--sorted-desc:hover {
   background-color: #f4f4f4;
 }
 
-table > thead > tr > th.sortable.sorted-asc > label {
+.x-dataTable-th--sorted-asc > label {
   background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='20,40 32,56 44,40 '/%3E%3Cpolyline stroke-miterlimit='10' points='32,16 32,56'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right;
@@ -60,7 +52,7 @@ table > thead > tr > th.sortable.sorted-asc > label {
   */
 }
 
-table > thead > tr > th.sortable.sorted-desc > label {
+.x-dataTable-th--sorted-desc > label {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='20,32 32,16 44,32 '/%3E%3Cpolyline stroke-miterlimit='10' points='32,16 32,56'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right;
@@ -78,7 +70,7 @@ table > thead > tr > th.sortable.sorted-desc > label {
   */
 }
 
-table > thead > tr > th.sortable.unsorted > label {
+.x-dataTable-th--unsorted > label {
   background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' opacity='0.2' width='20px' height='20px' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-miterlimit='10'%3E%3Cpolyline stroke-linejoin='bevel' points='7,32 19,16 32,32 '/%3E%3Cpolyline stroke-miterlimit='10' points='19,16 19,56'/%3E%3Cpolyline stroke-linejoin='bevel' points='33,40 45,56 57,40 '/%3E%3Cpolyline stroke-miterlimit='10' points='45,16 45,56'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right;
@@ -99,50 +91,48 @@ table > thead > tr > th.sortable.unsorted > label {
   */
 }
 
-table > thead > tr > th > .select-all-checkbox {
+.x-dataTable-selectAllCheckbox,
+.x-dataTable-selectRowCheckbox {
   cursor: pointer;
 }
 
-table > tbody > tr > td > .select-row-checkbox {
-  cursor: pointer;
-}
-
-table tbody tr:first-child td {
+.x-dataTable-tr:first-child > td {
   border: 0 solid #ddd;
 }
 
-table > tbody > tr:nth-child(even) {
+.x-dataTable-tr:nth-child(even) {
   background-color: #f6f6f6;
 }
 
-table > tbody > tr.selected {
+.x-dataTable-tr--selected {
   background-color: #a0d8e8;
 }
 
-table > tbody > tr:nth-child(even).selected {
+.x-dataTable-tr:nth-child(even).x-dataTable-tr--selected {
   background-color: #b0e8f8;
 }
 
-table > tbody > tr > td.sorted {
+.x-dataTable-td--sorted {
   background-color: #f8f8f8;
 }
 
-table > tbody > tr:nth-child(even) > td.sorted {
+.x-dataTable-tr:nth-child(even) > .x-dataTable-td--sorted {
   background-color: #f0f0f0;
 }
 
-table > tbody > tr.selected > td.sorted {
+.x-dataTable-tr.selected > .x-dataTable-td.sorted {
   background-color: #92cada;
 }
 
-table > tbody > tr:nth-child(even).selected > td.sorted {
+.x-dataTable-tr:nth-child(even).x-dataTable-tr--selected
+  > .x-dataTable-td--sorted {
   background-color: #a6e0ed;
 }
 
-table > tbody > tr:last-child > td {
+.x-dataTable-tr:last-child > .x-dataTable-td {
   border-bottom-width: 1px;
 }
 
-table > tbody > tr > td {
+.x-dataTable-td {
   padding: 3px 5px;
 }

@@ -1,5 +1,5 @@
 // external imports
-import { html, TemplateResult } from 'lit-html'
+import { html, VNode } from 'js-elements'
 
 // internal imports
 import { DataTableProps } from '../../core/data-table/data-table.core'
@@ -26,8 +26,8 @@ class DataExplorerCore {
   constructor(
     private config: {
       refresh(): void
-      renderDataTable(): TemplateResult
-      renderPaginationBar(): TemplateResult
+      renderDataTable(): VNode
+      renderPaginationBar(): VNode
     }
   ) {}
 
