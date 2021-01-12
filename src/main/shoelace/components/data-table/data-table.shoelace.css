@@ -1,3 +1,59 @@
 .x-dataTable {
   font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+  border: 1px solid var(--sl-color-gray-200);
+}
+
+.x-dataTable-th {
+  border: 1px solid var(--sl-color-gray-200);
+}
+
+.x-dataTable-tr:nth-child(even) {
+  background-color: var(--sl-color-gray-50);
+}
+
+.x-dataTable-tr--selected:nth-child(odd) {
+  background-color: var(--sl-color-primary-100);
+}
+
+.x-dataTable-tr--selected:nth-child(odd) {
+  background-color: var(--sl-color-primary-100);
+}
+
+.x-dataTable-tr--selected:nth-child(even) {
+  background-color: var(--sl-color-primary-200);
+}
+
+/*
+.x-dataTable-tr:nth-child(even) > .x-dataTable-td--sorted {
+  background-color: var(--sl-color-gray-100);
+}
+
+.x-dataTable-tr:nth-child(odd) > .x-dataTable-td--sorted {
+  background-color: var(--sl-color-gray-50);
+}
+
+.x-dataTable-tr--selected:nth-child(even) > .x-dataTable-td--sorted {
+  background-color: var(--sl-color-primary-300);
+}
+
+.x-dataTable-tr--selected:nth-child(odd) > .x-dataTable-td--sorted {
+  background-color: var(--sl-color-primary-200);
+}
+*/
+
+.x-dataTable-th--sorted-asc:hover,
+.x-dataTable-th--sorted-desc:hover,
+.x-dataTable-th--unsorted:hover {
+  background-color: var(--sl-color-gray-100);
+}
+
+.x-dataTable-selectionColumn sl-checkbox {
+  position: relative;
+  top: -3px;
+  margin: 0 6px;
+}
+
+.x-dataTable-selectionColumn sl-checkbox::part(label) {
+  display: none;
 }

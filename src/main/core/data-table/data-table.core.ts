@@ -283,7 +283,7 @@ function renderTableHead(model: DataTableViewModel) {
       const cell = h(
         'th',
         {
-          className: 'x-dataTable-th',
+          className: 'x-dataTable-th x-dataTable-selectionColumn',
           rowSpan: model.headerCells.length,
           valign: 'bottom',
         },
@@ -363,7 +363,7 @@ function renderTableBody(model: DataTableViewModel): Node {
     if (model.selectMode !== 'none') {
       const cell = h(
         'td',
-        { className: 'x-dataTable-td' },
+        { className: 'x-dataTable-td x-dataTable-selectionColumn' },
         renderSelectRowCheckbox(model, idx)
       )
       cells.push(cell)
