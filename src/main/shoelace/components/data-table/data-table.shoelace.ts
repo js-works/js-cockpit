@@ -1,7 +1,16 @@
-import { define, h } from 'js-elements'
-import { useEffect, useOnMount } from 'js-elements/hooks'
+// external imports
+import { define, html } from 'js-elements'
+import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
+import { SlCheckbox } from '@shoelace-style/shoelace'
+
+// internal imports
 import { DataTableCore, Column } from '../../../core/data-table/data-table.core'
+import { h, registerElement } from '../../../utils/dom'
+
+// @ts-ignore
+import dataTableCustomStyles from './data-table.shoelace.css'
+import defaultTheme from '../../themes/default-theme'
 
 class DataTableProps {
   columns?: Column[]
@@ -12,8 +21,21 @@ class DataTableProps {
 }
 
 export const DataTable = define('sx-data-table', DataTableProps, (p) => {
-  const core = new DataTableCore()
+  const core = new DataTableCore({
+    onToggleSelectAll: () => {},
+    onToggleSelectRow: () => {},
+
+    icons: {
+      sortedAsc: createSortedAscIcon(),
+      sortedDesc: createSortedDescIcon(),
+      sortable: createSortableIcon(),
+      checkboxTick: createCheckboxTickIcon(),
+    },
+  })
+
   const containerRef = createRef<Node>()
+
+  useStyles([DataTableCore.coreStyles, defaultTheme, dataTableCustomStyles])
 
   useOnMount(() => {
     containerRef.current!.appendChild(core.getElement())
@@ -21,11 +43,72 @@ export const DataTable = define('sx-data-table', DataTableProps, (p) => {
 
   useEffect(() => core.setProps(p))
 
-  return () =>
-    h(
-      'div',
-      null,
-      h('style', null, DataTableCore.coreStyles),
-      h('div', { ref: containerRef })
-    )
+  return () => html`<div ref=${containerRef}></div>`
 })
+
+function createSortedAscIcon() {
+  const ret = h('div')
+
+  ret.innerHTML = `
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,40 32,56 44,40 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg>
+  `
+
+  return ret
+}
+
+function createSortedDescIcon() {
+  const ret = h('div')
+
+  ret.innerHTML = `
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,32 32,16 44,32 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg>  
+  `
+
+  return ret
+}
+
+function createSortableIcon() {
+  const ret = h('div', { style: 'opacity: 0.2' })
+
+  ret.innerHTML = `
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="7,32 19,16 32,32 "/>
+        <polyline stroke-miterlimit="10" points="19,16 19,56"/>      
+        <polyline stroke-linejoin="bevel" points="33,40 45,56 57,40 "/>
+        <polyline stroke-miterlimit="10" points="45,16 45,56"/>
+      </g>
+    </svg>  
+  `
+
+  return ret
+}
+
+function createCheckboxTickIcon() {
+  const ret = h('div', { className: 'x-dataTable-checkboxTick' })
+
+  ret.innerHTML = `
+    <svg viewBox="0 0 16 16">
+      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g stroke="currentColor" stroke-width="2">
+          <g transform="translate(3.428571, 3.428571)">
+            <path d="M0,5.71428571 L3.42857143,9.14285714"></path>
+            <path d="M9.14285714,0 L3.42857143,9.14285714"></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  `
+  return ret
+}
+
+registerElement('sl-checkbox', SlCheckbox)

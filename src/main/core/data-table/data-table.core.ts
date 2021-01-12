@@ -5,11 +5,18 @@ import dataTableCoreStyles from './data-table.core.css'
 
 // === exports =======================================================
 
-export { DataTableCore, DataTableProps, Column }
+export { DataTableCore, DataTableParams as DataTableProps, Column }
 
 // === types =========================================================
 
-type DataTableProps = {
+type Icons = {
+  sortedAsc: Element
+  sortedDesc: Element
+  sortable?: Element
+  checkboxTick?: Element
+}
+
+type DataTableParams = {
   columns?: Column[]
   sortField?: number | string | null
   sortDir?: 'asc' | 'desc'
@@ -55,6 +62,7 @@ type DataTableViewModel = {
   data: any[][] | object[]
   onToggleSelectAll: () => void
   onToggleSelectRow: (rowIdx: number) => void
+  icons: Icons
 }
 
 // === DataTableCore =================================================
@@ -62,7 +70,7 @@ type DataTableViewModel = {
 class DataTableCore {
   static coreStyles = dataTableCoreStyles
 
-  private props: DataTableProps = {
+  private props: DataTableParams = {
     columns: [],
     data: [],
     selectMode: 'none',
@@ -74,8 +82,11 @@ class DataTableCore {
   private selectedRows: Set<number> = new Set()
 
   constructor(
-    private onToggleSelectAll: () => void = () => {},
-    private onToggleSelectRow: (rowIdx: number) => void = () => {}
+    private config: {
+      onToggleSelectAll: () => void
+      onToggleSelectRow: (rowIdx: number) => void
+      icons: Icons
+    }
   ) {}
 
   refresh() {
@@ -95,17 +106,17 @@ class DataTableCore {
           if (selectAll) {
             this.selectedRows.add(rowIdx)
             tr.classList.add('x-dataTable-tr--selected')
-            ;(tr.firstChild?.firstChild as any).checked = true
+            ;(tr.firstChild?.firstChild?.firstChild as any).checked = true
           } else {
             tr.classList.remove('x-dataTable-tr--selected')
-            ;(tr.firstChild?.firstChild as any).checked = false
+            ;(tr.firstChild?.firstChild?.firstChild as any).checked = false
           }
         })
       },
 
       onToggleSelectRow: (rowIdx: number) => {
         const selectAllCheckbox = this.element.querySelector(
-          'table:first-of-type > thead > tr:first-child > th > input'
+          'table:first-of-type > thead > tr:first-child > th:first-child input'
         ) as HTMLInputElement
 
         const tr = this.element.querySelector(
@@ -129,7 +140,7 @@ class DataTableCore {
     this.element.appendChild(renderDataTable(model))
   }
 
-  setProps(props: Partial<DataTableProps>) {
+  setProps(props: Partial<DataTableParams>) {
     Object.assign(this.props, props)
     this.refresh()
   }
@@ -177,6 +188,7 @@ class DataTableCore {
       data: this.props.data || [],
       onToggleSelectAll: params.onToggleSelectAll,
       onToggleSelectRow: params.onToggleSelectRow,
+      icons: this.config.icons,
     }
 
     function addHeaderCells(
@@ -222,7 +234,7 @@ class DataTableCore {
 
     function addColumns(
       modelColumns: DataTableViewModel['columns'],
-      propsColumns: Exclude<DataTableProps['columns'], undefined>
+      propsColumns: Exclude<DataTableParams['columns'], undefined>
     ) {
       for (const column of propsColumns) {
         if (column.type === 'column') {
@@ -281,11 +293,20 @@ function renderTableHead(model: DataTableViewModel) {
 
     for (const headerCol of headerRow) {
       let className = 'x-dataTable-th'
+      let icon = null
 
       if (headerCol.sortable) {
         if (headerCol.field === model.sortField) {
+          icon =
+            model.sortDir === 'asc'
+              ? model.icons.sortedAsc.cloneNode(true)
+              : model.icons.sortedDesc.cloneNode(true)
           className += ' x-dataTable-th--sorted-' + model.sortDir
         } else {
+          if (model.icons.sortable) {
+            icon = model.icons.sortable.cloneNode(true)
+          }
+
           className += ' x-dataTable-th--unsorted'
         }
       }
@@ -299,7 +320,7 @@ function renderTableHead(model: DataTableViewModel) {
             className,
           },
 
-          h('label', null, headerCol.text)
+          h('label', null, headerCol.text, icon)
         )
       )
     }
@@ -365,12 +386,13 @@ function renderTableBody(model: DataTableViewModel): Node {
 function renderSelectAllCheckbox(model: DataTableViewModel): Node {
   const checkbox = h('input', {
     type: 'checkbox',
-    className: 'x-dataTable-selectAllCheckbox',
+    className: 'x-dataTable-checkbox x-dataTable-selectAllCheckbox',
     checked: model.selectedRows.size === model.data.length,
     onclick: () => model.onToggleSelectAll(),
   })
 
-  return checkbox
+  const icon = model.icons.checkboxTick?.cloneNode(true)
+  return h('div', { style: 'position: relative' }, checkbox, icon)
 }
 
 function renderSelectRowCheckbox(
@@ -379,9 +401,11 @@ function renderSelectRowCheckbox(
 ): Node {
   const checkbox = h('input', {
     type: 'checkbox',
-    className: 'x-dataTable-selectRowCheckbox',
+    className: 'x-dataTable-checkbox x-dataTable-selectRowCheckbox',
     onclick: () => model.onToggleSelectRow(rowIdx),
   })
 
-  return checkbox
+  const icon = model.icons.checkboxTick?.cloneNode(true)
+
+  return h('div', null, checkbox, icon)
 }

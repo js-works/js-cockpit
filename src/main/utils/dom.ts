@@ -28,6 +28,10 @@ function addNodes(target: Node, ...children: Renderable[]) {
   children.forEach((child) => {
     const type = typeof child
 
+    if (child === undefined || child === null) {
+      return
+    }
+
     if (type === 'string' || type === 'number') {
       target.appendChild(document.createTextNode(child as string))
     } else if (!Array.isArray(child)) {
