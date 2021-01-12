@@ -19,6 +19,10 @@ export function h(
     Object.assign(ret, props)
   }
 
+  if (ret.className === null) {
+    ret.className = ''
+  }
+
   addNodes(ret, children)
 
   return ret

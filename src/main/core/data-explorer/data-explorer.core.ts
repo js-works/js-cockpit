@@ -22,12 +22,25 @@ class DataExplorerCore {
   static coreStyles = dataExplorerCoreStyles
 
   private props: DataExplorerProps = {}
+  private data: DataTableProps['data'] = []
+  private pageIndex = 50
+  private pageSize = 50
+  private totalItemCount = 1245
 
   constructor(
     private config: {
       refresh(): void
-      renderDataTable(): VNode
-      renderPaginationBar(): VNode
+
+      renderDataTable(params: {
+        columns: DataTableProps['columns']
+        data: DataTableProps['data']
+      }): VNode
+
+      renderPaginationBar(params: {
+        pageIndex: number
+        pageSize: number
+        totalItemCount: number
+      }): VNode
     }
   ) {}
 
@@ -36,7 +49,19 @@ class DataExplorerCore {
   }
 
   render() {
-    return html`<div>DataExplorer</div>`
+    return html`
+      <div>
+        <div>
+          ${this.renderHeader()}
+        </div>
+        <div>
+          ${this.renderBody()}
+        </div>
+        <div>
+          ${this.renderFooter()}
+        </div>
+      </div>
+    `
   }
 
   // --- private methods ---------------------------------------------
@@ -52,7 +77,10 @@ class DataExplorerCore {
   private renderBody() {
     return html`
       <div>
-        ${this.config.renderDataTable()}
+        ${this.config.renderDataTable({
+          columns: this.props.columns,
+          data: this.data,
+        })}
       </div>
     `
   }
@@ -60,7 +88,11 @@ class DataExplorerCore {
   renderFooter() {
     return html`
       <div>
-        ${this.config.renderPaginationBar()}
+        ${this.config.renderPaginationBar({
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize,
+          totalItemCount: this.totalItemCount,
+        })}
       </div>
     `
   }

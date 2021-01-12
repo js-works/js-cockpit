@@ -91,8 +91,14 @@ class DataTableCore {
   ) {}
 
   refresh() {
+    let ignoreChangeEvents = false
+
     const model = this.buildViewModel({
       onToggleSelectAll: () => {
+        if (ignoreChangeEvents) {
+          return
+        }
+
         const selectAll = this.selectedRows.size !== this.props.data!.length
 
         if (!selectAll) {
@@ -102,6 +108,8 @@ class DataTableCore {
         const trs = this.element.querySelectorAll(
           `table:first-of-type > tbody > tr`
         )
+
+        ignoreChangeEvents = true
 
         trs.forEach((tr, rowIdx) => {
           if (selectAll) {
@@ -113,9 +121,15 @@ class DataTableCore {
             ;(tr.firstChild!.firstChild as any).checked = false
           }
         })
+
+        ignoreChangeEvents = false
       },
 
       onToggleSelectRow: (rowIdx: number) => {
+        if (ignoreChangeEvents) {
+          return
+        }
+
         const selectAllCheckbox = this.element.querySelector(
           'table:first-of-type > thead > tr:first-child > th:first-child > :first-child'
         ) as HTMLInputElement
@@ -132,8 +146,12 @@ class DataTableCore {
           tr.classList.add('x-dataTable-tr--selected')
         }
 
+        ignoreChangeEvents = true
+
         selectAllCheckbox.checked =
           this.selectedRows.size === this.props.data!.length
+
+        ignoreChangeEvents = false
       },
     })
 
@@ -373,8 +391,12 @@ function renderTableBody(model: DataTableViewModel): Node {
       const column = model.columns[colIdx]
       const field = column.field
       const content = field ? h('div', null, (rec as any)[field]) : h('span') // TODO
+
       const className =
-        field && model.sortField === field ? 'x-dataTable-td--sorted' : null
+        field && model.sortField === field
+          ? 'x-dataTable-td x-dataTable-td--sorted'
+          : 'x-dataTable-td'
+
       const cell = h('td', { className }, content)
       cells.push(cell)
     }
