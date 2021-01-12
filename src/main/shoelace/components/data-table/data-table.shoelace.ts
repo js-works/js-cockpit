@@ -29,7 +29,12 @@ export const DataTable = define('sx-data-table', DataTableProps, (p) => {
       sortedAsc: createSortedAscIcon(),
       sortedDesc: createSortedDescIcon(),
       sortable: createSortableIcon(),
-      checkboxTick: createCheckboxTickIcon(),
+    },
+
+    renderCheckbox: (checked: boolean, onToggle: () => void) => {
+      const checkbox = h('sl-checkbox')
+      checkbox.addEventListener('sl-change', () => onToggle())
+      return checkbox
     },
   })
 
@@ -90,24 +95,6 @@ function createSortableIcon() {
     </svg>  
   `
 
-  return ret
-}
-
-function createCheckboxTickIcon() {
-  const ret = h('div', { className: 'x-dataTable-checkboxTick' })
-
-  ret.innerHTML = `
-    <svg viewBox="0 0 16 16">
-      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
-        <g stroke="currentColor" stroke-width="2">
-          <g transform="translate(3.428571, 3.428571)">
-            <path d="M0,5.71428571 L3.42857143,9.14285714"></path>
-            <path d="M9.14285714,0 L3.42857143,9.14285714"></path>
-          </g>
-        </g>
-      </g>
-    </svg>
-  `
   return ret
 }
 

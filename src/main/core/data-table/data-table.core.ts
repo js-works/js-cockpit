@@ -13,7 +13,6 @@ type Icons = {
   sortedAsc: Element
   sortedDesc: Element
   sortable?: Element
-  checkboxTick?: Element
 }
 
 type DataTableParams = {
@@ -63,6 +62,7 @@ type DataTableViewModel = {
   onToggleSelectAll: () => void
   onToggleSelectRow: (rowIdx: number) => void
   icons: Icons
+  renderCheckbox: ((checked: boolean, onChange: () => void) => Element) | null
 }
 
 // === DataTableCore =================================================
@@ -86,6 +86,7 @@ class DataTableCore {
       onToggleSelectAll: () => void
       onToggleSelectRow: (rowIdx: number) => void
       icons: Icons
+      renderCheckbox: (checked: boolean, onChange: () => void) => Element
     }
   ) {}
 
@@ -106,17 +107,17 @@ class DataTableCore {
           if (selectAll) {
             this.selectedRows.add(rowIdx)
             tr.classList.add('x-dataTable-tr--selected')
-            ;(tr.firstChild?.firstChild?.firstChild as any).checked = true
+            ;(tr.firstChild!.firstChild as any).checked = true
           } else {
             tr.classList.remove('x-dataTable-tr--selected')
-            ;(tr.firstChild?.firstChild?.firstChild as any).checked = false
+            ;(tr.firstChild!.firstChild as any).checked = false
           }
         })
       },
 
       onToggleSelectRow: (rowIdx: number) => {
         const selectAllCheckbox = this.element.querySelector(
-          'table:first-of-type > thead > tr:first-child > th:first-child input'
+          'table:first-of-type > thead > tr:first-child > th:first-child > :first-child'
         ) as HTMLInputElement
 
         const tr = this.element.querySelector(
@@ -189,6 +190,7 @@ class DataTableCore {
       onToggleSelectAll: params.onToggleSelectAll,
       onToggleSelectRow: params.onToggleSelectRow,
       icons: this.config.icons,
+      renderCheckbox: this.config.renderCheckbox || null,
     }
 
     function addHeaderCells(
@@ -384,28 +386,35 @@ function renderTableBody(model: DataTableViewModel): Node {
 }
 
 function renderSelectAllCheckbox(model: DataTableViewModel): Node {
-  const checkbox = h('input', {
-    type: 'checkbox',
-    className: 'x-dataTable-checkbox x-dataTable-selectAllCheckbox',
-    checked: model.selectedRows.size === model.data.length,
-    onclick: () => model.onToggleSelectAll(),
-  })
+  const checked = model.selectedRows.size === model.data.length
 
-  const icon = model.icons.checkboxTick?.cloneNode(true)
-  return h('div', { style: 'position: relative' }, checkbox, icon)
+  const checkbox = model.renderCheckbox
+    ? model.renderCheckbox(checked, model.onToggleSelectAll)
+    : h('input', {
+        type: 'checkbox',
+        checked,
+        onclick: model.onToggleSelectAll,
+      })
+
+  checkbox.className = 'x-dataTable-checkbox x-dataTable-selectAllCheckbox'
+
+  return checkbox
 }
 
 function renderSelectRowCheckbox(
   model: DataTableViewModel,
   rowIdx: number
 ): Node {
-  const checkbox = h('input', {
-    type: 'checkbox',
-    className: 'x-dataTable-checkbox x-dataTable-selectRowCheckbox',
-    onclick: () => model.onToggleSelectRow(rowIdx),
-  })
+  const checked = model.selectedRows.has(rowIdx)
 
-  const icon = model.icons.checkboxTick?.cloneNode(true)
+  const checkbox = model.renderCheckbox
+    ? model.renderCheckbox(checked, () => model.onToggleSelectRow(rowIdx))
+    : h('input', {
+        type: 'checkbox',
+        checked,
+        onclick: () => model.onToggleSelectRow(rowIdx),
+      })
 
-  return h('div', null, checkbox, icon)
+  checkbox.className = 'x-dataTable-checkbox x-dataTable-selectRowCheckbox'
+  return checkbox
 }
