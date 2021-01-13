@@ -6,6 +6,6 @@
 
 .x-datePicker-monthView th,
 .x-datePicker-monthView td {
-  font-size: var(--sl-font-size-x-small);
+  font-size: var(--sl-font-size-small);
   font-weight: normal;
 }

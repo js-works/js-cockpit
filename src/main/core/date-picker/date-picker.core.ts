@@ -33,6 +33,12 @@ const MONTHS = [
 
 // === types =========================================================
 
+type DatePickerConfig = {
+  getNameOfMonth: (month: number) => string
+  getShortNameOfMonth: (month: number) => string
+  getShortNameOfWeekday: (day: number) => string
+}
+
 type DatePickerParams = {
   value: Date
   firstDayOfWeek: number
@@ -52,19 +58,25 @@ class DatePickerCore {
     disabled: false,
   }
 
-  private monthView = new MonthView()
-  private yearView = new YearView()
-  private decadeView = new DecadeView()
+  private monthView: MonthView
+  private yearView: YearView
+  private decadeView: DecadeView
 
-  private container = h(
-    'div',
-    { className: 'x-datePicker' },
-    this.monthView.getElement(),
-    this.yearView.getElement(),
-    this.decadeView.getElement()
-  )
+  private container: HTMLElement
 
-  constructor() {
+  constructor(private config: DatePickerConfig) {
+    this.monthView = new MonthView(config)
+    this.yearView = new YearView(config)
+    this.decadeView = new DecadeView(config)
+
+    this.container = h(
+      'div',
+      { className: 'x-datePicker' },
+      this.monthView.getElement(),
+      this.yearView.getElement(),
+      this.decadeView.getElement()
+    )
+
     this.showMonthView()
   }
 
@@ -89,6 +101,7 @@ class DatePickerCore {
       firstDayOfWeek: this.params.firstDayOfWeek,
       selectedDate: this.params.value,
       showWeekNumbers: this.params.showWeekNumbers,
+      datePickerConfig: this.config,
     })
 
     this.yearView.setVisible(false)
@@ -112,10 +125,19 @@ class DatePickerCore {
 // === views =========================================================
 
 abstract class View {
+  private config: DatePickerConfig
   private container = h('div')
+
+  constructor(config: DatePickerConfig) {
+    this.config = config
+  }
 
   setVisible(value: boolean) {
     this.container.style.visibility = value ? 'visible' : 'hidden'
+  }
+
+  getConfig() {
+    return this.config
   }
 
   getElement() {
@@ -124,8 +146,8 @@ abstract class View {
 }
 
 class MonthView extends View {
-  constructor() {
-    super()
+  constructor(config: DatePickerConfig) {
+    super(config)
 
     const headRow: Node[] = []
     const rows: Node[] = []
@@ -157,7 +179,7 @@ class MonthView extends View {
     const content = h(
       'div',
       { className: 'x-datePicker-monthView' },
-      h('div', null, 'January 2021'),
+      h('div', null, 'November'),
       table
     )
 
@@ -170,20 +192,26 @@ class MonthView extends View {
     firstDayOfWeek,
     showWeekNumbers,
     selectedDate,
+    datePickerConfig,
   }: {
     year: number
     month: number
     showWeekNumbers: boolean
     firstDayOfWeek: number
     selectedDate: Date | null
+    datePickerConfig: DatePickerConfig
   }) {
-    const table = this.getElement().firstChild!.childNodes[1]
+    const config = this.getConfig()
+    const base = this.getElement()
+    const monthYear = base.firstChild!.firstChild! as Element
+    const table = base.firstChild!.childNodes[1]
     const thead = table.firstChild!
     const theadRow = thead.firstChild!
     const tbody = table!.childNodes[1]
-
     const firstDayOfMonth = getFirstDayOfMonth(year, month)
     const lengthOfPrevMonth = getLengthOfPrevMonth(year, month)
+
+    monthYear.innerHTML = `${config.getNameOfMonth(month)} ${year}`
 
     let counter = lengthOfPrevMonth - firstDayOfMonth.getDay() + 1
 
