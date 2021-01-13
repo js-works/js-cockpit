@@ -6,7 +6,7 @@
 
 .x-datePicker-monthViewTable th,
 .x-datePicker-monthViewTable td {
-  font-size: var(--sl-font-size-x-small);
+  font-size: var(--sl-font-size-small);
 }
 
 .x-datePicker-navi > button:first-child {

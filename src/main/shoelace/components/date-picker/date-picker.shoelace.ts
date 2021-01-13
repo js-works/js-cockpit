@@ -1,8 +1,9 @@
-import { attr, define, h } from 'js-elements'
+import { attr, define, html } from 'js-elements'
 import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
 import { DatePickerCore } from '../../../core/date-picker/date-picker.core'
 import defaultTheme from '../../../shoelace/themes/default-theme'
+import { h } from '../../../utils/dom'
 
 // @ts-ignore
 import datePickerCustomStyles from './date-picker.shoelace.css'
@@ -40,8 +41,13 @@ class DatePickerProps {
 define('sx-date-picker', DatePickerProps, (p) => {
   const core = new DatePickerCore({
     getNameOfMonth: (month) => MONTHS[month],
-    getShortNameOfMonth: (month) => MONTHS[month].substr(0, 2),
+    getShortNameOfMonth: (month) => MONTHS[month].substr(0, 3),
     getShortNameOfWeekday: (weekday) => WEEKDAYS_SHORT[weekday],
+
+    icons: {
+      goToNext: createGoToNextIcon(),
+      goToPrevious: createGoToPreviousIcon(),
+    },
   })
 
   const containerRef = createRef<Element>()
@@ -50,5 +56,35 @@ define('sx-date-picker', DatePickerProps, (p) => {
   useOnMount(() => void containerRef.current!.appendChild(core.getElement()))
   useEffect(() => core.setParams(p))
 
-  return () => h('div', { ref: containerRef })
+  return () => html`<div ref=${containerRef}></div>`
 })
+
+function createGoToNextIcon() {
+  const ret = h('div')
+
+  ret.innerHTML = `
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,40 32,56 44,40 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg>
+  `
+
+  return ret
+}
+
+function createGoToPreviousIcon() {
+  const ret = h('div')
+
+  ret.innerHTML = `
+    <svg width="20px" height="20px" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-miterlimit="10">
+        <polyline stroke-linejoin="bevel" points="20,32 32,16 44,32 "/>
+        <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+      </g>
+    </svg> 
+  `
+
+  return ret
+}

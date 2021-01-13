@@ -1,39 +1,70 @@
 .x-datePicker {
-  position: relative;
   display: inline-block;
+  xwidth: 18em;
+  xheight: 18em;
+  border: 1px solid red;
+}
+
+.x-datePicker-view {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100%;
+}
+
+.x-datePicker-viewBody {
+  height: 100%;
+}
+
+.x-datePicker-viewBody table {
+  height: 100%;
 }
 
 .x-datePicker-navi {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 3px 5px;
+  margin: 0 0 8px 0;
+}
+
+.x-datePicker-navi > button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
 }
 
 .x-datePicker-navi > button:first-child {
   width: 100%;
-  cursor: pointer;
-  background: none;
-  border: none;
   text-align: left;
-  padding: 0 10px;
-  outline: none;
   font-weight: bold;
 }
 
-.x-datePicker-monthViewTable {
+.x-datePicker-tableOfDays {
+  width: 100%;
   border-collapse: collapse;
 }
 
-.x-datePicker-monthViewTable td,
-.x-datePicker-monthViewTable th {
+.x-datePicker-tableOfDays td,
+.x-datePicker-tableOfDays th {
   font-weight: normal;
   text-align: center;
-  padding: 5px;
+  padding: 6px;
 }
 
 .x-datePicker-weekNumber {
   font-size: 70% !important;
   font-style: italic;
   padding-right: 8px !important;
+}
+
+.x-datePicker .x-datePicker-tableOfMonths {
+  height: 10em;
+}
+
+.x-datePicker-tableOfMonths > tbody > tr > td {
+  text-align: center;
+  vertical-align: middle;
 }

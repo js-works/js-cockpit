@@ -37,6 +37,11 @@ type DatePickerConfig = {
   getNameOfMonth: (month: number) => string
   getShortNameOfMonth: (month: number) => string
   getShortNameOfWeekday: (day: number) => string
+
+  icons: {
+    goToNext: Element
+    goToPrevious: Element
+  }
 }
 
 type DatePickerParams = {
@@ -110,6 +115,10 @@ class DatePickerCore {
   }
 
   private showYearView() {
+    this.yearView.update({
+      year: this.params.value.getFullYear(),
+    })
+
     this.decadeView.setVisible(false)
     this.monthView.setVisible(false)
     this.yearView.setVisible(true)
@@ -136,16 +145,20 @@ abstract class View {
     this.navi = h(
       'div',
       { className: 'x-datePicker-navi' },
-      h('button', null, 'xxx'),
-      h('button', null, '+'),
-      h('button', null, '-')
+      h('button'),
+      h('button', null, config.icons.goToPrevious.cloneNode(true)),
+      h('button', null, config.icons.goToNext.cloneNode(true))
     )
 
     this.container.appendChild(this.navi)
   }
 
+  setTitle(value: string) {
+    ;(this.navi.firstChild! as any).innerHTML = value
+  }
+
   setVisible(value: boolean) {
-    this.container.style.display = value ? 'block' : 'none'
+    this.container.style.display = value ? 'flex' : 'none'
   }
 
   getConfig() {
@@ -183,12 +196,14 @@ class MonthView extends View {
 
     const table = h(
       'table',
-      { className: 'x-datePicker-monthViewTable' },
+      { className: 'x-datePicker-tableOfDays' },
       h('thead', null, h('tr', null, headRow)),
       h('tbody', null, rows)
     )
 
-    this.getElement().appendChild(table)
+    const content = h('div', { className: 'x-datePicker-viewBody' }, table)
+
+    this.getElement().appendChild(content)
   }
 
   update({
@@ -207,12 +222,14 @@ class MonthView extends View {
     datePickerConfig: DatePickerConfig
   }) {
     const config = this.getConfig()
-    const table = this.getElement().childNodes[1]
+    const table = this.getElement().querySelector('.x-datePicker-tableOfDays')!
     const thead = table.firstChild!
     const theadRow = thead.firstChild!
     const tbody = table!.childNodes[1]
     const firstDayOfMonth = getFirstDayOfMonth(year, month)
     const lengthOfPrevMonth = getLengthOfPrevMonth(year, month)
+
+    this.setTitle(config.getNameOfMonth(month) + ' ' + year)
 
     let counter = lengthOfPrevMonth - firstDayOfMonth.getDay() + 1
 
@@ -244,6 +261,38 @@ class MonthView extends View {
   }
 }
 
-class YearView extends View {}
+class YearView extends View {
+  constructor(config: DatePickerConfig) {
+    super(config)
+
+    const rows: Element[] = []
+
+    for (let rowIdx = 0; rowIdx < 3; ++rowIdx) {
+      const cells: Element[] = []
+
+      for (let colIdx = 0; colIdx < 4; ++colIdx) {
+        cells.push(h('td', null, ''))
+      }
+
+      rows.push(h('tr', null, cells))
+    }
+
+    const tbody = h('tbody', null, rows)
+    const table = h('table', { className: 'x-datePicker-tableOfMonths' }, tbody)
+
+    this.getElement().appendChild(table)
+  }
+
+  update({ year }: { year: number }) {
+    const config = this.getConfig()
+    const cells = this.getElement().querySelectorAll('table > tbody > tr > td')
+
+    cells.forEach((cell, idx) => {
+      cell.innerHTML = config.getShortNameOfMonth(idx)
+    })
+    console.log(cells)
+    this.setTitle(year.toString())
+  }
+}
 
 class DecadeView extends View {}
