@@ -126,14 +126,26 @@ class DatePickerCore {
 
 abstract class View {
   private config: DatePickerConfig
-  private container = h('div')
+  private container: HTMLElement
+  private navi: Element
 
   constructor(config: DatePickerConfig) {
     this.config = config
+    this.container = h('div', { className: 'x-datePicker-view' })
+
+    this.navi = h(
+      'div',
+      { className: 'x-datePicker-navi' },
+      h('button', null, 'xxx'),
+      h('button', null, '+'),
+      h('button', null, '-')
+    )
+
+    this.container.appendChild(this.navi)
   }
 
   setVisible(value: boolean) {
-    this.container.style.visibility = value ? 'visible' : 'hidden'
+    this.container.style.display = value ? 'block' : 'none'
   }
 
   getConfig() {
@@ -156,8 +168,8 @@ class MonthView extends View {
       headRow.push(h('th'))
     }
 
-    for (let rowIdx = 0; rowIdx < 7; ++rowIdx) {
-      const cols: Node[] = []
+    for (let rowIdx = 0; rowIdx < 6; ++rowIdx) {
+      const cols: Element[] = []
       const rowClass = rowIdx === 0 ? 'x-datePicker-weekDays' : null
 
       for (let colIdx = 0; colIdx < 8; ++colIdx) {
@@ -171,19 +183,12 @@ class MonthView extends View {
 
     const table = h(
       'table',
-      null,
+      { className: 'x-datePicker-monthViewTable' },
       h('thead', null, h('tr', null, headRow)),
       h('tbody', null, rows)
     )
 
-    const content = h(
-      'div',
-      { className: 'x-datePicker-monthView' },
-      h('div', null, 'November'),
-      table
-    )
-
-    this.getElement().appendChild(content)
+    this.getElement().appendChild(table)
   }
 
   update({
@@ -202,16 +207,12 @@ class MonthView extends View {
     datePickerConfig: DatePickerConfig
   }) {
     const config = this.getConfig()
-    const base = this.getElement()
-    const monthYear = base.firstChild!.firstChild! as Element
-    const table = base.firstChild!.childNodes[1]
+    const table = this.getElement().childNodes[1]
     const thead = table.firstChild!
     const theadRow = thead.firstChild!
     const tbody = table!.childNodes[1]
     const firstDayOfMonth = getFirstDayOfMonth(year, month)
     const lengthOfPrevMonth = getLengthOfPrevMonth(year, month)
-
-    monthYear.innerHTML = `${config.getNameOfMonth(month)} ${year}`
 
     let counter = lengthOfPrevMonth - firstDayOfMonth.getDay() + 1
 

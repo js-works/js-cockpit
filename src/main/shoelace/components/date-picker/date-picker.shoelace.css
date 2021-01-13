@@ -4,8 +4,18 @@
   font-size: var(--sl-font-size-medium);
 }
 
-.x-datePicker-monthView th,
-.x-datePicker-monthView td {
-  font-size: var(--sl-font-size-small);
-  font-weight: normal;
+.x-datePicker-monthViewTable th,
+.x-datePicker-monthViewTable td {
+  font-size: var(--sl-font-size-x-small);
+}
+
+.x-datePicker-navi > button:first-child {
+  font-size: var(--sl-font-size-medium);
+}
+
+.x-datePicker-weekNumber {
+  border: 0 solid var(--sl-color-gray-100);
+  border-right-width: 1px;
+  font-size: 70% !important;
+  font-style: italic;
 }

@@ -1,6 +1,39 @@
-.x-datePicker-monthView th,
-.x-datePicker-monthView td {
+.x-datePicker {
+  position: relative;
+  display: inline-block;
+}
+
+.x-datePicker-navi {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 3px 5px;
+}
+
+.x-datePicker-navi > button:first-child {
+  width: 100%;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0 10px;
+  outline: none;
+  font-weight: bold;
+}
+
+.x-datePicker-monthViewTable {
+  border-collapse: collapse;
+}
+
+.x-datePicker-monthViewTable td,
+.x-datePicker-monthViewTable th {
+  font-weight: normal;
   text-align: center;
-  vertical-align: middle;
-  padding: 6px;
+  padding: 5px;
+}
+
+.x-datePicker-weekNumber {
+  font-size: 70% !important;
+  font-style: italic;
+  padding-right: 8px !important;
 }
