@@ -1,12 +1,9 @@
 .x-datePicker {
   display: inline-block;
-  xwidth: 18em;
-  xheight: 18em;
-  border: 1px solid red;
+  position: relative;
 }
 
 .x-datePicker-view {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -40,6 +37,14 @@
   width: 100%;
   text-align: left;
   font-weight: bold;
+}
+
+.x-datePicker-view:not(.x-datePicker-view--main) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .x-datePicker-tableOfDays {

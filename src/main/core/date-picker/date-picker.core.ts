@@ -83,6 +83,7 @@ class DatePickerCore {
     )
 
     this.showMonthView()
+    //this.showDecadeView()
   }
 
   setParams(params: Partial<DatePickerParams>) {
@@ -137,10 +138,16 @@ abstract class View {
   private config: DatePickerConfig
   private container: HTMLElement
   private navi: Element
+  private isMain: boolean
 
-  constructor(config: DatePickerConfig) {
+  constructor(config: DatePickerConfig, isMain: boolean = false) {
     this.config = config
+    this.isMain = isMain
     this.container = h('div', { className: 'x-datePicker-view' })
+
+    if (isMain) {
+      this.container.className += ' x-datePicker-view--main'
+    }
 
     this.navi = h(
       'div',
@@ -158,7 +165,11 @@ abstract class View {
   }
 
   setVisible(value: boolean) {
-    this.container.style.display = value ? 'flex' : 'none'
+    if (this.isMain) {
+      this.container.style.visibility = value ? 'visible' : 'hidden'
+    } else {
+      this.container.style.display = value ? 'flex' : 'none'
+    }
   }
 
   getConfig() {
@@ -172,7 +183,7 @@ abstract class View {
 
 class MonthView extends View {
   constructor(config: DatePickerConfig) {
-    super(config)
+    super(config, true)
 
     const headRow: Node[] = []
     const rows: Node[] = []
