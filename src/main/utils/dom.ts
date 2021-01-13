@@ -12,15 +12,15 @@ export function h(
   tagName: string,
   props?: Record<string, any> | null,
   ...children: Renderable[]
-) {
+): HTMLElement {
   const ret = document.createElement(tagName)
 
-  if (props) {
-    Object.assign(ret, props)
-  }
-
-  if (ret.className === null) {
-    ret.className = ''
+  for (let propName in props) {
+    if (props.hasOwnProperty(propName)) {
+      if (propName !== 'className' || props.className !== null) {
+        ;(ret as any)[propName] = props[propName]
+      }
+    }
   }
 
   addNodes(ret, children)

@@ -1,11 +1,7 @@
 const MONTH_LENGHTS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const MONTH_LENGTHS_LEAP_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-export function isLeapYear(year: number | Date) {
-  if (year instanceof Date) {
-    year = year.getFullYear()
-  }
-
+export function isLeapYear(year: number) {
   if (year <= 0) {
     throw new TypeError('Expecting year greater than 0')
   }
@@ -21,22 +17,21 @@ export function getYesterday(date: Date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, date.getDate() - 1)
 }
 
-export function getFirstDayOfMonth(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), 1)
+export function getFirstDayOfMonth(year: number, month: number) {
+  return new Date(year, month, 1)
 }
 
-export function getLengthOfMonth(date: Date) {
-  const monthLengths = isLeapYear(date)
+export function getLengthOfMonth(year: number, month: number) {
+  const monthLengths = isLeapYear(year)
     ? MONTH_LENGTHS_LEAP_YEAR
     : MONTH_LENGHTS
 
-  return monthLengths[date.getMonth()]
+  return monthLengths[month]
 }
 
-export function getLengthOfPrevMonth(date: Date) {
-  const lastMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1)
-
-  return getLengthOfMonth(lastMonth)
+export function getLengthOfPrevMonth(year: number, month: number) {
+  const lastMonth = new Date(year, month - 1, 1)
+  return getLengthOfMonth(lastMonth.getFullYear(), lastMonth.getMonth())
 }
 
 export function getWeekOfYear(date: Date, firstDayInWeek: number) {

@@ -17,12 +17,27 @@ export { DatePickerCore }
 
 const DAYS_OF_THE_WEEK = ['So', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Aug',
+  'Sep',
+  'Okt',
+  'Nov',
+  'Dez',
+]
+
 // === types =========================================================
 
 type DatePickerParams = {
-  date: Date
+  value: Date
   firstDayOfWeek: number
   showWeekNumbers: boolean
+  disabled: boolean
 }
 
 // === DatePickerCore ================================================
@@ -31,15 +46,26 @@ class DatePickerCore {
   static coreStyles: string = datePickerCoreStyles
 
   private params: DatePickerParams = {
-    date: new Date(1970, 1, 1),
+    value: new Date(1970, 1, 1),
     firstDayOfWeek: 0,
     showWeekNumbers: true,
+    disabled: false,
   }
 
-  private calendar: Element = h('div')
+  private monthView = new MonthView()
+  private yearView = new YearView()
+  private decadeView = new DecadeView()
+
+  private container = h(
+    'div',
+    { className: 'x-datePicker' },
+    this.monthView.getElement(),
+    this.yearView.getElement(),
+    this.decadeView.getElement()
+  )
 
   constructor() {
-    this.initCalendar()
+    this.showMonthView()
   }
 
   setParams(params: Partial<DatePickerParams>) {
@@ -51,13 +77,56 @@ class DatePickerCore {
   }
 
   getElement() {
-    return this.calendar
+    return this.container
   }
 
   // --- private methods ---------------------------------------------
 
-  initCalendar(): void {
-    const { date, firstDayOfWeek, showWeekNumbers } = this.params
+  private showMonthView() {
+    this.monthView.update({
+      month: this.params.value.getMonth(),
+      year: this.params.value.getFullYear(),
+      firstDayOfWeek: this.params.firstDayOfWeek,
+      selectedDate: this.params.value,
+      showWeekNumbers: this.params.showWeekNumbers,
+    })
+
+    this.yearView.setVisible(false)
+    this.decadeView.setVisible(false)
+    this.monthView.setVisible(true)
+  }
+
+  private showYearView() {
+    this.decadeView.setVisible(false)
+    this.monthView.setVisible(false)
+    this.yearView.setVisible(true)
+  }
+
+  private showDecadeView() {
+    this.monthView.setVisible(false)
+    this.yearView.setVisible(false)
+    this.decadeView.setVisible(true)
+  }
+}
+
+// === views =========================================================
+
+abstract class View {
+  private container = h('div')
+
+  setVisible(value: boolean) {
+    this.container.style.visibility = value ? 'visible' : 'hidden'
+  }
+
+  getElement() {
+    return this.container
+  }
+}
+
+class MonthView extends View {
+  constructor() {
+    super()
+
     const headRow: Node[] = []
     const rows: Node[] = []
 
@@ -85,28 +154,40 @@ class DatePickerCore {
       h('tbody', null, rows)
     )
 
-    this.calendar.innerHTML = '' // not really necessary here, anyway....
-    this.calendar.appendChild(table)
+    const content = h(
+      'div',
+      { className: 'x-datePicker-monthView' },
+      h('div', null, 'January 2021'),
+      table
+    )
 
-    this.updateCalendar()
+    this.getElement().appendChild(content)
   }
 
-  updateCalendar(): void {
-    const date = new Date() //this.params.date // TODO
-    const year = date.getFullYear()
-    const month = date.getMonth() // 0 - 11
-    const dayInMonth = date.getDate() // 1 - 31
-    const dayInWeek = date.getDay() // 0 - 6, 0 means sunday
-    const thead = this.getElement().firstChild!.childNodes[0]
+  update({
+    year,
+    month,
+    firstDayOfWeek,
+    showWeekNumbers,
+    selectedDate,
+  }: {
+    year: number
+    month: number
+    showWeekNumbers: boolean
+    firstDayOfWeek: number
+    selectedDate: Date | null
+  }) {
+    const table = this.getElement().firstChild!.childNodes[1]
+    const thead = table.firstChild!
     const theadRow = thead.firstChild!
-    const tbody = this.getElement().firstChild!.childNodes[1]
+    const tbody = table!.childNodes[1]
 
-    const firstDayOfMonth = getFirstDayOfMonth(date)
-    const lengthOfPrevMonth = getLengthOfPrevMonth(date)
+    const firstDayOfMonth = getFirstDayOfMonth(year, month)
+    const lengthOfPrevMonth = getLengthOfPrevMonth(year, month)
 
     let counter = lengthOfPrevMonth - firstDayOfMonth.getDay() + 1
 
-    ;(theadRow.firstChild! as Element).innerHTML = 'CW'
+    ;(theadRow.firstChild! as Element).innerHTML = '' // TODO?
 
     for (let colIdx = 1; colIdx < 8; ++colIdx) {
       ;(theadRow.childNodes[colIdx] as Element).innerHTML =
@@ -117,7 +198,7 @@ class DatePickerCore {
       for (let colIdx = 0; colIdx < 8; ++colIdx) {
         if (colIdx === 0) {
           const weekCell = tbody.childNodes[rowIdx].firstChild! as Element
-          weekCell.innerHTML = 'x'
+          weekCell.innerHTML = '12' // TODO!!!!!!!
         }
 
         if (colIdx > 0) {
@@ -134,4 +215,6 @@ class DatePickerCore {
   }
 }
 
-// === helper functions ==============================================
+class YearView extends View {}
+
+class DecadeView extends View {}

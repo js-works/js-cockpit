@@ -1,0 +1,11 @@
+.x-datePicker {
+  background-color: var(--sl-color-white);
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+}
+
+.x-datePicker-monthView th,
+.x-datePicker-monthView td {
+  font-size: var(--sl-font-size-x-small);
+  font-weight: normal;
+}
