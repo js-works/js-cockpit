@@ -16,7 +16,7 @@
 }
 
 .x-datePicker-viewBody table {
-  height: 100%;
+  width: 100%;
 }
 
 .x-datePicker-navi {
@@ -65,11 +65,9 @@
   padding-right: 8px !important;
 }
 
-.x-datePicker .x-datePicker-tableOfMonths {
-  height: 10em;
-}
-
-.x-datePicker-tableOfMonths > tbody > tr > td {
+.x-datePicker-tableOfMonths > tbody > tr > td,
+.x-datePicker-tableOfYears > tbody > tr > td {
   text-align: center;
   vertical-align: middle;
+  padding: 10px 5px;
 }

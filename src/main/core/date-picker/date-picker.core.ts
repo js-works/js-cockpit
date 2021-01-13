@@ -83,7 +83,7 @@ class DatePickerCore {
     )
 
     this.showMonthView()
-    //this.showDecadeView()
+    this.showDecadeView()
   }
 
   setParams(params: Partial<DatePickerParams>) {
@@ -306,4 +306,32 @@ class YearView extends View {
   }
 }
 
-class DecadeView extends View {}
+class DecadeView extends View {
+  constructor(config: DatePickerConfig) {
+    super(config)
+
+    const startYear = 2020
+    this.setTitle(`${startYear} - ${startYear + 12}`)
+
+    const rows: Element[] = []
+
+    for (let rowIdx = 0; rowIdx < 3; ++rowIdx) {
+      const cells: Element[] = []
+
+      for (let colIdx = 0; colIdx < 4; ++colIdx) {
+        cells.push(h('td', null, startYear + rowIdx * 4 + colIdx + 1))
+      }
+
+      rows.push(h('tr', null, cells))
+    }
+
+    const table = h(
+      'table',
+      { className: 'x-datePicker-tableOfYears' },
+      h('tbody', null, rows)
+    )
+    const content = h('div', { className: 'x-datePicker-viewBody' }, table)
+
+    this.getElement().appendChild(content)
+  }
+}
