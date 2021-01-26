@@ -1,9 +1,9 @@
-.x-datePicker {
+.jsc-datePicker {
   display: inline-block;
   position: relative;
 }
 
-.x-datePicker-view {
+.jsc-datePicker-view {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -11,35 +11,35 @@
   height: 100%;
 }
 
-.x-datePicker-viewBody {
+.jsc-datePicker-viewBody {
   height: 100%;
 }
 
-.x-datePicker-viewBody table {
+.jsc-datePicker-viewBody table {
   width: 100%;
 }
 
-.x-datePicker-navi {
+.jsc-datePicker-navi {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 0 0 8px 0;
 }
 
-.x-datePicker-navi > button {
+.jsc-datePicker-navi > button {
   cursor: pointer;
   background: none;
   border: none;
   outline: none;
 }
 
-.x-datePicker-navi > button:first-child {
+.jsc-datePicker-navi > button:first-child {
   width: 100%;
   text-align: left;
   font-weight: bold;
 }
 
-.x-datePicker-view:not(.x-datePicker-view--main) {
+.jsc-datePicker-view:not(.jsc-datePicker-view--main) {
   position: absolute;
   top: 0;
   left: 0;
@@ -47,26 +47,24 @@
   height: 100%;
 }
 
-.x-datePicker-tableOfDays {
+.jsc-datePicker-tableOfDays {
   width: 100%;
   border-collapse: collapse;
 }
 
-.x-datePicker-tableOfDays td,
-.x-datePicker-tableOfDays th {
+.jsc-datePicker-tableOfDays td,
+.jsc-datePicker-tableOfDays th {
   font-weight: normal;
   text-align: center;
   padding: 6px;
 }
 
-.x-datePicker-weekNumber {
-  font-size: 70% !important;
-  font-style: italic;
+.jsc-datePicker-weekNumber {
   padding-right: 8px !important;
 }
 
-.x-datePicker-tableOfMonths > tbody > tr > td,
-.x-datePicker-tableOfYears > tbody > tr > td {
+.jsc-datePicker-tableOfMonths > tbody > tr > td,
+.jsc-datePicker-tableOfYears > tbody > tr > td {
   text-align: center;
   vertical-align: middle;
   padding: 10px 5px;

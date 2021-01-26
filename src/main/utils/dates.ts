@@ -34,9 +34,20 @@ export function getLengthOfPrevMonth(year: number, month: number) {
   return getLengthOfMonth(lastMonth.getFullYear(), lastMonth.getMonth())
 }
 
-export function getWeekOfYear(date: Date, firstDayInWeek: number) {
-  const firstDayInYear = new Date(date.getFullYear(), 0, 1)
-  const diff = date.getTime() - firstDayInYear.getTime()
+export function getWeekOfYear(date: Date, firstDayInWeek: number): number {
+  //const firstDayInYear = new Date(date.getFullYear(), 0, 1)
+  //const diff = date.getTime() - firstDayInYear.getTime()
 
-  return Math.ceil((diff / 7) * 24 * 60 * 60)
+  //return Math.ceil((diff / 7) * 24 * 60 * 60)
+  var oneJan = new Date(date.getFullYear(), 0, 1)
+
+  // calculating number of days in given year before the given date
+  var numberOfDays = Math.floor(
+    ((date as any) - (oneJan as any)) / (24 * 60 * 60 * 1000)
+  )
+
+  // adding 1 since to current date and returns value starting from 0
+  var result = Math.ceil((date.getDay() + 1 + numberOfDays) / 7)
+
+  return result
 }

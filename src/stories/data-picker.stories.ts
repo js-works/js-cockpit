@@ -5,4 +5,4 @@ export default {
   title: 'date-picker',
 }
 
-export const example_1 = () => h('sx-date-picker')
+export const example_1 = () => h('jsc-date-picker')

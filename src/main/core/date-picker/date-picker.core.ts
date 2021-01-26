@@ -76,14 +76,14 @@ class DatePickerCore {
 
     this.container = h(
       'div',
-      { className: 'x-datePicker' },
+      { className: 'jsc-datePicker' },
       this.monthView.getElement(),
       this.yearView.getElement(),
       this.decadeView.getElement()
     )
 
     this.showMonthView()
-    this.showDecadeView()
+    //this.showDecadeView()
   }
 
   setParams(params: Partial<DatePickerParams>) {
@@ -143,15 +143,15 @@ abstract class View {
   constructor(config: DatePickerConfig, isMain: boolean = false) {
     this.config = config
     this.isMain = isMain
-    this.container = h('div', { className: 'x-datePicker-view' })
+    this.container = h('div', { className: 'jsc-datePicker-view' })
 
     if (isMain) {
-      this.container.className += ' x-datePicker-view--main'
+      this.container.className += ' jsc-datePicker-view--main'
     }
 
     this.navi = h(
       'div',
-      { className: 'x-datePicker-navi' },
+      { className: 'jsc-datePicker-navi' },
       h('button'),
       h('button', null, config.icons.goToPrevious.cloneNode(true)),
       h('button', null, config.icons.goToNext.cloneNode(true))
@@ -194,10 +194,10 @@ class MonthView extends View {
 
     for (let rowIdx = 0; rowIdx < 6; ++rowIdx) {
       const cols: Element[] = []
-      const rowClass = rowIdx === 0 ? 'x-datePicker-weekDays' : null
+      const rowClass = rowIdx === 0 ? 'jsc-datePicker-weekDays' : null
 
       for (let colIdx = 0; colIdx < 8; ++colIdx) {
-        const colClass = colIdx === 0 ? 'x-datePicker-weekNumber' : null
+        const colClass = colIdx === 0 ? 'jsc-datePicker-weekNumber' : null
 
         cols.push(h('td', { className: colClass }))
       }
@@ -207,12 +207,12 @@ class MonthView extends View {
 
     const table = h(
       'table',
-      { className: 'x-datePicker-tableOfDays' },
+      { className: 'jsc-datePicker-tableOfDays' },
       h('thead', null, h('tr', null, headRow)),
       h('tbody', null, rows)
     )
 
-    const content = h('div', { className: 'x-datePicker-viewBody' }, table)
+    const content = h('div', { className: 'jsc-datePicker-viewBody' }, table)
 
     this.getElement().appendChild(content)
   }
@@ -233,7 +233,9 @@ class MonthView extends View {
     datePickerConfig: DatePickerConfig
   }) {
     const config = this.getConfig()
-    const table = this.getElement().querySelector('.x-datePicker-tableOfDays')!
+    const table = this.getElement().querySelector(
+      '.jsc-datePicker-tableOfDays'
+    )!
     const thead = table.firstChild!
     const theadRow = thead.firstChild!
     const tbody = table!.childNodes[1]
@@ -247,7 +249,7 @@ class MonthView extends View {
     ;(theadRow.firstChild! as Element).innerHTML = '' // TODO?
 
     for (let colIdx = 1; colIdx < 8; ++colIdx) {
-      ;(theadRow.childNodes[colIdx] as Element).innerHTML =
+      ;(theadRow.childNodes[colIdx] as Element).textContent =
         DAYS_OF_THE_WEEK[colIdx - 1]
     }
 
@@ -255,7 +257,7 @@ class MonthView extends View {
       for (let colIdx = 0; colIdx < 8; ++colIdx) {
         if (colIdx === 0) {
           const weekCell = tbody.childNodes[rowIdx].firstChild! as Element
-          weekCell.innerHTML = '12' // TODO!!!!!!!
+          weekCell.textContent = '' + getWeekOfYear(new Date(), firstDayOfWeek) // TODO!!!!!!!
         }
 
         if (colIdx > 0) {
@@ -289,7 +291,11 @@ class YearView extends View {
     }
 
     const tbody = h('tbody', null, rows)
-    const table = h('table', { className: 'x-datePicker-tableOfMonths' }, tbody)
+    const table = h(
+      'table',
+      { className: 'jsc-datePicker-tableOfMonths' },
+      tbody
+    )
 
     this.getElement().appendChild(table)
   }
@@ -311,7 +317,7 @@ class DecadeView extends View {
     super(config)
 
     const startYear = 2020
-    this.setTitle(`${startYear} - ${startYear + 12}`)
+    this.setTitle(`${startYear} - ${startYear + 11}`)
 
     const rows: Element[] = []
 
@@ -319,7 +325,7 @@ class DecadeView extends View {
       const cells: Element[] = []
 
       for (let colIdx = 0; colIdx < 4; ++colIdx) {
-        cells.push(h('td', null, startYear + rowIdx * 4 + colIdx + 1))
+        cells.push(h('td', null, startYear + rowIdx * 4 + colIdx))
       }
 
       rows.push(h('tr', null, cells))
@@ -327,10 +333,10 @@ class DecadeView extends View {
 
     const table = h(
       'table',
-      { className: 'x-datePicker-tableOfYears' },
+      { className: 'jsc-datePicker-tableOfYears' },
       h('tbody', null, rows)
     )
-    const content = h('div', { className: 'x-datePicker-viewBody' }, table)
+    const content = h('div', { className: 'jsc-datePicker-viewBody' }, table)
 
     this.getElement().appendChild(content)
   }

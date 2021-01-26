@@ -42,12 +42,9 @@ class PaginationBarCore {
     private config: {
       localizer: Localizer
       refresh(): void
-
       handlePageIndexChangeRequest(pageIdx: number): void
       handlePageSizeChageRequest(pageSize: number): void
-
       renderTextField(params: { value: string; disabled: boolean }): VNode
-
       renderSelectField(params: { value: number; options: Set<number> }): VNode
     }
   ) {}
@@ -97,7 +94,7 @@ class PaginationBarCore {
     const paginationInfo = this.renderPaginationInfo()
 
     return html`
-      <div class="x-paginationBar">
+      <div class="jsc-paginationBar">
         ${paginator} ${pageSizeSelector} ${paginationInfo}
       </div>
     `
@@ -114,42 +111,42 @@ class PaginationBarCore {
 
     const btnFirst = html`
       <button
-        class="x-paginationBar-moveToFirstPage"
+        class="jsc-paginationBar-moveToFirstPage"
         disabled=${props.disabled || props.pageIndex < 1}
       />
     `
 
     const btnPrevious = html`
       <button
-        class="x-paginationBar-moveToPreviousPage"
+        class="jsc-paginationBar-moveToPreviousPage"
         disabled=${props.disabled || props.pageIndex < 1}
       />
     `
 
     const btnNext = html`
       <button
-        class="x-paginationBar-moveToNextPage"
+        class="jsc-paginationBar-moveToNextPage"
         disabled=${props.disabled || props.pageIndex >= pageCount}
       />
     `
 
     const btnLast = html`
       <button
-        class="x-paginationBar-moveToLastPage"
+        class="jsc-paginationBar-moveToLastPage"
         disabled=${props.disabled || props.pageIndex >= pageCount}
       />
     `
 
-    const pageCountStr = loc.format('number', this.getPageCount())
-    //const txtPageIdx = html` <input class="x-paginationBar-pageNumberInput" /> `
+    const pageCountStr = loc.formatNumber(this.getPageCount())
+    //const txtPageIdx = html` <input class="jsc-paginationBar-pageNumberInput" /> `
     const txtPageIdx = html`
-      <div class="x-paginationBar-pageInput">
+      <div class="jsc-paginationBar-pageInput">
         ${this.config.renderTextField({ value: 'xxx', disabled: false })}
       </div>
     `
 
     return html`
-      <div class="x-paginationBar-paginator">
+      <div class="jsc-paginationBar-paginator">
         ${btnFirst} ${btnPrevious}
         ${loc.translate('ext.paginationBar.page', null, 'Page')} ${txtPageIdx}
         ${loc.translate(
@@ -171,7 +168,7 @@ class PaginationBarCore {
     }
 
     const selectBox = html`
-      <div class="x-paginationBar-pageSizeSelector">
+      <div class="jsc-paginationBar-pageSizeSelector">
         ${loc.translate('ext.paginationBar.pageSize', null, 'Page size')}
         ${this.config.renderSelectField({
           value: this.props.pageSize,
@@ -189,9 +186,9 @@ class PaginationBarCore {
     }
 
     const loc = this.config.localizer
-    const firstItemNumber = loc.format('number', this.getFirstItemIndex() + 1)
-    const lastItemNumber = loc.format('number', this.getLastItemIndex() + 1)
-    const totalItemCount = loc.format('number', this.props.totalItemCount)
+    const firstItemNumber = loc.formatNumber(this.getFirstItemIndex() + 1)
+    const lastItemNumber = loc.formatNumber(this.getLastItemIndex() + 1)
+    const totalItemCount = loc.formatNumber(this.props.totalItemCount)
 
     const info = loc.translate(
       'ext.paginationBar.paginationInfo',
@@ -205,7 +202,7 @@ class PaginationBarCore {
     )
 
     return html`
-      <div class="x-paginationBar-paginationInfo">
+      <div class="jsc-paginationBar-paginationInfo">
         ${info}
       </div>
     `

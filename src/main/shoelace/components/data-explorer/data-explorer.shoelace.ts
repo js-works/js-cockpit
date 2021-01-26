@@ -1,5 +1,5 @@
 // external imports
-import { define, html } from 'js-elements'
+import { component, html, register } from 'js-elements'
 import { useEffect, useOnMount } from 'js-elements/hooks'
 
 import { DataExplorerCore } from '../../../core/data-explorer/data-explorer.core'
@@ -16,9 +16,7 @@ class DataExplorerProps {
 
 // === DataExplorer ==================================================
 
-export const DataExplorer = define('sx-data-explorer', DataExplorerProps, (
-  p
-) => {
+export const DataExplorer = component(DataExplorerProps, (p) => {
   const core = new DataExplorerCore({
     refresh: () => {},
 
@@ -46,4 +44,8 @@ export const DataExplorer = define('sx-data-explorer', DataExplorerProps, (
   core.setProps(p)
 
   return () => core.render()
+})
+
+register({
+  'jsc-data-explorer': DataExplorer,
 })

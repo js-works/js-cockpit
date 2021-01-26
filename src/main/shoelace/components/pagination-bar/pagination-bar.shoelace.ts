@@ -1,5 +1,5 @@
 // external imports
-import { attr, define, html, VNode } from 'js-elements'
+import { attr, component, html, register, VNode } from 'js-elements'
 import { useStyles } from 'js-elements/hooks'
 
 import {
@@ -11,8 +11,7 @@ import {
 
 // internal imports
 import { PaginationBarCore } from '../../../core/pagination-bar/pagination-bar.core'
-import { Localizer } from '../../../utils/i18n'
-import { registerElement } from '../../../utils/dom'
+import { useLocalizer } from '../../../hooks/hooks'
 
 // @ts-ignore
 import paginationBarCustomStyles from './pagination-bar.shoelace.css'
@@ -38,15 +37,15 @@ class PaginationBarProps {
   disabled = false
 }
 
-const PaginationBar = define('sx-pagination-bar', PaginationBarProps, (p) => {
-  useStyles([
+const PaginationBar = component(PaginationBarProps, (p) => {
+  useStyles(
     defaultTheme,
     PaginationBarCore.coreStyles,
-    paginationBarCustomStyles,
-  ])
+    paginationBarCustomStyles
+  )
 
   const core = new PaginationBarCore({
-    localizer: Localizer.default,
+    localizer: useLocalizer(),
     refresh: () => {},
     handlePageIndexChangeRequest: () => {},
     handlePageSizeChageRequest: () => {},
@@ -82,7 +81,10 @@ const PaginationBar = define('sx-pagination-bar', PaginationBarProps, (p) => {
   }
 })
 
-registerElement('sl-input', SlInput)
-registerElement('sl-select', SlSelect)
-registerElement('sl-menu-item', SlMenuItem)
-registerElement('sl-dropdown', SlDropdown)
+register({
+  'jsc-pagination-bar': PaginationBar,
+  'sl-input': SlInput,
+  'sl-select': SlSelect,
+  'sl-menu-item': SlMenuItem,
+  'sl-dropdown': SlDropdown,
+})

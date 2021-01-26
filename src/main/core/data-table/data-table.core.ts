@@ -114,10 +114,10 @@ class DataTableCore {
         trs.forEach((tr, rowIdx) => {
           if (selectAll) {
             this.selectedRows.add(rowIdx)
-            tr.classList.add('x-dataTable-tr--selected')
+            tr.classList.add('jsc-dataTable-tr--selected')
             ;(tr.firstChild!.firstChild as any).checked = true
           } else {
-            tr.classList.remove('x-dataTable-tr--selected')
+            tr.classList.remove('jsc-dataTable-tr--selected')
             ;(tr.firstChild!.firstChild as any).checked = false
           }
         })
@@ -140,10 +140,10 @@ class DataTableCore {
 
         if (this.selectedRows.has(rowIdx)) {
           this.selectedRows.delete(rowIdx)
-          tr.classList.remove('x-dataTable-tr--selected')
+          tr.classList.remove('jsc-dataTable-tr--selected')
         } else {
           this.selectedRows.add(rowIdx)
-          tr.classList.add('x-dataTable-tr--selected')
+          tr.classList.add('jsc-dataTable-tr--selected')
         }
 
         ignoreChangeEvents = true
@@ -281,7 +281,7 @@ class DataTableCore {
 function renderDataTable(model: DataTableViewModel): Element {
   const ret = h(
     'table',
-    { className: 'x-dataTable' },
+    { className: 'jsc-dataTable' },
     renderTableHead(model),
     renderColGroup(model),
     renderTableBody(model)
@@ -301,7 +301,7 @@ function renderTableHead(model: DataTableViewModel) {
       const cell = h(
         'th',
         {
-          className: 'x-dataTable-th x-dataTable-selectionColumn',
+          className: 'jsc-dataTable-th jsc-dataTable-selectionColumn',
           rowSpan: model.headerCells.length,
           valign: 'bottom',
         },
@@ -312,7 +312,7 @@ function renderTableHead(model: DataTableViewModel) {
     }
 
     for (const headerCol of headerRow) {
-      let className = 'x-dataTable-th'
+      let className = 'jsc-dataTable-th'
       let icon = null
 
       if (headerCol.sortable) {
@@ -321,13 +321,13 @@ function renderTableHead(model: DataTableViewModel) {
             model.sortDir === 'asc'
               ? model.icons.sortedAsc.cloneNode(true)
               : model.icons.sortedDesc.cloneNode(true)
-          className += ' x-dataTable-th--sorted-' + model.sortDir
+          className += ' jsc-dataTable-th--sorted-' + model.sortDir
         } else {
           if (model.icons.sortable) {
             icon = model.icons.sortable.cloneNode(true)
           }
 
-          className += ' x-dataTable-th--unsorted'
+          className += ' jsc-dataTable-th--unsorted'
         }
       }
 
@@ -381,7 +381,7 @@ function renderTableBody(model: DataTableViewModel): Node {
     if (model.selectMode !== 'none') {
       const cell = h(
         'td',
-        { className: 'x-dataTable-td x-dataTable-selectionColumn' },
+        { className: 'jsc-dataTable-td jsc-dataTable-selectionColumn' },
         renderSelectRowCheckbox(model, idx)
       )
       cells.push(cell)
@@ -394,14 +394,14 @@ function renderTableBody(model: DataTableViewModel): Node {
 
       const className =
         field && model.sortField === field
-          ? 'x-dataTable-td x-dataTable-td--sorted'
-          : 'x-dataTable-td'
+          ? 'jsc-dataTable-td jsc-dataTable-td--sorted'
+          : 'jsc-dataTable-td'
 
       const cell = h('td', { className }, content)
       cells.push(cell)
     }
 
-    rows.push(h('tr', { className: 'x-dataTable-tr' }, cells))
+    rows.push(h('tr', { className: 'jsc-dataTable-tr' }, cells))
   })
 
   return h('tbody', null, rows)
@@ -418,7 +418,7 @@ function renderSelectAllCheckbox(model: DataTableViewModel): Node {
         onclick: model.onToggleSelectAll,
       })
 
-  checkbox.className = 'x-dataTable-checkbox x-dataTable-selectAllCheckbox'
+  checkbox.className = 'jsc-dataTable-checkbox jsc-dataTable-selectAllCheckbox'
 
   return checkbox
 }
@@ -437,6 +437,6 @@ function renderSelectRowCheckbox(
         onclick: () => model.onToggleSelectRow(rowIdx),
       })
 
-  checkbox.className = 'x-dataTable-checkbox x-dataTable-selectRowCheckbox'
+  checkbox.className = 'jsc-dataTable-checkbox jsc-dataTable-selectRowCheckbox'
   return checkbox
 }

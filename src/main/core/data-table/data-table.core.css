@@ -1,4 +1,4 @@
-.x-dataTable {
+.jsc-dataTable {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
@@ -6,12 +6,12 @@
   user-select: none;
 }
 
-.x-dataTable-th {
+.jsc-dataTable-th {
   padding: 3px 5px;
   font-weight: 600;
 }
 
-.x-dataTable-th > label {
+.jsc-dataTable-th > label {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -19,25 +19,25 @@
   gap: 10px;
 }
 
-.x-dataTable-th--unsorted,
-.x-dataTable-th--sorted-asc,
-.x-dataTable-th--sorted-desc,
-.x-dataTable-th--unsorted *,
-.x-dataTable-th--sorted-asc *,
-.x-dataTable-th--sorted-desc * {
+.jsc-dataTable-th--unsorted,
+.jsc-dataTable-th--sorted-asc,
+.jsc-dataTable-th--sorted-desc,
+.jsc-dataTable-th--unsorted *,
+.jsc-dataTable-th--sorted-asc *,
+.jsc-dataTable-th--sorted-desc * {
   cursor: pointer;
 }
 
-.x-dataTable-selectAllCheckbox,
-.x-dataTable-selectRowCheckbox {
+.jsc-dataTable-selectAllCheckbox,
+.jsc-dataTable-selectRowCheckbox {
   cursor: pointer;
 }
 
-.x-dataTable-td {
+.jsc-dataTable-td {
   padding: 3px 5px !important;
 }
 
-.x-dataTable-selectionColumn {
+.jsc-dataTable-selectionColumn {
   position: relative;
   text-align: center;
 }

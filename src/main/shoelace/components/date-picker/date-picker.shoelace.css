@@ -1,21 +1,20 @@
-.x-datePicker {
+.jsc-datePicker {
   background-color: var(--sl-color-white);
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
 }
 
-.x-datePicker-monthViewTable th,
-.x-datePicker-monthViewTable td {
+.jsc-datePicker-monthViewTable th,
+.jsc-datePicker-monthViewTable td {
   font-size: var(--sl-font-size-small);
 }
 
-.x-datePicker-navi > button:first-child {
+.jsc-datePicker-navi > button:first-child {
   font-size: var(--sl-font-size-medium);
 }
 
-.x-datePicker-weekNumber {
-  border: 0 solid var(--sl-color-gray-100);
+.jsc-datePicker-weekNumber {
+  border: 0 solid var(--sl-color-gray-200);
   border-right-width: 1px;
-  font-size: 70% !important;
-  font-style: italic;
+  font-weight: 500 !important;
 }

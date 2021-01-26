@@ -54,7 +54,7 @@ export function registerElement(
   tagName: string,
   elementClass: CustomElementConstructor
 ) {
-  if (customElements.get(tagName)) {
+  if (false && customElements.get(tagName)) {
     document.location.reload()
   } else {
     customElements.define(tagName, elementClass)

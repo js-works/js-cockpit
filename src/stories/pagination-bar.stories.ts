@@ -6,7 +6,7 @@ export default {
 }
 
 export const example_1 = () =>
-  h('sx-pagination-bar', {
+  h('jsc-pagination-bar', {
     pageIndex: 13,
     pageSize: 100,
     totalItemCount: 13542,

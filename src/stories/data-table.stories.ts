@@ -92,7 +92,7 @@ const data = [
 ]
 
 export const example_1 = () =>
-  h('sx-data-table', {
+  h('jsc-data-table', {
     columns,
     data,
     selectMode: 'mutli',

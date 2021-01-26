@@ -91,4 +91,4 @@ const data = [
   },
 ]
 
-export const example1 = () => h('sx-data-explorer', { columns, data })
+export const example1 = () => h('jsc-data-explorer', { columns, data })

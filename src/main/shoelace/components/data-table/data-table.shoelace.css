@@ -1,53 +1,53 @@
-.x-dataTable {
+.jsc-dataTable {
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
   border: 1px solid var(--sl-color-gray-200);
 }
 
-.x-dataTable-th {
+.jsc-dataTable-th {
   background-color: var(--sl-color-white);
   border: 1px solid var(--sl-color-gray-200);
 }
 
-.x-dataTable-tr:nth-child(odd) {
+.jsc-dataTable-tr:nth-child(odd) {
   background-color: var(--sl-color-white);
   border: 0 solid var(--sl-color-gray-50);
   border-width: 1px 0;
 }
 
-.x-dataTable-tr:nth-child(even) {
+.jsc-dataTable-tr:nth-child(even) {
   background-color: var(--sl-color-gray-50);
   border: 0 solid var(--sl-color-gray-50);
   border-width: 1px 0;
 }
 
-.x-dataTable-tr:first-child {
+.jsc-dataTable-tr:first-child {
   border-top-width: 0;
 }
 
-.x-dataTable-tr:last-child {
+.jsc-dataTable-tr:last-child {
   border-bottom-width: 0;
 }
 
-.x-dataTable-tr--selected:nth-child(odd),
-.x-dataTable-tr--selected:nth-child(even) {
+.jsc-dataTable-tr--selected:nth-child(odd),
+.jsc-dataTable-tr--selected:nth-child(even) {
   background-color: var(--sl-color-primary-100);
   border: 0 solid var(--sl-color-primary-200);
   border-width: 1px 0;
 }
 
-.x-dataTable-th--sorted-asc:hover,
-.x-dataTable-th--sorted-desc:hover,
-.x-dataTable-th--unsorted:hover {
+.jsc-dataTable-th--sorted-asc:hover,
+.jsc-dataTable-th--sorted-desc:hover,
+.jsc-dataTable-th--unsorted:hover {
   background-color: var(--sl-color-primary-200);
 }
 
-.x-dataTable-selectionColumn sl-checkbox {
+.jsc-dataTable-selectionColumn sl-checkbox {
   position: relative;
   top: -3px;
   margin: 0 6px;
 }
 
-.x-dataTable-selectionColumn sl-checkbox::part(label) {
+.jsc-dataTable-selectionColumn sl-checkbox::part(label) {
   display: none;
 }
