@@ -1,4 +1,4 @@
-import { attr, component, html, register } from 'js-elements'
+import { attr, component, html } from 'js-elements'
 import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
 import { DatePickerCore } from '../../../core/date-picker/date-picker.core'
@@ -20,7 +20,7 @@ const MONTHS = [
   'September',
   'October',
   'November',
-  'December',
+  'December'
 ]
 
 const WEEKDAYS_SHORT = ['So', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
@@ -38,7 +38,7 @@ class DatePickerProps {
   disabled = false
 }
 
-const DatePicker = component(DatePickerProps, (p) => {
+const DatePicker = component('jsc-date-picker', DatePickerProps, (p) => {
   const core = new DatePickerCore({
     getNameOfMonth: (month) => MONTHS[month],
     getShortNameOfMonth: (month) => MONTHS[month].substr(0, 3),
@@ -46,8 +46,8 @@ const DatePicker = component(DatePickerProps, (p) => {
 
     icons: {
       goToNext: createGoToNextIcon(),
-      goToPrevious: createGoToPreviousIcon(),
-    },
+      goToPrevious: createGoToPreviousIcon()
+    }
   })
 
   const containerRef = createRef<Element>()
@@ -88,5 +88,3 @@ function createGoToPreviousIcon() {
 
   return ret
 }
-
-register('jsc-date-picker', DatePicker)

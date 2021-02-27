@@ -1,5 +1,5 @@
 // external imports
-import { component, html, register } from 'js-elements'
+import { component, html } from 'js-elements'
 import { useEffect, useOnMount } from 'js-elements/hooks'
 
 import { DataExplorerCore } from '../../../core/data-explorer/data-explorer.core'
@@ -16,21 +16,24 @@ class DataExplorerProps {
 
 // === DataExplorer ==================================================
 
-export const DataExplorer = component(DataExplorerProps, (p) => {
-  const core = new DataExplorerCore({
-    refresh: () => {},
+export const DataExplorer = component(
+  'jsc-data-explorer',
+  DataExplorerProps,
+  (p) => {
+    const core = new DataExplorerCore({
+      refresh: () => {},
 
-    renderDataTable: ({ columns, data }) => {
-      return html`
+      renderDataTable: ({ columns, data }) => {
+        return html`
         <${DataTable}
           columns=${columns}
         >
         </${DataTable}>
       `
-    },
+      },
 
-    renderPaginationBar: ({ pageIndex, pageSize, totalItemCount }) => {
-      return html`
+      renderPaginationBar: ({ pageIndex, pageSize, totalItemCount }) => {
+        return html`
         <${PaginationBar}
           pageIndex=${pageIndex}
           pageSize=${pageSize}
@@ -38,14 +41,11 @@ export const DataExplorer = component(DataExplorerProps, (p) => {
         >
         </${PaginationBar}>
       `
-    },
-  })
+      }
+    })
 
-  core.setProps(p)
+    core.setProps(p)
 
-  return () => core.render()
-})
-
-register({
-  'jsc-data-explorer': DataExplorer,
-})
+    return () => core.render()
+  }
+)

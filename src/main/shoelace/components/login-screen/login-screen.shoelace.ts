@@ -1,5 +1,5 @@
 // external imports
-import { component, html, register } from 'js-elements'
+import { component, html } from 'js-elements'
 
 // internal imports
 import { LoginScreenCore } from '../../../core/login-screen/login-screen.core'
@@ -14,16 +14,10 @@ export { LoginScreen }
 
 class LoginScreenProps {}
 
-const LoginScreen = component(LoginScreenProps, (p) => {
+const LoginScreen = component('jsc-login-screen', LoginScreenProps, (p) => {
   const core = new LoginScreenCore({
-    handleLogin: () => new Promise<void>(() => {}), // TODO
+    handleLogin: () => new Promise<void>(() => {}) // TODO
   })
 
   return () => core.render()
-})
-
-// === registrations =================================================
-
-register({
-  'jsc-login-screen': LoginScreen,
 })

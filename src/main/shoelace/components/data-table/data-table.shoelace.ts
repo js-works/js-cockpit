@@ -1,12 +1,15 @@
 // external imports
-import { component, html, register } from 'js-elements'
+import { component, html } from 'js-elements'
 import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
 import { createRef } from 'js-elements/utils'
+
+// @ts-ignore
 import { SlCheckbox } from '@shoelace-style/shoelace'
 
 // internal imports
 import { DataTableCore, Column } from '../../../core/data-table/data-table.core'
 import { h } from '../../../utils/dom'
+import { register } from '../../../utils/elements'
 
 // @ts-ignore
 import dataTableCustomStyles from './data-table.shoelace.css'
@@ -20,7 +23,7 @@ class DataTableProps {
   data?: any[][] | object[] | null
 }
 
-export const DataTable = component(DataTableProps, (p) => {
+export const DataTable = component('jsc-data-table', DataTableProps, (p) => {
   const core = new DataTableCore({
     onToggleSelectAll: () => {},
     onToggleSelectRow: () => {},
@@ -28,14 +31,14 @@ export const DataTable = component(DataTableProps, (p) => {
     icons: {
       sortedAsc: createSortedAscIcon(),
       sortedDesc: createSortedDescIcon(),
-      sortable: createSortableIcon(),
+      sortable: createSortableIcon()
     },
 
     renderCheckbox: (checked: boolean, onToggle: () => void) => {
       const checkbox = h('sl-checkbox')
       checkbox.addEventListener('sl-change', () => onToggle())
       return checkbox
-    },
+    }
   })
 
   const containerRef = createRef<Node>()
@@ -98,7 +101,4 @@ function createSortableIcon() {
   return ret
 }
 
-register({
-  'jsc-data-table': DataTable,
-  'sl-checkbox': SlCheckbox,
-})
+register('sl-checkbox', SlCheckbox)

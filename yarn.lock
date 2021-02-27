@@ -1200,7 +1200,12 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@popperjs/core@^2.5.3", "@popperjs/core@^2.5.4":
+"@popperjs/core@^2.5.3", "@popperjs/core@^2.7.0":
+  version "2.8.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.8.6.tgz#ad75ebe8dbecfa145af3c7e4d0ae98016458d005"
+  integrity sha512-1oXH2bAFXz9SttE1v/0Jp+2ZVePsPEAPGIuPKrmljWZcS3FPBEn2Q4WcANozZC0YiCjTWOF55k0g6rbSZS39ew==
+
+"@popperjs/core@^2.5.4":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.6.0.tgz#f022195afdfc942e088ee2101285a1d31c7d727f"
   integrity sha512-cPqjjzuFWNK3BSKLm0abspP0sp/IGOli4p5I5fKFAzdS8fvjdOwDCfZqAaIiXd9lPkOWi3SUUfZof3hEb7J/uw==
@@ -1215,36 +1220,41 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
-"@shoelace-style/animations@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/animations/-/animations-1.0.0.tgz#97a93062772a1056dfc150f884e5e9301e5c7d95"
-  integrity sha512-sv005CAsCmNmo1Uth/0k1lnU/Jp9/RDskVcCVBwaL/nwRLmm+BOC01ihVmTJ3RqBcYNzP5o+BuKC/GJOFUvLPw==
+"@shoelace-style/animations@^1.0.0", "@shoelace-style/animations@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/animations/-/animations-1.1.0.tgz#17539abafd6dcbf2a79e089e1593175e9f7835b5"
+  integrity sha512-Be+cahtZyI2dPKRm8EZSx3YJQ+jLvEcn3xzRP7tM4tqBnvd/eW/64Xh0iOf0t2w5P8iJKfdBbpVNE9naCaOf2g==
 
-"@shoelace-style/shoelace@^2.0.0-beta.25":
-  version "2.0.0-beta.25"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.25.tgz#e228a4c2296527b29e4c2177e47e27ea47178623"
-  integrity sha512-wdiL1poXeI9uIs2w7+auX94msM17x3L4Hn0CZm/kzkSxsfl2McGJBDRZv5t3u70LsKl/TtK5Pj3SZyt/BsZfzg==
-  dependencies:
-    "@popperjs/core" "^2.5.3"
-    "@stencil/core" "^2.3.0"
-    "@types/resize-observer-browser" "^0.1.4"
-    color "^3.1.2"
-
-"@shoelace-style/shoelace@^2.0.0-beta.26":
-  version "2.0.0-beta.26"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.26.tgz#b991001f8ff3aac141ae0229ed8def394709faf4"
-  integrity sha512-qR69+HOXXBOpD0+h53QKM8umu4kVGiZGwFKIYSCjkSku8qLJGLV/ItPBXFZN2soUnHtJ8XNgnKFTFJ4OWLxXFA==
+"@shoelace-style/shoelace@2.0.0-beta.27":
+  version "2.0.0-beta.27"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.27.tgz#ac74b8d2ca78ba3eede0ffe78cb778ea07d53297"
+  integrity sha512-3lo+rcVTfVB0MkkSVAWlqlT3qo6L9pe3iBFW0PPgOwCJj/SfAmuV8aZrBwZ20At8oONRfFYJNu3Ni06e0Tivrg==
   dependencies:
     "@popperjs/core" "^2.5.3"
     "@shoelace-style/animations" "^1.0.0"
-    "@stencil/core" "^2.3.0"
+    "@stencil/core" "^2.4.0"
     "@types/resize-observer-browser" "^0.1.4"
     color "^3.1.2"
 
-"@stencil/core@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.3.0.tgz#9190df3a0064537730be1546545e13531d701da8"
-  integrity sha512-VZ/Ox0E1kngcmHbJhHUufuLELi+xG3of3LuRI3X2AMWyE82JUVYlOEsQci/YBZWpfc9BS9I36R88prBew22oew==
+"@shoelace-style/shoelace@^2.0.0-beta.27":
+  version "2.0.0-beta.28"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.28.tgz#89ca83c0577ae732c8b9ec31a7304cf7d02c8b9f"
+  integrity sha512-MxUcY8Nq5j3JlZ7SfYXaIbGT08RIVsaV2A4O94UhUMkjwntGX/I1qTgEwIB0IdDsno+Do6LcUlkJVLCobifBpA==
+  dependencies:
+    "@popperjs/core" "^2.7.0"
+    "@shoelace-style/animations" "^1.1.0"
+    "@shoelace-style/shoemaker" "^1.0.0-beta.6"
+    color "^3.1.3"
+
+"@shoelace-style/shoemaker@^1.0.0-beta.6":
+  version "1.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoemaker/-/shoemaker-1.0.0-beta.6.tgz#fb38d5db631f5b2ff7f421fa4b0c27bddce32fac"
+  integrity sha512-uIogfUXZiczjZj0J5r6yEf0PFcop7aT72xqDK+tdhE68yAQ66Xx/UMNwZJnICozUAoqX0FdNd1gFH2EBJXukOw==
+
+"@stencil/core@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.4.0.tgz#17b45629c8986e35dcbce3f7dab7d64beede83f2"
+  integrity sha512-gU6+Yyd6O0KrCSS/O6j8KKqmRo+/Dcs2fI0+APCpbAWK+nqhwDISpdnSEfGDCLMoAC08XOZCycBRk2K1VGnEcg==
 
 "@storybook/addon-actions@6.1.15", "@storybook/addon-actions@^6.1.15":
   version "6.1.15"
@@ -3465,7 +3475,7 @@ color-string@^1.5.4:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.1.2:
+color@^3.1.2, color@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/color/-/color-3.1.3.tgz#ca67fb4e7b97d611dcde39eceed422067d91596e"
   integrity sha512-xgXAcTHa2HeFCGLE9Xs/R82hujGtu9Jd9x4NW3T34+OMs7VoPsjwzRczKHvTAHeJwWFwX5j15+MgAppE8ztObQ==
@@ -5928,12 +5938,12 @@ jest-worker@^26.2.1, jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-elements@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/js-elements/-/js-elements-0.1.8.tgz#5a6d223203550e782de287c28249cb53d0218821"
-  integrity sha512-7EJBLZE8QJxXnHBODn3zDNoMEvlcZHHc/eP1GEnhAt/X/vtWUVDJZ0x1GLbGbok3kPOt8FWP7k8FP25WdhWN3w==
+js-elements@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/js-elements/-/js-elements-0.1.9.tgz#498e538af90f42ad37e800ac78014db62c6c8532"
+  integrity sha512-hfUZatsGxrNP71AcwBJYlEgarBMQIFKeGoolZsxj3F8vsjmHQcZsTzUdXGCva1eWm44nPLu6DnsqkjfVxAhnww==
   dependencies:
-    "@shoelace-style/shoelace" "^2.0.0-beta.25"
+    "@shoelace-style/shoelace" "^2.0.0-beta.27"
 
 js-string-escape@^1.0.1:
   version "1.0.1"

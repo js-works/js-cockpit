@@ -1,17 +1,19 @@
 // external imports
-import { attr, component, html, register, VNode } from 'js-elements'
+import { attr, component, html, VNode } from 'js-elements'
 import { useStyles } from 'js-elements/hooks'
 
 import {
   SlInput,
   SlMenuItem,
   SlSelect,
-  SlDropdown,
+  SlDropdown
+  // @ts-ignore
 } from '@shoelace-style/shoelace'
 
 // internal imports
 import { PaginationBarCore } from '../../../core/pagination-bar/pagination-bar.core'
 import { useLocalizer } from '../../../hooks/hooks'
+import { register } from '../../../utils/elements'
 
 // @ts-ignore
 import paginationBarCustomStyles from './pagination-bar.shoelace.css'
@@ -37,7 +39,13 @@ class PaginationBarProps {
   disabled = false
 }
 
-const PaginationBar = component(PaginationBarProps, (p) => {
+const PaginationBar = component(
+  'jsc-pagination-bar',
+  PaginationBarProps,
+  initPaginationBar
+)
+
+function initPaginationBar(p: PaginationBarProps) {
   useStyles(
     defaultTheme,
     PaginationBarCore.coreStyles,
@@ -62,7 +70,7 @@ const PaginationBar = component(PaginationBarProps, (p) => {
       }
 
       return html`<sl-select size="small">${items}</sl-select>`
-    },
+    }
   })
 
   function syncProps() {
@@ -70,7 +78,7 @@ const PaginationBar = component(PaginationBarProps, (p) => {
       pageIndex: p.pageIndex,
       pageSize: p.pageSize,
       totalItemCount: p.totalItemCount,
-      disabled: p.disabled,
+      disabled: p.disabled
     })
   }
 
@@ -79,12 +87,9 @@ const PaginationBar = component(PaginationBarProps, (p) => {
 
     return core.render()
   }
-})
+}
 
-register({
-  'jsc-pagination-bar': PaginationBar,
-  'sl-input': SlInput,
-  'sl-select': SlSelect,
-  'sl-menu-item': SlMenuItem,
-  'sl-dropdown': SlDropdown,
-})
+register('sl-input', SlInput)
+register('sl-select', SlSelect)
+register('sl-menu-item', SlMenuItem)
+register('sl-dropdown', SlDropdown)
