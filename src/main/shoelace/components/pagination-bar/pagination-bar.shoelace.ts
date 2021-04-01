@@ -1,6 +1,6 @@
 // external imports
-import { attr, component, html, VNode } from 'js-elements'
-import { useStyles } from 'js-elements/hooks'
+import { attr, define, html, VNode, Attr } from 'js-element'
+import { useStyles } from 'js-element/hooks'
 
 import {
   SlInput,
@@ -26,24 +26,20 @@ export { PaginationBar }
 // === PaginationBar =================================================
 
 class PaginationBarProps {
-  @attr(Number)
+  @attr(Attr.number)
   pageIndex = -1
 
-  @attr(Number)
+  @attr(Attr.number)
   pageSize = -1
 
-  @attr(Number)
+  @attr(Attr.number)
   totalItemCount = -1
 
-  @attr(Boolean)
+  @attr(Attr.boolean)
   disabled = false
 }
 
-const PaginationBar = component(
-  'jsc-pagination-bar',
-  PaginationBarProps,
-  initPaginationBar
-)
+const PaginationBar = define('jsc-pagination-bar', PaginationBarProps, initPaginationBar)
 
 function initPaginationBar(p: PaginationBarProps) {
   useStyles(

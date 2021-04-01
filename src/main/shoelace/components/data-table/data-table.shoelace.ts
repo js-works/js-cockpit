@@ -1,7 +1,6 @@
 // external imports
-import { component, html } from 'js-elements'
-import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
-import { createRef } from 'js-elements/utils'
+import { createRef, define, html } from 'js-element'
+import { useEffect, useOnMount, useStyles } from 'js-element/hooks'
 
 // @ts-ignore
 import { SlCheckbox } from '@shoelace-style/shoelace'
@@ -23,7 +22,7 @@ class DataTableProps {
   data?: any[][] | object[] | null
 }
 
-export const DataTable = component('jsc-data-table', DataTableProps, (p) => {
+export const DataTable = define('jsc-data-table', DataTableProps, (p) => {
   const core = new DataTableCore({
     onToggleSelectAll: () => {},
     onToggleSelectRow: () => {},

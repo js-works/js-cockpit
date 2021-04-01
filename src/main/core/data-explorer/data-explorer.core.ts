@@ -1,5 +1,5 @@
 // external imports
-import { html, VNode } from 'js-elements'
+import { html, VNode } from 'js-element'
 
 // internal imports
 import { DataTableProps } from '../../core/data-table/data-table.core'
@@ -51,15 +51,9 @@ class DataExplorerCore {
   render() {
     return html`
       <div>
-        <div>
-          ${this.renderHeader()}
-        </div>
-        <div>
-          ${this.renderBody()}
-        </div>
-        <div>
-          ${this.renderFooter()}
-        </div>
+        <div>${this.renderHeader()}</div>
+        <div>${this.renderBody()}</div>
+        <div>${this.renderFooter()}</div>
       </div>
     `
   }
@@ -67,11 +61,7 @@ class DataExplorerCore {
   // --- private methods ---------------------------------------------
 
   private renderHeader() {
-    return html`
-      <div>
-        Header
-      </div>
-    `
+    return html` <div>Header</div> `
   }
 
   private renderBody() {
@@ -79,7 +69,7 @@ class DataExplorerCore {
       <div>
         ${this.config.renderDataTable({
           columns: this.props.columns,
-          data: this.data,
+          data: this.data
         })}
       </div>
     `
@@ -91,7 +81,7 @@ class DataExplorerCore {
         ${this.config.renderPaginationBar({
           pageIndex: this.pageIndex,
           pageSize: this.pageSize,
-          totalItemCount: this.totalItemCount,
+          totalItemCount: this.totalItemCount
         })}
       </div>
     `

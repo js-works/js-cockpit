@@ -1,5 +1,5 @@
 // external imports
-import { html, VNode } from 'js-elements'
+import { html, VNode } from 'js-element'
 
 // internal imports
 import { Localizer } from '../../utils/i18n'
@@ -35,7 +35,7 @@ class PaginationBarCore {
     pageIndex: -1,
     pageSize: -1,
     totalItemCount: -1,
-    disabled: false,
+    disabled: false
   }
 
   constructor(
@@ -172,7 +172,7 @@ class PaginationBarCore {
         ${loc.translate('ext.paginationBar.pageSize', null, 'Page size')}
         ${this.config.renderSelectField({
           value: this.props.pageSize,
-          options: ALLOWED_PAGE_SIZES,
+          options: ALLOWED_PAGE_SIZES
         })}
       </div>
     `
@@ -195,16 +195,12 @@ class PaginationBarCore {
       {
         firstItemNumber,
         lastItemNumber,
-        totalItemCount,
+        totalItemCount
       },
 
       '%{firstItemNumber} - %{lastItemNumber} / %{totalItemCount}'
     )
 
-    return html`
-      <div class="jsc-paginationBar-paginationInfo">
-        ${info}
-      </div>
-    `
+    return html` <div class="jsc-paginationBar-paginationInfo">${info}</div> `
   }
 }

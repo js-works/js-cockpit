@@ -1,5 +1,5 @@
 // external imports
-import { component, html } from 'js-elements'
+import { define, html } from 'js-element'
 
 // internal imports
 import { LoginScreenCore } from '../../../core/login-screen/login-screen.core'
@@ -14,7 +14,7 @@ export { LoginScreen }
 
 class LoginScreenProps {}
 
-const LoginScreen = component('jsc-login-screen', LoginScreenProps, (p) => {
+const LoginScreen = define('jsc-login-screen', LoginScreenProps, (p) => {
   const core = new LoginScreenCore({
     handleLogin: () => new Promise<void>(() => {}) // TODO
   })

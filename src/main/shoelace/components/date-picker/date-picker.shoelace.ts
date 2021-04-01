@@ -1,6 +1,5 @@
-import { attr, component, html } from 'js-elements'
-import { useEffect, useOnMount, useStyles } from 'js-elements/hooks'
-import { createRef } from 'js-elements/utils'
+import { attr, define, createRef, html, Attr } from 'js-element'
+import { useEffect, useOnMount, useStyles } from 'js-element/hooks'
 import { DatePickerCore } from '../../../core/date-picker/date-picker.core'
 import defaultTheme from '../../../shoelace/themes/default-theme'
 import { h } from '../../../utils/dom'
@@ -28,17 +27,17 @@ const WEEKDAYS_SHORT = ['So', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 class DatePickerProps {
   date: Date = new Date(1970, 1, 1)
 
-  @attr(Number)
+  @attr(Attr.number)
   firstDayInWeek: number = 0
 
-  @attr(Boolean)
+  @attr(Attr.boolean)
   showWeekNumber: boolean = true
 
-  @attr(Boolean)
+  @attr(Attr.boolean)
   disabled = false
 }
 
-const DatePicker = component('jsc-date-picker', DatePickerProps, (p) => {
+const DatePicker = define('jsc-date-picker', DatePickerProps, (p) => {
   const core = new DatePickerCore({
     getNameOfMonth: (month) => MONTHS[month],
     getShortNameOfMonth: (month) => MONTHS[month].substr(0, 3),

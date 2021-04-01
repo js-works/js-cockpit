@@ -1,9 +1,9 @@
-import { createHook } from 'js-elements/hooks'
+import { hook } from 'js-element/hooks'
 import { Localizer } from '../utils/i18n'
 
 // TODOOOOOOOOOOOOOOOOOOOOOOOOOOO - the whole stuff!!!!
 
-export const useLocalizer = createHook('useLocalizer', () => {
+export const useLocalizer = hook('useLocalizer', () => {
   return new DefaultLocalizer()
 })
 

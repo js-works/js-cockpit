@@ -1,5 +1,5 @@
 // external imports
-import { html, VNode } from 'js-elements'
+import { html, VNode } from 'js-element'
 
 // internal imports
 import { Localizer } from '../../utils/i18n'
