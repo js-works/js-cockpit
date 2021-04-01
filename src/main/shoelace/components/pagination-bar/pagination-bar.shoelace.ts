@@ -10,10 +10,12 @@ import {
   // @ts-ignore
 } from '@shoelace-style/shoelace'
 
+// used shoelace components
+SlInput && SlMenuItem && SlSelect && SlDropdown
+
 // internal imports
 import { PaginationBarCore } from '../../../core/pagination-bar/pagination-bar.core'
 import { useLocalizer } from '../../../hooks/hooks'
-import { register } from '../../../utils/elements'
 
 // @ts-ignore
 import paginationBarCustomStyles from './pagination-bar.shoelace.css'
@@ -84,8 +86,3 @@ function initPaginationBar(p: PaginationBarProps) {
     return core.render()
   }
 }
-
-register('sl-input', SlInput)
-register('sl-select', SlSelect)
-register('sl-menu-item', SlMenuItem)
-register('sl-dropdown', SlDropdown)

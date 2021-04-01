@@ -8,11 +8,13 @@ import { SlCheckbox } from '@shoelace-style/shoelace'
 // internal imports
 import { DataTableCore, Column } from '../../../core/data-table/data-table.core'
 import { h } from '../../../utils/dom'
-import { register } from '../../../utils/elements'
 
 // @ts-ignore
 import dataTableCustomStyles from './data-table.shoelace.css'
 import defaultTheme from '../../themes/default-theme'
+
+// used components
+SlCheckbox
 
 class DataTableProps {
   columns?: Column[]
@@ -99,5 +101,3 @@ function createSortableIcon() {
 
   return ret
 }
-
-register('sl-checkbox', SlCheckbox)
