@@ -1,11 +1,16 @@
-import { h, registerElement } from '../main/utils/dom'
-import '../main/shoelace/components/data-table/data-table.shoelace'
+import { h } from '../main/utils/dom'
+import { component, elem } from 'js-element'
+import { html, withLit } from 'js-element/lit'
+import { DataTable } from '../main/components/data-table/data-table'
+
+import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
+const themeStyles = theme.toString()
 
 export default {
-  title: 'data-table',
+  title: 'data-table'
 }
 
-const columns = [
+const columns: DataTable.Column[] = [
   {
     type: 'column-group',
     text: 'Name',
@@ -13,15 +18,15 @@ const columns = [
       {
         type: 'column',
         text: 'First name',
-        field: 'firstName',
+        field: 'firstName'
       },
       {
         type: 'column',
         text: 'Last name',
         field: 'lastName',
-        sortable: true,
-      },
-    ],
+        sortable: true
+      }
+    ]
   },
   {
     text: 'Address',
@@ -30,22 +35,28 @@ const columns = [
       {
         type: 'column',
         text: 'Street',
-        field: 'street',
+        field: 'street'
       },
       {
         type: 'column',
         text: 'Postcode',
         field: 'postcode',
-        sortable: true,
+        sortable: true
       },
       {
         type: 'column',
         text: 'City',
         field: 'city',
-        sortable: true,
+        sortable: true
       },
-    ],
-  },
+      {
+        type: 'column',
+        text: 'City2',
+        field: 'city',
+        sortable: true
+      }
+    ]
+  }
 ]
 
 const data = [
@@ -55,7 +66,7 @@ const data = [
     street: 'Golden Avenue 11',
     postcode: 12345,
     city: 'New York',
-    country: 'USA',
+    country: 'USA'
   },
   {
     firstName: 'John',
@@ -63,7 +74,7 @@ const data = [
     street: 'Golden Avenue 11',
     postcode: 12345,
     city: 'New York',
-    country: 'USA',
+    country: 'USA'
   },
   {
     firstName: 'Peter',
@@ -71,7 +82,7 @@ const data = [
     street: 'Main Street 123',
     postcode: 98765,
     city: 'Los Angeles',
-    country: 'USA',
+    country: 'USA'
   },
   {
     firstName: 'Mary',
@@ -79,7 +90,7 @@ const data = [
     street: 'Long Road 123',
     postcode: 45678,
     city: 'London',
-    country: 'Great Britain',
+    country: 'Great Britain'
   },
   {
     firstName: 'Julia',
@@ -87,15 +98,22 @@ const data = [
     street: 'Main Road 99',
     postcode: 65432,
     city: 'Sidney',
-    country: 'Australia',
-  },
+    country: 'Australia'
+  }
 ]
 
-export const example_1 = () =>
-  h('jsc-data-table', {
-    columns,
-    data,
-    selectMode: 'mutli',
-    sortField: 'lastName',
-    sortDir: 'desc',
-  })
+@elem({
+  tag: 'data-table-demo',
+  uses: [DataTable],
+  styles: themeStyles,
+  impl: withLit(dataTableDemoImpl)
+})
+class DataTableDemo extends component() {}
+
+function dataTableDemoImpl() {
+  return () => html`
+    <sx-data-table .columns=${columns} .data=${data}></sx-data-table>
+  `
+}
+
+export const dataTable = () => h('data-table-demo')

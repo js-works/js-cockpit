@@ -1,0 +1,5 @@
+.base h3.title {
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-xl);
+  font-weight: var(--sl-font-weight-normal);
+}

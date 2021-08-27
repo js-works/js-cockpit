@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = ({ config }) => {
+  /*
   config.module.rules.push({
     test: /\.(ts|tsx)$/,
 
@@ -10,6 +11,7 @@ module.exports = ({ config }) => {
       },
     ],
   })
+  */
 
   config.module.rules = config.module.rules.filter(
     (it) => !it || !it.test || !it.test.toString().startsWith('/\\.css$/')
@@ -17,7 +19,7 @@ module.exports = ({ config }) => {
 
   config.module.rules.push({
     test: /\.css$/,
-    use: ['raw-loader'],
+    use: ['raw-loader']
   })
 
   const alias = (config.resolve && config.resolve.alias) || {}
