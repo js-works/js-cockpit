@@ -1,9 +1,10 @@
+// external imports
 import { component, elem, prop, Attrs } from 'js-element'
 import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
 import { useState } from 'js-element/hooks'
 
-/** @ts-ignore */
-import dataTableStyles from './data-table.css' // TODO!!!
+// styles
+import dataTableStyles from './data-table.css'
 
 // === exports =======================================================
 
@@ -57,7 +58,7 @@ class DataTable extends component() {
   selectMode: 'single' | 'multi' | 'none' = 'none'
 
   @prop
-  bordered = false
+  bordered = true
 
   @prop
   data: any[][] | object[] | null = null

@@ -1,5 +1,11 @@
-.base h3.title {
+.base > h3.title {
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-xl);
   font-weight: var(--sl-font-weight-normal);
+}
+
+.base > hr {
+  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border-width: 1px 0 0 0;
+  height: 0px;
 }

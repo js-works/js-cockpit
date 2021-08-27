@@ -1,10 +1,14 @@
+// external imports
 import { component, elem, prop, Attrs } from 'js-element'
 import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
 import { useState } from 'js-element/hooks'
-import { DataTable } from '../data-table/data-table'
 
-/** @ts-ignore */
-import dataExplorerStyles from './data-explorer.css' // TODO!!!
+// internal imports
+import { DataTable } from '../data-table/data-table'
+import { PaginationBar } from '../pagination-bar/pagination-bar'
+
+// styles
+import dataExplorerStyles from './data-explorer.css'
 
 // === exports =======================================================
 
@@ -34,6 +38,7 @@ namespace DataExplorer {
 @elem({
   tag: 'sx-data-explorer',
   styles: [dataExplorerStyles],
+  uses: [DataTable, PaginationBar],
   impl: withLit(dataExplorerImpl)
 })
 class DataExplorer extends component() {
@@ -60,7 +65,54 @@ function dataExplorerImpl(self: DataExplorer) {
 
   return () => html` <div class="base">
     <h3 class="title">${self.title}</h3>
-    <sx-data-table .columns=${self.columns} .data=${state.data}>
+    <sx-data-table .columns=${self.columns} .data=${data} .bordered=${false}>
     </sx-data-table>
+    <hr />
+    <sx-pagination-bar></sx-pagination-bar>
   </div>`
 }
+
+// TODO: get rid of this ==================================================
+
+const data = [
+  {
+    firstName: 'Jane',
+    lastName: 'Doe',
+    street: 'Golden Avenue 11',
+    postcode: 12345,
+    city: 'New York',
+    country: 'USA'
+  },
+  {
+    firstName: 'John',
+    lastName: 'Doe',
+    street: 'Golden Avenue 11',
+    postcode: 12345,
+    city: 'New York',
+    country: 'USA'
+  },
+  {
+    firstName: 'Peter',
+    lastName: 'Goodyear',
+    street: 'Main Street 123',
+    postcode: 98765,
+    city: 'Los Angeles',
+    country: 'USA'
+  },
+  {
+    firstName: 'Mary',
+    lastName: 'Smith',
+    street: 'Long Road 123',
+    postcode: 45678,
+    city: 'London',
+    country: 'Great Britain'
+  },
+  {
+    firstName: 'Julia',
+    lastName: 'Mayfield',
+    street: 'Main Road 99',
+    postcode: 65432,
+    city: 'Sidney',
+    country: 'Australia'
+  }
+]
