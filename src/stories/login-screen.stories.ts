@@ -15,12 +15,23 @@ const themeStyles = theme.toString()
   tag: 'login-screen-demo',
   uses: [Brand, LoginScreen],
   styles: themeStyles,
-  impl: withLit(dataExplorerDemoImpl)
+  impl: withLit(loginScreenDemoImpl)
 })
-class DataExplorerDemo extends component() {}
+class LoginScreenDemo extends component() {}
 
-function dataExplorerDemoImpl() {
-  return () => html` <sx-brand></sx-brand> `
+function loginScreenDemoImpl() {
+  return () =>
+    html`
+      <sx-login-screen>
+        <div slot="header">
+          <sx-brand
+            vendor="meet+greet"
+            title="Back Office"
+            size="medium"
+          ></sx-brand>
+        </div>
+      </sx-login-screen>
+    `
 }
 
 export const loginScreen = () => h('login-screen-demo')

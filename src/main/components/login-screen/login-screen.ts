@@ -30,12 +30,16 @@ class LoginScreen extends component() {}
 function loginScreenImpl(self: LoginScreen) {
   return () => html`
     <div class="base">
-      <div class="header">Header</div>
-      <div class="maiin">
+      <div class="header">
+        <slot name="header">Header</slot>
+      </div>
+      <div class="main">
         <div>Left</div>
         <div>Right</div>
       </div>
-      <div class="footer">Footer</div>
+      <div class="footer">
+        <slot name="footer"> Footer </slot>
+      </div>
     </div>
   `
 }
