@@ -1,5 +1,6 @@
-:host {
+.base {
   font-family: var(--sl-font-sans);
+  user-select: none;
 }
 
 .base > table {
@@ -16,7 +17,7 @@
 .base > table > thead th {
   border: 1px solid rgb(var(--sl-color-neutral-300));
   padding: 2px 10px;
-  font-weight: 600;
+  font-weight: var(--sl-font-weight-normal);
   font-size: var(--sl-font-size-xxl);
   color: rgb(var(--sl-color-neutral-1000));
 }
@@ -26,11 +27,11 @@
 }
 
 .base > table > thead th.sortable:hover {
-  background-color: rgb(var(--sl-color-primary-100));
+  background-color: rgb(var(--sl-color-neutral-100));
 }
 
 .base > table > thead th.sortable:active {
-  background-color: rgb(var(--sl-color-primary-200));
+  background-color: rgb(var(--sl-color-primary-100));
 }
 
 .base > table > tbody > tr > td {
@@ -41,4 +42,17 @@
 
 .base > table > tbody > tr:nth-child(2n) td {
   background-color: rgb(var(--sl-color-neutral-100));
+}
+
+.selector-column {
+  position: relative;
+  width: 9px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.selector-column sl-checkbox {
+  position: absolute;
+  top: 0;
+  left: 7px;
 }

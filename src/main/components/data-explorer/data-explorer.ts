@@ -54,7 +54,7 @@ class DataExplorer extends component() {
   @prop
   sortDir: 'asc' | 'desc' = 'asc'
 
-  @prop
+  @prop({ attr: Attrs.string })
   selectMode: 'single' | 'multi' | 'none' = 'none'
 }
 
@@ -62,14 +62,21 @@ function dataExplorerImpl(self: DataExplorer) {
   const [state, setState] = useState({
     data: [] as any[][] | object[]
   })
-
-  return () => html` <div class="base">
-    <h3 class="title">${self.title}</h3>
-    <sx-data-table .columns=${self.columns} .data=${data} .bordered=${false}>
-    </sx-data-table>
-    <hr />
-    <sx-pagination-bar></sx-pagination-bar>
-  </div>`
+  setTimeout(() => console.log(222, self.selectMode), 200)
+  return () => html`
+    <div class="base">
+      <h3 class="title">${self.title}</h3>
+      <sx-data-table
+        .columns=${self.columns}
+        .selectMode=${self.selectMode}
+        .data=${data}
+        .bordered=${false}
+      >
+      </sx-data-table>
+      <hr />
+      <sx-pagination-bar></sx-pagination-bar>
+    </div>
+  `
 }
 
 // TODO: get rid of this ==================================================

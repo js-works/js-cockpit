@@ -3,6 +3,9 @@ import { component, elem, prop, Attrs } from 'js-element'
 import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
 import { useState } from 'js-element/hooks'
 
+// custom elements
+import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
+
 // styles
 import dataTableStyles from './data-table.css'
 
@@ -42,6 +45,7 @@ type HeaderCell = {
 @elem({
   tag: 'sx-data-table',
   styles: [dataTableStyles],
+  uses: [SlCheckbox],
   impl: withLit(dataTableImpl)
 })
 class DataTable extends component() {
@@ -69,7 +73,16 @@ function dataTableImpl(self: DataTable) {
     const rows: TemplateResult[] = []
     const { headerCells } = getTableHeadInfo(self.columns || [])
 
-    headerCells.forEach((row) => {
+    const rowsSelector =
+      self.selectMode === 'single' || self.selectMode === 'multi'
+        ? html`
+            <th class="selector-column" rowspan=${headerCells.length}>
+              <sl-checkbox></sl-checkbox>
+            </th>
+          `
+        : null
+
+    headerCells.forEach((row, rowIdx) => {
       const cells: TemplateResult[] = []
 
       row.forEach((cell, cellIdx) => {
@@ -86,7 +99,7 @@ function dataTableImpl(self: DataTable) {
 
       rows.push(
         html`<tr>
-          ${cells}
+          ${rowIdx === 0 ? rowsSelector : null}${cells}
         </tr>`
       )
     })
@@ -103,6 +116,15 @@ function dataTableImpl(self: DataTable) {
     const data = self.data || []
     const rows: TemplateResult[] = []
 
+    const rowSelector =
+      self.selectMode === 'single' || self.selectMode === 'multi'
+        ? html`
+            <td class="selector-column">
+              <sl-checkbox></sl-checkbox>
+            </td>
+          `
+        : null
+
     data.forEach((rec) => {
       const cells: TemplateResult[] = []
 
@@ -112,7 +134,7 @@ function dataTableImpl(self: DataTable) {
 
       rows.push(
         html`<tr>
-          ${cells}
+          ${rowSelector}${cells}
         </tr>`
       )
     })

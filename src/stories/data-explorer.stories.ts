@@ -48,12 +48,6 @@ const columns: DataExplorer.Column[] = [
         text: 'City',
         field: 'city',
         sortable: true
-      },
-      {
-        type: 'column',
-        text: 'City2',
-        field: 'city',
-        sortable: true
       }
     ]
   }
@@ -116,6 +110,7 @@ function dataExplorerDemoImpl() {
       title="Customers"
       .columns=${columns}
       .data=${data}
+      select-mode="multi"
     ></sx-data-explorer>
   `
 }

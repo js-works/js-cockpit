@@ -1,9 +1,14 @@
 // external imports
-import { component, elem, prop, Attrs } from 'js-element'
-import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
-import { useState } from 'js-element/hooks'
+import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { html, createRef, repeat, withLit, Ref } from 'js-element/lit'
+
+// custom elements
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
+import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
 
 // styles
 import paginationBarStyles from './pagination-bar.css'
@@ -14,11 +19,14 @@ import chevronLeftSvg from '../../icons/chevron-left.svg'
 import chevronRightSvg from '../../icons/chevron-right.svg'
 import chevronDoubleRightSvg from '../../icons/chevron-double-right.svg'
 
-console.log(11111, chevronDoubleLeftSvg)
-
 // === exports =======================================================
 
 export { PaginationBar }
+
+// === constants =====================================================
+
+const PAGE_SIZES = new Set([25, 50, 100, 250, 500])
+const DEFAULT_PAGE_SIZE = 50
 
 // === types =========================================================
 
@@ -27,15 +35,17 @@ export { PaginationBar }
 @elem({
   tag: 'sx-pagination-bar',
   styles: paginationBarStyles,
-  uses: [SlIcon, SlInput],
+  uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect],
   impl: withLit(paginationBarImpl)
 })
-class PaginationBar extends component() {
+class PaginationBar extends component<{
+  reset(): void
+}>() {
   @prop({ attr: Attrs.number })
   pageIndex = 0
 
   @prop({ attr: Attrs.number })
-  pageSize = 50
+  pageSize = DEFAULT_PAGE_SIZE
 
   @prop({ attr: Attrs.number })
   totalItemCount = -1
@@ -45,25 +55,71 @@ class PaginationBar extends component() {
 }
 
 function paginationBarImpl(self: PaginationBar) {
+  const pageInputRef = createRef<SlInput>()
+  const pageSizeSelectRef = createRef<SlSelect>()
+
+  setMethods(self, {
+    reset() {
+      pageInputRef.value!.value = String(self.pageIndex ?? 1)
+
+      pageSizeSelectRef.value!.value = String(
+        self.pageSize || DEFAULT_PAGE_SIZE
+      )
+    }
+  })
+
   return () => html`
     <div class="base">
-      <a>
-        <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
-      </a>
-      <a>
-        <sl-icon src=${chevronLeftSvg}></sl-icon>
-      </a>
-
-      Page
-      <sl-input size="small" class="page-number-input"></sl-input>
-      of 123
-
-      <a>
-        <sl-icon src=${chevronRightSvg}></sl-icon>
-      </a>
-      <a>
-        <sl-icon src=${chevronDoubleRightSvg}></sl-icon>
-      </a>
+      ${renderPagination(self)} ${renderPageSizeSelector(self)}
+      ${renderPaginationInfo(self)}
     </div>
   `
+}
+
+function renderPagination(self: PaginationBar) {
+  return html`
+    <div class="pagination">
+      <sl-button type="default" size="medium" class="nav-button">
+        <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
+      </sl-button>
+      <sl-button type="default" size="medium" class="nav-button">
+        <sl-icon src=${chevronLeftSvg}></sl-icon>
+      </sl-button>
+      <div class="page-control">
+        Page
+        <sl-input
+          size="small"
+          value=${self.pageIndex + 1}
+          class="page-number-input"
+        ></sl-input>
+        of 123
+      </div>
+      <sl-button type="default" size="medium" class="nav-button">
+        <sl-icon src=${chevronRightSvg}></sl-icon>
+      </sl-button>
+      <sl-button type="default" size="medium" class="nav-button">
+        <sl-icon src=${chevronDoubleRightSvg}></sl-icon>
+      </sl-button>
+    </div>
+  `
+}
+
+function renderPageSizeSelector(self: PaginationBar) {
+  return html`
+    <div class="page-size-selector">
+      Items/Page
+      <sl-select size="small" value=${self.pageSize}>
+        ${repeat(
+          PAGE_SIZES,
+          (idx) => idx,
+          (pageSize) =>
+            html`<sl-menu-item value=${pageSize}>${pageSize}</sl-menu-item>`
+        )}
+      </sl-select>
+    </div>
+  `
+}
+
+function renderPaginationInfo(self: PaginationBar) {
+  return html`<div class="pagination-info">Items 1-200 from 1.346</div>`
 }
