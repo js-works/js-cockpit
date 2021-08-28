@@ -1,0 +1,11 @@
+.base {
+  font-family: var(--sl-font-sans);
+}
+
+.vendor {
+  font-size: var(--sl-font-size-small);
+}
+
+.title {
+  font-size: var(--sl-font-size-large);
+}

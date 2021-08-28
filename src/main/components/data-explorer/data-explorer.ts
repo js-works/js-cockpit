@@ -62,7 +62,7 @@ function dataExplorerImpl(self: DataExplorer) {
   const [state, setState] = useState({
     data: [] as any[][] | object[]
   })
-  setTimeout(() => console.log(222, self.selectMode), 200)
+
   return () => html`
     <div class="base">
       <h3 class="title">${self.title}</h3>

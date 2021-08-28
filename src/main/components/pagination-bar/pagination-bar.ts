@@ -1,6 +1,7 @@
 // external imports
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { html, createRef, repeat, withLit, Ref } from 'js-element/lit'
+import { useI18n } from '../../utils/hooks'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -55,6 +56,7 @@ class PaginationBar extends component<{
 }
 
 function paginationBarImpl(self: PaginationBar) {
+  const t = useI18n('sx')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
 
@@ -68,58 +70,63 @@ function paginationBarImpl(self: PaginationBar) {
     }
   })
 
+  function renderPagination() {
+    return html`
+      <div class="pagination">
+        <sl-button type="default" size="medium" class="nav-button">
+          <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
+        </sl-button>
+        <sl-button type="default" size="medium" class="nav-button">
+          <sl-icon src=${chevronLeftSvg}></sl-icon>
+        </sl-button>
+        <div class="page-control">
+          ${t('page', 'Page')}
+          <sl-input
+            size="small"
+            value=${self.pageIndex + 1}
+            class="page-number-input"
+          ></sl-input>
+          ${t('ofPages', [t.formatNumber(12)], 'of {0} pages')}
+        </div>
+        <sl-button type="default" size="medium" class="nav-button">
+          <sl-icon src=${chevronRightSvg}></sl-icon>
+        </sl-button>
+        <sl-button type="default" size="medium" class="nav-button">
+          <sl-icon src=${chevronDoubleRightSvg}></sl-icon>
+        </sl-button>
+      </div>
+    `
+  }
+
+  function renderPageSizeSelector() {
+    return html`
+      <div class="page-size-selector">
+        ${t('pageSize', 'Items/Page')}
+        <sl-select size="small" value=${self.pageSize}>
+          ${repeat(
+            PAGE_SIZES,
+            (idx) => idx,
+            (pageSize) =>
+              html`<sl-menu-item value=${pageSize}>${pageSize}</sl-menu-item>`
+          )}
+        </sl-select>
+      </div>
+    `
+  }
+
+  function renderPaginationInfo() {
+    const info = t(
+      'paginationInfo',
+      [t.formatNumber(1), t.formatNumber(200), t.formatNumber(1346)],
+      'Items {0}-{1} of {2}'
+    )
+    return html`<div class="pagination-info">${info}</div>`
+  }
+
   return () => html`
     <div class="base">
-      ${renderPagination(self)} ${renderPageSizeSelector(self)}
-      ${renderPaginationInfo(self)}
+      ${renderPagination()} ${renderPageSizeSelector()}
+      ${renderPaginationInfo()}
     </div>
   `
-}
-
-function renderPagination(self: PaginationBar) {
-  return html`
-    <div class="pagination">
-      <sl-button type="default" size="medium" class="nav-button">
-        <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
-      </sl-button>
-      <sl-button type="default" size="medium" class="nav-button">
-        <sl-icon src=${chevronLeftSvg}></sl-icon>
-      </sl-button>
-      <div class="page-control">
-        Page
-        <sl-input
-          size="small"
-          value=${self.pageIndex + 1}
-          class="page-number-input"
-        ></sl-input>
-        of 123
-      </div>
-      <sl-button type="default" size="medium" class="nav-button">
-        <sl-icon src=${chevronRightSvg}></sl-icon>
-      </sl-button>
-      <sl-button type="default" size="medium" class="nav-button">
-        <sl-icon src=${chevronDoubleRightSvg}></sl-icon>
-      </sl-button>
-    </div>
-  `
-}
-
-function renderPageSizeSelector(self: PaginationBar) {
-  return html`
-    <div class="page-size-selector">
-      Items/Page
-      <sl-select size="small" value=${self.pageSize}>
-        ${repeat(
-          PAGE_SIZES,
-          (idx) => idx,
-          (pageSize) =>
-            html`<sl-menu-item value=${pageSize}>${pageSize}</sl-menu-item>`
-        )}
-      </sl-select>
-    </div>
-  `
-}
-
-function renderPaginationInfo(self: PaginationBar) {
-  return html`<div class="pagination-info">Items 1-200 from 1.346</div>`
 }
