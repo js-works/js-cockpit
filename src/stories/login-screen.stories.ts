@@ -3,6 +3,7 @@ import { component, elem } from 'js-element'
 import { html, withLit } from 'js-element/lit'
 import { Brand } from '../main/components/brand/brand'
 import { LoginScreen } from '../main/components/login-screen/login-screen'
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 
 export default {
   title: 'login-screen'
@@ -13,7 +14,7 @@ const themeStyles = theme.toString()
 
 @elem({
   tag: 'login-screen-demo',
-  uses: [Brand, LoginScreen],
+  uses: [Brand, LoginScreen, SlInput],
   styles: themeStyles,
   impl: withLit(loginScreenDemoImpl)
 })
@@ -25,11 +26,12 @@ function loginScreenDemoImpl() {
       <sx-login-screen>
         <div slot="header">
           <sx-brand
-            vendor="meet+greet"
+            vendor="my-company"
             title="Back Office"
-            size="medium"
+            size="large"
           ></sx-brand>
         </div>
+        <div slot="footer">&copy; 2021, my-company</div>
       </sx-login-screen>
     `
 }

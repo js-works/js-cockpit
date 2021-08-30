@@ -34,16 +34,17 @@ const firstDayOfWeekData: Record<number, string> = {
 
 type I18n = Readonly<{
   localize(
-    elem:
+    subject:
       | LitElement
       | {
           element: HTMLElement
           refresh(): void
           onConnect(action: () => void): void
           onDisconnect(action: () => void): void
-        },
+        }
+      | string,
 
-    category: string
+    category?: string
   ): I18n.Facade
 
   customize(
@@ -339,25 +340,34 @@ const i18nCtrl = (() => {
     watch: emitter.subscribe,
 
     // be careful, this is an expensive
-    getLocale(elem: HTMLElement) {
-      let ret = DEFAULT_LOCALE
-
+    determineLocale(elem: HTMLElement): string {
       if (elem.lang && !(elem.getRootNode() instanceof ShadowRoot)) {
-        ret = elem.lang
+        return elem.lang
       } else {
-        let el = elem.parentElement
+        let el: any = elem
 
         while (el) {
-          if (el.lang && !(el.getRootNode instanceof ShadowRoot)) {
-            ret = el.lang
-            break
+          if (el.host) {
+            while (el.host) {
+              el = el.host
+            }
+          } else {
+            el = el.parentNode
+
+            while (el && el.host) {
+              el = el.host
+            }
           }
 
-          el = el.parentElement
+          if (!el) {
+            return DEFAULT_LOCALE
+          } else if (el.lang) {
+            return el.lang
+          }
         }
       }
 
-      return ret
+      return DEFAULT_LOCALE
     }
   }
 })()
@@ -365,9 +375,13 @@ const i18nCtrl = (() => {
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  localize(elemInst: ElementInst, category: string): I18n.Facade {
-    const isLit = elemInst instanceof LitElement
-    const elem = isLit ? elemInst : (elemInst as any).element
+  localize(subject: ElementInst | string, category: string = ''): I18n.Facade {
+    if (typeof subject === 'string') {
+      return createFacade(() => subject, i18nCtrl.getBehavior, category)
+    }
+
+    const isLit = subject instanceof LitElement
+    const elem = isLit ? subject : (subject as any).element
     let version = 0
     let locale = DEFAULT_LOCALE
 
@@ -376,7 +390,7 @@ const I18n: I18n = Object.freeze({
 
       if (version !== currentVersion) {
         version = currentVersion
-        locale = i18nCtrl.getLocale(elem)
+        locale = i18nCtrl.determineLocale(elem)
       }
 
       return locale
@@ -404,7 +418,7 @@ const I18n: I18n = Object.freeze({
         }
       })
     } else {
-      const { refresh, onConnect, onDisconnect } = elemInst as Exclude<
+      const { refresh, onConnect, onDisconnect } = subject as Exclude<
         ElementInst,
         LitElement
       >
