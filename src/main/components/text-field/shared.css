@@ -1,0 +1,10 @@
+.required .input::part(label):after {
+  color: rgb(var(--sl-color-danger-700));
+  content: '*';
+}
+
+.error {
+  margin: 2px 0;
+  color: rgb(var(--sl-color-danger-700));
+  font-size: var(--sl-font-size-small);
+}

@@ -1,15 +1,19 @@
 .base {
-  position: absolute;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+.base.full-size {
   display: flex;
   text-align: center;
   justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
   min-width: 100%;
   max-width: 100%;
   min-height: 100%;
   max-width: 100%;
-  top: 0;
-  left: 0;
-  font-family: var(--sl-font-sans);
   background-color: rgb(var(--sl-color-cool-gray-100));
 }
 
@@ -34,6 +38,7 @@
   height: 500px;
   margin: 16px;
   align-self: center;
+  border-radius: 6px;
   box-shadow: 5px 5px 25px rgb(var(--sl-color-neutral-300));
 }
 
@@ -43,13 +48,12 @@
   flex-grow: 5;
   min-width: 280px;
   max-width: 280px;
-  padding: 24px 20px;
+  padding: 26px 20px 24px 20px;
   box-sizing: border-box;
   color: rgb(var(--sl-color-neutral-0));
   background-color: rgb(var(--sl-color-primary-600));
   border-radius: 6px 0 0 6px;
   text-align: center;
-  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g transform="translate(0 15)"><circle fill="white" opacity="0.14" cx="0" cy="50" r="30"/><circle fill="white" opacity="0.14" cx="10" cy="80" r="50"/><circle fill="white" opacity="0.14" cx="10" cy="100" r="30"/><circle fill="white" opacity="0.17" cx="70" cy="100" r="65"/><circle fill="white" opacity="0.16" cx="120" cy="60" r="50"/></g></svg>');
   background-repeat: no-repeat;
   background-position: bottom;
 }
@@ -59,25 +63,28 @@
 }
 
 .column2 {
-  position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: 8px;
   text-align: left;
   width: 280px;
   max-width: 280px;
   padding: 24px 20px;
-  flex-grow: 7;
+  background-color: white;
   background-color: rgb(var(--sl-color-neutral-0));
   border-radius: 0 6px 6px 0;
 }
 
 .column2-top {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
+  gap: 12px;
 }
 
 .column2-bottom {
   display: flex;
+  flex-grow: 0;
   flex-direction: column;
   gap: 16px;
 }
@@ -93,19 +100,34 @@
 }
 
 .default-login-intro h3 {
+  margin: 0;
   font-size: var(--sl-font-size-x-large);
-  font-weight: var(--sl-font-weight-normal);
+  font-weight: var(--sl-font-weight-semibold);
 }
 
 .default-login-intro p {
+  margin: 12px 0;
   font-size: var(--sl-font-size-medium);
 }
 
 .unlock-icon {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
 }
 
 .login-button {
   width: 100%;
+}
+
+.column1 {
+  background-image: url('data:image/svg+xml;charset=UTF-8,\
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
+      <g transform="translate(0 15)">\
+        <circle fill="white" opacity="0.14" cx="0" cy="50" r="30"/>\
+        <circle fill="white" opacity="0.14" cx="10" cy="80" r="50"/>\
+        <circle fill="white" opacity="0.14" cx="10" cy="100" r="30"/>\
+        <circle fill="white" opacity="0.17" cx="70" cy="100" r="65"/>\
+        <circle fill="white" opacity="0.16" cx="120" cy="60" r="50"/>\
+      </g>\
+    </svg>');
 }
