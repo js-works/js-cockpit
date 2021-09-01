@@ -3,7 +3,18 @@ import { component, elem } from 'js-element'
 import { html, withLit } from 'js-element/lit'
 import { Brand } from '../main/components/brand/brand'
 import { LoginForm } from '../main/components/login-form/login-form'
-import { lightTheme, darkTheme } from '../main/theming/themes'
+
+import {
+  lightTheme,
+  darkTheme,
+  blueTheme,
+  blueDarkTheme,
+  tealTheme,
+  tealDarkTheme,
+  pinkTheme,
+  pinkDarkTheme
+} from '../main/theming/themes'
+
 import { convertToCss } from '../main/theming/theme-utils'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 
@@ -11,7 +22,7 @@ export default {
   title: 'login-form'
 }
 
-const themeStyles = convertToCss(lightTheme)
+const themeStyles = convertToCss(pinkTheme)
 
 @elem({
   tag: 'login-form-demo',
