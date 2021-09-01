@@ -72,7 +72,7 @@ function dataExplorerImpl(self: DataExplorer) {
         <jsc-data-table
           .columns=${self.columns}
           .selectMode=${self.selectMode}
-          .data=${data}
+          .data=${[...data, ...data, ...data, ...data, ...data, ...data]}
           .bordered=${false}
           .sortField=${self.sortField}
           .sortDir=${self.sortDir}

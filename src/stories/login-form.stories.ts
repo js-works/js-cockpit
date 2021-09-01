@@ -24,7 +24,7 @@ export default {
   title: 'login-form'
 }
 
-const themeStyles = convertToCss(blueTheme)
+const themeStyles = convertToCss(lightTheme)
 
 @elem({
   tag: 'login-form-demo',
