@@ -65,18 +65,23 @@ function dataExplorerImpl(self: DataExplorer) {
 
   return () => html`
     <div class="base">
-      <h3 class="title">${self.title}</h3>
-      <sx-data-table
-        .columns=${self.columns}
-        .selectMode=${self.selectMode}
-        .data=${data}
-        .bordered=${false}
-        .sortField=${self.sortField}
-        .sortDir=${self.sortDir}
-      >
-      </sx-data-table>
-      <hr />
-      <sx-pagination-bar></sx-pagination-bar>
+      <div class="header">
+        <h3 class="title">${self.title}</h3>
+      </div>
+      <div class="table">
+        <sx-data-table
+          .columns=${self.columns}
+          .selectMode=${self.selectMode}
+          .data=${data}
+          .bordered=${false}
+          .sortField=${self.sortField}
+          .sortDir=${self.sortDir}
+        >
+        </sx-data-table>
+      </div>
+      <div class="footer">
+        <sx-pagination-bar></sx-pagination-bar>
+      </div>
     </div>
   `
 }

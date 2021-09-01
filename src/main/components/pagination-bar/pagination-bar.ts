@@ -56,7 +56,7 @@ class PaginationBar extends component<{
 }
 
 function paginationBarImpl(self: PaginationBar) {
-  const t = useI18n('sx')
+  const { i18n, t } = useI18n('sx')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
 
@@ -86,7 +86,7 @@ function paginationBarImpl(self: PaginationBar) {
             value=${self.pageIndex + 1}
             class="page-number-input"
           ></sl-input>
-          ${t('ofPages', [t.formatNumber(12)], 'of {0} pages')}
+          ${t('ofPages', [i18n.formatNumber(12)], 'of {0} pages')}
         </div>
         <sl-button type="default" size="medium" class="nav-button">
           <sl-icon src=${chevronRightSvg}></sl-icon>
@@ -116,10 +116,11 @@ function paginationBarImpl(self: PaginationBar) {
 
   function renderPaginationInfo() {
     const info = t(
-      'paginationInfo',
-      [t.formatNumber(1), t.formatNumber(200), t.formatNumber(1346)],
+      '.pagination-info',
+      [i18n.formatNumber(1), i18n.formatNumber(200), i18n.formatNumber(1346)],
       'Items {0}-{1} of {2}'
     )
+
     return html`<div class="pagination-info">${info}</div>`
   }
 

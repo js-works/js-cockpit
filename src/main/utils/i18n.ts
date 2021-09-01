@@ -509,3 +509,15 @@ function createEmitter<T>(): Emitter<T> {
     }
   }
 }
+
+// === set standard behavior =========================================
+
+I18n.customize((self, base) => {
+  return {
+    getText(locale, textId, replacements?, baseText?) {
+      return (
+        base.getText(locale, textId, replacements, baseText) ?? baseText ?? null
+      )
+    }
+  }
+})

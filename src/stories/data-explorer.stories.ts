@@ -111,7 +111,7 @@ function dataExplorerDemoImpl() {
       .columns=${columns}
       .data=${data}
       .sortField=${'lastName'}
-      .select-mode=${'multi'}
+      .selectMode=${'multi'}
     ></sx-data-explorer>
   `
 }

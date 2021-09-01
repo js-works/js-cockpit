@@ -4,7 +4,7 @@
       stroke="currentColor"
       stroke-width="3"
       stroke-miterlimit="10"
-      style="opacity: 60%"
+      style="opacity: 40%"
     >
       <polyline stroke-linejoin="bevel" points="8,40 20,56 32,40 "/>
       <polyline stroke-miterlimit="10" points="20,16 20,56"/>

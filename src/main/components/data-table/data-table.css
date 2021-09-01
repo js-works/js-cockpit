@@ -14,7 +14,7 @@
   border: 1px solid rgb(var(--sl-color-neutral-300));
 }
 
-.base > table th {
+.base > table > thead th {
   align-items: center;
   border: 1px solid rgb(var(--sl-color-neutral-300));
   padding: 2px 10px;
@@ -28,17 +28,17 @@
 }
 
 .base > table > thead th.sortable:hover {
-  background-color: rgb(var(--sl-color-neutral-100));
+  background-color: rgb(var(--sl-color-neutral-200));
 }
 
 .base > table > thead th.sortable:active {
-  background-color: rgb(var(--sl-color-primary-100));
+  background-color: rgb(var(--sl-color-primary-200));
 }
 
-.base > table > thead th content {
-  display: flex;
-  flex-direction: column;
-  background-color: red !important;
+.base > table > thead th .content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .base > table > thead th sl-icon {

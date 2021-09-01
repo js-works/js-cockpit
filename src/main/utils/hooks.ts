@@ -9,20 +9,27 @@ import { I18n } from './i18n'
 
 // === useI18n =======================================================
 
-export const useI18n = hook(
-  'useI18n',
-  (namespace: string): I18n.Facade => {
-    const refresh = useRefresher()
-    const element = useHost()
+export const useI18n = hook('useI18n', (namespace: string) => {
+  const refresh = useRefresher()
+  const element = useHost()
 
-    return I18n.localize(
-      {
-        element,
-        onConnect: useAfterMount,
-        onDisconnect: useBeforeUnmount,
-        refresh
-      },
-      namespace
-    )
+  const localizer = I18n.localize(
+    {
+      element,
+      onConnect: useAfterMount,
+      onDisconnect: useBeforeUnmount,
+      refresh
+    },
+    namespace
+  )
+
+  const t = localizer.bind(null)
+
+  return {
+    i18n: {
+      ...localizer,
+      getText: t
+    },
+    t
   }
-)
+})

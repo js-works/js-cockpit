@@ -1,12 +1,39 @@
-.base > h3.title {
-  font-family: var(--sl-font-sans);
-  font-size: var(--sl-font-size-xl);
+.base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px;
+  color: rgb(var(--sl-color-neutral-1000));
+  background-color: rgb(var(--sl-color-neutral-0));
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.header {
+  margin: 0 0 0px 0;
+  padding: 12px;
+  font-size: var(--sl-font-size-large);
   font-weight: var(--sl-font-weight-normal);
 }
 
-.base > hr {
+.title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-large);
+  font-weight: var(--sl-font-weight-normal);
+}
+
+.table {
+  flex-grow: 1;
+}
+
+.footer {
   border: 0 solid rgb(var(--sl-color-neutral-300));
   border-width: 1px 0 0 0;
-  height: 0px;
-  margin: 1px 0 2px 0;
+  padding: 1px 0 2px 0;
 }

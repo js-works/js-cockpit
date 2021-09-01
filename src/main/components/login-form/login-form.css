@@ -70,7 +70,6 @@
   width: 280px;
   max-width: 280px;
   padding: 24px 20px;
-  background-color: white;
   background-color: rgb(var(--sl-color-neutral-0));
   border-radius: 0 6px 6px 0;
 }
@@ -80,6 +79,7 @@
   flex-direction: column;
   flex-grow: 1;
   gap: 12px;
+  --sl-input-label-color: rgb(var(--sl-color-neutral-1000));
 }
 
 .column2-bottom {

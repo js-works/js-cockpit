@@ -102,7 +102,7 @@ function dataTableImpl(self: DataTable) {
             icon = upArrowSvg
           }
         }
-        console.log(icon)
+
         cells.push(html`
           <th
             colspan=${cell.colSpan}
