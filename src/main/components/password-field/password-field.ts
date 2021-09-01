@@ -18,7 +18,7 @@ export { PasswordField }
 // === PasswordField =====================================================
 
 @elem({
-  tag: 'sx-password-field',
+  tag: 'jsc-password-field',
   styles: [sharedStyles, passwordFieldStyles],
   uses: [SlInput],
   impl: withLit(passwordFieldImpl)

@@ -22,7 +22,7 @@
     "paths": {},
     "typeRoots": ["node_modules/@types"]
   },
-  "files": ["src/main/sx-widgets.ts"],
+  "files": ["src/main/js-cockpit.ts"],
   "include": ["./src/main/**/*.*", "./src/stories/**/*.*"],
   "exclude": ["node_modules"]
 }

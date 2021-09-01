@@ -30,65 +30,65 @@ function brandDemoImpl() {
     html`
       <div class="brand-demo">
         <div>
-          <sx-brand
+          <jsc-brand
             vendor="Size: small"
             title="Back Office"
             size="small"
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: medium"
             title="Back Office"
             size="medium"
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: large"
             title="Back Office"
             size="large"
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: huge"
             title="Back Office"
             size="huge"
-          ></sx-brand>
+          ></jsc-brand>
         </div>
 
         <div>
-          <sx-brand
+          <jsc-brand
             vendor="Size: small"
             title="Back Office"
             size="small"
             multi-color
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: medium"
             title="Back Office"
             size="medium"
             multi-color
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: large"
             title="Back Office"
             size="large"
             multi-color
-          ></sx-brand>
+          ></jsc-brand>
           <br />
           <br />
-          <sx-brand
+          <jsc-brand
             vendor="Size: huge"
             title="Back Office"
             size="huge"
             multi-color
-          ></sx-brand>
+          ></jsc-brand>
         </div>
       </div>
     `

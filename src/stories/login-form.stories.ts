@@ -3,15 +3,15 @@ import { component, elem } from 'js-element'
 import { html, withLit } from 'js-element/lit'
 import { Brand } from '../main/components/brand/brand'
 import { LoginForm } from '../main/components/login-form/login-form'
-
+import { lightTheme, darkTheme } from '../main/theming/themes'
+import { convertToCss } from '../main/theming/theme-utils'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 
 export default {
   title: 'login-form'
 }
 
-import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
-const themeStyles = theme.toString()
+const themeStyles = convertToCss(lightTheme)
 
 @elem({
   tag: 'login-form-demo',
@@ -24,16 +24,16 @@ class LoginScreenDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <sx-login-form full-size>
+      <jsc-login-form full-size>
         <div slot="header">
-          <sx-brand
+          <jsc-brand
             vendor="my-company"
             title="Back Office"
             size="large"
-          ></sx-brand>
+          ></jsc-brand>
         </div>
         <div slot="footer">&copy; 2021, my-company</div>
-      </sx-login-form>
+      </jsc-login-form>
     `
 }
 

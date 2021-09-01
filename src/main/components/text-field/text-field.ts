@@ -19,7 +19,7 @@ export { TextField }
 // === TextField =====================================================
 
 @elem({
-  tag: 'sx-text-field',
+  tag: 'jsc-text-field',
   styles: [sharedStyles, textFieldStyles],
   uses: [SlInput],
   impl: withLit(textFieldImpl)

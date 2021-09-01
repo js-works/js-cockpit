@@ -45,7 +45,7 @@ module.exports = ({ config }) => {
 
   const alias = (config.resolve && config.resolve.alias) || {}
 
-  alias['sx-widgets$'] = path.resolve(__dirname, '../src/main/js-widgets.ts')
+  alias['js-cockpit$'] = path.resolve(__dirname, '../src/main/js-widgets.ts')
   config.resolve.alias = alias
   config.resolve.extensions.push('.ts', '.tsx')
 

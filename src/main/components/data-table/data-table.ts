@@ -48,7 +48,7 @@ type HeaderCell = {
 // === DataTable =====================================================
 
 @elem({
-  tag: 'sx-data-table',
+  tag: 'jsc-data-table',
   styles: [dataTableStyles],
   uses: [SlCheckbox],
   impl: withLit(dataTableImpl)

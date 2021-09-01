@@ -57,7 +57,7 @@ class AppLayoutDemo extends component() {}
 
 function appLayoutDemoImpl() {
   return () => html`
-    <sx-app-layout>
+    <jsc-app-layout>
       <div slot="header-start" class="orangered">header-start</div>
       <div slot="header" class="orange">header</div>
       <div slot="header-end" class="orangered">header-end</div>
@@ -76,7 +76,7 @@ function appLayoutDemoImpl() {
       <div slot="footer-start" class="orangered">footer-start</div>
       <div slot="footer" class="orange">footer</div>
       <div slot="footer-end" class="orangered">footer-end</div>
-    </sx-app-layout>
+    </jsc-app-layout>
   `
 }
 

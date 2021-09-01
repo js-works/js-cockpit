@@ -17,7 +17,7 @@ export { Brand }
 // === Brand ===================================================
 
 @elem({
-  tag: 'sx-brand',
+  tag: 'jsc-brand',
   styles: brandStyles,
   uses: [SlIcon],
   impl: withLit(loginScreenImpl)

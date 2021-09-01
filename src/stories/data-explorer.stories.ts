@@ -106,13 +106,13 @@ class DataExplorerDemo extends component() {}
 
 function dataExplorerDemoImpl() {
   return () => html`
-    <sx-data-explorer
+    <jsc-data-explorer
       .title=${'Customers'}
       .columns=${columns}
       .data=${data}
       .sortField=${'lastName'}
       .selectMode=${'multi'}
-    ></sx-data-explorer>
+    ></jsc-data-explorer>
   `
 }
 

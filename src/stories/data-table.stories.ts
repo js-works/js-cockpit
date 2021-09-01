@@ -112,7 +112,7 @@ class DataTableDemo extends component() {}
 
 function dataTableDemoImpl() {
   return () => html`
-    <sx-data-table .columns=${columns} .data=${data}></sx-data-table>
+    <jsc-data-table .columns=${columns} .data=${data}></jsc-data-table>
   `
 }
 
