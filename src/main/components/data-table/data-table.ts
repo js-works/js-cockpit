@@ -9,6 +9,11 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 // styles
 import dataTableStyles from './data-table.css'
 
+// icons
+import downArrowSvg from './assets/down-arrow.svg'
+import upArrowSvg from './assets/up-arrow.svg'
+import downUpArrowsSvg from './assets/down-up-arrows.svg'
+
 // === exports =======================================================
 
 export { DataTable }
@@ -86,15 +91,29 @@ function dataTableImpl(self: DataTable) {
       const cells: TemplateResult[] = []
 
       row.forEach((cell, cellIdx) => {
-        cells.push(
-          html`<th
+        let icon = ''
+
+        if (cell.sortable) {
+          if (cell.field !== self.sortField) {
+            icon = downUpArrowsSvg
+          } else if (self.sortDir !== 'desc') {
+            icon = downArrowSvg
+          } else {
+            icon = upArrowSvg
+          }
+        }
+        console.log(icon)
+        cells.push(html`
+          <th
             colspan=${cell.colSpan}
             rowspan=${cell.rowSpan}
             class=${classMap({ sortable: cell.sortable })}
           >
-            ${cell.text}
-          </th>`
-        )
+            <div class="content">
+              ${cell.text} ${!icon ? '' : html`<sl-icon src=${icon}></sl-icon>`}
+            </div>
+          </th>
+        `)
       })
 
       rows.push(

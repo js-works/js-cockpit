@@ -71,6 +71,8 @@ function dataExplorerImpl(self: DataExplorer) {
         .selectMode=${self.selectMode}
         .data=${data}
         .bordered=${false}
+        .sortField=${self.sortField}
+        .sortDir=${self.sortDir}
       >
       </sx-data-table>
       <hr />

@@ -107,10 +107,11 @@ class DataExplorerDemo extends component() {}
 function dataExplorerDemoImpl() {
   return () => html`
     <sx-data-explorer
-      title="Customers"
+      .title=${'Customers'}
       .columns=${columns}
       .data=${data}
-      select-mode="multi"
+      .sortField=${'lastName'}
+      .select-mode=${'multi'}
     ></sx-data-explorer>
   `
 }

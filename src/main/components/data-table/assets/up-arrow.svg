@@ -1,0 +1,6 @@
+<svg width="20px" height="20px" viewBox="0 0 64 64">
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-miterlimit="10">
+    <polyline stroke-linejoin="bevel" points="20,32 32,16 44,32 "/>
+    <polyline stroke-miterlimit="10" points="32,16 32,56"/>
+  </g>
+</svg>
