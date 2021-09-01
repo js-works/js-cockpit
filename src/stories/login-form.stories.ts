@@ -9,6 +9,8 @@ import {
   darkTheme,
   blueTheme,
   blueDarkTheme,
+  orangeTheme,
+  orangeDarkTheme,
   tealTheme,
   tealDarkTheme,
   pinkTheme,
@@ -22,7 +24,7 @@ export default {
   title: 'login-form'
 }
 
-const themeStyles = convertToCss(pinkTheme)
+const themeStyles = convertToCss(blueTheme)
 
 @elem({
   tag: 'login-form-demo',

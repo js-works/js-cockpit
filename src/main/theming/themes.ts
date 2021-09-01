@@ -9,6 +9,8 @@ export {
   darkTheme,
   blueTheme,
   blueDarkTheme,
+  orangeTheme,
+  orangeDarkTheme,
   tealTheme,
   tealDarkTheme,
   pinkTheme,
@@ -25,6 +27,13 @@ const blueTheme = createTheme({
 })
 
 const blueDarkTheme = invertTheme(blueTheme)
+
+const orangeTheme = createTheme({
+  primaryColor: '#ff8800',
+  reduceBorderRadius: true
+})
+
+const orangeDarkTheme = invertTheme(orangeTheme)
 
 const tealTheme = createTheme({
   primaryColor: '#008080',

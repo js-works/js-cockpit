@@ -43,7 +43,7 @@ function createTheme(params: {
       const r = (value >> 16) % 256
       const g = (value >> 8) % 256
       const b = value % 256
-      const [h, s] = rgbToHsl(r, g, b)
+      const [h, s, l] = rgbToHsl(r, g, b)
 
       ;[
         0.95,
@@ -57,14 +57,18 @@ function createTheme(params: {
         0.1,
         0.05,
         0.02
-      ].forEach((l, idx) => {
+      ].forEach((newL, idx) => {
         let n = idx === 0 ? 50 : idx === 10 ? 950 : idx * 100
 
         if (params.dark) {
           n = 1000 - n
         }
 
-        ret[`color-${color}-${n}`] = hslToRgb(h, s, l).join(' ')
+        ret[`color-${color}-${n}`] = hslToRgb(
+          h,
+          s,
+          newL * Math.abs(1 - newL + l) // TODO: argument should normally be just newL
+        ).join(' ')
       })
     }
   )
