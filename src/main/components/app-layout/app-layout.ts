@@ -93,6 +93,17 @@ function appLayoutImpl(self: AppLayout) {
           <slot name="sidebar2-end"></slot>
         </div>
       </div>
+      <div class="row3">
+        <div class="footer-start">
+          <slot name="footer-start"></slot>
+        </div>
+        <div class="footer">
+          <slot name="footer"></slot>
+        </div>
+        <div class="footer-end">
+          <slot name="footer-end"></slot>
+        </div>
+      </div>
     </div>
   `
 }
