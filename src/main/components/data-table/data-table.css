@@ -3,7 +3,6 @@
   user-select: none;
   position: relative;
   border: 2px solid green;
-  width: 100%;
   height: 100%;
 }
 
@@ -11,8 +10,6 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
   border: 2px solid red;
 }
 
@@ -63,14 +60,10 @@ thead {
   display: table;
   width: 100%;
 }
+
 tbody {
   display: block;
-  height: inherit;
   overflow: auto;
-}
-
-tr {
-  width: 100%;
 }
 
 table > tbody > tr > td {

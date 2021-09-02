@@ -102,16 +102,25 @@ function dataTableImpl(self: DataTable) {
 
   function updateColumnSizes() {
     const container = containerRef.value!
+    const tableWidth = container.clientWidth
     const tableHeight = container.clientHeight
     const theadHeight = theadRef.value!.clientHeight
 
     const newStyles = `
-      table {
-        height: ${tableHeight}px;
-      }
-
       tbody {
+        background-color: yellow;
         height: ${tableHeight - theadHeight}px;
+      }
+      tbody > tr {
+        width: ${tableWidth}px !important;
+      }
+      xxtbody > tr > td:nth-child(2) {
+        width: 600px !important;
+        background-color: orange !important;
+      }
+      xxtbody > tr > td:nth-child(3) {
+        width: 200px !important;
+        background-color: orange !important;
       }
     `
     console.log(newStyles)
