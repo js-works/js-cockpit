@@ -1,20 +1,33 @@
 .base {
   font-family: var(--sl-font-sans);
   user-select: none;
+  position: relative;
+  border: 2px solid green;
+  width: 100%;
+  height: 100%;
 }
 
-.base > table {
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: 2px solid red;
+}
+
+table {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
   background-color: rgb(var(--sl-color-neutral-0));
 }
 
-.base > table.bordered {
+table.bordered {
   border: 1px solid rgb(var(--sl-color-neutral-300));
 }
 
-.base > table > thead th {
+table > thead th {
   align-items: center;
   border: 1px solid rgb(var(--sl-color-neutral-300));
   padding: 2px 10px;
@@ -23,19 +36,19 @@
   color: rgb(var(--sl-color-neutral-1000));
 }
 
-.base > table > thead th.sortable:hover {
+table > thead th.sortable:hover {
   cursor: pointer;
 }
 
-.base > table > thead th.sortable:hover {
+table > thead th.sortable:hover {
   background-color: rgb(var(--sl-color-neutral-200));
 }
 
-.base > table > thead th.sortable:active {
+table > thead th.sortable:active {
   background-color: rgb(var(--sl-color-primary-200));
 }
 
-.base > table > thead th .content {
+table > thead th .content {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -52,20 +65,21 @@ thead {
 }
 tbody {
   display: block;
+  height: inherit;
   overflow: auto;
-  max-height: 400px;
 }
+
 tr {
-  display: table;
   width: 100%;
 }
-.base > table > tbody > tr > td {
+
+table > tbody > tr > td {
   padding: 2px 6px;
   background-color: rgb(var(--sl-color-neutral-0));
   color: rgb(var(--sl-color-neutral-1000));
 }
 
-.base > table > tbody > tr:nth-child(2n) td {
+table > tbody > tr:nth-child(2n) td {
   background-color: rgb(var(--sl-color-neutral-100));
 }
 
@@ -80,4 +94,14 @@ tr {
   position: absolute;
   top: 0;
   left: 7px;
+}
+
+td {
+  text-align: left;
+  width: 19%;
+  border: 1px solid black;
+}
+
+td:nth-child(1) {
+  width: 20px !important;
 }

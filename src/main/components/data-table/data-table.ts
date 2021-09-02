@@ -1,7 +1,16 @@
 // external imports
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
-import { useState } from 'js-element/hooks'
+
+import {
+  classMap,
+  createRef,
+  html,
+  ref,
+  withLit,
+  TemplateResult
+} from 'js-element/lit'
+
+import { useAfterMount, useStatus, useState } from 'js-element/hooks'
 
 // custom elements
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
@@ -74,6 +83,53 @@ class DataTable extends component() {
 }
 
 function dataTableImpl(self: DataTable) {
+  const columnSizesStyles = document.createElement('style')
+  const containerRef = createRef<HTMLElement>()
+  const theadRef = createRef<HTMLElement>()
+  const tbodyRef = createRef<HTMLElement>()
+
+  columnSizesStyles.append(document.createTextNode(''))
+  self.shadowRoot!.firstChild!.appendChild(columnSizesStyles)
+
+  useAfterMount(() => {
+    const container = containerRef.value!
+    const resizeObserver = new ResizeObserver(() => updateColumnSizes())
+
+    resizeObserver.observe(container)
+
+    return () => resizeObserver.unobserve(container)
+  })
+
+  function updateColumnSizes() {
+    const container = containerRef.value!
+    const tableHeight = container.clientHeight
+    const theadHeight = theadRef.value!.clientHeight
+
+    const newStyles = `
+      table {
+        height: ${tableHeight}px;
+      }
+
+      tbody {
+        height: ${tableHeight - theadHeight}px;
+      }
+    `
+    console.log(newStyles)
+    columnSizesStyles.innerText = newStyles
+  }
+
+  function render() {
+    return html`
+      <div class="base">
+        <div class="container" ${ref(containerRef)}>
+          <table class=${classMap({ bordered: self.bordered })}>
+            ${renderTableHeader()} ${renderTableBody()}
+          </table>
+        </div>
+      </div>
+    `
+  }
+
   function renderTableHeader() {
     const rows: TemplateResult[] = []
     const { headerCells } = getTableHeadInfo(self.columns || [])
@@ -124,7 +180,7 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <thead>
+      <thead ${ref(theadRef)}>
         ${rows}
       </thead>
     `
@@ -159,7 +215,7 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <tbody>
+      <tbody ${ref(tbodyRef)}>
         ${rows}
       </tbody>
     `
@@ -170,13 +226,7 @@ function dataTableImpl(self: DataTable) {
     return html`${rec[column.field!]}` // TODO
   }
 
-  return () => html`
-    <div class="base">
-      <table class=${classMap({ bordered: self.bordered })}>
-        ${renderTableHeader()} ${renderTableBody()}
-      </table>
-    </div>
-  `
+  return render
 }
 
 const getTableHeadInfo: (
