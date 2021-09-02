@@ -1,8 +1,8 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, withLit } from 'js-element/lit'
+import { AppLayout } from '../main/components/app-layout/app-layout'
 import { DataExplorer } from '../main/components/data-explorer/data-explorer'
-
 export default {
   title: 'data-explorer'
 }
@@ -98,7 +98,7 @@ const data = [
 
 @elem({
   tag: 'data-explorer-demo',
-  uses: [DataExplorer],
+  uses: [AppLayout, DataExplorer],
   styles: themeStyles,
   impl: withLit(dataExplorerDemoImpl)
 })
@@ -107,11 +107,13 @@ class DataExplorerDemo extends component() {}
 function dataExplorerDemoImpl() {
   return () => html`
     <jsc-data-explorer
+      slot="main"
       .title=${'Customers'}
       .columns=${columns}
-      .data=${data}
+      .data=${data.slice(0, 5)}
       .sortField=${'lastName'}
       .selectMode=${'multi'}
+      full-size
     ></jsc-data-explorer>
   `
 }

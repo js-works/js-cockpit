@@ -56,6 +56,9 @@ class DataExplorer extends component() {
 
   @prop({ attr: Attrs.string })
   selectMode: 'single' | 'multi' | 'none' = 'none'
+
+  @prop({ attr: Attrs.boolean })
+  fullSize = false
 }
 
 function dataExplorerImpl(self: DataExplorer) {
@@ -64,21 +67,20 @@ function dataExplorerImpl(self: DataExplorer) {
   })
 
   return () => html`
-    <div class="base">
+    <div class="base ${classMap({ 'full-size': self.fullSize })}">
       <div class="header">
         <h3 class="title">${self.title}</h3>
       </div>
-      <div class="table">
-        <jsc-data-table
-          .columns=${self.columns}
-          .selectMode=${self.selectMode}
-          .data=${[...data, ...data, ...data, ...data, ...data, ...data]}
-          .bordered=${false}
-          .sortField=${self.sortField}
-          .sortDir=${self.sortDir}
-        >
-        </jsc-data-table>
-      </div>
+      <jsc-data-table
+        class="table"
+        .columns=${self.columns}
+        .selectMode=${self.selectMode}
+        .data=${data}
+        .bordered=${false}
+        .sortField=${self.sortField}
+        .sortDir=${self.sortDir}
+      >
+      </jsc-data-table>
       <div class="footer">
         <jsc-pagination-bar></jsc-pagination-bar>
       </div>

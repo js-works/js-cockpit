@@ -107,16 +107,13 @@ function dataTableImpl(self: DataTable) {
     const theadHeight = theadRef.value!.clientHeight
 
     const newStyles = `
-      tbody {
-        background-color: yellow;
-        height: ${tableHeight - theadHeight}px;
-      }
     `
     console.log(newStyles)
     columnSizesStyles.innerText = newStyles
   }
 
   function render() {
+    //return html`<div class="test">xxx</div>`
     return html`
       <div class="base">
         <div class="container" ${ref(containerRef)}>
@@ -177,7 +174,7 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <table>
+      <table class="head-table">
         <thead ${ref(theadRef)}>
           ${rows}
         </thead>
@@ -215,7 +212,7 @@ function dataTableImpl(self: DataTable) {
 
     return html`
       <div class="scroll-pane">
-        <table>
+        <table class="body-table">
           <tbody ${ref(tbodyRef)}>
             ${rows}
           </tbody>

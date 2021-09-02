@@ -76,7 +76,9 @@ function appLayoutImpl(self: AppLayout) {
           <slot name="main-start"></slot>
         </div>
         <div class="main">
-          <slot name="main"></slot>
+          <div class="scroll-pane">
+            <slot name="main"></slot>
+          </div>
         </div>
         <div class="main-end">
           <slot name="main-end"></slot>

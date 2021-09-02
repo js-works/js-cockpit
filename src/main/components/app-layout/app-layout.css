@@ -3,10 +3,12 @@
   grid-template-rows: auto auto 1fr auto;
   grid-template-columns: auto 1fr auto;
   position: absolute;
-  height: 100%;
-  width: 100%;
   top: 0;
   left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
   font-family: var(--sl-font-sans);
   user-select: none;
 }
@@ -39,8 +41,8 @@
 }
 
 .sidebar {
+  position: relative;
   flex-grow: 1;
-  overflow: auto;
 }
 
 .col2 {
@@ -49,8 +51,8 @@
 }
 
 .main {
+  position: relative;
   flex-grow: 1;
-  overflow: auto;
 }
 
 .col3 {
@@ -60,8 +62,8 @@
 }
 
 .sidebar2 {
+  position: relative;
   flex-grow: 1;
-  overflow: auto;
 }
 
 .row3 {
@@ -73,4 +75,11 @@
 
 .footer {
   flex-grow: 1;
+}
+
+.scroll-pane {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
