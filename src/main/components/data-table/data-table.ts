@@ -111,17 +111,6 @@ function dataTableImpl(self: DataTable) {
         background-color: yellow;
         height: ${tableHeight - theadHeight}px;
       }
-      tbody > tr {
-        width: ${tableWidth}px !important;
-      }
-      xxtbody > tr > td:nth-child(2) {
-        width: 600px !important;
-        background-color: orange !important;
-      }
-      xxtbody > tr > td:nth-child(3) {
-        width: 200px !important;
-        background-color: orange !important;
-      }
     `
     console.log(newStyles)
     columnSizesStyles.innerText = newStyles
@@ -131,9 +120,7 @@ function dataTableImpl(self: DataTable) {
     return html`
       <div class="base">
         <div class="container" ${ref(containerRef)}>
-          <table class=${classMap({ bordered: self.bordered })}>
-            ${renderTableHeader()} ${renderTableBody()}
-          </table>
+          ${renderTableHeader()} ${renderTableBody()}
         </div>
       </div>
     `
@@ -147,7 +134,7 @@ function dataTableImpl(self: DataTable) {
       self.selectMode === 'single' || self.selectMode === 'multi'
         ? html`
             <th class="selector-column" rowspan=${headerCells.length}>
-              <sl-checkbox></sl-checkbox>
+              <sl-checkbox class="checkbox"></sl-checkbox>
             </th>
           `
         : null
@@ -175,7 +162,8 @@ function dataTableImpl(self: DataTable) {
             class=${classMap({ sortable: cell.sortable })}
           >
             <div class="content">
-              ${cell.text} ${!icon ? '' : html`<sl-icon src=${icon}></sl-icon>`}
+              ${cell.text}
+              ${!icon ? '' : html`<sl-icon src=${icon} class="icon"></sl-icon>`}
             </div>
           </th>
         `)
@@ -189,9 +177,11 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <thead ${ref(theadRef)}>
-        ${rows}
-      </thead>
+      <table>
+        <thead ${ref(theadRef)}>
+          ${rows}
+        </thead>
+      </table>
     `
   }
 
@@ -224,9 +214,13 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <tbody ${ref(tbodyRef)}>
-        ${rows}
-      </tbody>
+      <div class="scroll-pane">
+        <table>
+          <tbody ${ref(tbodyRef)}>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
     `
   }
 
