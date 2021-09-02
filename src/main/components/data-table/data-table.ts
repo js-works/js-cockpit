@@ -102,11 +102,15 @@ function dataTableImpl(self: DataTable) {
 
   function updateColumnSizes() {
     const container = containerRef.value!
+    const containerHeight = container.clientHeight
     const tableWidth = container.clientWidth
     const tableHeight = container.clientHeight
     const theadHeight = theadRef.value!.clientHeight
 
     const newStyles = `
+      .xxx {
+        height: ${self.clientHeight - theadHeight - 1}px;
+      }
     `
     console.log(newStyles)
     columnSizesStyles.innerText = newStyles
@@ -211,12 +215,14 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <div class="scroll-pane">
-        <table class="body-table">
-          <tbody ${ref(tbodyRef)}>
-            ${rows}
-          </tbody>
-        </table>
+      <div class="xxx">
+        <div class="scroll-pane">
+          <table class="body-table">
+            <tbody ${ref(tbodyRef)}>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
       </div>
     `
   }

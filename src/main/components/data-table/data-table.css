@@ -2,10 +2,6 @@
   background-color: yellow;
 }
 
-.test {
-  background-color: yellow;
-}
-
 .base {
   display: block;
   font-family: var(--sl-font-sans);
@@ -17,13 +13,18 @@
 }
 
 .container {
+  position: relative;
 }
 
 .scroll-pane {
-  position: abolute;
+  position: absolute;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow: auto;
+}
+
+.xxx {
+  position: relative;
 }
 
 container.bordered {
