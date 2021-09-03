@@ -1,5 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { html, classMap, withLit } from 'js-element/lit'
+import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -20,7 +20,7 @@ export { Brand }
   tag: 'jsc-brand',
   styles: brandStyles,
   uses: [SlIcon],
-  impl: withLit(loginScreenImpl)
+  impl: lit(loginScreenImpl)
 })
 class Brand extends component() {
   @prop({ attr: Attrs.string })

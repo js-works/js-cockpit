@@ -1,6 +1,6 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
-import { html, withLit } from 'js-element/lit'
+import { html, lit } from 'js-element/lit'
 import { Brand } from '../main/components/brand/brand'
 import { LoginForm } from '../main/components/login-form/login-form'
 
@@ -30,7 +30,7 @@ const themeStyles = convertToCss(lightTheme)
   tag: 'login-form-demo',
   uses: [Brand, LoginForm, SlInput],
   styles: themeStyles,
-  impl: withLit(loginFormDemoImpl)
+  impl: lit(loginFormDemoImpl)
 })
 class LoginScreenDemo extends component() {}
 

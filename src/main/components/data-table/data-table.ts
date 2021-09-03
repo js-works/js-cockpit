@@ -6,7 +6,7 @@ import {
   createRef,
   html,
   ref,
-  withLit,
+  lit,
   TemplateResult
 } from 'js-element/lit'
 
@@ -60,7 +60,7 @@ type HeaderCell = {
   tag: 'jsc-data-table',
   styles: [dataTableStyles],
   uses: [SlCheckbox],
-  impl: withLit(dataTableImpl)
+  impl: lit(dataTableImpl)
 })
 class DataTable extends component() {
   @prop
@@ -101,17 +101,15 @@ function dataTableImpl(self: DataTable) {
   })
 
   function updateColumnSizes() {
-    const container = containerRef.value!
-    const containerHeight = container.clientHeight
-    const tableWidth = container.clientWidth
-    const tableHeight = container.clientHeight
-    const theadHeight = theadRef.value!.clientHeight
+    const theadHeight = theadRef.value!.offsetHeight
 
     const newStyles = `
-      .xxx {
-        height: ${self.clientHeight - theadHeight - 1}px;
+      .xxxxscroll-pane {
+        height: ${self.offsetHeight - theadHeight - 1}px;
+        max-height: ${self.offsetHeight - theadHeight - 1}px;
       }
     `
+    console.log(newStyles)
     console.log(newStyles)
     columnSizesStyles.innerText = newStyles
   }
@@ -215,7 +213,7 @@ function dataTableImpl(self: DataTable) {
     })
 
     return html`
-      <div class="xxx">
+      <div class="xxx yyy">
         <div class="scroll-pane">
           <table class="body-table">
             <tbody ${ref(tbodyRef)}>

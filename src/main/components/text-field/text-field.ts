@@ -1,5 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, html, createRef, repeat, withLit, Ref } from 'js-element/lit'
+import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import {} from 'js-element/hooks'
 import { useFormCtrl } from '../../ctrls/form-ctrl'
 
@@ -22,7 +22,7 @@ export { TextField }
   tag: 'jsc-text-field',
   styles: [sharedStyles, textFieldStyles],
   uses: [SlInput],
-  impl: withLit(textFieldImpl)
+  impl: lit(textFieldImpl)
 })
 class TextField extends component<{
   reset(): void

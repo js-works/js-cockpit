@@ -1,6 +1,6 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
-import { html, withLit } from 'js-element/lit'
+import { html, lit } from 'js-element/lit'
 import { DataTable } from '../main/components/data-table/data-table'
 
 import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
@@ -106,13 +106,19 @@ const data = [
   tag: 'data-table-demo',
   uses: [DataTable],
   styles: themeStyles,
-  impl: withLit(dataTableDemoImpl)
+  impl: lit(dataTableDemoImpl)
 })
 class DataTableDemo extends component() {}
 
 function dataTableDemoImpl() {
   return () => html`
-    <jsc-data-table .columns=${columns} .data=${data}></jsc-data-table>
+    <div style="max-height: 200px; border: 1px solid red">
+      <jsc-data-table
+        bordered
+        .columns=${columns}
+        .data=${[...data, ...data]}
+      ></jsc-data-table>
+    </div>
   `
 }
 

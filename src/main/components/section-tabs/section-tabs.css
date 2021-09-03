@@ -1,0 +1,16 @@
+.base {
+  display: flex;
+  gap: 16px;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+.section {
+  padding-bottom: 6px;
+  box-sizing: border-box;
+}
+.section.active {
+  font-weight: var(--sl-font-weight-bold);
+  border: 0 solid rgb(var(--sl-color-primary-500));
+  border-bottom-width: 3px;
+}

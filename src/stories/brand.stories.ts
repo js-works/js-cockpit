@@ -1,6 +1,6 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
-import { html, withLit } from 'js-element/lit'
+import { html, lit } from 'js-element/lit'
 import { Brand } from '../main/components/brand/brand'
 
 export default {
@@ -21,7 +21,7 @@ const brandDemoStyles = `
   tag: 'brand-demo',
   uses: [Brand],
   styles: [themeStyles, brandDemoStyles],
-  impl: withLit(brandDemoImpl)
+  impl: lit(brandDemoImpl)
 })
 class BrandDemo extends component() {}
 

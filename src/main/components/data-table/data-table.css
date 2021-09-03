@@ -1,34 +1,31 @@
-:host {
-  background-color: yellow;
-}
-
 .base {
-  display: block;
+  position: relative;
   font-family: var(--sl-font-sans);
   user-select: none;
-  xheight: 200px;
-  xoverflow-x: hidden;
-  xoverflow-y: hidden;
-  overflow: auto;
+  overflow: hidden;
+  border: 1px solid green;
+  box-sizing: border-box;
 }
 
-.container {
-  position: relative;
+base.bordered {
+  border: 1px solid rgb(var(--sl-color-neutral-300));
 }
 
 .scroll-pane {
   position: absolute;
-  width: 100%;
+  xposition: relative;
   height: 100%;
+  width: 100%;
+  xheight: inherit;
+  xheight: inherit;
   overflow: auto;
 }
 
-.xxx {
+.yyy {
   position: relative;
-}
-
-container.bordered {
-  border: 1px solid rgb(var(--sl-color-neutral-300));
+  height: 100px;
+  xoverflow: hidden;
+  border: 2px solid purple;
 }
 
 table {

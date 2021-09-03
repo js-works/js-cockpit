@@ -1,6 +1,6 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
-import { html, withLit } from 'js-element/lit'
+import { html, lit } from 'js-element/lit'
 import { AppLayout } from '../main/components/app-layout/app-layout'
 
 export default {
@@ -51,7 +51,7 @@ const styles = `
   tag: 'app-layout-demo',
   styles: [themeStyles, styles],
   uses: [AppLayout],
-  impl: withLit(appLayoutDemoImpl)
+  impl: lit(appLayoutDemoImpl)
 })
 class AppLayoutDemo extends component() {}
 

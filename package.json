@@ -28,12 +28,12 @@
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.2.2",
     "base64-raw-loader": "^1.0.1",
-    "js-element": "^0.0.212",
+    "js-element": "^0.0.213",
     "lit-html": "^1.4.1",
     "svg-url-loader": "^7.1.1",
     "typescript": "^4.4.2"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.0.0-beta.49"
+    "@shoelace-style/shoelace": "^2.0.0-beta.50"
   }
 }

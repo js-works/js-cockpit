@@ -1,6 +1,6 @@
 // external imports
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, html, createRef, repeat, withLit, Ref } from 'js-element/lit'
+import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -21,7 +21,7 @@ export { PasswordField }
   tag: 'jsc-password-field',
   styles: [sharedStyles, passwordFieldStyles],
   uses: [SlInput],
-  impl: withLit(passwordFieldImpl)
+  impl: lit(passwordFieldImpl)
 })
 class PasswordField extends component<{
   reset(): void

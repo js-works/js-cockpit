@@ -1,6 +1,6 @@
 // external impors
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, html, withLit } from 'js-element/lit'
+import { classMap, html, lit } from 'js-element/lit'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -41,7 +41,7 @@ export { LoginForm }
     SlIcon,
     SlForm
   ],
-  impl: withLit(loginFormImpl)
+  impl: lit(loginFormImpl)
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.boolean })

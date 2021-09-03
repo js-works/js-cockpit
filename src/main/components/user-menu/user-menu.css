@@ -1,0 +1,26 @@
+.base {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  max-width: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  background-color: rgb(var(--sl-color-primary-500));
+}
+
+.logout-icon {
+  width: 28px;
+  height: 28px;
+}

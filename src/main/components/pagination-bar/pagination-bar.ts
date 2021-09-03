@@ -1,6 +1,6 @@
 // external imports
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { html, createRef, repeat, withLit, Ref } from 'js-element/lit'
+import { html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import { useI18n } from '../../utils/hooks'
 
 // custom elements
@@ -37,7 +37,7 @@ const DEFAULT_PAGE_SIZE = 50
   tag: 'jsc-pagination-bar',
   styles: paginationBarStyles,
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect],
-  impl: withLit(paginationBarImpl)
+  impl: lit(paginationBarImpl)
 })
 class PaginationBar extends component<{
   reset(): void

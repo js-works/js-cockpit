@@ -17,7 +17,7 @@
 }
 
 .content.multi-color .logo {
-  color: rgb(var(--sl-color-primary-600));
+  color: rgb(var(--sl-color-primary-500));
 }
 
 .content.small .logo {

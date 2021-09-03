@@ -1,23 +1,23 @@
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import { html, lit as lit } from 'js-element/lit'
 
 // styles
-import appLayoutStyles from './app-layout.css'
+import cockpitStyles from './cockpit.css'
 
 // === exports =======================================================
 
-export { AppLayout }
+export { Cockpit }
 
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'jsc-app-layout',
-  styles: appLayoutStyles,
-  impl: lit(appLayoutImpl)
+  tag: 'jsc-cockpit',
+  styles: cockpitStyles,
+  impl: lit(cockpitImpl)
 })
-class AppLayout extends component() {}
+class Cockpit extends component() {}
 
-function appLayoutImpl() {
+function cockpitImpl() {
   return () => html`
     <div class="base">
       <div class="row1">
@@ -64,28 +64,6 @@ function appLayoutImpl() {
         </div>
         <div class="main-end">
           <slot name="main-end"></slot>
-        </div>
-      </div>
-      <div class="col3">
-        <div class="sidebar2-start">
-          <slot name="sidebar2-start"></slot>
-        </div>
-        <div class="sidebar2">
-          <slot name="sidebar2"></slot>
-        </div>
-        <div class="sidebar2-end">
-          <slot name="sidebar2-end"></slot>
-        </div>
-      </div>
-      <div class="row3">
-        <div class="footer-start">
-          <slot name="footer-start"></slot>
-        </div>
-        <div class="footer">
-          <slot name="footer"></slot>
-        </div>
-        <div class="footer-end">
-          <slot name="footer-end"></slot>
         </div>
       </div>
     </div>

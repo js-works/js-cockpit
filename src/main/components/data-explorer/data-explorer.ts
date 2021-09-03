@@ -1,6 +1,6 @@
 // external imports
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, classMap, withLit, TemplateResult } from 'js-element/lit'
+import { html, classMap, lit, TemplateResult } from 'js-element/lit'
 import { useState } from 'js-element/hooks'
 
 // internal imports
@@ -39,7 +39,7 @@ namespace DataExplorer {
   tag: 'jsc-data-explorer',
   styles: [dataExplorerStyles],
   uses: [DataTable, PaginationBar],
-  impl: withLit(dataExplorerImpl)
+  impl: lit(dataExplorerImpl)
 })
 class DataExplorer extends component() {
   @prop({ attr: Attrs.string })
