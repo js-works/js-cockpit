@@ -26,16 +26,16 @@
 }
 
 .section:not(.active) .title:hover {
-  background-color: rgb(var(--sl-color-primary-500));
-  border-radius: 5px;
+  background-color: rgb(var(--sl-color-primary-600));
+  border-radius: 4px;
 }
 
 .section:not(.active) .title:active {
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: rgb(var(--sl-color-primary-500));
 }
 
 .section.active {
-  font-weight: var(--sl-font-weight-semibold);
+  font-weight: 600;
   border: 0 solid rgb(var(--sl-color-primary-500));
   border-bottom-width: 3px;
   cursor: default;

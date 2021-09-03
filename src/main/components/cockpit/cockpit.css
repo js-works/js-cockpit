@@ -20,14 +20,8 @@
   gap: 18px;
   z-index: 100;
   color: rgb(var(--sl-color-neutral-0));
-  background-color: rgb(var(--sl-color-neutral-600));
+  background-color: rgb(var(--sl-color-neutral-700));
   max-height: 50px;
-}
-
-.header-start,
-.header,
-.header-end {
-  xxxpadding: 7px 10px 7px 10px;
 }
 
 .header {
@@ -52,6 +46,9 @@
 
 .sidebar {
   position: relative;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
   flex-grow: 1;
 }
 

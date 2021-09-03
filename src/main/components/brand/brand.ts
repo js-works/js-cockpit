@@ -20,7 +20,7 @@ export { Brand }
   tag: 'jsc-brand',
   styles: brandStyles,
   uses: [SlIcon],
-  impl: lit(loginScreenImpl)
+  impl: lit(brandImpl)
 })
 class Brand extends component() {
   @prop({ attr: Attrs.string })
@@ -39,7 +39,7 @@ class Brand extends component() {
   multiColor = false
 }
 
-function loginScreenImpl(self: Brand) {
+function brandImpl(self: Brand) {
   return () => {
     const logo = self.logo?.trim() || defaultLogoSvg
     const size = self.size || 'medium'

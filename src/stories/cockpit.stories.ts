@@ -5,6 +5,9 @@ import { Cockpit } from '../main/components/cockpit/cockpit'
 import { Brand } from '../main/components/brand/brand'
 import { UserMenu } from '../main/components/user-menu/user-menu'
 import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
+import { SideMenu } from '../main/components/side-menu/side-menu'
+import { DataForm } from '../main/components/data-form/data-form'
+
 export default {
   title: 'cockpit'
 }
@@ -83,7 +86,7 @@ export const cockpit1 = () => h('cockpit-demo1')
 @elem({
   tag: 'cockpit-demo2',
   styles: [themeStyles],
-  uses: [Brand, Cockpit, SectionsMenu, UserMenu],
+  uses: [Brand, Cockpit, DataForm, SectionsMenu, SideMenu, UserMenu],
   impl: lit(cockpitDemo2Impl)
 })
 class CockpitDemo2 extends component() {}
@@ -121,16 +124,17 @@ function cockpitDemo2Impl() {
         ]}
         .activeSection=${2}
       ></jsc-sections-menu>
-      <!-- div slot="header-end" class="orangered" -->
       <jsc-user-menu slot="header-end"></jsc-user-menu>
-      <!-- /div -->
-      <div slot="sidebar" class="lightgreen full-height">sidebar</div>
-      <div slot="sidebar-end" class="green">sidebar-end</div>
-      <div slot="main-start" class="gold">main-start</div>
-      <div slot="main" class="yellow full-height">main</div>
-      <div slot="main-end" class="gold">main-end</div>
+      <div slot="sidebar" class="lightgreen full-height">
+        <jsc-side-menu></jsc-side-menu>
+      </div>
+      <div slot="main" class="yellow full-height">${createDataForm()}</div>
     </jsc-cockpit>
   `
 }
 
 export const cockpit2 = () => h('cockpit-demo2')
+
+function createDataForm() {
+  return html`<div><jsc-data-form></jsc-data-form></div>`
+}
