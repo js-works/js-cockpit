@@ -4,7 +4,7 @@ import { html, lit } from 'js-element/lit'
 import { Cockpit } from '../main/components/cockpit/cockpit'
 import { Brand } from '../main/components/brand/brand'
 import { UserMenu } from '../main/components/user-menu/user-menu'
-import { SectionTabs } from '../main/components/section-tabs/section-tabs'
+import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
 export default {
   title: 'cockpit'
 }
@@ -52,7 +52,7 @@ const demo1Styles = `
 @elem({
   tag: 'cockpit-demo1',
   styles: [themeStyles, demo1Styles],
-  uses: [Cockpit, SectionTabs],
+  uses: [Cockpit, SectionsMenu],
   impl: lit(cockpitDemo1Impl)
 })
 class CockpitDemo1 extends component() {}
@@ -83,7 +83,7 @@ export const cockpit1 = () => h('cockpit-demo1')
 @elem({
   tag: 'cockpit-demo2',
   styles: [themeStyles],
-  uses: [Brand, Cockpit, SectionTabs, UserMenu],
+  uses: [Brand, Cockpit, SectionsMenu, UserMenu],
   impl: lit(cockpitDemo2Impl)
 })
 class CockpitDemo2 extends component() {}
@@ -91,43 +91,39 @@ class CockpitDemo2 extends component() {}
 function cockpitDemo2Impl() {
   return () => html`
     <jsc-cockpit>
-      <div slot="header-start" class="orangered">
-        <jsc-brand
-          vendor="my-company"
-          title="Back Office"
-          multi-color
-        ></jsc-brand>
-      </div>
-      <div slot="header" class="orange">
-        <jsc-section-tabs
-          .sections=${[
-            {
-              id: 1,
-              title: 'Dashboard'
-            },
-            {
-              id: 2,
-              title: 'User management'
-            },
-            {
-              id: 3,
-              title: 'Catalog'
-            },
-            {
-              id: 4,
-              title: 'CMS'
-            }
-          ]}
-          .activeSection=${2}
-        ></jsc-section-tabs>
-      </div>
+      <jsc-brand
+        slot="header-start"
+        class="orangered"
+        vendor="my-company"
+        title="Back Office"
+        multi-color
+      ></jsc-brand>
+      <jsc-sections-menu
+        slot="header"
+        class="orange"
+        .sections=${[
+          {
+            id: 1,
+            title: 'Dashboard'
+          },
+          {
+            id: 2,
+            title: 'User management'
+          },
+          {
+            id: 3,
+            title: 'Catalog'
+          },
+          {
+            id: 4,
+            title: 'CMS'
+          }
+        ]}
+        .activeSection=${2}
+      ></jsc-sections-menu>
       <!-- div slot="header-end" class="orangered" -->
       <jsc-user-menu slot="header-end"></jsc-user-menu>
       <!-- /div -->
-      <div slot="subheader-start" class="orange">subheader-start</div>
-      <div slot="subheader" class="orangered">subheader</div>
-      <div slot="subheader-end" class="orange">subheader-end</div>
-      <div slot="sidebar-start" class="green">sidebar-start</div>
       <div slot="sidebar" class="lightgreen full-height">sidebar</div>
       <div slot="sidebar-end" class="green">sidebar-end</div>
       <div slot="main-start" class="gold">main-start</div>

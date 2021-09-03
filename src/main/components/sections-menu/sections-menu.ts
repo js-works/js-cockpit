@@ -5,18 +5,18 @@ import { html, classMap, lit, repeat } from 'js-element/lit'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 
 // icons
-import defaultLogoSvg from './assets/default-logo.svg'
+import menuSvg from './assets/menu.svg'
 
 // styles
-import sectionTabsStyles from './section-tabs.css'
+import sectionsMenuStyles from './sections-menu.css'
 
 // === exports =======================================================
 
-export { SectionTabs }
+export { SectionsMenu }
 
 // === types =========================================================
 
-namespace SectionTabs {
+namespace SectionsMenu {
   export type Section = {
     id: number | string
     title: string
@@ -24,26 +24,27 @@ namespace SectionTabs {
   }
 }
 
-// === SectionTabs ===================================================
+// === SectionsMenu ===================================================
 
 @elem({
-  tag: 'jsc-section-tabs',
-  styles: sectionTabsStyles,
+  tag: 'jsc-sections-menu',
+  styles: sectionsMenuStyles,
   uses: [SlIcon],
-  impl: lit(sectionTabsImpl)
+  impl: lit(sectionsMenuImpl)
 })
-class SectionTabs extends component() {
+class SectionsMenu extends component() {
   @prop
-  sections?: SectionTabs.Section[]
+  sections?: SectionsMenu.Section[]
 
   @prop
   activeSection?: number | string
 }
 
-function sectionTabsImpl(self: SectionTabs) {
+function sectionsMenuImpl(self: SectionsMenu) {
   return () => {
     return html`
       <div class="base">
+        <sl-icon src=${menuSvg} class="icon"></sl-icon>
         ${repeat(
           self.sections || [],
           (_, idx) => idx,
@@ -54,7 +55,7 @@ function sectionTabsImpl(self: SectionTabs) {
                   active: section.id === self.activeSection
                 })}"
               >
-                ${section.title}
+                <div class="title">${section.title}</div>
               </div>
             `
           }

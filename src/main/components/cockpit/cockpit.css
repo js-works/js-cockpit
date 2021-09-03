@@ -27,7 +27,7 @@
 .header-start,
 .header,
 .header-end {
-  padding: 7px 10px 7px 10px;
+  xxxpadding: 7px 10px 7px 10px;
 }
 
 .header {
@@ -70,4 +70,14 @@
   width: 100%;
   height: 100%;
   overflow: auto;
+}
+
+::slotted(jsc-brand) {
+  margin: 0 10px;
+}
+
+::slotted(jsc-sections-menu) {
+  position: relative;
+  left: 20px;
+  right: 20px;
 }
