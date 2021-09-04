@@ -20,14 +20,14 @@
 }
 
 .section .title {
-  padding: 8px 8px;
-  margin-top: 8px;
+  padding: 13px 8px;
+  margin-top: 2px;
   white-space: nowrap;
 }
 
 .section:not(.active) .title:hover {
   background-color: rgb(var(--sl-color-primary-600));
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .section:not(.active) .title:active {
