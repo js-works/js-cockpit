@@ -23,28 +23,30 @@ const darkTheme = invertTheme(lightTheme)
 
 const blueTheme = createTheme({
   primaryColor: '#0078D4',
-  reduceBorderRadius: true
+  noBorderRadius: true
 })
 
 const blueDarkTheme = invertTheme(blueTheme)
 
 const orangeTheme = createTheme({
   primaryColor: '#ff8800',
-  reduceBorderRadius: true
+  noBorderRadius: true
 })
 
 const orangeDarkTheme = invertTheme(orangeTheme)
 
 const tealTheme = createTheme({
   primaryColor: '#008080',
-  reduceBorderRadius: true
+  noBorderRadius: true
 })
 
 const tealDarkTheme = invertTheme(tealTheme)
 
 const pinkTheme = createTheme({
   primaryColor: '#F8ABBA',
-  reduceBorderRadius: true
+  noBorderRadius: true
 })
 
 const pinkDarkTheme = invertTheme(pinkTheme)
+
+console.log(JSON.stringify(pinkDarkTheme, null, 2))

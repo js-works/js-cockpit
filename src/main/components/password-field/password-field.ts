@@ -45,12 +45,12 @@ class PasswordField extends component<{
 function passwordFieldImpl(self: PasswordField) {
   return () => html`
     <div class="base ${classMap({ required: self.required })}">
-      <sl-input
-        type="password"
-        name=${self.name}
-        class="input"
-        label=${self.label}
-      ></sl-input>
+      <div class="field-wrapper">
+        <div class="label">${self.label}</div>
+        <div class="control">
+          <sl-input type="password" name=${self.name} class="input"></sl-input>
+        </div>
+      </div>
     </div>
   `
 }

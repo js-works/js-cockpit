@@ -3,12 +3,14 @@ import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Cockpit } from '../main/components/cockpit/cockpit'
 import { Brand } from '../main/components/brand/brand'
+import { Fieldset } from '../main/components/fieldset/fieldset'
 import { UserMenu } from '../main/components/user-menu/user-menu'
 import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
 import { SideMenu } from '../main/components/side-menu/side-menu'
 import { DataForm } from '../main/components/data-form/data-form'
 import { Tabs } from '../main/components/tabs/tabs'
 import { Tab } from '../main/components/tab/tab'
+import { TextField } from '../main/components/text-field/text-field'
 
 export default {
   title: 'cockpit'
@@ -88,7 +90,18 @@ export const cockpit1 = () => h('cockpit-demo1')
 @elem({
   tag: 'cockpit-demo2',
   styles: [themeStyles],
-  uses: [Brand, Cockpit, DataForm, SectionsMenu, SideMenu, Tab, Tabs, UserMenu],
+  uses: [
+    Brand,
+    Cockpit,
+    DataForm,
+    Fieldset,
+    SectionsMenu,
+    SideMenu,
+    Tab,
+    Tabs,
+    TextField,
+    UserMenu
+  ],
   impl: lit(cockpitDemo2Impl)
 })
 class CockpitDemo2 extends component() {}
@@ -141,7 +154,20 @@ function createDataForm() {
   return html`<div>
     <cp-data-form>
       <cp-tabs>
-        <cp-tab title="Tab-1">Tab1</cp-tab>
+        <cp-tab title="Tab-1">
+          <cp-fieldset title="Address">
+            <cp-text-field label="First name" required></cp-text-field>
+            <cp-text-field label="Last name" required></cp-text-field>
+            <cp-text-field label="Phone" required></cp-text-field>
+            <cp-text-field label="Mobile"></cp-text-field>
+          </cp-fieldset>
+          <cp-fieldset title="Options">
+            <cp-text-field label="First name" required></cp-text-field>
+            <cp-text-field label="Last name" required></cp-text-field>
+            <cp-text-field label="Phone" required></cp-text-field>
+            <cp-text-field label="Mobile"></cp-text-field>
+          </cp-fieldset>
+        </cp-tab>
         <cp-tab title="Tab-2">Tab2</cp-tab>
         <cp-tab title="Tab-3">Tab3</cp-tab>
       </cp-tabs>

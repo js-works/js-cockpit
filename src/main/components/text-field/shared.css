@@ -1,5 +1,33 @@
+/*
 .required .input::part(label):after {
+ddddddddddddddddddddddddddddddddddddddd);
+  content: '*';
+}
+*/
+
+.field-wrapper {
+  white-space: nowrap;
+}
+
+.label {
+  display: inline-block;
+  width: 8rem;
+  text-align: right;
+  padding: 0 4px 0 0;
+}
+
+.control {
+  display: inline-block;
+}
+
+.label:after {
+  margin: 0 7px;
+  content: '';
+}
+
+.required .label:after {
   color: rgb(var(--sl-color-danger-700));
+  margin: 0 4px;
   content: '*';
 }
 

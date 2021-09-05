@@ -48,8 +48,13 @@ function textFieldImpl(self: TextField) {
 
   return () => html`
     <div class="base ${classMap({ required: self.required })}">
-      <sl-input class="input" label=${self.label}></sl-input>
-      <div class="error">${self.error}</div>
+      <div class="field-wrapper">
+        <div class="label">${self.label}</div>
+        <div class="control">
+          <sl-input class="input" size="small"></sl-input>
+          <div class="error">${self.error}</div>
+        </div>
+      </div>
     </div>
   `
 }

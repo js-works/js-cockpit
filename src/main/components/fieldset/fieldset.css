@@ -1,0 +1,15 @@
+.base {
+}
+
+.title {
+  margin: 0 0 4px 0;
+  padding: 0 8px 1px 6px;
+  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border-width: 0 0 1px 0;
+  font-size: var(--sl-font-size-small);
+  font-weight: 600;
+}
+
+.content {
+  padding: 8px 16px;
+}
