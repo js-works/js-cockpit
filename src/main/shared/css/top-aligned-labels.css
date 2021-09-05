@@ -1,5 +1,5 @@
 :host {
-  --cp-label-and-field-flex-direction: columns;
+  --cp-label-and-field-flex-direction: column;
   --cp-label-and-field-label-text-align: left;
   --cp-label-and-field-label-width: auto;
 }
