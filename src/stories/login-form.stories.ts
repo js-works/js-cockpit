@@ -37,16 +37,16 @@ class LoginScreenDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <jsc-login-form full-size>
+      <cp-login-form full-size>
         <div slot="header">
-          <jsc-brand
+          <cp-brand
             vendor="my-company"
             title="Back Office"
             size="large"
-          ></jsc-brand>
+          ></cp-brand>
         </div>
         <div slot="footer">&copy; 2021, my-company</div>
-      </jsc-login-form>
+      </cp-login-form>
     `
 }
 

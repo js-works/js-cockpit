@@ -11,7 +11,7 @@ export { Cockpit }
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'jsc-cockpit',
+  tag: 'cp-cockpit',
   styles: cockpitStyles,
   impl: lit(cockpitImpl)
 })

@@ -18,7 +18,7 @@ export { UserMenu }
 // === UserMenu ===================================================
 
 @elem({
-  tag: 'jsc-user-menu',
+  tag: 'cp-user-menu',
   styles: userMenuStyles,
   uses: [SlIcon],
   impl: lit(userMenuImpl)

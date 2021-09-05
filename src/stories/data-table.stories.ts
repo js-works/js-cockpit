@@ -113,11 +113,11 @@ class DataTableDemo extends component() {}
 function dataTableDemoImpl() {
   return () => html`
     <div style="max-height: 200px; border: 1px solid red">
-      <jsc-data-table
+      <cp-data-table
         bordered
         .columns=${columns}
         .data=${[...data, ...data]}
-      ></jsc-data-table>
+      ></cp-data-table>
     </div>
   `
 }

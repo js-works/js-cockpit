@@ -1,10 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
-
-// custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-
-// icons
+import { html, lit } from 'js-element/lit'
 
 // styles
 import tabStyles from './tab.css'
@@ -16,9 +11,8 @@ export { Tab }
 // === Tab ===================================================
 
 @elem({
-  tag: 'jsc-tab',
+  tag: 'cp-tab',
   styles: tabStyles,
-  uses: [SlIcon],
   impl: lit(tabImpl)
 })
 class Tab extends component() {
@@ -27,7 +21,9 @@ class Tab extends component() {
 }
 
 function tabImpl(self: Tab) {
-  return () => {
-    return html` <div class="base">[Tab:${self.title}]</div> `
-  }
+  return () => html`
+    <div class="base">
+      <slot></slot>
+    </div>
+  `
 }

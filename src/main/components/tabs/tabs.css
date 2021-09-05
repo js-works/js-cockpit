@@ -1,0 +1,8 @@
+.pages {
+  position: relative;
+  padding: 15px 10px;
+}
+
+.pages slot::slotted(cp-tab) {
+  visibility: hidden;
+}

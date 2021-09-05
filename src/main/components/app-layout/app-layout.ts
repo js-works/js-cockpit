@@ -11,7 +11,7 @@ export { AppLayout }
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'jsc-app-layout',
+  tag: 'cp-app-layout',
   styles: appLayoutStyles,
   impl: lit(appLayoutImpl)
 })

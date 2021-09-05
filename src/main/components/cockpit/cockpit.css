@@ -69,11 +69,13 @@
   overflow: auto;
 }
 
-::slotted(jsc-brand) {
-  margin: 0 10px;
+::slotted(cp-brand) {
+  position: relative;
+  margin: 0 10px 0 10px;
+  bottom: 1px;
 }
 
-::slotted(jsc-sections-menu) {
+::slotted(cp-sections-menu) {
   position: relative;
   left: 20px;
   right: 20px;

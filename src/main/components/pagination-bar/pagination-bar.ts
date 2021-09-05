@@ -34,7 +34,7 @@ const DEFAULT_PAGE_SIZE = 50
 // === Paginator =====================================================
 
 @elem({
-  tag: 'jsc-pagination-bar',
+  tag: 'cp-pagination-bar',
   styles: paginationBarStyles,
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect],
   impl: lit(paginationBarImpl)
@@ -56,7 +56,7 @@ class PaginationBar extends component<{
 }
 
 function paginationBarImpl(self: PaginationBar) {
-  const { i18n, t } = useI18n('jsc')
+  const { i18n, t } = useI18n('js-cockpit')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
 

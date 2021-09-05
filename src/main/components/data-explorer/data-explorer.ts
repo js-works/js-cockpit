@@ -36,7 +36,7 @@ namespace DataExplorer {
 // === DataExplorer ==================================================
 
 @elem({
-  tag: 'jsc-data-explorer',
+  tag: 'cp-data-explorer',
   styles: [dataExplorerStyles],
   uses: [DataTable, PaginationBar],
   impl: lit(dataExplorerImpl)
@@ -71,7 +71,7 @@ function dataExplorerImpl(self: DataExplorer) {
       <div class="header">
         <h3 class="title">${self.title}</h3>
       </div>
-      <jsc-data-table
+      <cp-data-table
         class="table"
         .columns=${self.columns}
         .selectMode=${self.selectMode}
@@ -80,9 +80,9 @@ function dataExplorerImpl(self: DataExplorer) {
         .sortField=${self.sortField}
         .sortDir=${self.sortDir}
       >
-      </jsc-data-table>
+      </cp-data-table>
       <div class="footer">
-        <jsc-pagination-bar></jsc-pagination-bar>
+        <cp-pagination-bar></cp-pagination-bar>
       </div>
     </div>
   `

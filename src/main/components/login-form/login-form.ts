@@ -30,7 +30,7 @@ export { LoginForm }
 // === LoginForm ===================================================
 
 @elem({
-  tag: 'jsc-login-form',
+  tag: 'cp-login-form',
   styles: loginFormStyles,
   uses: [
     FormCtrlProvider,
@@ -84,11 +84,11 @@ function loginFormImpl(self: LoginForm) {
           <form-ctrl-provider class="column2" .value=${formCtrl}>
             <div class="column2-top">
               <slot name="login-fields">
-                <jsc-text-field label="Username" required></jsc-text-field>
-                <jsc-password-field
+                <cp-text-field label="Username" required></cp-text-field>
+                <cp-password-field
                   label="Password"
                   required
-                ></jsc-password-field>
+                ></cp-password-field>
               </slot>
             </div>
             <div class="column2-bottom">
@@ -101,7 +101,7 @@ function loginFormImpl(self: LoginForm) {
                 >Log in</sl-button
               >
             </div>
-          </jsc-form-ctrl-provider>
+          </cp-form-ctrl-provider>
         </div>
         <div class="footer">
           <slot name="footer"></slot>

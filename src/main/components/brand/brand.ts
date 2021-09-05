@@ -17,7 +17,7 @@ export { Brand }
 // === Brand ===================================================
 
 @elem({
-  tag: 'jsc-brand',
+  tag: 'cp-brand',
   styles: brandStyles,
   uses: [SlIcon],
   impl: lit(brandImpl)

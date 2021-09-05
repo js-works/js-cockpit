@@ -1,0 +1,11 @@
+.base {
+  padding: 8px 16px;
+}
+
+.header {
+  padding: 8px 0 10px 0;
+}
+
+.title {
+  font-size: var(--sl-font-size-large);
+}

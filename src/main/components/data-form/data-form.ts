@@ -14,7 +14,7 @@ export { DataForm }
 // === DataForm ===================================================
 
 @elem({
-  tag: 'jsc-data-form',
+  tag: 'cp-data-form',
   styles: dataFormStyles,
   uses: [SlIcon],
   impl: lit(dataFormImpl)
@@ -26,6 +26,13 @@ class DataForm extends component() {
 
 function dataFormImpl(self: DataForm) {
   return () => {
-    return html` <div class="base">DataForm<br /><slot></slot></div> `
+    return html`
+      <div class="base">
+        <div class="header">
+          <div class="title">DataForm</div>
+        </div>
+        <slot></slot>
+      </div>
+    `
   }
 }

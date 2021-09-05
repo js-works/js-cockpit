@@ -7,6 +7,8 @@ import { UserMenu } from '../main/components/user-menu/user-menu'
 import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
 import { SideMenu } from '../main/components/side-menu/side-menu'
 import { DataForm } from '../main/components/data-form/data-form'
+import { Tabs } from '../main/components/tabs/tabs'
+import { Tab } from '../main/components/tab/tab'
 
 export default {
   title: 'cockpit'
@@ -62,7 +64,7 @@ class CockpitDemo1 extends component() {}
 
 function cockpitDemo1Impl() {
   return () => html`
-    <jsc-cockpit>
+    <cp-cockpit>
       <div slot="header-start" class="orangered">header-start</div>
       <div slot="header" class="orange">header</div>
       <div slot="header-end" class="orangered">header-end</div>
@@ -75,7 +77,7 @@ function cockpitDemo1Impl() {
       <div slot="main-start" class="gold">main-start</div>
       <div slot="main" class="yellow full-height">main</div>
       <div slot="main-end" class="gold">main-end</div>
-    </jsc-cockpit>
+    </cp-cockpit>
   `
 }
 
@@ -86,22 +88,22 @@ export const cockpit1 = () => h('cockpit-demo1')
 @elem({
   tag: 'cockpit-demo2',
   styles: [themeStyles],
-  uses: [Brand, Cockpit, DataForm, SectionsMenu, SideMenu, UserMenu],
+  uses: [Brand, Cockpit, DataForm, SectionsMenu, SideMenu, Tab, Tabs, UserMenu],
   impl: lit(cockpitDemo2Impl)
 })
 class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <jsc-cockpit>
-      <jsc-brand
+    <cp-cockpit>
+      <cp-brand
         slot="header-start"
         class="orangered"
         vendor="my-company"
         title="Back Office"
         multi-color
-      ></jsc-brand>
-      <jsc-sections-menu
+      ></cp-brand>
+      <cp-sections-menu
         slot="header"
         class="orange"
         .sections=${[
@@ -123,18 +125,26 @@ function cockpitDemo2Impl() {
           }
         ]}
         .activeSection=${2}
-      ></jsc-sections-menu>
-      <jsc-user-menu slot="header-end"></jsc-user-menu>
+      ></cp-sections-menu>
+      <cp-user-menu slot="header-end"></cp-user-menu>
       <div slot="sidebar" class="lightgreen full-height">
-        <jsc-side-menu></jsc-side-menu>
+        <cp-side-menu></cp-side-menu>
       </div>
       <div slot="main" class="yellow full-height">${createDataForm()}</div>
-    </jsc-cockpit>
+    </cp-cockpit>
   `
 }
 
 export const cockpit2 = () => h('cockpit-demo2')
 
 function createDataForm() {
-  return html`<div><jsc-data-form></jsc-data-form></div>`
+  return html`<div>
+    <cp-data-form>
+      <cp-tabs>
+        <cp-tab title="Tab-1">Tab1</cp-tab>
+        <cp-tab title="Tab-2">Tab2</cp-tab>
+        <cp-tab title="Tab-3">Tab3</cp-tab>
+      </cp-tabs>
+    </cp-data-form>
+  </div>`
 }

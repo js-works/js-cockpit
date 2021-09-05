@@ -9,7 +9,7 @@ export { FormCtrlProvider }
 // === FormCtrlProvider ==============================================
 
 @elem({
-  tag: 'jsc-form-ctrl-provider',
+  tag: 'cp-form-ctrl-provider',
   ctx: formCtrlCtx
 })
 class FormCtrlProvider extends component() {
