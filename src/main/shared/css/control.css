@@ -1,0 +1,36 @@
+.field-wrapper {
+  display: flex;
+  flex-direction: var(--cp-label-and-field-flex-direction, column);
+  justify-content: flex-start;
+  align-items: flex-start;
+  white-space: nowrap;
+}
+
+.label {
+  min-width: var(--cp-label-and-field-label-width, auto);
+  max-width: var(--cp-label-and-field-label-width, auto);
+  text-align: var(--cp-label-and-field-label-text-align, left);
+  padding: 0 4px 0 0;
+  white-space: normal;
+}
+
+.control {
+}
+
+.label:after {
+  padding: 0 7px;
+  content: '';
+}
+
+.required .label:after {
+  color: rgb(var(--sl-color-danger-700));
+  padding: 0 4px;
+  font-size: 15px;
+  content: '*';
+}
+
+.error {
+  margin: 2px 0;
+  color: rgb(var(--sl-color-danger-700));
+  font-size: var(--sl-font-size-small);
+}

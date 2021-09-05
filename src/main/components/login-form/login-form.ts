@@ -15,6 +15,7 @@ import { FormCtrl } from '../../ctrls/form-ctrl'
 
 // styles
 import loginFormStyles from './login-form.css'
+import topAlignedLabelsStyles from '../../shared/css/top-aligned-labels.css'
 
 // icons
 import unlockSvg from './assets/unlock.svg'
@@ -31,7 +32,7 @@ export { LoginForm }
 
 @elem({
   tag: 'cp-login-form',
-  styles: loginFormStyles,
+  styles: [loginFormStyles, topAlignedLabelsStyles],
   uses: [
     FormCtrlProvider,
     PasswordField,

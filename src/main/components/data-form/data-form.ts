@@ -6,6 +6,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 
 // styles
 import dataFormStyles from './data-form.css'
+import rightAlignedLabelsStyles from '../../shared/css/right-aligned-labels.css'
 
 // === exports =======================================================
 
@@ -15,7 +16,7 @@ export { DataForm }
 
 @elem({
   tag: 'cp-data-form',
-  styles: dataFormStyles,
+  styles: [dataFormStyles, rightAlignedLabelsStyles],
   uses: [SlIcon],
   impl: lit(dataFormImpl)
 })

@@ -13,7 +13,7 @@ const INVERTABLE_COLORS = getColorNames(lightTheme)
 
 function createTheme(params: {
   dark?: boolean
-  noBorderRadius?: boolean
+  reduceBorderRadius?: boolean
   primaryColor?: string
   successColor?: string
   infoColor?: string
@@ -24,11 +24,11 @@ function createTheme(params: {
 
   const ret: Record<string, string> = Object.assign({}, source)
 
-  if (params.noBorderRadius) {
-    ret['border-radius-small'] = '0'
-    ret['border-radius-medium'] = '0'
-    ret['border-radius-large'] = '0'
-    ret['border-radius-x-large'] = '0'
+  if (params.reduceBorderRadius) {
+    ret['border-radius-small'] = '2px'
+    ret['border-radius-medium'] = '2px'
+    ret['border-radius-large'] = '2px'
+    ret['border-radius-x-large'] = '2px'
   }
 
   ;['primary', 'success', 'info', 'warning', 'danger', 'neutral'].forEach(

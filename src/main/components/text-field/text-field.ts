@@ -7,7 +7,7 @@ import { useFormCtrl } from '../../ctrls/form-ctrl'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 
 // styles
-import sharedStyles from './shared.css'
+import controlStyles from '../../shared/css/control.css'
 import textFieldStyles from './text-field.css'
 
 // === exports =======================================================
@@ -20,7 +20,7 @@ export { TextField }
 
 @elem({
   tag: 'cp-text-field',
-  styles: [sharedStyles, textFieldStyles],
+  styles: [controlStyles, textFieldStyles],
   uses: [SlInput],
   impl: lit(textFieldImpl)
 })

@@ -1,0 +1,5 @@
+:host {
+  --cp-label-and-field-flex-direction: row;
+  --cp-label-and-field-label-text-align: right;
+  --cp-label-and-field-label-width: 9rem;
+}

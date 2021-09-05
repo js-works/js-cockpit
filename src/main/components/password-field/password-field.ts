@@ -6,7 +6,7 @@ import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 
 // styles
-import sharedStyles from '../text-field/shared.css'
+import controlStyles from '../../shared/css/control.css'
 import passwordFieldStyles from './password-field.css'
 
 // === exports =======================================================
@@ -19,7 +19,7 @@ export { PasswordField }
 
 @elem({
   tag: 'cp-password-field',
-  styles: [sharedStyles, passwordFieldStyles],
+  styles: [controlStyles, passwordFieldStyles],
   uses: [SlInput],
   impl: lit(passwordFieldImpl)
 })
@@ -48,7 +48,12 @@ function passwordFieldImpl(self: PasswordField) {
       <div class="field-wrapper">
         <div class="label">${self.label}</div>
         <div class="control">
-          <sl-input type="password" name=${self.name} class="input"></sl-input>
+          <sl-input
+            type="password"
+            name=${self.name}
+            class="input"
+            size="small"
+          ></sl-input>
         </div>
       </div>
     </div>
