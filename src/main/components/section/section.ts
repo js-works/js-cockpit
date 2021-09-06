@@ -17,14 +17,14 @@ export { Section }
 })
 class Section extends component() {
   @prop({ attr: Attrs.string })
-  title = ''
+  caption = ''
 }
 
 function sectionImpl(self: Section) {
   return () => {
     return html`
       <div class="base">
-        <div class="title">${self.title}</div>
+        <div class="caption">${self.caption}</div>
         <div class="content">
           <slot></slot>
         </div>

@@ -3,8 +3,10 @@ import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Cockpit } from '../main/components/cockpit/cockpit'
 import { Brand } from '../main/components/brand/brand'
+import { Fieldset } from '../main/components/fieldset/fieldset'
 import { Section } from '../main/components/section/section'
 import { UserMenu } from '../main/components/user-menu/user-menu'
+import { RadioGroup } from '../main/components/radio-group/radio-group'
 import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
 import { SideMenu } from '../main/components/side-menu/side-menu'
 import { DataForm } from '../main/components/data-form/data-form'
@@ -100,6 +102,8 @@ export const cockpit1 = () => h('cockpit-demo1')
     Brand,
     Cockpit,
     DataForm,
+    Fieldset,
+    RadioGroup,
     Section,
     SectionsMenu,
     SideMenu,
@@ -161,17 +165,32 @@ function createDataForm() {
     <cp-data-form>
       <cp-tabs>
         <cp-tab title="Tab-1">
-          <cp-section title="Address">
-            <cp-text-field label="First name" required></cp-text-field>
-            <cp-text-field label="Last name" required></cp-text-field>
-            <cp-text-field label="Phone" required></cp-text-field>
-            <cp-text-field label="Mobile"></cp-text-field>
+          <cp-section caption="Address">
+            <cp-fieldset>
+              <cp-radio-group
+                label="Salutation"
+                orient="horizontal"
+                required
+              ></cp-radio-group>
+              <cp-text-field label="First name" required></cp-text-field>
+              <cp-text-field label="Last name" required></cp-text-field>
+              <cp-text-field label="Phone" required></cp-text-field>
+              <cp-text-field label="Mobile"></cp-text-field>
+            </cp-fieldset>
+            <cp-fieldset>
+              <cp-text-field label="First name" required></cp-text-field>
+              <cp-text-field label="Last name" required></cp-text-field>
+              <cp-text-field label="Phone" required></cp-text-field>
+              <cp-text-field label="Mobile"></cp-text-field>
+            </cp-fieldset>
           </cp-section>
-          <cp-section title="Options">
-            <cp-text-field label="First name" required></cp-text-field>
-            <cp-text-field label="Last name" required></cp-text-field>
-            <cp-text-field label="Phone" required></cp-text-field>
-            <cp-text-field label="Mobile"></cp-text-field>
+          <cp-section caption="Options">
+            <cp-fieldset>
+              <cp-text-field label="First name" required></cp-text-field>
+              <cp-text-field label="Last name" required></cp-text-field>
+              <cp-text-field label="Phone" required></cp-text-field>
+              <cp-text-field label="Mobile"></cp-text-field>
+            </cp-fieldset>
           </cp-section>
         </cp-tab>
         <cp-tab title="Tab-2">Tab2</cp-tab>

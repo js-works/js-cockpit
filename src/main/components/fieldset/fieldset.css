@@ -1,16 +1,9 @@
 .base {
 }
 
-.title {
-  margin: 0 0 4px 0;
-  padding: 0 8px 1px 6px;
-  opacity: 0.8;
-  border: 0 solid rgb(var(--sl-color-neutral-200));
-  border-width: 0 0 1px 0;
-  font-size: var(--sl-font-size-small);
-  font-weight: 0;
-}
-
 .content {
-  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 0;
 }

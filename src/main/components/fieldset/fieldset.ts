@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { component, elem, prop, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // styles
@@ -17,14 +17,14 @@ export { Fieldset }
 })
 class Fieldset extends component() {
   @prop({ attr: Attrs.string })
-  title = ''
+  caption = ''
 }
 
 function fieldsetImpl(self: Fieldset) {
   return () => {
     return html`
       <div class="base">
-        <div class="title">${self.title}</div>
+        <div class="caption">${self.caption}</div>
         <div class="content">
           <slot></slot>
         </div>

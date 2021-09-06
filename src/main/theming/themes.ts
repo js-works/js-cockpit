@@ -61,5 +61,3 @@ const pinkTheme = createTheme({
 })
 
 const pinkDarkTheme = invertTheme(pinkTheme)
-
-console.log(JSON.stringify(pinkDarkTheme, null, 2))
