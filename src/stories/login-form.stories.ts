@@ -40,8 +40,8 @@ function loginFormDemoImpl() {
       <cp-login-form full-size>
         <div slot="header">
           <cp-brand
-            vendor="my-company"
-            title="Back Office"
+            headline="my-company"
+            subheadline="Back Office"
             size="large"
           ></cp-brand>
         </div>

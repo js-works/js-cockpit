@@ -14,5 +14,5 @@
 .content {
   display: flex;
   padding: 8px 16px;
-  gap: 8px;
+  gap: 24px;
 }

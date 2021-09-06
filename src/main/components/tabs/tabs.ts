@@ -64,7 +64,7 @@ function tabsImpl(self: Tabs) {
     const pages = slotRef
       .value!.assignedElements()
       .filter((it: any) => it.localName === 'cp-tab')
-      .map((it: any) => ({ title: (it as any).title }))
+      .map((it: any) => ({ caption: (it as any).caption }))
 
     return html`
       <div class="base">
@@ -85,7 +85,7 @@ function tabsImpl(self: Tabs) {
             (_, idx) => idx,
             (page: any, idx) =>
               html`<sl-tab slot="nav" panel="panel${idx}"
-                >${page.title}</sl-tab
+                >${page.caption}</sl-tab
               >`
           )}
         </sl-tab-group>

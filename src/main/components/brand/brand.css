@@ -35,7 +35,7 @@
   height: 36px;
 }
 
-.vendor-and-title {
+.headline-and-subheadline {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -43,38 +43,38 @@
   gap: 2px;
 }
 
-.vendor {
+.headline {
   font-size: 14px;
   line-height: 100%;
   white-space: nowrap;
 }
 
-.content.small .vendor {
+.content.small .headline {
   font-size: 12px;
 }
 
-.content.large .vendor {
+.content.large .headline {
   font-size: 16px;
 }
 
-.content.huge .vendor {
+.content.huge .headline {
   font-size: 20px;
 }
 
-.title {
+.subheadline {
   font-size: 20px;
   line-height: 100%;
   white-space: nowrap;
 }
 
-.content.small .title {
+.content.small .subheadline {
   font-size: 16px;
 }
 
-.content.large .title {
+.content.large .subheadline {
   font-size: 24px;
 }
 
-.content.huge .title {
+.content.huge .subheadline {
   font-size: 28px;
 }

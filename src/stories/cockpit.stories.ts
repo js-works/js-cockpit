@@ -122,8 +122,8 @@ function cockpitDemo2Impl() {
       <cp-brand
         slot="header-start"
         class="orangered"
-        vendor="my-company"
-        title="Back Office"
+        headline="my-company"
+        subheadline="Back Office"
         multi-color
       ></cp-brand>
       <cp-sections-menu
@@ -164,7 +164,7 @@ function createDataForm() {
   return html`<div>
     <cp-data-form>
       <cp-tabs>
-        <cp-tab title="Tab-1">
+        <cp-tab caption="Tab-1">
           <cp-section caption="Address">
             <cp-fieldset>
               <cp-radio-group
@@ -193,8 +193,8 @@ function createDataForm() {
             </cp-fieldset>
           </cp-section>
         </cp-tab>
-        <cp-tab title="Tab-2">Tab2</cp-tab>
-        <cp-tab title="Tab-3">Tab3</cp-tab>
+        <cp-tab caption="Tab-2">Tab2</cp-tab>
+        <cp-tab caption="Tab-3">Tab3</cp-tab>
       </cp-tabs>
     </cp-data-form>
   </div>`

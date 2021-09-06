@@ -27,10 +27,10 @@ class Brand extends component() {
   logo = ''
 
   @prop({ attr: Attrs.string })
-  vendor = ''
+  headline = ''
 
   @prop({ attr: Attrs.string })
-  title = ''
+  subheadline = ''
 
   @prop({ attr: Attrs.string })
   size: 'small' | 'medium' | 'large' | 'huge' = 'medium'
@@ -54,9 +54,9 @@ function brandImpl(self: Brand) {
           })}
         >
           <sl-icon src=${logo} class="logo"></sl-icon>
-          <div class="vendor-and-title">
-            <div class="vendor">${self.vendor}</div>
-            <div class="title">${self.title}</div>
+          <div class="headline-and-subheadline">
+            <div class="headline">${self.headline}</div>
+            <div class="subheadline">${self.subheadline}</div>
           </div>
         </div>
       </div>

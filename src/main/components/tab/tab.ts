@@ -17,7 +17,7 @@ export { Tab }
 })
 class Tab extends component() {
   @prop({ attr: Attrs.string })
-  title = ''
+  caption = ''
 }
 
 function tabImpl(self: Tab) {

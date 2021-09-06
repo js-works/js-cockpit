@@ -4,6 +4,6 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   padding: 8px 0;
 }
