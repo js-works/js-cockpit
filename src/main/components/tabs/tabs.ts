@@ -54,7 +54,7 @@ function tabsImpl(self: Tabs) {
       refresh()
 
       return html`
-        <sl-tab-group ${ref(tabGroupRef)}></sl-tab-group>
+        <sl-tab-group ${ref(tabGroupRef)} exportparts="base"></sl-tab-group>
         <slot ${ref(slotRef)}></slot>
       `
     } else {
@@ -79,7 +79,11 @@ function tabsImpl(self: Tabs) {
           }
         </style>
 
-        <sl-tab-group ${ref(tabGroupRef)} @sl-tab-show=${onTabChange}>
+        <sl-tab-group
+          ${ref(tabGroupRef)}
+          @sl-tab-show=${onTabChange}
+          exportparts="base"
+        >
           ${repeat(
             pages,
             (_, idx) => idx,

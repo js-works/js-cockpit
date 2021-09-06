@@ -5,20 +5,23 @@ import { Cockpit } from '../main/components/cockpit/cockpit'
 import { Brand } from '../main/components/brand/brand'
 import { Fieldset } from '../main/components/fieldset/fieldset'
 import { Section } from '../main/components/section/section'
-import { UserMenu } from '../main/components/user-menu/user-menu'
 import { RadioGroup } from '../main/components/radio-group/radio-group'
 import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
 import { SideMenu } from '../main/components/side-menu/side-menu'
 import { DataForm } from '../main/components/data-form/data-form'
 import { Tabs } from '../main/components/tabs/tabs'
 import { Tab } from '../main/components/tab/tab'
+import { TextArea } from '../main/components/text-area/text-area'
 import { TextField } from '../main/components/text-field/text-field'
+import { UserMenu } from '../main/components/user-menu/user-menu'
 
 import { convertToCss } from '../main/theming/theme-utils'
 import {
   lightTheme,
   modernTheme,
-  modernDarkTheme
+  modernDarkTheme,
+  orangeTheme,
+  orangeDarkTheme
 } from '../main/theming/themes'
 
 export default {
@@ -109,6 +112,7 @@ export const cockpit1 = () => h('cockpit-demo1')
     SideMenu,
     Tab,
     Tabs,
+    TextArea,
     TextField,
     UserMenu
   ],
@@ -167,29 +171,26 @@ function createDataForm() {
         <cp-tab caption="Tab-1">
           <cp-section caption="Address">
             <cp-fieldset>
+              <cp-text-field label="First name" required></cp-text-field>
+              <cp-text-field label="Last name" required></cp-text-field>
+              <cp-text-field label="Phone" required></cp-text-field>
+              <cp-text-field label="Mobile"></cp-text-field>
+            </cp-fieldset>
+            <cp-fieldset>
+              <cp-text-field label="Company" required></cp-text-field>
+              <cp-text-field label="Alias name"></cp-text-field>
               <cp-radio-group
-                label="Salutation"
+                label="Options"
                 orient="horizontal"
                 required
               ></cp-radio-group>
-              <cp-text-field label="First name" required></cp-text-field>
-              <cp-text-field label="Last name" required></cp-text-field>
-              <cp-text-field label="Phone" required></cp-text-field>
-              <cp-text-field label="Mobile"></cp-text-field>
-            </cp-fieldset>
-            <cp-fieldset>
-              <cp-text-field label="First name" required></cp-text-field>
-              <cp-text-field label="Last name" required></cp-text-field>
-              <cp-text-field label="Phone" required></cp-text-field>
-              <cp-text-field label="Mobile"></cp-text-field>
             </cp-fieldset>
           </cp-section>
-          <cp-section caption="Options">
+          <cp-section caption="Contact">
             <cp-fieldset>
-              <cp-text-field label="First name" required></cp-text-field>
-              <cp-text-field label="Last name" required></cp-text-field>
               <cp-text-field label="Phone" required></cp-text-field>
               <cp-text-field label="Mobile"></cp-text-field>
+              <cp-text-area label="Comments"></cp-text-area>
             </cp-fieldset>
           </cp-section>
         </cp-tab>

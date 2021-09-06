@@ -10,11 +10,31 @@
   text-align: var(--cp-label-and-field-label-text-align, left);
   padding: 0 4px 0 0;
   white-space: normal;
+  font-size: var(--sl-font-size-small);
+
+  /*
+  font-size: calc(
+    var(--sl-font-size-small) * var(--cp-label-and-field-mode, 0) +
+      var(--sl-font-size-small) * (1 - var(--cp-label-and-field-mode, 0))
+  );
+  */
+
+  font-weight: 400;
+}
+
+sl-input::part(base),
+sl-textarea::part(base) {
+  border-color: rgb(var(--sl-color-neutral-400) / 80%);
+}
+
+sl-checkbox::part(control) {
+  border: 1px solid red;
 }
 
 .label:after {
   padding: 0 7px;
   content: '';
+  margin: 0 7px 0 0;
 }
 
 .required .label:after {
@@ -22,6 +42,9 @@
   padding: 0 4px;
   font-size: 15px;
   content: '*';
+}
+
+.control {
 }
 
 .error {

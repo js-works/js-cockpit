@@ -1,5 +1,6 @@
 .base {
   padding: 8px 16px;
+  background-color: rgb(var(--sl-color-neutral-0));
 }
 
 .header {
@@ -8,4 +9,8 @@
 
 .title {
   font-size: var(--sl-font-size-large);
+}
+
+::slotted(cp-tabs)::part(base) {
+  border: 2px solid red;
 }
