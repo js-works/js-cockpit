@@ -17,6 +17,7 @@ try {
         tsconfig: './tsconfig.build.json',
         target: 'es2020',
         minify: true,
+        sourcemap: true,
         format,
         loader: { '.svg': 'dataurl', '.css': 'text' },
         external: ['lit-html', 'js-element', '@shoelace-style/shoelace'],
