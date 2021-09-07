@@ -2,7 +2,8 @@ import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { AppLayout } from '../main/components/app-layout/app-layout'
-import { DataExplorer } from '../main/components/data-explorer/data-explorer'
+import { DataExplorer } from 'js-cockpit'
+
 export default {
   title: 'data-explorer'
 }

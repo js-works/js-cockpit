@@ -1,21 +1,24 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Cockpit } from '../main/components/cockpit/cockpit'
-import { Brand } from '../main/components/brand/brand'
-import { Fieldset } from '../main/components/fieldset/fieldset'
-import { Section } from '../main/components/section/section'
-import { RadioGroup } from '../main/components/radio-group/radio-group'
-import { SectionsMenu } from '../main/components/sections-menu/sections-menu'
-import { SideMenu } from '../main/components/side-menu/side-menu'
-import { DataForm } from '../main/components/data-form/data-form'
-import { Tabs } from '../main/components/tabs/tabs'
-import { Tab } from '../main/components/tab/tab'
-import { TextArea } from '../main/components/text-area/text-area'
-import { TextField } from '../main/components/text-field/text-field'
-import { UserMenu } from '../main/components/user-menu/user-menu'
+import {
+  Brand,
+  Cockpit,
+  DataForm,
+  Fieldset,
+  RadioGroup,
+  Section,
+  SectionsMenu,
+  SideMenu,
+  Tab,
+  Tabs,
+  TextArea,
+  TextField,
+  UserMenu
+} from 'js-cockpit'
 
 import { convertToCss } from '../main/theming/theme-utils'
+
 import {
   lightTheme,
   modernTheme,

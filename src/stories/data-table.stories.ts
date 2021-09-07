@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { DataTable } from '../main/components/data-table/data-table'
+import { DataTable } from 'js-cockpit'
 
 import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
 const themeStyles = theme.toString()

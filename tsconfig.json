@@ -19,7 +19,9 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "paths": {},
+    "paths": {
+      "js-cockpit": ["./src/main/js-cockpit.ts"]
+    },
     "typeRoots": ["node_modules/@types"]
   },
   "files": ["src/main/js-cockpit.ts"],

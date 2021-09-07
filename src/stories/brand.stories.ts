@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand } from '../main/components/brand/brand'
+import { Brand } from 'js-cockpit'
 
 export default {
   title: 'brand'
@@ -31,61 +31,61 @@ function brandDemoImpl() {
       <div class="brand-demo">
         <div>
           <cp-brand
-            vendor="Size: small"
-            title="Back Office"
+            headline="Size: small"
+            subheadline="Back Office"
             size="small"
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: medium"
-            title="Back Office"
+            headline="Size: mediume"
+            subheadline="Back Office"
             size="medium"
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: large"
-            title="Back Office"
+            headline="Size: large"
+            subheadline="Back Office"
             size="large"
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: huge"
-            title="Back Office"
+            headline="Size: huge"
+            subheadline="Back Office"
             size="huge"
           ></cp-brand>
         </div>
 
         <div>
           <cp-brand
-            vendor="Size: small"
-            title="Back Office"
+            headline="Size: small"
+            subheadline="Back Office"
             size="small"
             multi-color
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: medium"
-            title="Back Office"
+            headline="Size: medium"
+            subheadline="Back Office"
             size="medium"
             multi-color
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: large"
-            title="Back Office"
+            headline="Size: large"
+            subheadline="Back Office"
             size="large"
             multi-color
           ></cp-brand>
           <br />
           <br />
           <cp-brand
-            vendor="Size: huge"
-            title="Back Office"
+            headline="Size: huge"
+            subheadline="Back Office"
             size="huge"
             multi-color
           ></cp-brand>

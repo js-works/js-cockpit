@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { AppLayout } from '../main/components/app-layout/app-layout'
+import { AppLayout } from 'js-cockpit'
 
 export default {
   title: 'app-layout'
