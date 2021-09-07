@@ -69,13 +69,13 @@
   overflow: auto;
 }
 
-::slotted(cp-brand) {
+::slotted(c-brand) {
   position: relative;
   margin: 0 10px 0 10px;
   bottom: 1px;
 }
 
-::slotted(cp-sections-menu) {
+::slotted(c-sections-menu) {
   position: relative;
   left: 20px;
   right: 20px;

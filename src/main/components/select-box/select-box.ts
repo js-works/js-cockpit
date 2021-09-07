@@ -19,7 +19,7 @@ export { SelectBox }
 // === SelectBox =====================================================
 
 @elem({
-  tag: 'cp-select-box',
+  tag: 'c-select-box',
   styles: [controlStyles, selectBoxStyles],
   uses: [SlInput],
   impl: lit(selectBoxImpl)

@@ -11,6 +11,6 @@
   font-size: var(--sl-font-size-large);
 }
 
-::slotted(cp-tabs)::part(base) {
+::slotted(c-tabs)::part(base) {
   border: 2px solid red;
 }

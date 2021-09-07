@@ -45,7 +45,7 @@ namespace SideMenu {
 // === SideMenu ======================================================
 
 @elem({
-  tag: 'cp-side-menu',
+  tag: 'c-side-menu',
   styles: sideMenuStyles,
   uses: [SlIcon],
   impl: lit(loginScreenImpl)

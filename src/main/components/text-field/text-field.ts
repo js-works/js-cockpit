@@ -19,7 +19,7 @@ export { TextField }
 // === TextField =====================================================
 
 @elem({
-  tag: 'cp-text-field',
+  tag: 'c-text-field',
   styles: [controlStyles, textFieldStyles],
   uses: [SlInput],
   impl: lit(textFieldImpl)

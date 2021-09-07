@@ -30,65 +30,65 @@ function brandDemoImpl() {
     html`
       <div class="brand-demo">
         <div>
-          <cp-brand
+          <c-brand
             headline="Size: small"
             subheadline="Back Office"
             size="small"
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: mediume"
             subheadline="Back Office"
             size="medium"
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: large"
             subheadline="Back Office"
             size="large"
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: huge"
             subheadline="Back Office"
             size="huge"
-          ></cp-brand>
+          ></c-brand>
         </div>
 
         <div>
-          <cp-brand
+          <c-brand
             headline="Size: small"
             subheadline="Back Office"
             size="small"
             multi-color
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: medium"
             subheadline="Back Office"
             size="medium"
             multi-color
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: large"
             subheadline="Back Office"
             size="large"
             multi-color
-          ></cp-brand>
+          ></c-brand>
           <br />
           <br />
-          <cp-brand
+          <c-brand
             headline="Size: huge"
             subheadline="Back Office"
             size="huge"
             multi-color
-          ></cp-brand>
+          ></c-brand>
         </div>
       </div>
     `

@@ -11,7 +11,7 @@ export { Section }
 // === Section ===================================================
 
 @elem({
-  tag: 'cp-section',
+  tag: 'c-section',
   styles: sectionStyles,
   impl: lit(sectionImpl)
 })

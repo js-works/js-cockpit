@@ -15,7 +15,7 @@ export { DataForm }
 // === DataForm ===================================================
 
 @elem({
-  tag: 'cp-data-form',
+  tag: 'c-data-form',
   styles: [dataFormStyles, rightAlignedLabelsStyles],
   uses: [SlIcon],
   impl: lit(dataFormImpl)

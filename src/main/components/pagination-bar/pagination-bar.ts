@@ -34,7 +34,7 @@ const DEFAULT_PAGE_SIZE = 50
 // === Paginator =====================================================
 
 @elem({
-  tag: 'cp-pagination-bar',
+  tag: 'c-pagination-bar',
   styles: paginationBarStyles,
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect],
   impl: lit(paginationBarImpl)

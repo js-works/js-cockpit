@@ -11,7 +11,7 @@ export { Tab }
 // === Tab ===================================================
 
 @elem({
-  tag: 'cp-tab',
+  tag: 'c-tab',
   styles: tabStyles,
   impl: lit(tabImpl)
 })

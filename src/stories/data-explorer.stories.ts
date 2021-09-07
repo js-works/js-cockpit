@@ -107,14 +107,14 @@ class DataExplorerDemo extends component() {}
 
 function dataExplorerDemoImpl() {
   return () => html`
-    <cp-data-explorer
+    <c-data-explorer
       slot="main"
       .title=${'Customers'}
       .columns=${columns}
       .data=${data.slice(0, 5)}
       .sortField=${'lastName'}
       .selectMode=${'multi'}
-    ></cp-data-explorer>
+    ></c-data-explorer>
   `
 }
 

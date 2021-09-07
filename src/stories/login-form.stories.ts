@@ -24,12 +24,9 @@ export default {
   title: 'login-form'
 }
 
-const themeStyles = convertToCss(lightTheme)
-
 @elem({
   tag: 'login-form-demo',
   uses: [Brand, LoginForm, SlInput],
-  styles: themeStyles,
   impl: lit(loginFormDemoImpl)
 })
 class LoginScreenDemo extends component() {}
@@ -37,16 +34,16 @@ class LoginScreenDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <cp-login-form full-size>
+      <c-login-form full-size .theme="orange">
         <div slot="header">
-          <cp-brand
+          <c-brand
             headline="my-company"
             subheadline="Back Office"
             size="large"
-          ></cp-brand>
+          ></c-brand>
         </div>
         <div slot="footer">&copy; 2021, my-company</div>
-      </cp-login-form>
+      </c-login-form>
     `
 }
 

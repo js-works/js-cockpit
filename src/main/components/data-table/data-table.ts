@@ -57,7 +57,7 @@ type HeaderCell = {
 // === DataTable =====================================================
 
 @elem({
-  tag: 'cp-data-table',
+  tag: 'c-data-table',
   styles: [dataTableStyles],
   uses: [SlCheckbox],
   impl: lit(dataTableImpl)

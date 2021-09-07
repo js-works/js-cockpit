@@ -1,3 +1,4 @@
+// components
 export { AppLayout } from './components/app-layout/app-layout'
 export { Brand } from './components/brand/brand'
 export { Cockpit } from './components/cockpit/cockpit'
@@ -16,6 +17,17 @@ export { SelectBox } from './components/select-box/select-box'
 export { SideMenu } from './components/side-menu/side-menu'
 export { Tab } from './components/tab/tab'
 export { Tabs } from './components/tabs/tabs'
+export { ThemeProvider } from './components/theme-provider/theme-provider'
 export { TextArea } from './components/text-area/text-area'
 export { TextField } from './components/text-field/text-field'
 export { UserMenu } from './components/user-menu/user-menu'
+
+// themes
+export {
+  lightTheme,
+  darkTheme,
+  blueTheme,
+  blueDarkTheme,
+  orangeTheme,
+  orangeDarkTheme
+} from './theming/themes'

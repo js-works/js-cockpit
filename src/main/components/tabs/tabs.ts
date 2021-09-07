@@ -23,7 +23,7 @@ export { Tabs }
 // === Tabs ===================================================
 
 @elem({
-  tag: 'cp-tabs',
+  tag: 'c-tabs',
   styles: tabsStyles,
   uses: [SlIcon, SlTabGroup, SlTabPanel, SlTab],
   impl: lit(tabsImpl)
@@ -63,13 +63,13 @@ function tabsImpl(self: Tabs) {
 
     const pages = slotRef
       .value!.assignedElements()
-      .filter((it: any) => it.localName === 'cp-tab')
+      .filter((it: any) => it.localName === 'c-tab')
       .map((it: any) => ({ caption: (it as any).caption }))
 
     return html`
       <div class="base">
         <style>
-          .pages slot::slotted(cp-tab:nth-of-type(${state.activeIdx + 1})) {
+          .pages slot::slotted(c-tab:nth-of-type(${state.activeIdx + 1})) {
             visibility: visible;
             position: absolute;
             left: 0;

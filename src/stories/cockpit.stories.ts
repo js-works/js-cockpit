@@ -1,6 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
+
 import {
   Brand,
   Cockpit,
@@ -14,6 +15,7 @@ import {
   Tabs,
   TextArea,
   TextField,
+  ThemeProvider,
   UserMenu
 } from 'js-cockpit'
 
@@ -30,8 +32,6 @@ import {
 export default {
   title: 'cockpit'
 }
-
-const themeStyles = convertToCss(modernTheme)
 
 const demo1Styles = `
   .orange {
@@ -72,7 +72,7 @@ const demo1Styles = `
 
 @elem({
   tag: 'cockpit-demo1',
-  styles: [themeStyles, demo1Styles],
+  styles: demo1Styles,
   uses: [Cockpit, SectionsMenu],
   impl: lit(cockpitDemo1Impl)
 })
@@ -80,7 +80,7 @@ class CockpitDemo1 extends component() {}
 
 function cockpitDemo1Impl() {
   return () => html`
-    <cp-cockpit>
+    <c-cockpit>
       <div slot="header-start" class="orangered">header-start</div>
       <div slot="header" class="orange">header</div>
       <div slot="header-end" class="orangered">header-end</div>
@@ -93,7 +93,7 @@ function cockpitDemo1Impl() {
       <div slot="main-start" class="gold">main-start</div>
       <div slot="main" class="yellow full-height">main</div>
       <div slot="main-end" class="gold">main-end</div>
-    </cp-cockpit>
+    </c-cockpit>
   `
 }
 
@@ -103,7 +103,6 @@ export const cockpit1 = () => h('cockpit-demo1')
 
 @elem({
   tag: 'cockpit-demo2',
-  styles: [themeStyles],
   uses: [
     Brand,
     Cockpit,
@@ -125,15 +124,15 @@ class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <cp-cockpit>
-      <cp-brand
+    <c-cockpit>
+      <c-brand
         slot="header-start"
         class="orangered"
         headline="my-company"
         subheadline="Back Office"
         multi-color
-      ></cp-brand>
-      <cp-sections-menu
+      ></c-brand>
+      <c-sections-menu
         slot="header"
         class="orange"
         .sections=${[
@@ -155,13 +154,13 @@ function cockpitDemo2Impl() {
           }
         ]}
         .activeSection=${2}
-      ></cp-sections-menu>
-      <cp-user-menu slot="header-end"></cp-user-menu>
+      ></c-sections-menu>
+      <c-user-menu slot="header-end"></c-user-menu>
       <div slot="sidebar" class="lightgreen full-height">
-        <cp-side-menu></cp-side-menu>
+        <c-side-menu></c-side-menu>
       </div>
       <div slot="main" class="yellow full-height">${createDataForm()}</div>
-    </cp-cockpit>
+    </c-cockpit>
   `
 }
 
@@ -169,37 +168,37 @@ export const cockpit2 = () => h('cockpit-demo2')
 
 function createDataForm() {
   return html`<div>
-    <cp-data-form>
-      <cp-tabs>
-        <cp-tab caption="Tab-1">
-          <cp-section caption="Address">
-            <cp-fieldset>
-              <cp-text-field label="First name" required></cp-text-field>
-              <cp-text-field label="Last name" required></cp-text-field>
-              <cp-text-field label="Phone" required></cp-text-field>
-              <cp-text-field label="Mobile"></cp-text-field>
-            </cp-fieldset>
-            <cp-fieldset>
-              <cp-text-field label="Company" required></cp-text-field>
-              <cp-text-field label="Alias name"></cp-text-field>
-              <cp-radio-group
+    <c-data-form>
+      <c-tabs>
+        <c-tab caption="Tab-1">
+          <c-section caption="Address">
+            <c-fieldset>
+              <c-text-field label="First name" required></c-text-field>
+              <c-text-field label="Last name" required></c-text-field>
+              <c-text-field label="Phone" required></c-text-field>
+              <c-text-field label="Mobile"></c-text-field>
+            </c-fieldset>
+            <c-fieldset>
+              <c-text-field label="Company" required></c-text-field>
+              <c-text-field label="Alias name"></c-text-field>
+              <c-radio-group
                 label="Options"
                 orient="horizontal"
                 required
-              ></cp-radio-group>
-            </cp-fieldset>
-          </cp-section>
-          <cp-section caption="Contact">
-            <cp-fieldset>
-              <cp-text-field label="Phone" required></cp-text-field>
-              <cp-text-field label="Mobile"></cp-text-field>
-              <cp-text-area label="Comments"></cp-text-area>
-            </cp-fieldset>
-          </cp-section>
-        </cp-tab>
-        <cp-tab caption="Tab-2">Tab2</cp-tab>
-        <cp-tab caption="Tab-3">Tab3</cp-tab>
-      </cp-tabs>
-    </cp-data-form>
+              ></c-radio-group>
+            </c-fieldset>
+          </c-section>
+          <c-section caption="Contact">
+            <c-fieldset>
+              <c-text-field label="Phone" required></c-text-field>
+              <c-text-field label="Mobile"></c-text-field>
+              <c-text-area label="Comments"></c-text-area>
+            </c-fieldset>
+          </c-section>
+        </c-tab>
+        <c-tab caption="Tab-2">Tab2</c-tab>
+        <c-tab caption="Tab-3">Tab3</c-tab>
+      </c-tabs>
+    </c-data-form>
   </div>`
 }

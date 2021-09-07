@@ -27,7 +27,7 @@ namespace SectionsMenu {
 // === SectionsMenu ===================================================
 
 @elem({
-  tag: 'cp-sections-menu',
+  tag: 'c-sections-menu',
   styles: sectionsMenuStyles,
   uses: [SlIcon],
   impl: lit(sectionsMenuImpl)

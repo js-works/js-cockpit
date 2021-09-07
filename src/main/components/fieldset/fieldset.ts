@@ -11,7 +11,7 @@ export { Fieldset }
 // === Fieldset ===================================================
 
 @elem({
-  tag: 'cp-fieldset',
+  tag: 'c-fieldset',
   styles: fieldsetStyles,
   impl: lit(fieldsetImpl)
 })

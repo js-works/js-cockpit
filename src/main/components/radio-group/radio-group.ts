@@ -16,7 +16,7 @@ export { RadioGroup }
 // === RadioGroup ===================================================
 
 @elem({
-  tag: 'cp-radio-group',
+  tag: 'c-radio-group',
   styles: [radioGroupStyles, controlStyles],
   uses: [SlRadio, SlRadioGroup],
   impl: lit(radioGroupImpl)
