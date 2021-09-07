@@ -1,6 +1,6 @@
 {
   "name": "js-cockpit",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "",
   "main": "./dist/js-cockpit.cjs.js",
   "module": "./dist/js-cockpit.esm.js",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.50",
-    "js-element": "^0.0.216",
+    "js-element": "^0.0.221",
     "lit-html": "^2.0.0-rc.5"
   }
 }

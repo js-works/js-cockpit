@@ -5997,10 +5997,10 @@ jest-worker@^26.5.0, jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.216:
-  version "0.0.216"
-  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.216.tgz#3d30276936b2a7a1861fce1c009c71dadcce3f1a"
-  integrity sha512-uXNd2mqONJiKP5eDYMzW1OKTCcpT5KkTPR29P3fmynT6tp9UAUDLRZpLAg4HE9YP4Wa6Zzbgft9s4kodgR+x3Q==
+js-element@^0.0.221:
+  version "0.0.221"
+  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.221.tgz#e0a17bbc67964c60a384ae4d503f14b6d064ea18"
+  integrity sha512-CtvAa3WB6gvwl/YNBNg0vz2g8IexncScazPf7q2MwPSOSbfNgmaFlmCdmphHY1a530vgJF/2DnnuAvFtYuLxow==
   dependencies:
     lit-html "^2.0.0-rc.4"
 

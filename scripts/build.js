@@ -1,4 +1,5 @@
 import esbuild from 'esbuild'
+import path from 'path'
 import del from 'del'
 import { execSync } from 'child_process'
 
@@ -13,6 +14,7 @@ try {
         entryPoints: ['./src/main/js-cockpit.ts'],
         bundle: true,
         outfile,
+        tsconfig: './tsconfig.build.json',
         target: 'es2020',
         minify: true,
         format,
@@ -27,11 +29,13 @@ try {
         process.exit(1)
       })
   }
-  /*
-execSync('tsc -p ./tsconfig.dist.json -d --emitDeclarationOnly --declarationDir dist/types', {
-  stdio: 'inherit'
-})
-*/
+
+  execSync(
+    'tsc -p tsconfig.build.json --emitDeclarationOnly -d --declarationDir dist/types',
+    {
+      stdio: 'inherit'
+    }
+  )
 } catch (e) {
   console.error('Error:', e)
   throw e
