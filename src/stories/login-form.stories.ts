@@ -34,7 +34,7 @@ class LoginScreenDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-login-form full-size .theme="orange">
+      <c-login-form full-size>
         <div slot="header">
           <c-brand
             headline="my-company"
@@ -47,4 +47,4 @@ function loginFormDemoImpl() {
     `
 }
 
-export const loginForm = () => h('login-form-demo')
+export const loginForm = () => h('login-form-demo', { lang: 'de' })

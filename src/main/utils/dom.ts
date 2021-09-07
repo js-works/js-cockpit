@@ -17,8 +17,12 @@ export function h(
 
   for (let propName in props) {
     if (props.hasOwnProperty(propName)) {
-      if (propName !== 'className' || props.className !== null) {
-        ;(ret as any)[propName] = props[propName]
+      const value = props[propName]
+
+      if (propName === 'lang') {
+        ret.setAttribute('lang', value)
+      } else if (propName !== 'className' || props.className !== null) {
+        ;(ret as any)[propName] = value
       }
     }
   }
