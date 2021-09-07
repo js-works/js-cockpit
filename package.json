@@ -1,9 +1,10 @@
 {
   "name": "js-cockpit",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "description": "",
   "main": "./dist/js-cockpit.cjs.js",
   "module": "./dist/js-cockpit.esm.js",
+  "types": "./dist/types/js-cockpit.d.ts",
   "type": "module",
   "files": [
     "dist"
