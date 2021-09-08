@@ -56,7 +56,7 @@ const Themes = {
 
   get orange(): Theme {
     //return setThemeProperty(this, 'orange', { primaryColor: '#c94a2a' })
-    return setThemeProperty(this, 'orange', { primaryColor: '#e96a4a' })
+    return setThemeProperty(this, 'orange', { primaryColor: '#e98a6a' })
   },
 
   get teal(): Theme {
