@@ -31,7 +31,7 @@
   align-items: flex-end;
   justify-content: center;
   font-size: var(--sl-font-size-large);
-  color: rgba(var(--sl-color-neutral-500) / 90%);
+  color: rgba(var(--sl-color-primary-950) / 50%);
 }
 
 .main {
@@ -97,7 +97,7 @@
   align-items: flex-start;
   justify-content: center;
   flex-grow: 5;
-  color: rgba(var(--sl-color-neutral-500) / 90%);
+  color: rgba(var(--sl-color-primary-950) / 50%);
 }
 
 .default-login-intro h3 {

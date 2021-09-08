@@ -324,6 +324,7 @@ function setThemeProperty(
 
   return theme
 }
+
 // === Shoelace original light theme =================================
 
 const lightThemeTokens = {
