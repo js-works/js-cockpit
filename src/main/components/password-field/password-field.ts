@@ -51,6 +51,7 @@ function passwordFieldImpl(self: PasswordField) {
           <sl-input
             type="password"
             name=${self.name}
+            toggle-password
             class="input"
             size="small"
           ></sl-input>

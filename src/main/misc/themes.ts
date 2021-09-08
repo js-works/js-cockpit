@@ -1,5 +1,3 @@
-import Color from 'color'
-
 // === exports =======================================================
 
 export { convertToCss, Theme, Themes }
@@ -8,7 +6,7 @@ export { convertToCss, Theme, Themes }
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 950]
 
-const SEMANTIC_COLORS = new Set<SemanticColor>([
+const SEMANTIC_COLORS = new Set<ColorName>([
   'primary',
   'success',
   'info',
@@ -17,6 +15,8 @@ const SEMANTIC_COLORS = new Set<SemanticColor>([
 ])
 
 // === types =========================================================
+
+type Theme = typeof lightTheme
 
 type ThemeCustomizing = {
   primaryColor?: string
@@ -28,13 +28,13 @@ type ThemeCustomizing = {
 }
 
 type ColorShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
-type SemanticColor = 'primary' | 'success' | 'info' | 'warning' | 'danger'
+type ColorName = 'primary' | 'success' | 'info' | 'warning' | 'danger'
 
 // === enums =========================================================
 
 const Themes = {
   get blue(): Theme {
-    return setThemeProperty(this, 'blue', { primaryColor: '#267CC7' })
+    return setThemeProperty(this, 'blue', { primaryColor: '#04a4e9' })
   },
 
   get orange(): Theme {
@@ -68,7 +68,7 @@ const Themes = {
     ret['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
     ret['input-border-color-focus'] = 'var(--sl-color-primary-700)'
 
-    ret['font-size-medium'] = '0.894rem'
+    ret['font-size-medium'] = '0.92rem'
 
     for (const semanticColor of SEMANTIC_COLORS) {
       const colorHex = customizing[`${semanticColor}Color`]
@@ -114,45 +114,124 @@ function rgbToHex(rgb: string) {
   return ret
 }
 
-function hexToRgb(hex: string): string {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+function hexToRgb(hex: string): [number, number, number] {
+  const value = parseInt(`0x${hex.substr(1)}`)
 
-  if (!result) {
+  if (isNaN(value) || hex[0] !== '#') {
     throw new Error(`Illegal color '${hex}`)
   }
 
-  const r = parseInt(result[1], 16)
-  const g = parseInt(result[2], 16)
-  const b = parseInt(result[3], 16)
+  const r = (value >> 16) % 256
+  const g = (value >> 8) % 256
+  const b = value % 256
 
-  return `${r} ${g} ${b}`
+  return [r, g, b]
 }
 
-function calcColorShades<C extends SemanticColor>(
-  semanticColor: C,
-  colorHex: string
-): Record<`color-${SemanticColor}-${ColorShade}`, string> {
-  const ret: any = {
-    [`color-${semanticColor}-500`]: hexToRgb(colorHex)
-  }
-  const base: Record<string, string> = lightTheme
-  const key500 = `color-${semanticColor}-500`
-  const value500 = colorHex
-  const color500 = Color(value500)
+/**
+ * Converts an RGB color value to HSL. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes r, g, and b are contained in the set [0, 255] and
+ * returns h, s, and l in the set [0, 1].
+ *
+ * @param   Number  r       The red color value
+ * @param   Number  g       The green color value
+ * @param   Number  b       The blue color value
+ * @return  Array           The HSL representation
+ */
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+  ;(r /= 255), (g /= 255), (b /= 255)
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  let h: number
+  let s: number
+  let l = (max + min) / 2
 
-  for (const shade of COLOR_SHADES) {
-    const colorKey = `color-${semanticColor}-${shade}`
-
-    if (shade !== 500) {
-      const lightness500 = color500.lightness()
-      const lightnessBase500 = Color(rgbToHex(base[key500])).lightness()
-      const lightness = Color(rgbToHex(base[colorKey])).lightness()
-      const factor = (lightness500 - lightnessBase500) / lightnessBase500
-      const newColor = color500.lightness(lightness).lighten(factor)
-
-      ret[colorKey] = hexToRgb(newColor.hex())
+  if (max == min) {
+    h = s = 0 // achromatic
+  } else {
+    var d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0)
+        break
+      case g:
+        h = (b - r) / d + 2
+        break
+      default:
+        h = (r - g) / d + 4
+        break
     }
+    h /= 6
   }
+
+  return [h, s, l]
+}
+
+function hexToHsl(hex: string): [number, number, number] {
+  const [r, g, b] = hexToRgb(hex)
+
+  return rgbToHsl(r, g, b)
+}
+
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   Number  h       The hue
+ * @param   Number  s       The saturation
+ * @param   Number  l       The lightness
+ * @return  Array           The RGB representation
+ */
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  let r: number, g: number, b: number
+
+  if (s == 0) {
+    r = g = b = l // achromatic
+  } else {
+    function hue2rgb(p: number, q: number, t: number) {
+      if (t < 0) t += 1
+      if (t > 1) t -= 1
+      if (t < 1 / 6) return p + (q - p) * 6 * t
+      if (t < 1 / 2) return q
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+      return p
+    }
+
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s
+    var p = 2 * l - q
+    r = hue2rgb(p, q, h + 1 / 3)
+    g = hue2rgb(p, q, h)
+    b = hue2rgb(p, q, h - 1 / 3)
+  }
+
+  return [r * 255, g * 255, b * 255]
+}
+
+function calcColorShades<C extends ColorName>(
+  colorName: C,
+  colorHex: string,
+  dark = false
+): Record<`color-${ColorName}-${ColorShade}`, string> {
+  const [h, s] = hexToHsl(colorHex)
+
+  const ret: any = {}
+  ;[0.95, 0.84, 0.73, 0.62, 0.49, 0.35, 0.23, 0.15, 0.1, 0.05, 0.02].forEach(
+    (l, idx) => {
+      let n = idx === 0 ? 50 : idx === 10 ? 950 : idx * 100
+
+      if (dark) {
+        n = 1000 - n
+      }
+
+      ret[`color-${colorName}-${n}`] = hslToRgb(h, s, l)
+        .map((it) => Math.floor(it))
+        .join(' ')
+    }
+  )
 
   return ret
 }
@@ -173,425 +252,7 @@ function setThemeProperty(
 
 // === Shoelace original light theme =================================
 
-type Theme = Readonly<{
-  'color-blue-gray-50': string
-  'color-blue-gray-100': string
-  'color-blue-gray-200': string
-  'color-blue-gray-300': string
-  'color-blue-gray-400': string
-  'color-blue-gray-500': string
-  'color-blue-gray-600': string
-  'color-blue-gray-700': string
-  'color-blue-gray-800': string
-  'color-blue-gray-900': string
-  'color-blue-gray-950': string
-  'color-cool-gray-50': string
-  'color-cool-gray-100': string
-  'color-cool-gray-200': string
-  'color-cool-gray-300': string
-  'color-cool-gray-400': string
-  'color-cool-gray-500': string
-  'color-cool-gray-600': string
-  'color-cool-gray-700': string
-  'color-cool-gray-800': string
-  'color-cool-gray-900': string
-  'color-cool-gray-950': string
-  'color-gray-50': string
-  'color-gray-100': string
-  'color-gray-200': string
-  'color-gray-300': string
-  'color-gray-400': string
-  'color-gray-500': string
-  'color-gray-600': string
-  'color-gray-700': string
-  'color-gray-800': string
-  'color-gray-900': string
-  'color-gray-950': string
-  'color-true-gray-50': string
-  'color-true-gray-100': string
-  'color-true-gray-200': string
-  'color-true-gray-300': string
-  'color-true-gray-400': string
-  'color-true-gray-500': string
-  'color-true-gray-600': string
-  'color-true-gray-700': string
-  'color-true-gray-800': string
-  'color-true-gray-900': string
-  'color-true-gray-950': string
-  'color-warm-gray-50': string
-  'color-warm-gray-100': string
-  'color-warm-gray-200': string
-  'color-warm-gray-300': string
-  'color-warm-gray-400': string
-  'color-warm-gray-500': string
-  'color-warm-gray-600': string
-  'color-warm-gray-700': string
-  'color-warm-gray-800': string
-  'color-warm-gray-900': string
-  'color-warm-gray-950': string
-  'color-red-50': string
-  'color-red-100': string
-  'color-red-200': string
-  'color-red-300': string
-  'color-red-400': string
-  'color-red-500': string
-  'color-red-600': string
-  'color-red-700': string
-  'color-red-800': string
-  'color-red-900': string
-  'color-red-950': string
-  'color-orange-50': string
-  'color-orange-100': string
-  'color-orange-200': string
-  'color-orange-300': string
-  'color-orange-400': string
-  'color-orange-500': string
-  'color-orange-600': string
-  'color-orange-700': string
-  'color-orange-800': string
-  'color-orange-900': string
-  'color-orange-950': string
-  'color-amber-50': string
-  'color-amber-100': string
-  'color-amber-200': string
-  'color-amber-300': string
-  'color-amber-400': string
-  'color-amber-500': string
-  'color-amber-600': string
-  'color-amber-700': string
-  'color-amber-800': string
-  'color-amber-900': string
-  'color-amber-950': string
-  'color-yellow-50': string
-  'color-yellow-100': string
-  'color-yellow-200': string
-  'color-yellow-300': string
-  'color-yellow-400': string
-  'color-yellow-500': string
-  'color-yellow-600': string
-  'color-yellow-700': string
-  'color-yellow-800': string
-  'color-yellow-900': string
-  'color-yellow-950': string
-  'color-lime-50': string
-  'color-lime-100': string
-  'color-lime-200': string
-  'color-lime-300': string
-  'color-lime-400': string
-  'color-lime-500': string
-  'color-lime-600': string
-  'color-lime-700': string
-  'color-lime-800': string
-  'color-lime-900': string
-  'color-lime-950': string
-  'color-green-50': string
-  'color-green-100': string
-  'color-green-200': string
-  'color-green-300': string
-  'color-green-400': string
-  'color-green-500': string
-  'color-green-600': string
-  'color-green-700': string
-  'color-green-800': string
-  'color-green-900': string
-  'color-green-950': string
-  'color-emerald-50': string
-  'color-emerald-100': string
-  'color-emerald-200': string
-  'color-emerald-300': string
-  'color-emerald-400': string
-  'color-emerald-500': string
-  'color-emerald-600': string
-  'color-emerald-700': string
-  'color-emerald-800': string
-  'color-emerald-900': string
-  'color-emerald-950': string
-  'color-teal-50': string
-  'color-teal-100': string
-  'color-teal-200': string
-  'color-teal-300': string
-  'color-teal-400': string
-  'color-teal-500': string
-  'color-teal-600': string
-  'color-teal-700': string
-  'color-teal-800': string
-  'color-teal-900': string
-  'color-teal-950': string
-  'color-cyan-50': string
-  'color-cyan-100': string
-  'color-cyan-200': string
-  'color-cyan-300': string
-  'color-cyan-400': string
-  'color-cyan-500': string
-  'color-cyan-600': string
-  'color-cyan-700': string
-  'color-cyan-800': string
-  'color-cyan-900': string
-  'color-cyan-950': string
-  'color-sky-50': string
-  'color-sky-100': string
-  'color-sky-200': string
-  'color-sky-300': string
-  'color-sky-400': string
-  'color-sky-500': string
-  'color-sky-600': string
-  'color-sky-700': string
-  'color-sky-800': string
-  'color-sky-900': string
-  'color-sky-950': string
-  'color-blue-50': string
-  'color-blue-100': string
-  'color-blue-200': string
-  'color-blue-300': string
-  'color-blue-400': string
-  'color-blue-500': string
-  'color-blue-600': string
-  'color-blue-700': string
-  'color-blue-800': string
-  'color-blue-900': string
-  'color-blue-950': string
-  'color-indigo-50': string
-  'color-indigo-100': string
-  'color-indigo-200': string
-  'color-indigo-300': string
-  'color-indigo-400': string
-  'color-indigo-500': string
-  'color-indigo-600': string
-  'color-indigo-700': string
-  'color-indigo-800': string
-  'color-indigo-900': string
-  'color-indigo-950': string
-  'color-violet-50': string
-  'color-violet-100': string
-  'color-violet-200': string
-  'color-violet-300': string
-  'color-violet-400': string
-  'color-violet-500': string
-  'color-violet-600': string
-  'color-violet-700': string
-  'color-violet-800': string
-  'color-violet-900': string
-  'color-violet-950': string
-  'color-purple-50': string
-  'color-purple-100': string
-  'color-purple-200': string
-  'color-purple-300': string
-  'color-purple-400': string
-  'color-purple-500': string
-  'color-purple-600': string
-  'color-purple-700': string
-  'color-purple-800': string
-  'color-purple-900': string
-  'color-purple-950': string
-  'color-fuchsia-50': string
-  'color-fuchsia-100': string
-  'color-fuchsia-200': string
-  'color-fuchsia-300': string
-  'color-fuchsia-400': string
-  'color-fuchsia-500': string
-  'color-fuchsia-600': string
-  'color-fuchsia-700': string
-  'color-fuchsia-800': string
-  'color-fuchsia-900': string
-  'color-fuchsia-950': string
-  'color-pink-50': string
-  'color-pink-100': string
-  'color-pink-200': string
-  'color-pink-300': string
-  'color-pink-400': string
-  'color-pink-500': string
-  'color-pink-600': string
-  'color-pink-700': string
-  'color-pink-800': string
-  'color-pink-900': string
-  'color-pink-950': string
-  'color-rose-50': string
-  'color-rose-100': string
-  'color-rose-200': string
-  'color-rose-300': string
-  'color-rose-400': string
-  'color-rose-500': string
-  'color-rose-600': string
-  'color-rose-700': string
-  'color-rose-800': string
-  'color-rose-900': string
-  'color-rose-950': string
-  'color-primary-50': string
-  'color-primary-100': string
-  'color-primary-200': string
-  'color-primary-300': string
-  'color-primary-400': string
-  'color-primary-500': string
-  'color-primary-600': string
-  'color-primary-700': string
-  'color-primary-800': string
-  'color-primary-900': string
-  'color-primary-950': string
-  'color-success-50': string
-  'color-success-100': string
-  'color-success-200': string
-  'color-success-300': string
-  'color-success-400': string
-  'color-success-500': string
-  'color-success-600': string
-  'color-success-700': string
-  'color-success-800': string
-  'color-success-900': string
-  'color-success-950': string
-  'color-warning-50': string
-  'color-warning-100': string
-  'color-warning-200': string
-  'color-warning-300': string
-  'color-warning-400': string
-  'color-warning-500': string
-  'color-warning-600': string
-  'color-warning-700': string
-  'color-warning-800': string
-  'color-warning-900': string
-  'color-warning-950': string
-  'color-danger-50': string
-  'color-danger-100': string
-  'color-danger-200': string
-  'color-danger-300': string
-  'color-danger-400': string
-  'color-danger-500': string
-  'color-danger-600': string
-  'color-danger-700': string
-  'color-danger-800': string
-  'color-danger-900': string
-  'color-danger-950': string
-  'color-neutral-50': string
-  'color-neutral-100': string
-  'color-neutral-200': string
-  'color-neutral-300': string
-  'color-neutral-400': string
-  'color-neutral-500': string
-  'color-neutral-600': string
-  'color-neutral-700': string
-  'color-neutral-800': string
-  'color-neutral-900': string
-  'color-neutral-950': string
-  'color-neutral-0': string
-  'color-neutral-1000': string
-  'border-radius-small': string
-  'border-radius-medium': string
-  'border-radius-large': string
-  'border-radius-x-large': string
-  'border-radius-circle': string
-  'border-radius-pill': string
-  'shadow-x-small': string
-  'shadow-small': string
-  'shadow-medium': string
-  'shadow-large': string
-  'shadow-x-large': string
-  'spacing-xxx-small': string
-  'spacing-xx-small': string
-  'spacing-x-small': string
-  'spacing-small': string
-  'spacing-medium': string
-  'spacing-large': string
-  'spacing-x-large': string
-  'spacing-xx-large': string
-  'spacing-xxx-large': string
-  'spacing-xxxx-large': string
-  'transition-x-slow': string
-  'transition-slow': string
-  'transition-medium': string
-  'transition-fast': string
-  'transition-x-fast': string
-  'font-mono': string
-  'font-sans': string
-  'font-serif': string
-  'font-size-xx-small': string
-  'font-size-x-small': string
-  'font-size-small': string
-  'font-size-medium': string
-  'font-size-large': string
-  'font-size-x-large': string
-  'font-size-xx-large': string
-  'font-size-xxx-large': string
-  'font-size-xxxx-large': string
-  'font-weight-light': string
-  'font-weight-normal': string
-  'font-weight-semibold': string
-  'font-weight-bold': string
-  'letter-spacing-dense': string
-  'letter-spacing-normal': string
-  'letter-spacing-loose': string
-  'line-height-dense': string
-  'line-height-normal': string
-  'line-height-loose': string
-  'focus-ring-color': string
-  'focus-ring-width': string
-  'focus-ring-alpha': string
-  'focus-ring': string
-  'button-font-size-small': string
-  'button-font-size-medium': string
-  'button-font-size-large': string
-  'input-height-small': string
-  'input-height-medium': string
-  'input-height-large': string
-  'input-background-color': string
-  'input-background-color-hover': string
-  'input-background-color-focus': string
-  'input-background-color-disabled': string
-  'input-border-color': string
-  'input-border-color-hover': string
-  'input-border-color-focus': string
-  'input-border-color-disabled': string
-  'input-border-width': string
-  'input-border-radius-small': string
-  'input-border-radius-medium': string
-  'input-border-radius-large': string
-  'input-font-family': string
-  'input-font-weight': string
-  'input-font-size-small': string
-  'input-font-size-medium': string
-  'input-font-size-large': string
-  'input-letter-spacing': string
-  'input-color': string
-  'input-color-hover': string
-  'input-color-focus': string
-  'input-color-disabled': string
-  'input-icon-color': string
-  'input-icon-color-hover': string
-  'input-icon-color-focus': string
-  'input-placeholder-color': string
-  'input-placeholder-color-disabled': string
-  'input-spacing-small': string
-  'input-spacing-medium': string
-  'input-spacing-large': string
-  'input-label-font-size-small': string
-  'input-label-font-size-medium': string
-  'input-label-font-size-large': string
-  'input-label-color': string
-  'input-help-text-font-size-small': string
-  'input-help-text-font-size-medium': string
-  'input-help-text-font-size-large': string
-  'input-help-text-color': string
-  'toggle-size': string
-  'overlay-background-color': string
-  'overlay-opacity': string
-  'panel-background-color': string
-  'panel-border-color': string
-  'tooltip-border-radius': string
-  'tooltip-background-color': string
-  'tooltip-color': string
-  'tooltip-font-family': string
-  'tooltip-font-weight': string
-  'tooltip-font-size': string
-  'tooltip-line-height': string
-  'tooltip-padding': string
-  'tooltip-arrow-size': string
-  'tooltip-arrow-start-end-offset': string
-  'z-index-drawer': string
-  'z-index-dialog': string
-  'z-index-dropdown': string
-  'z-index-toast': string
-  'z-index-tooltip': string
-}>
-
-const lightTheme: Theme = {
+const lightTheme = {
   'color-blue-gray-50': '248 250 252',
   'color-blue-gray-100': '241 245 249',
   'color-blue-gray-200': '226 232 240',
@@ -1010,3 +671,5 @@ const lightTheme: Theme = {
   'z-index-toast': '950',
   'z-index-tooltip': '1000'
 }
+
+console.log('Primary color:', Themes.blue['color-primary-500'])

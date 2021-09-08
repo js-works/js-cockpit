@@ -1,5 +1,6 @@
 .base {
   font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
   user-select: none;
 }
 
@@ -96,7 +97,6 @@
   align-items: flex-start;
   justify-content: center;
   flex-grow: 5;
-  font-size: var(--sl-font-size-medium);
   color: rgba(var(--sl-color-neutral-500) / 90%);
 }
 
@@ -108,7 +108,6 @@
 
 .default-login-intro p {
   margin: 12px 0;
-  font-size: var(--sl-font-size-medium);
 }
 
 .unlock-icon {
