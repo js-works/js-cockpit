@@ -72,7 +72,7 @@ function loginFormImpl(self: LoginForm) {
   }
 
   return () => html`
-    <c-theme-provider .theme=${self.theme || Themes.blue}>
+    <c-theme-provider .theme=${self.theme || Themes.violet}>
       <div class="base ${classMap({ 'full-size': self.fullSize })}">
         <div class="container">
           <div class="header">

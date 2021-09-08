@@ -10,7 +10,7 @@
   text-align: var(--c-label-and-field-label-text-align, left);
   padding: 0 4px 3px 0;
   white-space: normal;
-  font-size: var(--sl-font-size-small);
+  font-size: var(--sl-font-size-medium);
 
   /*
   font-size: calc(
@@ -20,15 +20,6 @@
   */
 
   font-weight: 400;
-}
-
-sl-input::part(base),
-sl-textarea::part(base) {
-  border-color: rgb(var(--sl-color-neutral-400) / 80%);
-}
-
-sl-checkbox::part(control) {
-  border: 1px solid red;
 }
 
 .label:after {

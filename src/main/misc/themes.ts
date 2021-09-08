@@ -34,19 +34,19 @@ type SemanticColor = 'primary' | 'success' | 'info' | 'warning' | 'danger'
 
 const Themes = {
   get blue(): Theme {
-    return setThemeProperty(this, 'blue', { primaryColor: '#0078d7' })
+    return setThemeProperty(this, 'blue', { primaryColor: '#267CC7' })
   },
 
   get orange(): Theme {
-    return setThemeProperty(this, 'orange', { primaryColor: '#ff8800' })
+    return setThemeProperty(this, 'orange', { primaryColor: '#c94a2a' })
   },
 
   get teal(): Theme {
-    return setThemeProperty(this, 'teal', { primaryColor: '#008080' })
+    return setThemeProperty(this, 'teal', { primaryColor: '#00b0b0' })
   },
 
-  get fuchsia(): Theme {
-    return setThemeProperty(this, 'fuchsia', { primaryColor: '#ff00ff' })
+  get violet(): Theme {
+    return setThemeProperty(this, 'violet', { primaryColor: '#b14dc2' })
   },
 
   custom(customizing: ThemeCustomizing): Theme {
@@ -59,6 +59,16 @@ const Themes = {
     ret['border-radius-medium'] = '2px'
     ret['border-radius-large'] = '2px'
     ret['border-radius-x-large'] = '2px'
+
+    ret['focus-ring-color'] = 'var(--sl-color-primary-700)'
+    ret['focus-ring-width'] = '1px'
+    ret['focus-ring-alpha'] = '100%'
+
+    ret['input-border-color'] = 'var(--sl-color-neutral-400)'
+    ret['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
+    ret['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+
+    ret['font-size-medium'] = '0.894rem'
 
     for (const semanticColor of SEMANTIC_COLORS) {
       const colorHex = customizing[`${semanticColor}Color`]

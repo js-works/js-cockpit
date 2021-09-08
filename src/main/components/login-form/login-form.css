@@ -51,7 +51,7 @@
   padding: 26px 20px 24px 20px;
   box-sizing: border-box;
   color: rgb(var(--sl-color-neutral-0));
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: rgb(var(--sl-color-primary-500));
   border-radius: 6px 0 0 6px;
   text-align: center;
   background-repeat: no-repeat;
@@ -113,10 +113,6 @@
 .unlock-icon {
   width: 72px;
   height: 72px;
-}
-
-.login-button {
-  width: 100%;
 }
 
 .column1 {
