@@ -7,9 +7,6 @@ export default {
   title: 'app-layout'
 }
 
-import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
-const themeStyles = theme.toString()
-
 const styles = `
   .orange {
     padding: 4px 8px;
@@ -49,7 +46,7 @@ const styles = `
 
 @elem({
   tag: 'app-layout-demo',
-  styles: [themeStyles, styles],
+  styles: styles,
   uses: [AppLayout],
   impl: lit(appLayoutDemoImpl)
 })

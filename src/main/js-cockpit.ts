@@ -23,4 +23,4 @@ export { TextField } from './components/text-field/text-field'
 export { UserMenu } from './components/user-menu/user-menu'
 
 // theming
-export { Theme, Themes } from './misc/themes'
+export { Theme } from './misc/theming'

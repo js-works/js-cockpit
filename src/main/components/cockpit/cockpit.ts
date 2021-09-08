@@ -1,6 +1,6 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { html, lit as lit } from 'js-element/lit'
-import { Theme } from '../../misc/themes'
+import { Theme } from '../../misc/theming'
 import { ThemeProvider } from '../theme-provider/theme-provider'
 
 // styles

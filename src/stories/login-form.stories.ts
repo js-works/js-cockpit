@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, LoginForm, Themes } from 'js-cockpit'
+import { Brand, LoginForm, Theme } from 'js-cockpit'
 
 export default {
   title: 'login-form'
@@ -17,7 +17,7 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-login-form full-size .theme=${Themes.orange}>
+      <c-login-form full-size .theme=${Theme.orange}>
         <div slot="header">
           <c-brand
             headline="my-company"

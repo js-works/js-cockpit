@@ -1,6 +1,6 @@
 // === exports =======================================================
 
-export { convertToCss, Theme, Themes }
+export { Theme }
 
 // === constants =====================================================
 
@@ -29,7 +29,7 @@ const SEMANTIC_COLORS = new Set<ColorName>([
 
 // === types =========================================================
 
-type Theme = typeof lightTheme
+type ThemeTokens = typeof lightThemeTokens
 
 type ThemeCustomizing = {
   primaryColor?: string
@@ -43,78 +43,133 @@ type ThemeCustomizing = {
 type ColorShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
 type ColorName = 'primary' | 'success' | 'info' | 'warning' | 'danger'
 
-// === enums =========================================================
+// === Theme ==========================================================
 
-const Themes = {
-  get blue(): Theme {
-    return setThemeProperty(this, 'blue', { primaryColor: '#04a4e9' })
-  },
+class Theme {
+  #themeTokens: ThemeTokens
+  #css: string | null = null
 
-  get green(): Theme {
-    return setThemeProperty(this, 'green', { primaryColor: '#226644' })
-  },
+  static #colorNames: Set<string> | null = null
 
-  get orange(): Theme {
-    //return setThemeProperty(this, 'orange', { primaryColor: '#c94a2a' })
-    return setThemeProperty(this, 'orange', { primaryColor: '#e98a6a' })
-  },
+  static get blue(): Theme {
+    return setThemeProperty('blue', { primaryColor: '#04a4e9' })
+  }
 
-  get teal(): Theme {
-    return setThemeProperty(this, 'teal', { primaryColor: '#33b0b0' })
-  },
+  static get green(): Theme {
+    return setThemeProperty('green', { primaryColor: '#226644' })
+  }
 
-  get violet(): Theme {
-    return setThemeProperty(this, 'violet', { primaryColor: '#b14dc2' })
-  },
+  static get orange(): Theme {
+    //return setThemeProperty('orange', { primaryColor: '#c94a2a' })
+    return setThemeProperty('orange', { primaryColor: '#e98a6a' })
+  }
 
-  custom(customizing: ThemeCustomizing): Theme {
-    const ret: { -readonly [K in keyof Theme]: Theme[K] } = Object.assign(
-      {},
-      lightTheme
-    )
+  static get teal(): Theme {
+    return setThemeProperty('teal', { primaryColor: '#33b0b0' })
+  }
 
-    ret['border-radius-small'] = '2px'
-    ret['border-radius-medium'] = '2px'
-    ret['border-radius-large'] = '2px'
-    ret['border-radius-x-large'] = '2px'
+  static get violet(): Theme {
+    return setThemeProperty('violet', { primaryColor: '#b14dc2' })
+  }
 
-    ret['focus-ring-color'] = 'var(--sl-color-primary-700)'
-    ret['focus-ring-width'] = '1px'
-    ret['focus-ring-alpha'] = '100%'
+  constructor(customizing: ThemeCustomizing) {
+    if (Object.keys(customizing).length === 0) {
+      this.#themeTokens = lightThemeTokens
+      return
+    }
 
-    ret['input-border-color'] = 'var(--sl-color-neutral-400)'
-    ret['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
-    ret['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+    const tokens: {
+      -readonly [K in keyof ThemeTokens]: ThemeTokens[K]
+    } = Object.assign({}, lightThemeTokens)
 
-    ret['font-size-medium'] = '0.92rem'
+    tokens['border-radius-small'] = '2px'
+    tokens['border-radius-medium'] = '2px'
+    tokens['border-radius-large'] = '2px'
+    tokens['border-radius-x-large'] = '2px'
+
+    tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
+    tokens['focus-ring-width'] = '1px'
+    tokens['focus-ring-alpha'] = '100%'
+
+    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
+    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
+    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+
+    tokens['font-size-medium'] = '0.92rem'
 
     for (const semanticColor of SEMANTIC_COLORS) {
       const colorHex = customizing[`${semanticColor}Color`]
 
       if (colorHex) {
-        Object.assign(ret, {
+        Object.assign(tokens, {
           ...calcColorShades(semanticColor, colorHex)
         })
       }
     }
 
-    return Object.freeze(ret)
+    this.#themeTokens = Object.freeze(tokens)
+  }
+
+  asCss(): string {
+    let css = this.#css
+
+    if (css) {
+      return css
+    }
+
+    const lines: string[] = [':host {']
+
+    Object.entries(this.#themeTokens).forEach(([key, value]) => {
+      lines.push(`--sl-${key}: ${value};`)
+    })
+
+    lines.push('}\n')
+    css = lines.join('\n')
+    this.#css = css
+
+    return css
+  }
+
+  isDark() {
+    return this.#themeTokens['theme-mode'] === '1'
+  }
+
+  invert(): Theme {
+    let colorNames = Theme.#colorNames || (Theme.#colorNames = getColorNames())
+
+    const tokens: Record<string, string> = this.#themeTokens
+    const invertedTokens = Object.assign({}, tokens)
+
+    invertedTokens['theme-mode'] = tokens['theme-mode'] === '0' ? '1' : '0'
+    invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
+    invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
+
+    colorNames.forEach((color) => {
+      for (let i = 0; i < 5; ++i) {
+        const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
+        const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
+
+        invertedTokens[key1] = tokens[key2]
+        invertedTokens[key2] = tokens[key1]
+      }
+    })
+
+    const invertedTheme = new Theme({})
+    invertedTheme.#themeTokens = Object.freeze(invertedTokens) as ThemeTokens
+
+    return invertedTheme
   }
 }
 
-function convertToCss(theme: Theme) {
-  const lines: string[] = [':host {']
-
-  Object.entries(theme).forEach(([key, value]) => {
-    lines.push(`--sl-${key}: ${value};`)
-  })
-
-  lines.push('}\n')
-
-  return lines.join('\n')
-}
-
 // === utils =========================================================
+
+function getColorNames(): Set<string> {
+  return new Set(
+    Object.keys(lightThemeTokens)
+      .filter((it) => it.startsWith('color-'))
+      .map((it) => it.replace(/^color-|-[^-]*$/g, ''))
+  )
+}
 
 function rgbToHex(r: number, g: number, b: number) {
   let ret = '#'
@@ -258,22 +313,21 @@ function calcColorShades<C extends ColorName>(
 }
 
 function setThemeProperty(
-  obj: typeof Themes,
-  propName: keyof typeof Themes,
+  propName: Exclude<keyof typeof Theme, 'prototype'>,
   customizing: ThemeCustomizing
-) {
-  const theme: Theme = Themes.custom(customizing)
+): Theme {
+  const theme: Theme = new Theme(customizing)
 
-  Object.defineProperty(obj, propName, {
+  Object.defineProperty(Theme, propName, {
     value: theme
   })
 
   return theme
 }
-
 // === Shoelace original light theme =================================
 
-const lightTheme = {
+const lightThemeTokens = {
+  'theme-mode': '0', // '0': light theme, '1': dark theme
   'color-blue-gray-50': '248 250 252',
   'color-blue-gray-100': '241 245 249',
   'color-blue-gray-200': '226 232 240',

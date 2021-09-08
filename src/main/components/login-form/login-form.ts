@@ -1,6 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
-import { Theme, Themes } from '../../misc/themes'
+import { Theme } from '../../misc/theming'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 
@@ -72,7 +72,7 @@ function loginFormImpl(self: LoginForm) {
   }
 
   return () => html`
-    <c-theme-provider .theme=${self.theme || Themes.violet}>
+    <c-theme-provider .theme=${self.theme || Theme.violet}>
       <div class="base ${classMap({ 'full-size': self.fullSize })}">
         <div class="container">
           <div class="header">

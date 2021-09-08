@@ -1,8 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { AppLayout } from '../main/components/app-layout/app-layout'
-import { DataExplorer, ThemeProvider, Themes } from 'js-cockpit'
+import { AppLayout, DataExplorer, ThemeProvider, Theme } from 'js-cockpit'
 
 export default {
   title: 'data-explorer'
@@ -103,7 +102,7 @@ class DataExplorerDemo extends component() {}
 
 function dataExplorerDemoImpl() {
   return () => html`
-    <c-theme-provider .theme=${Themes.teal}>
+    <c-theme-provider .theme=${Theme.blue}>
       <c-data-explorer
         .title=${'Customers'}
         .columns=${columns}

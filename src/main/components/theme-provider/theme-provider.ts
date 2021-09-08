@@ -1,6 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { convertToCss, Theme, Themes } from '../../misc/themes'
+import { Theme } from '../../misc/theming'
 
 // === exports =======================================================
 
@@ -21,7 +21,7 @@ function themeProviderImpl(self: ThemeProvider) {
   return () =>
     html`
       <style>
-        ${convertToCss(self.theme || Themes.blue)}
+        ${self.theme?.asCss() || Theme.blue.asCss()}
       </style>
       <slot></slot>
     `
