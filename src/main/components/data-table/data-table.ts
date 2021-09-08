@@ -109,8 +109,7 @@ function dataTableImpl(self: DataTable) {
         max-height: ${self.offsetHeight - theadHeight - 1}px;
       }
     `
-    console.log(newStyles)
-    console.log(newStyles)
+
     columnSizesStyles.innerText = newStyles
   }
 

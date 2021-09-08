@@ -114,7 +114,7 @@ class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <c-cockpit .theme=${Themes.orange}>
+    <c-cockpit .theme=${Themes.blue}>
       <c-brand
         slot="header-start"
         class="orangered"

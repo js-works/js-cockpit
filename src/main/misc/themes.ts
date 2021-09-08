@@ -6,6 +6,19 @@ export { convertToCss, Theme, Themes }
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 950]
 
+const COLOR_SHADES_LIGHTNESSES = [
+  0.97,
+  0.94,
+  0.86,
+  0.74,
+  0.6,
+  0.5, // 0.48
+  0.39,
+  0.32,
+  0.27,
+  0.16
+]
+
 const SEMANTIC_COLORS = new Set<ColorName>([
   'primary',
   'success',
@@ -37,12 +50,17 @@ const Themes = {
     return setThemeProperty(this, 'blue', { primaryColor: '#04a4e9' })
   },
 
+  get green(): Theme {
+    return setThemeProperty(this, 'green', { primaryColor: '#226644' })
+  },
+
   get orange(): Theme {
-    return setThemeProperty(this, 'orange', { primaryColor: '#c94a2a' })
+    //return setThemeProperty(this, 'orange', { primaryColor: '#c94a2a' })
+    return setThemeProperty(this, 'orange', { primaryColor: '#e96a4a' })
   },
 
   get teal(): Theme {
-    return setThemeProperty(this, 'teal', { primaryColor: '#00b0b0' })
+    return setThemeProperty(this, 'teal', { primaryColor: '#33b0b0' })
   },
 
   get violet(): Theme {
@@ -98,11 +116,11 @@ function convertToCss(theme: Theme) {
 
 // === utils =========================================================
 
-function rgbToHex(rgb: string) {
+function rgbToHex(r: number, g: number, b: number) {
   let ret = '#'
 
-  for (const c of rgb.split(' ')) {
-    let hex = parseInt(c).toString(16)
+  for (const c of [r, g, b]) {
+    let hex = c.toString(16)
 
     if (hex.length === 1) {
       hex = `0${hex}`
@@ -219,19 +237,22 @@ function calcColorShades<C extends ColorName>(
   const [h, s] = hexToHsl(colorHex)
 
   const ret: any = {}
-  ;[0.95, 0.84, 0.73, 0.62, 0.49, 0.35, 0.23, 0.15, 0.1, 0.05, 0.02].forEach(
-    (l, idx) => {
-      let n = idx === 0 ? 50 : idx === 10 ? 950 : idx * 100
 
-      if (dark) {
-        n = 1000 - n
-      }
+  COLOR_SHADES.forEach((shade, idx) => {
+    let n = idx === 0 ? 50 : idx === 10 ? 950 : idx * 100
 
-      ret[`color-${colorName}-${n}`] = hslToRgb(h, s, l)
-        .map((it) => Math.floor(it))
-        .join(' ')
+    if (dark) {
+      n = 1000 - n
     }
-  )
+
+    ret[`color-${colorName}-${n}`] = hslToRgb(
+      h,
+      s,
+      COLOR_SHADES_LIGHTNESSES[idx]
+    )
+      .map((it) => Math.floor(it))
+      .join(' ')
+  })
 
   return ret
 }
@@ -671,5 +692,3 @@ const lightTheme = {
   'z-index-toast': '950',
   'z-index-tooltip': '1000'
 }
-
-console.log('Primary color:', Themes.blue['color-primary-500'])
