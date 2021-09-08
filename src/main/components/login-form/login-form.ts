@@ -1,8 +1,8 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
-import { Theme } from '../../theming/theme'
+import { Theme, Themes } from '../../misc/themes'
 import { useI18n } from '../../utils/hooks'
-import { I18n } from '../../utils/i18n'
+import { I18n } from '../../misc/i18n'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -40,6 +40,7 @@ export { LoginForm }
     FormCtrlProvider,
     PasswordField,
     TextField,
+    ThemeProvider,
     SlButton,
     SlCheckbox,
     SlIcon,
@@ -71,7 +72,7 @@ function loginFormImpl(self: LoginForm) {
   }
 
   return () => html`
-    <c-theme-provider .theme=${self.theme}>
+    <c-theme-provider .theme=${self.theme || Themes.blue}>
       <div class="base ${classMap({ 'full-size': self.fullSize })}">
         <div class="container">
           <div class="header">
@@ -134,7 +135,7 @@ function loginFormImpl(self: LoginForm) {
 I18n.addTexts('de', {
   'js-cockpit.c-login-form.login-intro-headline': 'Anmeldung',
   'js-cockpit.c-login-form.login-intro-text':
-    'Bitte geben Sie Ihr Benutzername und Ihr Passort an',
+    'Bitte geben Sie Ihre Anmeldedaten an',
   'js-cockpit.c-login-form.username': 'Benutzername',
   'js-cockpit.c-login-form.password': 'Passwort',
   'js-cockpit.c-login-form.remember-login': 'Angemeldet bleiben',

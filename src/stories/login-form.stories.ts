@@ -1,24 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand } from '../main/components/brand/brand'
-import { LoginForm } from '../main/components/login-form/login-form'
-
-import {
-  lightTheme,
-  darkTheme,
-  blueTheme,
-  blueDarkTheme,
-  orangeTheme,
-  orangeDarkTheme,
-  tealTheme,
-  tealDarkTheme,
-  pinkTheme,
-  pinkDarkTheme
-} from '../main/theming/themes'
-
-import { convertToCss } from '../main/theming/theme-utils'
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
+import { Brand, LoginForm, Themes } from 'js-cockpit'
 
 export default {
   title: 'login-form'
@@ -26,15 +9,15 @@ export default {
 
 @elem({
   tag: 'login-form-demo',
-  uses: [Brand, LoginForm, SlInput],
+  uses: [Brand, LoginForm],
   impl: lit(loginFormDemoImpl)
 })
-class LoginScreenDemo extends component() {}
+class LoginFormDemo extends component() {}
 
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-login-form full-size>
+      <c-login-form full-size .theme=${Themes.orange}>
         <div slot="header">
           <c-brand
             headline="my-company"

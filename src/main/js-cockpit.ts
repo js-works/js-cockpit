@@ -22,12 +22,5 @@ export { TextArea } from './components/text-area/text-area'
 export { TextField } from './components/text-field/text-field'
 export { UserMenu } from './components/user-menu/user-menu'
 
-// themes
-export {
-  lightTheme,
-  darkTheme,
-  blueTheme,
-  blueDarkTheme,
-  orangeTheme,
-  orangeDarkTheme
-} from './theming/themes'
+// theming
+export { Theme, Themes } from './misc/themes'

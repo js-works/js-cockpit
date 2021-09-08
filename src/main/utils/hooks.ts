@@ -5,7 +5,7 @@ import {
   useHost,
   useRefresher
 } from 'js-element/hooks'
-import { I18n } from './i18n'
+import { I18n } from '../misc/i18n'
 
 // === useI18n =======================================================
 

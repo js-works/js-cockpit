@@ -15,19 +15,9 @@ import {
   Tabs,
   TextArea,
   TextField,
-  ThemeProvider,
+  Themes,
   UserMenu
 } from 'js-cockpit'
-
-import { convertToCss } from '../main/theming/theme-utils'
-
-import {
-  lightTheme,
-  modernTheme,
-  modernDarkTheme,
-  orangeTheme,
-  orangeDarkTheme
-} from '../main/theming/themes'
 
 export default {
   title: 'cockpit'
@@ -124,7 +114,7 @@ class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <c-cockpit>
+    <c-cockpit .theme=${Themes.fuchsia}>
       <c-brand
         slot="header-start"
         class="orangered"
