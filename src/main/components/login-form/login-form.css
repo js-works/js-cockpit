@@ -60,6 +60,7 @@
 
 .column1-top {
   flex-grow: 1;
+  margin: 6px 0;
 }
 
 .column2 {

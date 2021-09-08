@@ -3,8 +3,8 @@
   font-family: var(--sl-font-sans);
   user-select: none;
   overflow: hidden;
-  border: 1px solid green;
   box-sizing: border-box;
+  font-size: var(--sl-font-size-medium);
 }
 
 base.bordered {
@@ -23,9 +23,8 @@ base.bordered {
 
 .yyy {
   position: relative;
-  height: 100px;
+  height: 500px;
   xoverflow: hidden;
-  border: 2px solid purple;
 }
 
 table {
@@ -49,7 +48,7 @@ table > thead th.sortable:hover {
 }
 
 table > thead th.sortable:hover {
-  background-color: rgb(var(--sl-color-neutral-200));
+  background-color: rgb(var(--sl-color-primary-100));
 }
 
 table > thead th.sortable:active {

@@ -2,14 +2,11 @@ import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { AppLayout } from '../main/components/app-layout/app-layout'
-import { DataExplorer } from 'js-cockpit'
+import { DataExplorer, ThemeProvider, Themes } from 'js-cockpit'
 
 export default {
   title: 'data-explorer'
 }
-
-import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
-const themeStyles = theme.toString()
 
 const columns: DataExplorer.Column[] = [
   {
@@ -99,22 +96,22 @@ const data = [
 
 @elem({
   tag: 'data-explorer-demo',
-  uses: [AppLayout, DataExplorer],
-  styles: themeStyles,
+  uses: [AppLayout, DataExplorer, ThemeProvider],
   impl: lit(dataExplorerDemoImpl)
 })
 class DataExplorerDemo extends component() {}
 
 function dataExplorerDemoImpl() {
   return () => html`
-    <c-data-explorer
-      slot="main"
-      .title=${'Customers'}
-      .columns=${columns}
-      .data=${data.slice(0, 5)}
-      .sortField=${'lastName'}
-      .selectMode=${'multi'}
-    ></c-data-explorer>
+    <c-theme-provider .theme=${Themes.teal}>
+      <c-data-explorer
+        .title=${'Customers'}
+        .columns=${columns}
+        .data=${data.slice(0, 5)}
+        .sortField=${'lastName'}
+        .selectMode=${'multi'}
+      ></c-data-explorer>
+    </c-theme-provider>
   `
 }
 

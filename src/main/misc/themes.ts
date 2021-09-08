@@ -153,7 +153,7 @@ function calcColorShades<C extends SemanticColor>(
       ret[colorKey] = hexToRgb(newColor.hex())
     }
   }
-  console.log(ret)
+
   return ret
 }
 

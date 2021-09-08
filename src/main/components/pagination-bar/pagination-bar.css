@@ -7,6 +7,7 @@
   width: 100%;
   color: rgb(var(--sl-color-neutral-1000));
   background-color: rgb(var(--sl-color-neutral-0));
+  font-size: var(--sl-font-size-medium);
   user-select: none;
   z-index: 1000;
 }
@@ -39,7 +40,7 @@
 }
 
 .nav-button:hover::part(base) {
-  border-color: rgb(var(--sl-color-success-500));
+  border-color: rgb(var(--sl-color-primary-300));
 }
 
 .page-size-selector {

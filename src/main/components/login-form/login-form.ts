@@ -135,7 +135,7 @@ function loginFormImpl(self: LoginForm) {
 I18n.addTexts('de', {
   'js-cockpit.c-login-form.login-intro-headline': 'Anmeldung',
   'js-cockpit.c-login-form.login-intro-text':
-    'Bitte geben Sie Ihre Anmeldedaten an',
+    'Herzlich willkommen! Bitte geben Sie Ihre Anmeldedaten ein.',
   'js-cockpit.c-login-form.username': 'Benutzername',
   'js-cockpit.c-login-form.password': 'Passwort',
   'js-cockpit.c-login-form.remember-login': 'Angemeldet bleiben',
