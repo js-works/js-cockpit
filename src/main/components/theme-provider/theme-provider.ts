@@ -21,7 +21,7 @@ function themeProviderImpl(self: ThemeProvider) {
   return () =>
     html`
       <style>
-        ${self.theme?.asCss() || Theme.blue.asCss()}
+        ${self.theme?.asCss() || Theme.default.asCss()}
       </style>
       <slot></slot>
     `

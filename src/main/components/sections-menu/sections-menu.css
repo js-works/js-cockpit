@@ -26,17 +26,24 @@
 }
 
 .section:not(.active) .title:hover {
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: rgb(var(--sl-color-primary-500));
   border-radius: 2px;
 }
 
 .section:not(.active) .title:active {
-  background-color: rgb(var(--sl-color-primary-500));
+  background-color: rgb(var(--sl-color-primary-600));
 }
 
 .section.active {
   font-weight: 600;
   border: 0 solid rgb(var(--sl-color-primary-500));
   border-bottom-width: 3px;
+
+  /*
+  padding: 0 10px;
+  margin: -1px;
+  background-color: rgb(var(--sl-color-primary-600));
+  */
+
   cursor: default;
 }

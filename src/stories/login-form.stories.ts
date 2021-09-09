@@ -17,7 +17,7 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-login-form full-size .theme=${Theme.orange}>
+      <c-login-form full-size .theme=${Theme.apricot2}>
         <div slot="header">
           <c-brand
             headline="my-company"

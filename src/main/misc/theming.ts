@@ -51,25 +51,81 @@ class Theme {
 
   static #colorNames: Set<string> | null = null
 
+  static get default(): Theme {
+    //return setThemeProperty('default', { primaryColor: '#04a4e9' })
+    return Theme.#deriveTheme('default', 'sky')
+  }
+  static get apricot2(): Theme {
+    //return setThemeProperty('default', { primaryColor: '#04a4e9' })
+    return Theme.#deriveTheme('apricot2', 'apricot2')
+  }
+
+  static get apricot(): Theme {
+    //return setThemeProperty('apricot', { primaryColor: '#c94a2a' })
+    return setThemeProperty('apricot', { primaryColor: '#e98a6a' })
+  }
+
+  static get amber(): Theme {
+    return Theme.#deriveTheme('amber', 'amber')
+  }
+
   static get blue(): Theme {
-    return setThemeProperty('blue', { primaryColor: '#04a4e9' })
+    return Theme.#deriveTheme('blue', 'blue')
+  }
+  static get cyan(): Theme {
+    return Theme.#deriveTheme('cyan', 'cyan')
+  }
+
+  static get emerald(): Theme {
+    return Theme.#deriveTheme('emerald', 'emerald')
+  }
+
+  static get fuchsia(): Theme {
+    return Theme.#deriveTheme('fuchsia', 'fuchsia')
   }
 
   static get green(): Theme {
-    return setThemeProperty('green', { primaryColor: '#226644' })
+    return Theme.#deriveTheme('green', 'green')
+  }
+
+  static get indigo(): Theme {
+    return Theme.#deriveTheme('indigo', 'indigo')
+  }
+
+  static get lime(): Theme {
+    return Theme.#deriveTheme('lime', 'lime')
   }
 
   static get orange(): Theme {
-    //return setThemeProperty('orange', { primaryColor: '#c94a2a' })
-    return setThemeProperty('orange', { primaryColor: '#e98a6a' })
+    return Theme.#deriveTheme('orange', 'orange')
+  }
+
+  static get pink(): Theme {
+    return Theme.#deriveTheme('pink', 'pink')
+  }
+
+  static get purple(): Theme {
+    return Theme.#deriveTheme('purple', 'purple')
+  }
+
+  static get red(): Theme {
+    return Theme.#deriveTheme('red', 'red')
+  }
+
+  static get rose(): Theme {
+    return Theme.#deriveTheme('rose', 'rose')
   }
 
   static get teal(): Theme {
-    return setThemeProperty('teal', { primaryColor: '#33b0b0' })
+    return Theme.#deriveTheme('teal', 'teal')
   }
 
   static get violet(): Theme {
-    return setThemeProperty('violet', { primaryColor: '#b14dc2' })
+    return Theme.#deriveTheme('violet', 'violet')
+  }
+
+  static get yellow(): Theme {
+    return Theme.#deriveTheme('yellow', 'yellow')
   }
 
   constructor(customizing: ThemeCustomizing) {
@@ -78,24 +134,9 @@ class Theme {
       return
     }
 
-    const tokens: {
-      -readonly [K in keyof ThemeTokens]: ThemeTokens[K]
-    } = Object.assign({}, lightThemeTokens)
+    const tokens = { ...lightThemeTokens }
 
-    tokens['border-radius-small'] = '2px'
-    tokens['border-radius-medium'] = '2px'
-    tokens['border-radius-large'] = '2px'
-    tokens['border-radius-x-large'] = '2px'
-
-    tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
-    tokens['focus-ring-width'] = '1px'
-    tokens['focus-ring-alpha'] = '100%'
-
-    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
-    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
-    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
-
-    tokens['font-size-medium'] = '0.92rem'
+    adjustThemeTokens(tokens)
 
     for (const semanticColor of SEMANTIC_COLORS) {
       const colorHex = customizing[`${semanticColor}Color`]
@@ -159,6 +200,26 @@ class Theme {
 
     return invertedTheme
   }
+
+  static #deriveTheme(propName: string, primaryColorName: string): Theme {
+    const ret = new Theme({})
+    const base: any = lightThemeTokens
+    const tokens: any = { ...lightThemeTokens }
+
+    for (const shade of COLOR_SHADES) {
+      tokens[`color-primary-${shade}`] =
+        base[`color-${primaryColorName}-${shade}`]
+    }
+
+    adjustThemeTokens(tokens)
+    ret.#themeTokens = tokens
+
+    Object.defineProperty(Theme, propName, {
+      value: ret
+    })
+
+    return ret
+  }
 }
 
 // === utils =========================================================
@@ -168,7 +229,25 @@ function getColorNames(): Set<string> {
     Object.keys(lightThemeTokens)
       .filter((it) => it.startsWith('color-'))
       .map((it) => it.replace(/^color-|-[^-]*$/g, ''))
+      .sort()
   )
+}
+
+function adjustThemeTokens(tokens: ThemeTokens) {
+  tokens['border-radius-small'] = '2px'
+  tokens['border-radius-medium'] = '2px'
+  tokens['border-radius-large'] = '2px'
+  tokens['border-radius-x-large'] = '2px'
+
+  tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
+  tokens['focus-ring-width'] = '1px'
+  tokens['focus-ring-alpha'] = '100%'
+
+  tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
+  tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
+  tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+
+  tokens['font-size-medium'] = '0.92rem'
 }
 
 function rgbToHex(r: number, g: number, b: number) {
@@ -745,5 +824,19 @@ const lightThemeTokens = {
   'z-index-dialog': '800',
   'z-index-dropdown': '900',
   'z-index-toast': '950',
-  'z-index-tooltip': '1000'
+  'z-index-tooltip': '1000',
+
+  'color-apricot2-50': '254 248 246',
+  'color-apricot2-100': '251 233 226',
+  'color-apricot2-200': '248 215 204',
+  'color-apricot2-300': '244 196 180',
+  'color-apricot2-400': '239 170 146',
+  'color-apricot2-500': '229 135 104',
+  'color-apricot2-600': '189 112 86',
+  'color-apricot2-700': '155 92 70',
+  'color-apricot2-800': '128 76 58',
+  'color-apricot2-900': '91 54 41',
+  'color-apricot2-950': '56 33 25'
 }
+
+console.log(getColorNames())

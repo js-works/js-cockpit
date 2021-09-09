@@ -17,16 +17,16 @@
   max-width: 50px;
   min-height: 50px;
   max-height: 50px;
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: rgb(var(--sl-color-primary-500));
   cursor: pointer;
 }
 
 .logout-button:hover {
-  background-color: rgb(var(--sl-color-primary-500));
+  background-color: rgb(var(--sl-color-primary-400));
 }
 
 .logout-button:active {
-  background-color: rgb(var(--sl-color-primary-400));
+  background-color: rgb(var(--sl-color-primary-500));
 }
 
 .logout-icon {
