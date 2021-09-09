@@ -1,25 +1,10 @@
-import chroma from 'chroma-js'
-
 // === exports =======================================================
 
 export { Theme }
 
 // === constants =====================================================
 
-const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 950]
-
-const COLOR_SHADES_LIGHTNESSES = [
-  0.97,
-  0.94,
-  0.86,
-  0.74,
-  0.6,
-  0.5, // 0.48
-  0.39,
-  0.32,
-  0.27,
-  0.16
-]
+const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
 const SEMANTIC_COLORS = new Set<ColorName>([
   'primary',
@@ -78,6 +63,7 @@ class Theme {
   static get blue(): Theme {
     return Theme.#deriveTheme('blue', 'blue')
   }
+
   static get cyan(): Theme {
     return Theme.#deriveTheme('cyan', 'cyan')
   }
@@ -234,28 +220,24 @@ class Theme {
   ): Record<`color-${ColorName}-${ColorShade}`, string> {
     const ret: any = {}
 
-    const scale = chroma
-      .scale([
-        chroma(colorHex).luminance(0.95), // 50
-        chroma(colorHex).luminance(0.84), // 100
-        chroma(colorHex).luminance(0.73), // 200
-        chroma(colorHex).luminance(0.62), // 300
-        chroma(colorHex).luminance(0.49), // 400
-        chroma(colorHex).luminance(0.35), // 500
-        chroma(colorHex).luminance(0.23), // 600
-        chroma(colorHex).luminance(0.15), // 700
-        chroma(colorHex).luminance(0.1), // 800
-        chroma(colorHex).luminance(0.05), // 900
-        chroma(colorHex).luminance(0.02) // 950
-      ])
-      .colors(COLOR_SHADES.length)
+    const scale = [
+      calcColor(colorHex, 0.95), // 50
+      calcColor(colorHex, 0.84), // 100
+      calcColor(colorHex, 0.73), // 200
+      calcColor(colorHex, 0.62), // 300
+      calcColor(colorHex, 0.49), // 400
+      calcColor(colorHex, 0.35), // 500
+      calcColor(colorHex, 0.23), // 600
+      calcColor(colorHex, 0.15), // 700
+      calcColor(colorHex, 0.1), // 800
+      calcColor(colorHex, 0.05), // 900
+      calcColor(colorHex, 0.02) // 950
+    ]
 
-    scale.forEach((color, idx) => {
-      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = chroma(color)
-        .rgb()
-        .join(' ')
+    scale.forEach((rgb, idx) => {
+      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = rgb.join(' ')
     })
-
+    console.log(colorName, JSON.stringify(ret, null, 2))
     return ret
   }
 }
@@ -288,29 +270,44 @@ function adjustThemeTokens(tokens: ThemeTokens) {
   tokens['font-size-medium'] = '0.92rem'
 }
 
-/*
+// === color utility functions =======================================
 
-function rgbToHex(r: number, g: number, b: number) {
-  let ret = '#'
+function calcColor(hex: string, lum: number): [number, number, number] {
+  let [r, g, b] = hexToRgb(hex)
+  let iter = 0
+  let l = luminanceOfRgb(r, g, b)
+  let rmin = 0
+  let gmin = 0
+  let bmin = 0
+  let rmax = 255
+  let gmax = 255
+  let bmax = 255
 
-  for (const c of [r, g, b]) {
-    let hex = c.toString(16)
-
-    if (hex.length === 1) {
-      hex = `0${hex}`
+  while (++iter <= 20 && Math.abs(l - lum) > 1e-7) {
+    if (l < lum) {
+      rmin = r
+      gmin = g
+      bmin = b
+    } else {
+      rmax = r
+      gmax = g
+      bmax = b
     }
 
-    ret += hex
+    r = (rmin + rmax) / 2
+    g = (gmin + gmax) / 2
+    b = (bmin + bmax) / 2
+    l = luminanceOfRgb(r, g, b)
   }
 
-  return ret
+  return [Math.round(r), Math.round(g), Math.round(b)]
 }
 
 function hexToRgb(hex: string): [number, number, number] {
-  const value = parseInt(`0x${hex.substr(1)}`)
+  const value = parseInt(hex.substr(1), 16)
 
-  if (isNaN(value) || hex[0] !== '#') {
-    throw new Error(`Illegal color '${hex}`)
+  if (isNaN(value) || hex[0] !== '#' || hex.length !== 7) {
+    throw new Error(`Illegal color '${hex}'. Required hex format: #rrggbb`)
   }
 
   const r = (value >> 16) % 256
@@ -320,95 +317,23 @@ function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b]
 }
 
-function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
-  ;(r /= 255), (g /= 255), (b /= 255)
-  const max = Math.max(r, g, b)
-  const min = Math.min(r, g, b)
-  let h: number
-  let s: number
-  let l = (max + min) / 2
+function luminanceOfRgb(r: number, g: number, b: number): number {
+  // relative luminance
+  // see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+  const lr = luminanceOfValue(r)
+  const lg = luminanceOfValue(g)
+  const lb = luminanceOfValue(b)
 
-  if (max == min) {
-    h = s = 0 // achromatic
-  } else {
-    var d = max - min
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0)
-        break
-      case g:
-        h = (b - r) / d + 2
-        break
-      default:
-        h = (r - g) / d + 4
-        break
-    }
-    h /= 6
-  }
-
-  return [h, s, l]
+  return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb
 }
 
-function hexToHsl(hex: string): [number, number, number] {
-  const [r, g, b] = hexToRgb(hex)
+function luminanceOfValue(x: number): number {
+  const v = x / 255
 
-  return rgbToHsl(r, g, b)
+  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
 }
 
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-  let r: number, g: number, b: number
-
-  if (s == 0) {
-    r = g = b = l // achromatic
-  } else {
-    function hue2rgb(p: number, q: number, t: number) {
-      if (t < 0) t += 1
-      if (t > 1) t -= 1
-      if (t < 1 / 6) return p + (q - p) * 6 * t
-      if (t < 1 / 2) return q
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
-      return p
-    }
-
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s
-    var p = 2 * l - q
-    r = hue2rgb(p, q, h + 1 / 3)
-    g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1 / 3)
-  }
-
-  return [r * 255, g * 255, b * 255]
-}
-
-function calcColorShades<C extends ColorName>(
-  colorName: C,
-  colorHex: string,
-  dark = false
-): Record<`color-${ColorName}-${ColorShade}`, string> {
-  const [h, s] = hexToHsl(colorHex)
-
-  const ret: any = {}
-
-  COLOR_SHADES.forEach((shade, idx) => {
-    let n = idx === 0 ? 50 : idx === 10 ? 950 : idx * 100
-
-    if (dark) {
-      n = 1000 - n
-    }
-
-    ret[`color-${colorName}-${n}`] = hslToRgb(
-      h,
-      s,
-      COLOR_SHADES_LIGHTNESSES[idx]
-    )
-      .map((it) => Math.floor(it))
-      .join(' ')
-  })
-
-  return ret
-}
-*/
+// === helpers =======================================================
 
 function setThemeProperty(
   propName: Exclude<keyof typeof Theme, 'prototype'>,

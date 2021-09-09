@@ -63,8 +63,8 @@ const demo1Styles = `
 @elem({
   tag: 'cockpit-demo1',
   styles: demo1Styles,
-  uses: [Cockpit, SectionsMenu],
-  impl: lit(cockpitDemo1Impl)
+  impl: lit(cockpitDemo1Impl),
+  uses: [Cockpit, SectionsMenu]
 })
 class CockpitDemo1 extends component() {}
 
