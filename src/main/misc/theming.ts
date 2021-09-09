@@ -6,6 +6,20 @@ export { Theme }
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
+const COLOR_LUMINANCES = [
+  0.95, // 50
+  0.84, // 100
+  0.73, // 200
+  0.62, // 300
+  0.49, // 400
+  0.35, // 500
+  0.23, // 600
+  0.15, // 700
+  0.1, // 800
+  0.05, // 900
+  0.02 // 950
+]
+
 const SEMANTIC_COLORS = new Set<ColorName>([
   'primary',
   'success',
@@ -35,16 +49,13 @@ type ColorName = 'primary' | 'success' | 'info' | 'warning' | 'danger'
 class Theme {
   #themeTokens: ThemeTokens
   #css: string | null = null
+  #invertedTheme: Theme | null = null
 
   static #colorNames: Set<string> | null = null
 
   static get default(): Theme {
     //return setThemeProperty('default', { primaryColor: '#04a4e9' })
     return Theme.#deriveTheme('default', 'sky')
-  }
-  static get apricot2(): Theme {
-    //return setThemeProperty('default', { primaryColor: '#04a4e9' })
-    return Theme.#deriveTheme('apricot2', 'apricot2')
   }
 
   static get apricot(): Theme {
@@ -168,6 +179,12 @@ class Theme {
   }
 
   invert(): Theme {
+    let ret = this.#invertedTheme
+
+    if (ret) {
+      return ret
+    }
+
     let colorNames = Theme.#colorNames || (Theme.#colorNames = getColorNames())
 
     const tokens: Record<string, string> = this.#themeTokens
@@ -188,8 +205,9 @@ class Theme {
     })
 
     const invertedTheme = new Theme({})
-    invertedTheme.#themeTokens = Object.freeze(invertedTokens) as ThemeTokens
+    invertedTheme.#themeTokens = invertedTokens as ThemeTokens
 
+    this.#invertedTheme = invertedTheme
     return invertedTheme
   }
 
@@ -220,24 +238,17 @@ class Theme {
   ): Record<`color-${ColorName}-${ColorShade}`, string> {
     const ret: any = {}
 
-    const scale = [
-      calcColor(colorHex, 0.95), // 50
-      calcColor(colorHex, 0.84), // 100
-      calcColor(colorHex, 0.73), // 200
-      calcColor(colorHex, 0.62), // 300
-      calcColor(colorHex, 0.49), // 400
-      calcColor(colorHex, 0.35), // 500
-      calcColor(colorHex, 0.23), // 600
-      calcColor(colorHex, 0.15), // 700
-      calcColor(colorHex, 0.1), // 800
-      calcColor(colorHex, 0.05), // 900
-      calcColor(colorHex, 0.02) // 950
-    ]
+    COLOR_LUMINANCES.forEach((luminance, idx) => {
+      if (dark) {
+        idx = 1000 - idx
+      }
 
-    scale.forEach((rgb, idx) => {
-      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = rgb.join(' ')
+      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = calcColor(
+        colorHex,
+        luminance
+      ).join(' ')
     })
-    console.log(colorName, JSON.stringify(ret, null, 2))
+
     return ret
   }
 }
@@ -768,19 +779,5 @@ const lightThemeTokens = {
   'z-index-dialog': '800',
   'z-index-dropdown': '900',
   'z-index-toast': '950',
-  'z-index-tooltip': '1000',
-
-  'color-apricot2-50': '254 248 246',
-  'color-apricot2-100': '251 233 226',
-  'color-apricot2-200': '248 215 204',
-  'color-apricot2-300': '244 196 180',
-  'color-apricot2-400': '239 170 146',
-  'color-apricot2-500': '229 135 104',
-  'color-apricot2-600': '189 112 86',
-  'color-apricot2-700': '155 92 70',
-  'color-apricot2-800': '128 76 58',
-  'color-apricot2-900': '91 54 41',
-  'color-apricot2-950': '56 33 25'
+  'z-index-tooltip': '1000'
 }
-
-console.log(getColorNames())
