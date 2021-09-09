@@ -1,3 +1,5 @@
+import chroma from 'chroma-js'
+
 // === exports =======================================================
 
 export { Theme }
@@ -63,6 +65,10 @@ class Theme {
   static get apricot(): Theme {
     //return setThemeProperty('apricot', { primaryColor: '#c94a2a' })
     return setThemeProperty('apricot', { primaryColor: '#e98a6a' })
+  }
+
+  static get turquoise(): Theme {
+    return setThemeProperty('turquoise', { primaryColor: '#12c9cc' })
   }
 
   static get amber(): Theme {
@@ -143,7 +149,7 @@ class Theme {
 
       if (colorHex) {
         Object.assign(tokens, {
-          ...calcColorShades(semanticColor, colorHex)
+          ...Theme.#calcColorShades(semanticColor, colorHex)
         })
       }
     }
@@ -220,6 +226,38 @@ class Theme {
 
     return ret
   }
+
+  static #calcColorShades<C extends ColorName>(
+    colorName: C,
+    colorHex: string,
+    dark = false
+  ): Record<`color-${ColorName}-${ColorShade}`, string> {
+    const ret: any = {}
+
+    const scale = chroma
+      .scale([
+        chroma(colorHex).luminance(0.95), // 50
+        chroma(colorHex).luminance(0.84), // 100
+        chroma(colorHex).luminance(0.73), // 200
+        chroma(colorHex).luminance(0.62), // 300
+        chroma(colorHex).luminance(0.49), // 400
+        chroma(colorHex).luminance(0.35), // 500
+        chroma(colorHex).luminance(0.23), // 600
+        chroma(colorHex).luminance(0.15), // 700
+        chroma(colorHex).luminance(0.1), // 800
+        chroma(colorHex).luminance(0.05), // 900
+        chroma(colorHex).luminance(0.02) // 950
+      ])
+      .colors(COLOR_SHADES.length)
+
+    scale.forEach((color, idx) => {
+      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = chroma(color)
+        .rgb()
+        .join(' ')
+    })
+
+    return ret
+  }
 }
 
 // === utils =========================================================
@@ -249,6 +287,8 @@ function adjustThemeTokens(tokens: ThemeTokens) {
 
   tokens['font-size-medium'] = '0.92rem'
 }
+
+/*
 
 function rgbToHex(r: number, g: number, b: number) {
   let ret = '#'
@@ -280,17 +320,6 @@ function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b]
 }
 
-/**
- * Converts an RGB color value to HSL. Conversion formula
- * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes r, g, and b are contained in the set [0, 255] and
- * returns h, s, and l in the set [0, 1].
- *
- * @param   Number  r       The red color value
- * @param   Number  g       The green color value
- * @param   Number  b       The blue color value
- * @return  Array           The HSL representation
- */
 function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
   ;(r /= 255), (g /= 255), (b /= 255)
   const max = Math.max(r, g, b)
@@ -327,17 +356,6 @@ function hexToHsl(hex: string): [number, number, number] {
   return rgbToHsl(r, g, b)
 }
 
-/**
- * Converts an HSL color value to RGB. Conversion formula
- * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes h, s, and l are contained in the set [0, 1] and
- * returns r, g, and b in the set [0, 255].
- *
- * @param   Number  h       The hue
- * @param   Number  s       The saturation
- * @param   Number  l       The lightness
- * @return  Array           The RGB representation
- */
 function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   let r: number, g: number, b: number
 
@@ -390,6 +408,7 @@ function calcColorShades<C extends ColorName>(
 
   return ret
 }
+*/
 
 function setThemeProperty(
   propName: Exclude<keyof typeof Theme, 'prototype'>,

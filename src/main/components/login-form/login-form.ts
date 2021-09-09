@@ -36,6 +36,7 @@ export { LoginForm }
 @elem({
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
+  impl: lit(loginFormImpl),
   uses: [
     FormCtrlProvider,
     PasswordField,
@@ -45,8 +46,7 @@ export { LoginForm }
     SlCheckbox,
     SlIcon,
     SlForm
-  ],
-  impl: lit(loginFormImpl)
+  ]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.boolean })

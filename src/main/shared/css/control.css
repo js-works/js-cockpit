@@ -11,6 +11,7 @@
   padding: 0 4px 3px 0;
   white-space: normal;
   font-size: var(--sl-font-size-medium);
+  color: var(--sl-input-label-color);
 
   /*
   font-size: calc(
