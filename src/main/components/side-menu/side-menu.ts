@@ -2,10 +2,9 @@ import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { html, classMap, lit, repeat, TemplateResult } from 'js-element/lit'
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-
-// icons
-import defaultLogoSvg from './assets/default-logo.svg'
+import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
+import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu'
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
 
 // styles
 import sideMenuStyles from './side-menu.css'
@@ -47,8 +46,8 @@ namespace SideMenu {
 @elem({
   tag: 'c-side-menu',
   styles: sideMenuStyles,
-  uses: [SlIcon],
-  impl: lit(loginScreenImpl)
+  impl: lit(loginScreenImpl),
+  uses: [SlDetails, SlMenu, SlMenuItem]
 })
 class SideMenu extends component() {
   @prop
@@ -57,24 +56,37 @@ class SideMenu extends component() {
 
 function loginScreenImpl(self: SideMenu) {
   function render() {
-    let content: TemplateResult | null = null
-
-    const menu =
-      (typeof self.menu === 'function' ? self.menu() : self.menu) || null
-
-    if (menu) {
-      content = html`
-        ${repeat(
-          menu.groups,
-          (g) => g.title,
-          (g) => {
-            return html`<div>${g.title}</div>`
-          }
-        )}
-      `
-    }
-
-    return html`<div class="base">${content}</div>`
+    return html`
+      <div class="base">
+        <sl-details summary="Products">
+          <sl-menu>
+            <sl-menu-item>Manage products</sl-menu-item>
+            <sl-menu-item>Price calculation</sl-menu-item>
+            <sl-menu-item>Import products</sl-menu-item>
+          </sl-menu>
+        </sl-details>
+        <sl-details summary="Services">
+          <sl-menu>
+            <sl-menu-item>Assign services to products bla bla bla</sl-menu-item>
+            <sl-menu-item>Export services</sl-menu-item>
+          </sl-menu>
+        </sl-details>
+        <sl-details summary="Administration">
+          <sl-menu>
+            <sl-menu-item>User management</sl-menu-item>
+            <sl-menu-item>Configuration</sl-menu-item>
+            <sl-menu-item>Cronjobs</sl-menu-item>
+          </sl-menu>
+        </sl-details>
+        <sl-details summary="Miscellaneous">
+          <sl-menu>
+            <sl-menu-item>Manage products</sl-menu-item>
+            <sl-menu-item>Price calculation</sl-menu-item>
+            <sl-menu-item>Import products</sl-menu-item>
+          </sl-menu>
+        </sl-details>
+      </div>
+    `
   }
 
   return render

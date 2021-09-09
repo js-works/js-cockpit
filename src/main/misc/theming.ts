@@ -266,6 +266,8 @@ class Theme {
     tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
 
     tokens['font-size-medium'] = '0.92rem'
+
+    tokens['font-weight-semibold'] = '600'
   }
 
   static #deriveTheme(propName: string, primaryColorName: string): Theme {
