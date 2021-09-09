@@ -1,3 +1,7 @@
+// Color calculations derived from parts of the source code of
+// the `Chroma.js` project (see: https://github.com/gka/chroma.js).
+// Many thanks for their great work.
+
 // === exports =======================================================
 
 export { Theme }
@@ -20,13 +24,43 @@ const COLOR_LUMINANCES = [
   0.02 // 950
 ]
 
-const SEMANTIC_COLORS = new Set<ColorName>([
+const SEMANTIC_COLORS = [
   'primary',
   'success',
   'info',
   'warning',
   'danger'
-])
+] as const
+
+const PALETTE_COLORS = [
+  'amber',
+  'blue',
+  'blue-gray',
+  'cool-gray',
+  'cyan',
+  'danger',
+  'emerald',
+  'fuchsia',
+  'gray',
+  'green',
+  'indigo',
+  'lime',
+  'neutral',
+  'orange',
+  'pink',
+  'purple',
+  'red',
+  'rose',
+  'sky',
+  'success',
+  'teal',
+  'true-gray',
+  'violet',
+  'warm-gray',
+  'yellow'
+] as const
+
+const ALL_COLORS = new Set([...SEMANTIC_COLORS, ...PALETTE_COLORS])
 
 // === types =========================================================
 
@@ -41,9 +75,6 @@ type ThemeCustomizing = {
   dark?: boolean
 }
 
-type ColorShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
-type ColorName = 'primary' | 'success' | 'info' | 'warning' | 'danger'
-
 // === Theme ==========================================================
 
 class Theme {
@@ -54,17 +85,23 @@ class Theme {
   static #colorNames: Set<string> | null = null
 
   static get default(): Theme {
-    //return setThemeProperty('default', { primaryColor: '#04a4e9' })
     return Theme.#deriveTheme('default', 'sky')
   }
 
   static get apricot(): Theme {
-    //return setThemeProperty('apricot', { primaryColor: '#c94a2a' })
-    return setThemeProperty('apricot', { primaryColor: '#e98a6a' })
+    return Theme.#setThemeProperty('apricot', { primaryColor: '#F19035' })
+  }
+
+  static get aquamarine(): Theme {
+    return Theme.#setThemeProperty('aquamarine', { primaryColor: '#7FFFD4' })
+  }
+
+  static get coral(): Theme {
+    return Theme.#setThemeProperty('coral', { primaryColor: '#ff7f50' })
   }
 
   static get turquoise(): Theme {
-    return setThemeProperty('turquoise', { primaryColor: '#12c9cc' })
+    return Theme.#setThemeProperty('turquoise', { primaryColor: '#40e0d0' })
   }
 
   static get amber(): Theme {
@@ -139,8 +176,6 @@ class Theme {
 
     const tokens = { ...lightThemeTokens }
 
-    adjustThemeTokens(tokens)
-
     for (const semanticColor of SEMANTIC_COLORS) {
       const colorHex = customizing[`${semanticColor}Color`]
 
@@ -151,7 +186,8 @@ class Theme {
       }
     }
 
-    this.#themeTokens = Object.freeze(tokens)
+    this.#themeTokens = tokens
+    this.#adjustThemeTokens()
   }
 
   asCss(): string {
@@ -185,8 +221,6 @@ class Theme {
       return ret
     }
 
-    let colorNames = Theme.#colorNames || (Theme.#colorNames = getColorNames())
-
     const tokens: Record<string, string> = this.#themeTokens
     const invertedTokens = Object.assign({}, tokens)
 
@@ -194,7 +228,7 @@ class Theme {
     invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
     invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
 
-    colorNames.forEach((color) => {
+    ALL_COLORS.forEach((color) => {
       for (let i = 0; i < 5; ++i) {
         const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
         const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
@@ -211,6 +245,29 @@ class Theme {
     return invertedTheme
   }
 
+  #adjustThemeTokens() {
+    if (this.#themeTokens === lightThemeTokens) {
+      this.#themeTokens = { ...this.#themeTokens }
+    }
+
+    const tokens = this.#themeTokens
+
+    tokens['border-radius-small'] = '2px'
+    tokens['border-radius-medium'] = '2px'
+    tokens['border-radius-large'] = '2px'
+    tokens['border-radius-x-large'] = '2px'
+
+    tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
+    tokens['focus-ring-width'] = '1px'
+    tokens['focus-ring-alpha'] = '100%'
+
+    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
+    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
+    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+
+    tokens['font-size-medium'] = '0.92rem'
+  }
+
   static #deriveTheme(propName: string, primaryColorName: string): Theme {
     const ret = new Theme({})
     const base: any = lightThemeTokens
@@ -221,8 +278,8 @@ class Theme {
         base[`color-${primaryColorName}-${shade}`]
     }
 
-    adjustThemeTokens(tokens)
     ret.#themeTokens = tokens
+    ret.#adjustThemeTokens()
 
     Object.defineProperty(Theme, propName, {
       value: ret
@@ -231,11 +288,24 @@ class Theme {
     return ret
   }
 
-  static #calcColorShades<C extends ColorName>(
-    colorName: C,
+  static #setThemeProperty(
+    propName: Exclude<keyof typeof Theme, 'prototype'>,
+    customizing: ThemeCustomizing
+  ): Theme {
+    const theme: Theme = new Theme(customizing)
+
+    Object.defineProperty(Theme, propName, {
+      value: theme
+    })
+
+    return theme
+  }
+
+  static #calcColorShades(
+    colorName: string,
     colorHex: string,
     dark = false
-  ): Record<`color-${ColorName}-${ColorShade}`, string> {
+  ): Record<`color-${string}-${string}`, string> {
     const ret: any = {}
 
     COLOR_LUMINANCES.forEach((luminance, idx) => {
@@ -251,34 +321,6 @@ class Theme {
 
     return ret
   }
-}
-
-// === utils =========================================================
-
-function getColorNames(): Set<string> {
-  return new Set(
-    Object.keys(lightThemeTokens)
-      .filter((it) => it.startsWith('color-'))
-      .map((it) => it.replace(/^color-|-[^-]*$/g, ''))
-      .sort()
-  )
-}
-
-function adjustThemeTokens(tokens: ThemeTokens) {
-  tokens['border-radius-small'] = '2px'
-  tokens['border-radius-medium'] = '2px'
-  tokens['border-radius-large'] = '2px'
-  tokens['border-radius-x-large'] = '2px'
-
-  tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
-  tokens['focus-ring-width'] = '1px'
-  tokens['focus-ring-alpha'] = '100%'
-
-  tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
-  tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
-  tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
-
-  tokens['font-size-medium'] = '0.92rem'
 }
 
 // === color utility functions =======================================
@@ -342,21 +384,6 @@ function luminanceOfValue(x: number): number {
   const v = x / 255
 
   return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
-}
-
-// === helpers =======================================================
-
-function setThemeProperty(
-  propName: Exclude<keyof typeof Theme, 'prototype'>,
-  customizing: ThemeCustomizing
-): Theme {
-  const theme: Theme = new Theme(customizing)
-
-  Object.defineProperty(Theme, propName, {
-    value: theme
-  })
-
-  return theme
 }
 
 // === Shoelace original light theme =================================

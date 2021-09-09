@@ -9,7 +9,7 @@
 }
 
 .icon {
-  color: rgb(var(--sl-color-primary-500));
+  color: rgb(var(--sl-color-primary-600));
   margin: 18px -10px 0 0;
 }
 
@@ -26,12 +26,12 @@
 }
 
 .section:not(.active) .title:hover {
-  background-color: rgb(var(--sl-color-primary-500));
+  background-color: rgb(var(--sl-color-primary-600));
   border-radius: 2px;
 }
 
 .section:not(.active) .title:active {
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: rgb(var(--sl-color-primary-500));
 }
 
 .section.active {
