@@ -48,12 +48,12 @@ table > thead th.sortable:hover {
 }
 
 table > thead th.sortable:hover {
-  color: rgb(var(--sl-color-primary-900));
+  color: rgb(var(--sl-color-primary-950));
   background-color: rgb(var(--sl-color-primary-200));
 }
 
 table > thead th.sortable:active {
-  background-color: rgb(var(--sl-color-primary-100));
+  background-color: rgb(var(--sl-color-primary-300));
 }
 
 table > thead th .content {
