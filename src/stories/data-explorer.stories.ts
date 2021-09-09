@@ -102,7 +102,7 @@ class DataExplorerDemo extends component() {}
 
 function dataExplorerDemoImpl() {
   return () => html`
-    <c-theme-provider .theme=${Theme.turquoise}>
+    <c-theme-provider .theme=${Theme.default}>
       <c-data-explorer
         .title=${'Customers'}
         .columns=${columns}

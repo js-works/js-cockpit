@@ -266,8 +266,10 @@ class Theme {
     tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
 
     tokens['font-size-medium'] = '0.92rem'
-
     tokens['font-weight-semibold'] = '600'
+
+    tokens['font-sans'] =
+      "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
   }
 
   static #deriveTheme(propName: string, primaryColorName: string): Theme {
