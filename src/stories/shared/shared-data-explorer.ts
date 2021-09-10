@@ -9,44 +9,32 @@ export default {
 
 const columns: DataExplorer.Column[] = [
   {
-    type: 'column-group',
-    text: 'Name',
-    columns: [
-      {
-        type: 'column',
-        text: 'First name',
-        field: 'firstName'
-      },
-      {
-        type: 'column',
-        text: 'Last name',
-        field: 'lastName',
-        sortable: true
-      }
-    ]
+    type: 'column',
+    text: 'First name',
+    field: 'firstName'
   },
   {
-    text: 'Address',
-    type: 'column-group',
-    columns: [
-      {
-        type: 'column',
-        text: 'Street',
-        field: 'street'
-      },
-      {
-        type: 'column',
-        text: 'Postcode',
-        field: 'postcode',
-        sortable: true
-      },
-      {
-        type: 'column',
-        text: 'City',
-        field: 'city',
-        sortable: true
-      }
-    ]
+    type: 'column',
+    text: 'Last name',
+    field: 'lastName',
+    sortable: true
+  },
+  {
+    type: 'column',
+    text: 'Street',
+    field: 'street'
+  },
+  {
+    type: 'column',
+    text: 'Postcode',
+    field: 'postcode',
+    sortable: true
+  },
+  {
+    type: 'column',
+    text: 'City',
+    field: 'city',
+    sortable: true
   }
 ]
 
@@ -95,21 +83,19 @@ const data = [
 
 @elem({
   tag: 'shared-data-explorer',
-  uses: [AppLayout, DataExplorer, ThemeProvider],
+  uses: [AppLayout, DataExplorer],
   impl: lit(sharedDataExplorerDemoImpl)
 })
 export class SharedDataExplorer extends component() {}
 
 function sharedDataExplorerDemoImpl() {
   return () => html`
-    <c-theme-provider .theme=${Theme.default}>
-      <c-data-explorer
-        .title=${'Customers'}
-        .columns=${columns}
-        .data=${data.slice(0, 5)}
-        .sortField=${'lastName'}
-        .selectMode=${'multi'}
-      ></c-data-explorer>
-    </c-theme-provider>
+    <c-data-explorer
+      .title=${'Customers'}
+      .columns=${columns}
+      .data=${data.slice(0, 5)}
+      .sortField=${'lastName'}
+      .selectMode=${'multi'}
+    ></c-data-explorer>
   `
 }

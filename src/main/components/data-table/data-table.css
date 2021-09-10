@@ -39,7 +39,6 @@ table > thead th {
   border: 1px solid rgb(var(--sl-color-neutral-300));
   padding: 2px 10px;
   font-weight: var(--sl-font-weight-normal);
-  font-size: var(--sl-font-size-xxl);
   color: rgb(var(--sl-color-neutral-1000));
 }
 
