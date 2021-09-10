@@ -1,4 +1,5 @@
 // components
+export { ActionBar } from './components/action-bar/action-bar'
 export { AppLayout } from './components/app-layout/app-layout'
 export { Brand } from './components/brand/brand'
 export { Cockpit } from './components/cockpit/cockpit'

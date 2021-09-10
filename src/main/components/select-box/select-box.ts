@@ -4,7 +4,9 @@ import {} from 'js-element/hooks'
 import { useFormCtrl } from '../../ctrls/form-ctrl'
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
+import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
+import SlMenuDivider from '@shoelace-style/shoelace/dist/components/menu-divider/menu-divider'
 
 // styles
 import controlStyles from '../../shared/css/control.css'
@@ -21,7 +23,7 @@ export { SelectBox }
 @elem({
   tag: 'c-select-box',
   styles: [controlStyles, selectBoxStyles],
-  uses: [SlInput],
+  uses: [SlMenuDivider, SlMenuItem, SlSelect],
   impl: lit(selectBoxImpl)
 })
 class SelectBox extends component<{
@@ -51,8 +53,15 @@ function selectBoxImpl(self: SelectBox) {
       <div class="field-wrapper">
         <div class="label">${self.label}</div>
         <div class="control">
-          <sl-input class="input" size="small"></sl-input>
-          <div class="error">${self.error}</div>
+          <sl-select size="small">
+            <sl-menu-item value="option-1">Option 1</sl-menu-item>
+            <sl-menu-item value="option-2">Option 2</sl-menu-item>
+            <sl-menu-item value="option-3">Option 3</sl-menu-item>
+            <sl-menu-divider></sl-menu-divider>
+            <sl-menu-item value="option-4">Option 4</sl-menu-item>
+            <sl-menu-item value="option-5">Option 5</sl-menu-item>
+            <sl-menu-item value="option-6">Option 6</sl-menu-item>
+          </sl-select>
         </div>
       </div>
     </div>

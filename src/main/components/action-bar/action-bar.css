@@ -1,6 +1,14 @@
 .base {
   display: flex;
-  gap: 5px;
+  gap: 2px;
   font-family: var(--sl-font-sans);
   user-select: none;
+}
+
+sl-button:not(:hover)::part(base) {
+  border-color: transparent;
+}
+
+sl-button::part(base) {
+  font-size: var(--sl-font-size-medium);
 }

@@ -4,6 +4,8 @@
 }
 
 .header {
+  display: flex;
+  gap: 1.5rem;
   padding: 8px 0 5px 0;
   margin: 0 0 10px 0;
   border: 0 solid rgb(var(--sl-color-neutral-300));
@@ -15,6 +17,15 @@
   font-size: var(--sl-font-size-large);
 }
 
-::slotted(c-tabs)::part(base) {
-  border: 2px solid red;
+.actions {
+  flex-grow: 1;
+}
+
+.close-button:not(:hover)::part(base) {
+  border: none;
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
 }
