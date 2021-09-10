@@ -7,8 +7,10 @@
 .header {
   display: flex;
   gap: 1.5rem;
-  padding: 8px 0 5px 0;
-  margin: 0 0 10px 0;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 8px 0;
+  margin: 0 0 3px 0;
   border: 0 solid rgb(var(--sl-color-neutral-300));
   border-width: 0 0 1px 0;
 }

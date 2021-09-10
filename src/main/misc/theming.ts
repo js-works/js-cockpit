@@ -252,10 +252,10 @@ class Theme {
 
     const tokens = this.#themeTokens
 
-    tokens['border-radius-small'] = '1px'
-    tokens['border-radius-medium'] = '1px'
-    tokens['border-radius-large'] = '1px'
-    tokens['border-radius-x-large'] = '1px'
+    tokens['border-radius-small'] = '0px'
+    tokens['border-radius-medium'] = '0px'
+    tokens['border-radius-large'] = '0px'
+    tokens['border-radius-x-large'] = '0px'
 
     tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
     tokens['focus-ring-width'] = '1px'
@@ -270,6 +270,10 @@ class Theme {
 
     tokens['font-sans'] =
       "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+
+    // TODO!!!!
+    tokens['input-placeholder-color'] = 'var(--sl-color-neutral-600)'
+    tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
   }
 
   static #deriveTheme(propName: string, primaryColorName: string): Theme {
@@ -704,16 +708,16 @@ const lightThemeTokens = {
   'shadow-medium': '0 2px 4px rgb(var(--sl-color-neutral-500) / 12%)',
   'shadow-large': '0 2px 8px rgb(var(--sl-color-neutral-500) / 12%)',
   'shadow-x-large': '0 4px 16px rgb(var(--sl-color-neutral-500) / 12%)',
-  'spacing-xxx-small': '0.125rem',
-  'spacing-xx-small': '0.25rem',
+  'spacing-3x-small': '0.125rem',
+  'spacing-2x-small': '0.25rem',
   'spacing-x-small': '0.5rem',
   'spacing-small': '0.75rem',
   'spacing-medium': '1rem',
   'spacing-large': '1.25rem',
   'spacing-x-large': '1.75rem',
-  'spacing-xx-large': '2.25rem',
-  'spacing-xxx-large': '3rem',
-  'spacing-xxxx-large': '4.5rem',
+  'spacing-2x-large': '2.25rem',
+  'spacing-3x-large': '3rem',
+  'spacing-4x-large': '4.5rem',
   'transition-x-slow': '1000ms',
   'transition-slow': '500ms',
   'transition-medium': '250ms',
@@ -723,15 +727,15 @@ const lightThemeTokens = {
   'font-sans':
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   'font-serif': "Georgia, 'Times New Roman', serif",
-  'font-size-xx-small': '0.625rem',
+  'font-size-2x-small': '0.625rem',
   'font-size-x-small': '0.75rem',
   'font-size-small': '0.875rem',
   'font-size-medium': '1rem',
   'font-size-large': '1.25rem',
   'font-size-x-large': '1.5rem',
-  'font-size-xx-large': '2.25rem',
-  'font-size-xxx-large': '3rem',
-  'font-size-xxxx-large': '4.5rem',
+  'font-size-2x-large': '2.25rem',
+  'font-size-3x-large': '3rem',
+  'font-size-4x-large': '4.5rem',
   'font-weight-light': '300',
   'font-weight-normal': '400',
   'font-weight-semibold': '500',
@@ -803,7 +807,7 @@ const lightThemeTokens = {
   'tooltip-font-weight': 'var(--sl-font-weight-normal)',
   'tooltip-font-size': 'var(--sl-font-size-small)',
   'tooltip-line-height': 'var(--sl-line-height-dense)',
-  'tooltip-padding': 'var(--sl-spacing-xx-small) var(--sl-spacing-x-small)',
+  'tooltip-padding': 'var(--sl-spacing-2x-small) var(--sl-spacing-x-small)',
   'tooltip-arrow-size': '5px',
   'tooltip-arrow-start-end-offset': '8px',
   'z-index-drawer': '700',

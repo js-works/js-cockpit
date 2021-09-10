@@ -79,8 +79,7 @@ function dataExplorerImpl(self: DataExplorer) {
           <c-action-bar></c-action-bar>
         </div>
         <div class="search">
-          Search: &nbsp;
-          <sl-input size="small">
+          <sl-input size="small" placeholder="Search...">
             <sl-icon
               src=${searchIcon}
               slot="prefix"

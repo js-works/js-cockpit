@@ -3,6 +3,7 @@ import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
+import SlButtonGroup from '@shoelace-style/shoelace/dist/components/button-group/button-group'
 
 // styles
 import actionBarStyles from './action-bar.css'
@@ -23,7 +24,7 @@ export { ActionBar }
   tag: 'c-action-bar',
   styles: actionBarStyles,
   impl: lit(actionBarImpl),
-  uses: [SlButton]
+  uses: [SlButton, SlButtonGroup]
 })
 class ActionBar extends component() {}
 
@@ -31,18 +32,12 @@ function actionBarImpl(self: ActionBar) {
   return () => {
     return html`
       <div class="base">
-        <sl-button size="small">
-          <sl-icon slot="prefix" src=${newIcon}></sl-icon>
-          New
-        </sl-button>
-        <sl-button size="small">
-          <sl-icon slot="prefix" src=${editIcon}></sl-icon>
-          Edit
-        </sl-button>
-        <sl-button size="small">
-          <sl-icon slot="prefix" src=${deleteIcon}></sl-icon>
-          Delete
-        </sl-button>
+        <sl-button-group>
+          <sl-button size="small" xpill>New</sl-button>
+          <sl-button size="small" xpill>Edit</sl-button>
+          <sl-button size="small" xpill>Print</sl-button>
+          <sl-button size="small" xpill>Delete</sl-button>
+        </sl-button-group>
       </div>
     `
   }
