@@ -9,6 +9,10 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 // styles
 import sideMenuStyles from './side-menu.css'
 
+// icons
+import collapseIcon2 from '../../icons/arrow-left.svg'
+import collapseIcon from '../../icons/arrow-left-short.svg'
+
 // === exports =======================================================
 
 export { SideMenu }
@@ -58,7 +62,16 @@ function loginScreenImpl(self: SideMenu) {
   function render() {
     return html`
       <div class="base">
-        <div class="menu-header">Modules</div>
+        <div class="menu-header">
+          <div class="menu-caption">Modules</div>
+          <sl-button class="collapse-button" size="small">
+            <sl-icon
+              src=${collapseIcon}
+              slot="prefix"
+              class="collapse-icon"
+            ></sl-icon>
+          </sl-button>
+        </div>
         <sl-details summary="Products">
           <sl-menu>
             <sl-menu-item>Manage products</sl-menu-item>

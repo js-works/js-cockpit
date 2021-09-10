@@ -86,7 +86,7 @@ function dataExplorerImpl(self: DataExplorer) {
               class="search-icon"
             ></sl-icon>
           </sl-input>
-          <sl-button type="primary" size="small">
+          <sl-button type="primary" size="small" class="filter-button">
             <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
             Filter...
           </sl-button>

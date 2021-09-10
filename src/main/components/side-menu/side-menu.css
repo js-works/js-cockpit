@@ -66,12 +66,29 @@ sl-menu-item::part(base):active {
 }
 
 .menu-header {
+  display: flex;
+  align-items: center;
   text-align: center;
   font-size: var(--sl-font-size-medium);
   font-weight: var(--sl-font-weight-semibold);
   color: #000000;
-  padding: 8px 10px;
+  padding: 4px 4px;
   background-color: rgb(var(--sl-color-neutral-100));
   border: 0 solid rgb(var(--sl-color-neutral-300));
   border-width: 0 0 1px 0;
+}
+
+.menu-caption {
+  flex-grow: 1;
+}
+
+.collapse-button:not(:hover)::part(base) {
+  background-color: transparent;
+  border: none;
+}
+
+.collapse-icon {
+  height: 24px;
+  width: 24px;
+  color: rgb(var(--sl-color-primary-600));
 }

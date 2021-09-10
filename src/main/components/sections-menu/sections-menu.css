@@ -11,6 +11,7 @@
 .icon {
   color: rgb(var(--sl-color-primary-600));
   margin: 18px -10px 0 0;
+  font-smooth: never;
 }
 
 .section {
