@@ -1,0 +1,6 @@
+.base {
+  display: flex;
+  gap: 5px;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}

@@ -22,7 +22,7 @@ export { DataForm }
 })
 class DataForm extends component() {
   @prop({ attr: Attrs.string })
-  title = ''
+  headline = ''
 }
 
 function dataFormImpl(self: DataForm) {
@@ -30,7 +30,7 @@ function dataFormImpl(self: DataForm) {
     return html`
       <div class="base">
         <div class="header">
-          <div class="title">DataForm</div>
+          <div class="headline">${self.headline}</div>
         </div>
         <slot></slot>
       </div>

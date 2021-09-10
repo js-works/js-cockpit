@@ -58,6 +58,7 @@ function loginScreenImpl(self: SideMenu) {
   function render() {
     return html`
       <div class="base">
+        <div class="menu-header">Modules</div>
         <sl-details summary="Products">
           <sl-menu>
             <sl-menu-item>Manage products</sl-menu-item>

@@ -4,10 +4,14 @@
 }
 
 .header {
-  padding: 8px 0 10px 0;
+  padding: 8px 0 5px 0;
+  margin: 0 0 10px 0;
+  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border-width: 0 0 1px 0;
 }
 
-.title {
+.headline {
+  padding: 0.125rem 0.75rem;
   font-size: var(--sl-font-size-large);
 }
 

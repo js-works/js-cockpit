@@ -18,12 +18,17 @@ export { Fieldset }
 class Fieldset extends component() {
   @prop({ attr: Attrs.string })
   caption = ''
+
+  @prop({ attr: Attrs.string })
+  orient: 'horizontal' | 'vertical' = 'vertical'
 }
 
 function fieldsetImpl(self: Fieldset) {
   return () => {
     return html`
-      <div class="base">
+      <div
+        class="base ${classMap({ horizontal: self.orient === 'horizontal' })}"
+      >
         <div class="caption">${self.caption}</div>
         <div class="content">
           <slot></slot>
