@@ -274,6 +274,13 @@ class Theme {
     // TODO!!!!
     tokens['input-placeholder-color'] = 'var(--sl-color-neutral-600)'
     tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
+
+    tokens['font-size-medium'] = '1rem'
+    tokens['font-size-large'] = '1.3rem'
+    tokens['font-size-x-large'] = '1.6rem'
+    tokens['font-size-2x-large'] = '2rem'
+    tokens['font-size-3x-large'] = '3.5rem'
+    tokens['font-size-4x-large'] = '4rem'
   }
 
   static #deriveTheme(propName: string, primaryColorName: string): Theme {
