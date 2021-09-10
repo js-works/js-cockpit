@@ -8,9 +8,10 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import actionBarStyles from './action-bar.css'
 
 // icons
-import newIcon from 'remixicon/icons/System/add-line.svg'
-import editIcon from 'remixicon/icons/Design/edit-2-line.svg'
-import deleteIcon from 'remixicon/icons/System/delete-bin-6-line.svg'
+//import newIcon from 'remixicon/icons/System/add-line.svg'
+import newIcon from 'bootstrap-icons/icons/plus.svg'
+import editIcon from 'bootstrap-icons/icons/pencil-square.svg'
+import deleteIcon from 'bootstrap-icons/icons/trash.svg'
 
 // === exports =======================================================
 

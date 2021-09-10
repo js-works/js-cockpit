@@ -114,7 +114,7 @@ class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <c-cockpit .theme=${Theme.pink}>
+    <c-cockpit .theme=${Theme.default}>
       <c-brand
         slot="header-start"
         class="orangered"
@@ -162,7 +162,7 @@ function createDataForm() {
       <c-section>
         <c-fieldset orient="horizontal">
           <c-text-field label="Customer No." required></c-text-field>
-          <c-text-field label="Shortcut" required></c-text-field>
+          <c-text-field label="Short name" required></c-text-field>
         </c-fieldset>
       </c-section>
       <c-tabs>

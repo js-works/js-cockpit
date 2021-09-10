@@ -4,8 +4,12 @@ import { html, classMap, lit, TemplateResult } from 'js-element/lit'
 import { useState } from 'js-element/hooks'
 
 // internal imports
+import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
+
+// icons
+import searchIcon from '../../icons/search.svg'
 
 // styles
 import dataExplorerStyles from './data-explorer.css'
@@ -38,8 +42,8 @@ namespace DataExplorer {
 @elem({
   tag: 'c-data-explorer',
   styles: [dataExplorerStyles],
-  uses: [DataTable, PaginationBar],
-  impl: lit(dataExplorerImpl)
+  impl: lit(dataExplorerImpl),
+  uses: [ActionBar, DataTable, PaginationBar]
 })
 class DataExplorer extends component() {
   @prop({ attr: Attrs.string })
@@ -70,6 +74,19 @@ function dataExplorerImpl(self: DataExplorer) {
     <div class="base ${classMap({ 'full-size': self.fullSize })}">
       <div class="header">
         <h3 class="title">${self.title}</h3>
+        <div class="actions">
+          <c-action-bar></c-action-bar>
+        </div>
+        <div class="search">
+          Search:
+          <sl-input size="small">
+            <sl-icon
+              src=${searchIcon}
+              slot="prefix"
+              class="search-icon"
+            ></sl-icon>
+          </sl-input>
+        </div>
       </div>
       <c-data-table
         class="table"

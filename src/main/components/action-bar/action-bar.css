@@ -12,3 +12,9 @@ sl-button:not(:hover)::part(base) {
 sl-button::part(base) {
   font-size: var(--sl-font-size-medium);
 }
+
+sl-icon {
+  color: rgb(var(--sl-color-primary-500));
+  width: 16px;
+  height: 16px;
+}
