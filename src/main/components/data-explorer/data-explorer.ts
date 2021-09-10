@@ -10,6 +10,7 @@ import { PaginationBar } from '../pagination-bar/pagination-bar'
 
 // icons
 import searchIcon from '../../icons/search.svg'
+import filterIcon from '../../icons/filter.svg'
 
 // styles
 import dataExplorerStyles from './data-explorer.css'
@@ -78,7 +79,7 @@ function dataExplorerImpl(self: DataExplorer) {
           <c-action-bar></c-action-bar>
         </div>
         <div class="search">
-          Search:
+          Search: &nbsp;
           <sl-input size="small">
             <sl-icon
               src=${searchIcon}
@@ -86,6 +87,10 @@ function dataExplorerImpl(self: DataExplorer) {
               class="search-icon"
             ></sl-icon>
           </sl-input>
+          <sl-button type="primary" size="small">
+            <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
+            Filter...
+          </sl-button>
         </div>
       </div>
       <c-data-table

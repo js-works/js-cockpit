@@ -45,7 +45,7 @@
 
 .search {
   display: flex;
-  gap: 1rem;
+  gap: 4px;
   align-items: center;
 }
 

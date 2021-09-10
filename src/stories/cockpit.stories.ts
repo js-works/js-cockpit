@@ -19,6 +19,9 @@ import {
   UserMenu
 } from 'js-cockpit'
 
+import { SharedCockpit } from './shared/shared-cockpit'
+import { SharedDataExplorer } from './shared/shared-data-explorer'
+
 export default {
   title: 'cockpit'
 }
@@ -64,7 +67,7 @@ const demo1Styles = `
   tag: 'cockpit-demo1',
   styles: demo1Styles,
   impl: lit(cockpitDemo1Impl),
-  uses: [Cockpit, SectionsMenu]
+  uses: [Cockpit, SectionsMenu, SharedCockpit]
 })
 class CockpitDemo1 extends component() {}
 
@@ -102,6 +105,7 @@ export const cockpit1 = () => h('cockpit-demo1')
     Section,
     SectionsMenu,
     SideMenu,
+    SharedDataExplorer,
     Tab,
     Tabs,
     TextArea,
@@ -114,48 +118,41 @@ class CockpitDemo2 extends component() {}
 
 function cockpitDemo2Impl() {
   return () => html`
-    <c-cockpit .theme=${Theme.default}>
-      <c-brand
-        slot="header-start"
-        class="orangered"
-        headline="my-company"
-        subheadline="Back Office"
-        multi-color
-      ></c-brand>
-      <c-sections-menu
-        slot="header"
-        class="orange"
-        .sections=${[
-          {
-            id: 1,
-            title: 'Dashboard'
-          },
-          {
-            id: 2,
-            title: 'User management'
-          },
-          {
-            id: 3,
-            title: 'Catalog'
-          },
-          {
-            id: 4,
-            title: 'CMS'
-          }
-        ]}
-        .activeSection=${2}
-      ></c-sections-menu>
-      <c-user-menu slot="header-end"></c-user-menu>
-      <div slot="sidebar" class="lightgreen full-height">
-        <c-side-menu></c-side-menu>
-      </div>
-      <div slot="main" class="yellow full-height">${createDataForm()}</div>
-    </c-cockpit>
+    <shared-cockpit>
+      <shared-data-explorer></shared-data-explorer>
+    </shared-cockpit>
   `
 }
 
 export const cockpit2 = () => h('cockpit-demo2')
 
+@elem({
+  tag: 'cockpit-demo3',
+  uses: [
+    Brand,
+    Cockpit,
+    DataForm,
+    Fieldset,
+    RadioGroup,
+    Section,
+    SectionsMenu,
+    SideMenu,
+    SharedDataExplorer,
+    Tab,
+    Tabs,
+    TextArea,
+    TextField,
+    UserMenu
+  ],
+  impl: lit(cockpitDemo3Impl)
+})
+class CockpitDemo3 extends component() {}
+
+function cockpitDemo3Impl() {
+  return () => html` <shared-cockpit>${createDataForm()}</shared-cockpit> `
+}
+
+export const cockpit3 = () => h('cockpit-demo3')
 function createDataForm() {
   return html`<div>
     <c-data-form headline="Customer">
