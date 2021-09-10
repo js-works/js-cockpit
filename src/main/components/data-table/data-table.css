@@ -74,7 +74,7 @@ table > tbody > tr > td {
 }
 
 table > tbody > tr:nth-child(2n) td {
-  background-color: rgb(var(--sl-color-neutral-100));
+  background-color: rgb(var(--sl-color-neutral-100) / 70%);
 }
 
 .selector-column {

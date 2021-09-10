@@ -252,10 +252,10 @@ class Theme {
 
     const tokens = this.#themeTokens
 
-    tokens['border-radius-small'] = '2px'
-    tokens['border-radius-medium'] = '2px'
-    tokens['border-radius-large'] = '2px'
-    tokens['border-radius-x-large'] = '2px'
+    tokens['border-radius-small'] = '1px'
+    tokens['border-radius-medium'] = '1px'
+    tokens['border-radius-large'] = '1px'
+    tokens['border-radius-x-large'] = '1px'
 
     tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
     tokens['focus-ring-width'] = '1px'
