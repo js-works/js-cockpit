@@ -103,7 +103,11 @@ function dataExplorerImpl(self: DataExplorer) {
       >
       </c-data-table>
       <div class="footer">
-        <c-pagination-bar></c-pagination-bar>
+        <c-pagination-bar
+          page-index="0"
+          page-size="500"
+          total-item-count="1002"
+        ></c-pagination-bar>
       </div>
     </div>
   `

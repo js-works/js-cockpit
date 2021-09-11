@@ -81,7 +81,7 @@ namespace I18n {
     // translation function
     (textId: string, replacements?: string[]): string
     (textId: string, baseText: string): string
-    (textId: string, replacements: string[], baseText: string): string
+    (textId: string, baseText: string, repacements: any[]): string
 
     getLocale(): string
     formatDate(value: Date, format?: DateFormat): string
@@ -193,9 +193,14 @@ function createFacade(
 ): I18n.Facade {
   const facade = <I18n.Facade>((textId: string, arg2?: any, arg3?: any) => {
     const fullId = !textId || textId[0] !== '.' ? textId : category + textId
-    const replacements = Array.isArray(arg2) ? arg2 : null
-    const baseText =
-      typeof arg2 === 'string' ? arg2 : typeof arg3 === 'string' ? arg3 : null
+
+    const baseText = typeof arg2 === 'string' ? arg2 : null
+
+    const replacements = Array.isArray(arg2)
+      ? arg2
+      : Array.isArray(arg3)
+      ? arg3
+      : null
 
     let text = getBehavior().getText(
       getLocale(),

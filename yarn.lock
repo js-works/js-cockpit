@@ -6024,10 +6024,10 @@ jest-worker@^26.5.0, jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.222:
-  version "0.0.222"
-  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.222.tgz#95b4153c763f2d042fa90ce561a116b61c9a438f"
-  integrity sha512-QREdp9Z52hqLWA5uI5yztL4Zh/Omu4cUvMycxt6HmwJlzaDGIVX0UMlQ4hMd+kAm0OHzgKtsIv7dkVejRz/HRQ==
+js-element@^0.0.223:
+  version "0.0.223"
+  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.223.tgz#49efcc1c15c9e215a0f048d65948072bbd7af173"
+  integrity sha512-F2uAKuDci2qzIYshg6P4Kgk8VFQQIZpEr+QAN9X4N0pW/VhH8dLn/X/immwJkCWplaSnCYD/muUzw8oxCxQ4Aw==
   dependencies:
     lit-html "^2.0.0-rc.4"
 
@@ -8987,10 +8987,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
-  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
+typescript@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
+  integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"
