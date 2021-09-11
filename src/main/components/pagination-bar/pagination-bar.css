@@ -8,8 +8,9 @@
   color: rgb(var(--sl-color-neutral-1000));
   background-color: rgb(var(--sl-color-neutral-0));
   font-size: var(--sl-font-size-medium);
-  user-select: none;
   z-index: 1000;
+  white-space: nowrap;
+  user-select: none;
 }
 
 .page-number-input {

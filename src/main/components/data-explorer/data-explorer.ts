@@ -104,9 +104,11 @@ function dataExplorerImpl(self: DataExplorer) {
       </c-data-table>
       <div class="footer">
         <c-pagination-bar
-          page-index="0"
+          page-index="3"
           page-size="500"
-          total-item-count="1002"
+          total-item-count="10002"
+          .onPageChange=${(ev: any) => console.log(ev)}
+          .onPageSizeChange=${(ev: any) => console.log(ev)}
         ></c-pagination-bar>
       </div>
     </div>

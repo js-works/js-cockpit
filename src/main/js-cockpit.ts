@@ -23,5 +23,9 @@ export { TextArea } from './components/text-area/text-area'
 export { TextField } from './components/text-field/text-field'
 export { UserMenu } from './components/user-menu/user-menu'
 
+// events
+export { PageChangeEvent } from './events/page-change-event'
+export { PageSizeChangeEvent } from './events/page-size-change-event'
+
 // theming
 export { Theme } from './misc/theming'
