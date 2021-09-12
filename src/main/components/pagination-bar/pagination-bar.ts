@@ -51,6 +51,15 @@ type AuxData = {
 
 // === Paginator =====================================================
 
+const texts = {
+  'items-x-to-y-of-z': 'Items {0}-{1} of {2}',
+  'item-x-of-y': 'Item {0} of {1}',
+  'of-x-pages': 'of {0} pages',
+  'of-1-page': 'of 1 page',
+  page: 'Page',
+  'page-size': 'Items/Page'
+}
+
 @elem({
   tag: 'c-pagination-bar',
   styles: paginationBarStyles,
@@ -81,7 +90,7 @@ class PaginationBar extends component<{
 
 function paginationBarImpl(self: PaginationBar) {
   let aux: AuxData
-  const { i18n, t } = useI18n('js-cockpit')
+  const { i18n, t } = useI18n('js-cockpit', texts)
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
   const emitPageChange = useEmitter('c-page-change', () => self.onPageChange)
@@ -153,12 +162,12 @@ function paginationBarImpl(self: PaginationBar) {
       return null
     }
 
-    const pageTransl = t('.page', 'Page')
+    const pageTransl = t('page')
 
     const ofXPagesTransl =
       aux.pageCount > 1
-        ? t('.of-x-pages', 'of {0} pages', [i18n.formatNumber(aux.pageCount)])
-        : t('.of-1-page', 'of 1 page')
+        ? t('of-x-pages', i18n.formatNumber(aux.pageCount))
+        : t('of-1-page', 'of 1 page')
 
     return html`
       <div class="pagination">
@@ -217,7 +226,7 @@ function paginationBarImpl(self: PaginationBar) {
 
     return html`
       <div class="page-size-selector">
-        ${t('.page-size', 'Items/Page')}
+        ${t('page-size')}
         <sl-select
           size="small"
           value=${aux.pageSize}
@@ -246,16 +255,13 @@ function paginationBarImpl(self: PaginationBar) {
     let info: String
 
     if (aux.shownItemsCount > 1) {
-      info = t('.items-x-to-y-of-z', 'Items {0}-{1} of {2}', [
+      info = t('items-x-to-y-of-z', [
         startNumberText,
         endNumberText,
         totalCountText
       ])
     } else {
-      info = t('.item-x-of-y', 'Item {0} of {1}', [
-        startNumberText,
-        totalCountText
-      ])
+      info = t('item-x-of-y', [startNumberText, totalCountText])
     }
 
     return html`<div class="pagination-info">${info}</div>`

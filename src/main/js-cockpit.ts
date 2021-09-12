@@ -29,3 +29,9 @@ export { PageSizeChangeEvent } from './events/page-size-change-event'
 
 // theming
 export { Theme } from './misc/theming'
+
+// translations
+import { I18n } from './misc/i18n'
+import texts_de from './translations/de'
+
+I18n.addTexts('de', texts_de)

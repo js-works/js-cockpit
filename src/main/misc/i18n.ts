@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { LitElement } from 'lit'
 
 // === exports =======================================================
 
@@ -35,23 +34,20 @@ const firstDayOfWeekData: Record<number, string> = {
 type I18n = Readonly<{
   localize(
     subject:
-      | LitElement
       | {
           element: HTMLElement
           refresh(): void
           onConnect(action: () => void): void
           onDisconnect(action: () => void): void
         }
-      | string,
-
-    category?: string
+      | string // locale
   ): I18n.Facade
 
   customize(
     mapper: (self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>
   ): void
 
-  addTexts(locale: string, texts: Record<string, string>): void
+  addTexts(locale: string, texts: I18n.Texts): void
 }>
 
 // eslint-disable-next-line
@@ -60,8 +56,8 @@ namespace I18n {
     getText(
       locale: string,
       textId: string,
-      replacements?: string[] | null,
-      baseText?: string | null
+      baseText?: string | null,
+      replacements?: string[] | null
     ): string | null
 
     formatDate(locale: string, value: Date, format?: DateFormat): string
@@ -78,12 +74,14 @@ namespace I18n {
   }
 
   export type Facade = {
-    // translation function
-    (textId: string, replacements?: string[]): string
-    (textId: string, baseText: string): string
-    (textId: string, baseText: string, repacements: any[]): string
-
     getLocale(): string
+
+    getText(
+      textId: string,
+      baseText?: string | null,
+      replacements?: string[] | null
+    ): string
+
     formatDate(value: Date, format?: DateFormat): string
     formatNumber(value: number, format?: NumberFormat): string
 
@@ -105,6 +103,7 @@ namespace I18n {
   export type DateFormat = Intl.DateTimeFormatOptions
   export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
   export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
+  export type Texts = { [key: string]: string | Texts }
 }
 
 // === local types ===================================================
@@ -118,19 +117,35 @@ type Emitter<T> = {
   subscribe: Subscribable<T>
 }
 
-type ElementInst =
-  | LitElement
-  | {
-      element: HTMLElement
-      refresh(): void
-      onConnect(action: () => void): void
-      onDisconnect(action: () => void): void
-    }
+type Subject = {
+  element: HTMLElement
+  refresh(): void
+  onConnect(action: () => void): void
+  onDisconnect(action: () => void): void
+}
 
 // === dictionary for translations ===================================
 
 const dict = (() => {
   const texts = new Map<string, Map<string, string>>()
+
+  const addTextsWithNamespace = (
+    locale: string,
+    namespace: string,
+    texts: I18n.Texts
+  ) => {
+    Object.entries(texts).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        const newKey = namespace === '' ? key : `${namespace}.${key}`
+
+        dict.addText(locale, newKey, value)
+      } else {
+        const newNamespace = namespace === '' ? key : `${namespace}.${key}`
+
+        addTextsWithNamespace(locale, newNamespace, value)
+      }
+    })
+  }
 
   return {
     addText(locale: string, textId: string, translation: string): void {
@@ -144,17 +159,11 @@ const dict = (() => {
       map.set(textId, translation)
     },
 
-    addTexts(locale: string, texts: Record<string, string>) {
-      Object.entries(texts).forEach(([key, value]) =>
-        dict.addText(locale, key, value)
-      )
+    addTexts(locale: string, texts: I18n.Texts) {
+      addTextsWithNamespace(locale, '', texts)
     },
 
-    getText(
-      locale: string,
-      textId: string,
-      replacements?: string[] | null
-    ): string | null {
+    getText(locale: string, textId: string): string | null {
       let ret = texts.get(locale)?.get(textId) || null
 
       if (ret === null && locale) {
@@ -173,12 +182,6 @@ const dict = (() => {
         }
       }
 
-      if (ret && replacements) {
-        replacements.forEach((value, idx) => {
-          ret = ret!.replaceAll(`{${idx}}`, value)
-        })
-      }
-
       return ret
     }
   }
@@ -188,39 +191,26 @@ const dict = (() => {
 
 function createFacade(
   getLocale: () => string,
-  getBehavior: () => I18n.Behavior,
-  category: string
+  getBehavior: () => I18n.Behavior
 ): I18n.Facade {
-  const facade = <I18n.Facade>((textId: string, arg2?: any, arg3?: any) => {
-    const fullId = !textId || textId[0] !== '.' ? textId : category + textId
-
-    const baseText = typeof arg2 === 'string' ? arg2 : null
-
-    const replacements = Array.isArray(arg2)
-      ? arg2
-      : Array.isArray(arg3)
-      ? arg3
-      : null
-
-    let text = getBehavior().getText(
-      getLocale(),
-      fullId,
-      replacements,
-      baseText
-    )
-
-    if (text && replacements) {
-      // TODO: optimize
-      replacements.forEach((value, idx) => {
-        text = text!.replaceAll(`{${idx}}`, value)
-      })
-    }
-
-    return text
-  })
-
-  return Object.assign(facade, <I18n.Facade>{
+  const facade: I18n.Facade = {
     getLocale,
+
+    getText(textId: string, baseText?: string, replacements?: any) {
+      let ret = getBehavior().getText(getLocale(), textId, baseText) || ''
+
+      if (arguments.length > 2) {
+        if (Array.isArray(replacements)) {
+          replacements.forEach((value, idx) => {
+            ret = ret.replaceAll(`{${idx}}`, value)
+          })
+        } else {
+          ret = ret.replaceAll(`{0}`, replacements)
+        }
+      }
+
+      return ret
+    },
 
     formatNumber: (number, format) =>
       getBehavior().formatNumber(getLocale(), number, format),
@@ -268,14 +258,16 @@ function createFacade(
 
       return arr
     }
-  })
+  }
+
+  return facade
 }
 
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  getText(locale, textId, replacements?, baseText?): string | null {
-    let ret = dict.getText(locale, textId, replacements)
+  getText(locale, textId, baseText?): string | null {
+    let ret = dict.getText(locale, textId)
 
     if (
       ret === null &&
@@ -380,13 +372,12 @@ const i18nCtrl = (() => {
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  localize(subject: ElementInst | string, category: string = ''): I18n.Facade {
+  localize(subject: Subject | string): I18n.Facade {
     if (typeof subject === 'string') {
-      return createFacade(() => subject, i18nCtrl.getBehavior, category)
+      return createFacade(() => subject, i18nCtrl.getBehavior)
     }
 
-    const isLit = subject instanceof LitElement
-    const elem = isLit ? subject : (subject as any).element
+    const elem = (subject as any).element
     let version = 0
     let locale = DEFAULT_LOCALE
 
@@ -401,57 +392,27 @@ const I18n: I18n = Object.freeze({
       return locale
     }
 
-    if (isLit) {
-      const litElem = elem as LitElement
-      let cleanup: Unsubscribe | null = null
+    const { refresh, onConnect, onDisconnect } = subject as Subject
 
-      litElem.addController({
-        hostConnected() {
-          cleanup = i18nCtrl.watch((forceUpdate) => {
-            const oldLocale = locale
-            const newLocale = getLocale()
+    let cleanup: Unsubscribe | null = null
 
-            if (forceUpdate || oldLocale !== newLocale) {
-              litElem.requestUpdate()
-            }
-          })
-        },
+    onConnect(() => {
+      cleanup = i18nCtrl.watch((forceUpdate) => {
+        const oldLocale = locale
+        const newLocale = getLocale()
 
-        hostDisconnected() {
-          cleanup && cleanup()
-          cleanup = null
+        if (forceUpdate || oldLocale !== newLocale) {
+          refresh()
         }
       })
-    } else {
-      const { refresh, onConnect, onDisconnect } = subject as Exclude<
-        ElementInst,
-        LitElement
-      >
+    })
 
-      let cleanup: Unsubscribe | null = null
+    onDisconnect(() => {
+      cleanup && cleanup()
+      cleanup = null
+    })
 
-      onConnect(() => {
-        cleanup = i18nCtrl.watch((forceUpdate) => {
-          const oldLocale = locale
-          const newLocale = getLocale()
-
-          if (forceUpdate || oldLocale !== newLocale) {
-            refresh()
-          }
-        })
-      })
-
-      onDisconnect(() => {
-        cleanup && cleanup()
-        cleanup = null
-      })
-    }
-
-    return createFacade(
-      getLocale,
-      i18nCtrl.getBehavior,
-      `${category}.${elem.localName}`
-    )
+    return createFacade(getLocale, i18nCtrl.getBehavior)
   },
 
   customize(
@@ -519,9 +480,10 @@ function createEmitter<T>(): Emitter<T> {
 
 I18n.customize((self, base) => {
   return {
-    getText(locale, textId, replacements?, baseText?) {
+    getText(locale, textId, baseText?, replacements?) {
+      console.log(textId, baseText, replacements)
       return (
-        base.getText(locale, textId, replacements, baseText) ?? baseText ?? null
+        base.getText(locale, textId, baseText, replacements) ?? baseText ?? null
       )
     }
   }

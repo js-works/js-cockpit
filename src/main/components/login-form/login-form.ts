@@ -33,6 +33,15 @@ export { LoginForm }
 
 // === LoginForm ===================================================
 
+const texts = {
+  'login-intro-headline': 'Login',
+  'login-intro-text': 'Please enter your credentials to log in',
+  username: 'Username',
+  password: 'Password',
+  'remember-login': 'Remember login',
+  'log-in': 'Log in'
+}
+
 @elem({
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
@@ -57,7 +66,7 @@ class LoginForm extends component() {
 }
 
 function loginFormImpl(self: LoginForm) {
-  const { t } = useI18n('js-cockpit')
+  const { t } = useI18n('js-cockpit', texts)
 
   const formCtrl: FormCtrl = {
     submit() {
@@ -83,11 +92,8 @@ function loginFormImpl(self: LoginForm) {
               <div class="column1-top login-intro" slot="login-intro">
                 <div class="default-login-intro">
                   <slot name="login-intro">
-                    <h3>${t('.login-intro-headline', 'Login')}</h3>
-                    <p>${t(
-                      '.login-intro-text',
-                      'Please enter your credentials to log in'
-                    )}</p>
+                    <h3>${t('login-intro-headline')}</h3>
+                    <p>${t('login-intro-text')}</p>
                   </slot>
                 </div>
               </div>
@@ -98,27 +104,21 @@ function loginFormImpl(self: LoginForm) {
             <form-ctrl-provider class="column2" .value=${formCtrl}>
               <div class="column2-top">
                 <slot name="login-fields">
-                  <c-text-field label=${t(
-                    '.username',
-                    'Username'
-                  )} required></c-text-field>
+                  <c-text-field label=${t('username')} required></c-text-field>
                   <c-password-field
-                    label=${t('.password', 'Password')}
+                    label=${t('password')}
                     required
                   ></c-password-field>
                 </slot>
               </div>
               <div class="column2-bottom">
-                <sl-checkbox>${t(
-                  '.remember-login',
-                  'Remember login'
-                )}</sl-checkbox>
+                <sl-checkbox>${t('remember-login')}</sl-checkbox>
                 <sl-button
                   type="primary"
                   class="login-button"
                   submit
                   @click=${onSubmitClick}
-                  >${t('.log-in', 'Log in')}</sl-button
+                  >${t('log-in')}</sl-button
                 >
               </div>
             </c-form-ctrl-provider>
@@ -131,13 +131,3 @@ function loginFormImpl(self: LoginForm) {
     </c-theme-provider>
   `
 }
-
-I18n.addTexts('de', {
-  'js-cockpit.c-login-form.login-intro-headline': 'Anmeldung',
-  'js-cockpit.c-login-form.login-intro-text':
-    'Herzlich willkommen! Bitte geben Sie Ihre Anmeldedaten ein.',
-  'js-cockpit.c-login-form.username': 'Benutzername',
-  'js-cockpit.c-login-form.password': 'Passwort',
-  'js-cockpit.c-login-form.remember-login': 'Angemeldet bleiben',
-  'js-cockpit.c-login-form.log-in': 'Anmelden'
-})
