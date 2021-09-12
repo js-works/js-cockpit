@@ -87,6 +87,9 @@ function dataTableImpl(self: DataTable) {
   const containerRef = createRef<HTMLElement>()
   const theadRef = createRef<HTMLElement>()
   const tbodyRef = createRef<HTMLElement>()
+  const selectedRows = new Set<number>([2, 3, 4, 5, 6])
+
+  const [state, setState] = useState({})
 
   columnSizesStyles.append(document.createTextNode(''))
   self.shadowRoot!.firstChild!.appendChild(columnSizesStyles)
@@ -111,6 +114,37 @@ function dataTableImpl(self: DataTable) {
     `
 
     columnSizesStyles.innerText = newStyles
+  }
+
+  function toggleRowSelection(idx: number) {
+    if (selectedRows.has(idx)) {
+      selectedRows.delete(idx)
+    } else {
+      selectedRows.add(idx)
+    }
+
+    refreshSelection()
+  }
+
+  function refreshSelection() {
+    if (!self.data) {
+      return
+    }
+
+    const tbody = tbodyRef.value!
+    const checkboxes = tbody.querySelectorAll('tr > td:first-child sl-checkbox')
+
+    for (let i = 0; i < self.data.length; ++i) {
+      const selected = selectedRows.has(i)
+
+      if (selected) {
+        tbody.children[i].classList.add('selected-row')
+        checkboxes[i].setAttribute('checked', '')
+      } else {
+        tbody.children[i].classList.remove('selected-row')
+        checkboxes[i].removeAttribute('checked')
+      }
+    }
   }
 
   function render() {
@@ -184,20 +218,28 @@ function dataTableImpl(self: DataTable) {
   }
 
   function renderTableBody() {
+    console.log('renderTableBody')
     const { columns } = getTableHeadInfo(self.columns || [])
     const data = self.data || []
     const rows: TemplateResult[] = []
 
-    const rowSelector =
-      self.selectMode === 'single' || self.selectMode === 'multi'
-        ? html`
-            <td class="selector-column">
-              <sl-checkbox></sl-checkbox>
-            </td>
-          `
-        : null
+    data.forEach((rec, idx) => {
+      const selected = selectedRows.has(idx)
 
-    data.forEach((rec) => {
+      const rowSelector =
+        self.selectMode === 'single' || self.selectMode === 'multi'
+          ? html`
+              <td class="selector-column">
+                <sl-checkbox
+                  type="checkbox"
+                  ?checked=${selected}
+                  @sl-change=${() => toggleRowSelection(idx)}
+                >
+                </sl-checkbox>
+              </td>
+            `
+          : null
+
       const cells: TemplateResult[] = []
 
       columns.forEach((column) => {
@@ -205,7 +247,11 @@ function dataTableImpl(self: DataTable) {
       })
 
       rows.push(
-        html`<tr>
+        html`<tr
+          class="row ${classMap({
+            'selected-row': selected
+          })}"
+        >
           ${rowSelector}${cells}
         </tr>`
       )

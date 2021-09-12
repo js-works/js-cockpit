@@ -12,10 +12,10 @@ export default {
     },
 
     'c-pagination-bar': {
-      'items-x-to-y-of-z': '{0}-{1} von {2}',
-      'item-x-of-y': 'Datensatz {0} of {1}',
-      'of-x-pages': 'von {0} Seiten',
-      'of-1-page': 'von einer Seite',
+      'items-x-to-y-of-z': '{0} - {1} / {2}',
+      'item-x-of-y': '{0} / {1}',
+      'of-x-pages': 'von {0}',
+      'of-1-page': 'von 1',
       page: 'Seite',
       'page-size': 'Datensätze/Seite'
     }

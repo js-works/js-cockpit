@@ -23,7 +23,6 @@ import chevronDoubleLeftSvg from '../../icons/chevron-double-left.svg'
 import chevronLeftSvg from '../../icons/chevron-left.svg'
 import chevronRightSvg from '../../icons/chevron-right.svg'
 import chevronDoubleRightSvg from '../../icons/chevron-double-right.svg'
-import { render } from 'lit'
 
 // === exports =======================================================
 
@@ -52,10 +51,10 @@ type AuxData = {
 // === Paginator =====================================================
 
 const texts = {
-  'items-x-to-y-of-z': 'Items {0}-{1} of {2}',
-  'item-x-of-y': 'Item {0} of {1}',
-  'of-x-pages': 'of {0} pages',
-  'of-1-page': 'of 1 page',
+  'items-x-to-y-of-z': '{0} - {1} of {2}',
+  'item-x-of-y': '{0} of {1}',
+  'of-x-pages': 'of {0}',
+  'of-1-page': 'of 1',
   page: 'Page',
   'page-size': 'Items/Page'
 }

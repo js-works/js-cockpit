@@ -23,7 +23,7 @@ base.bordered {
 
 .yyy {
   position: relative;
-  height: 500px;
+  height: 482px;
   xoverflow: hidden;
 }
 
@@ -77,14 +77,23 @@ table > tbody > tr:nth-child(2n) td {
 }
 
 .selector-column {
-  position: relative;
-  width: 9px;
-  overflow: hidden;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .selector-column .checkbox {
-  position: absolute;
-  top: 0;
-  left: 7px;
+}
+
+.row > td {
+  padding: 4px 5px;
+  border-color: transparent;
+  border: 1px solid transparent;
+}
+
+.row.selected-row > td {
+  background-color: rgb(var(--sl-color-primary-200));
+  border: 0 solid rgb(var(--sl-color-primary-300));
+  border-width: 1px 0;
+  padding: 4px 5px;
 }

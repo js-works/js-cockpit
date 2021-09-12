@@ -50,3 +50,8 @@
   align-items: center;
   gap: 8px;
 }
+
+sl-menu-item::part(label) {
+  min-width: 1.5rem;
+  text-align: center;
+}

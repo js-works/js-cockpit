@@ -253,9 +253,9 @@ class Theme {
     const tokens = this.#themeTokens
 
     tokens['border-radius-small'] = '0px'
-    tokens['border-radius-medium'] = '0px'
-    tokens['border-radius-large'] = '0px'
-    tokens['border-radius-x-large'] = '0px'
+    tokens['border-radius-medium'] = '1px'
+    tokens['border-radius-large'] = '2px'
+    tokens['border-radius-x-large'] = '3px'
 
     tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
     tokens['focus-ring-width'] = '1px'

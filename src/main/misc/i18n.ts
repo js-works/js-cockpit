@@ -481,7 +481,6 @@ function createEmitter<T>(): Emitter<T> {
 I18n.customize((self, base) => {
   return {
     getText(locale, textId, baseText?, replacements?) {
-      console.log(textId, baseText, replacements)
       return (
         base.getText(locale, textId, baseText, replacements) ?? baseText ?? null
       )
