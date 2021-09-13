@@ -121,13 +121,13 @@ function sharedDataExplorerDemoImpl() {
           actions: [
             {
               kind: 'action',
-              text: 'to CSV',
+              text: 'Export to CSV',
               type: 'multi-row',
               actionId: ''
             },
             {
               kind: 'action',
-              text: 'to Excel',
+              text: 'Export to Excel',
               type: 'multi-row',
               actionId: ''
             }

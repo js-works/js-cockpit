@@ -107,7 +107,39 @@ function dataExplorerImpl(self: DataExplorer) {
   const onRowsSelectionChange = (ev: RowsSelectionChangeEvent) => {
     numSelectedRows = ev.detail.rows.size
 
-    refresh()
+    actionBarRef.value!.actions = convertActions()
+  }
+
+  function convertActions(): ActionBar.Actions {
+    if (!self.actions) {
+      return []
+    }
+
+    return self.actions.map((it) => {
+      if (it.kind === 'action') {
+        return {
+          kind: 'action',
+          actionId: '',
+          text: it.text,
+          disabled:
+            (it.type === 'single-row' && numSelectedRows !== 1) ||
+            (it.type === 'multi-row' && numSelectedRows === 0)
+        }
+      } else {
+        return {
+          kind: 'action-group',
+          text: it.text,
+          actions: it.actions.map((it) => ({
+            kind: 'action',
+            text: it.text,
+            actionId: '',
+            disabled:
+              (it.type === 'single-row' && numSelectedRows !== 1) ||
+              (it.type === 'multi-row' && numSelectedRows === 0)
+          }))
+        }
+      }
+    })
   }
 
   function render() {
@@ -160,36 +192,10 @@ function dataExplorerImpl(self: DataExplorer) {
       return null
     }
 
-    const convertedActions: ActionBar.Actions = self.actions.map((it) => {
-      if (it.kind === 'action') {
-        return {
-          kind: 'action',
-          actionId: '',
-          text: it.text,
-          disabled:
-            (it.type === 'single-row' && numSelectedRows !== 1) ||
-            (it.type === 'multi-row' && numSelectedRows === 0)
-        }
-      } else {
-        return {
-          kind: 'action-group',
-          text: it.text,
-          actions: it.actions.map((it) => ({
-            kind: 'action',
-            text: it.text,
-            actionId: '',
-            disabled:
-              (it.type === 'single-row' && numSelectedRows !== 1) ||
-              (it.type === 'multi-row' && numSelectedRows === 0)
-          }))
-        }
-      }
-    })
-
-    return html`<c-action-bar
-      .actions=${convertedActions}
-      ${ref(actionBarRef)}
-    ></c-action-bar>`
+    return html`
+      <c-action-bar .actions=${convertActions()} ${ref(actionBarRef)}>
+      </c-action-bar>
+    `
   }
 
   return render
