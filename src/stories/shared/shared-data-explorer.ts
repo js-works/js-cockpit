@@ -98,16 +98,40 @@ function sharedDataExplorerDemoImpl() {
       .selectionMode=${'multi'}
       .actions=${[
         {
+          kind: 'action',
           text: 'New',
-          type: 'general'
+          type: 'general',
+          actionId: ''
         },
         {
+          kind: 'action',
           text: 'Edit',
-          type: 'single-row'
+          type: 'single-row',
+          actionId: ''
         },
         {
+          kind: 'action',
           text: 'Delete',
-          type: 'multi-row'
+          type: 'multi-row',
+          actionId: ''
+        },
+        {
+          kind: 'action-group',
+          text: 'Export',
+          actions: [
+            {
+              kind: 'action',
+              text: 'to CSV',
+              type: 'multi-row',
+              actionId: ''
+            },
+            {
+              kind: 'action',
+              text: 'to Excel',
+              type: 'multi-row',
+              actionId: ''
+            }
+          ]
         }
       ]}
     ></c-data-explorer>

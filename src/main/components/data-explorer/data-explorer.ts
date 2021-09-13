@@ -1,12 +1,15 @@
 // external imports
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, classMap, lit, TemplateResult } from 'js-element/lit'
-import { useState } from 'js-element/hooks'
+import { classMap, createRef, html, lit, ref } from 'js-element/lit'
+import { useRefresher, useState } from 'js-element/hooks'
 
 // internal imports
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
+
+// events
+import { RowsSelectionChangeEvent } from '../../events/rows-selection-change-event'
 
 // icons
 import searchIcon from '../../icons/search.svg'
@@ -38,12 +41,14 @@ namespace DataExplorer {
       }
 
   export type Action = {
+    kind: 'action'
     text: string
     actionId: string
     type: 'general' | 'single-row' | 'multi-row'
   }
 
   export type ActionGroup = {
+    kind: 'action-group'
     text: string
 
     actions: {
@@ -52,6 +57,8 @@ namespace DataExplorer {
       type: 'general' | 'single-row' | 'multi-row'
     }[]
   }
+
+  export type Actions = (Action | ActionGroup)[]
 }
 
 // === DataExplorer ==================================================
@@ -80,12 +87,28 @@ class DataExplorer extends component() {
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
+
+  @prop
+  actions?: DataExplorer.Actions
 }
 
 function dataExplorerImpl(self: DataExplorer) {
+  const refresh = useRefresher()
+
   const [state, setState] = useState({
     data: [] as any[][] | object[]
   })
+
+  const actionBarRef = createRef<ActionBar>()
+  let numSelectedRows = 0
+
+  const onSortChange = () => {}
+
+  const onRowsSelectionChange = (ev: RowsSelectionChangeEvent) => {
+    numSelectedRows = ev.detail.rows.size
+
+    refresh()
+  }
 
   function render() {
     return html`
@@ -115,9 +138,8 @@ function dataExplorerImpl(self: DataExplorer) {
           .bordered=${false}
           .sortField=${self.sortField}
           .sortDir=${self.sortDir}
-          @c-sort-change=${(ev: any) => console.log('sort-change', ev)}
-          @c-rows-selection-change=${(ev: any) =>
-            console.log('selections-change', ev)}
+          @c-sort-change=${onSortChange}
+          @c-rows-selection-change=${onRowsSelectionChange}
         >
         </c-data-table>
         <div class="footer">
@@ -134,7 +156,40 @@ function dataExplorerImpl(self: DataExplorer) {
   }
 
   function renderActionBar() {
-    return html`<c-action-bar></c-action-bar>`
+    if (!self.actions) {
+      return null
+    }
+
+    const convertedActions: ActionBar.Actions = self.actions.map((it) => {
+      if (it.kind === 'action') {
+        return {
+          kind: 'action',
+          actionId: '',
+          text: it.text,
+          disabled:
+            (it.type === 'single-row' && numSelectedRows !== 1) ||
+            (it.type === 'multi-row' && numSelectedRows === 0)
+        }
+      } else {
+        return {
+          kind: 'action-group',
+          text: it.text,
+          actions: it.actions.map((it) => ({
+            kind: 'action',
+            text: it.text,
+            actionId: '',
+            disabled:
+              (it.type === 'single-row' && numSelectedRows !== 1) ||
+              (it.type === 'multi-row' && numSelectedRows === 0)
+          }))
+        }
+      }
+    })
+
+    return html`<c-action-bar
+      .actions=${convertedActions}
+      ${ref(actionBarRef)}
+    ></c-action-bar>`
   }
 
   return render

@@ -100,7 +100,7 @@ function dataTableImpl(self: DataTable) {
   const theadRef = createRef<HTMLElement>()
   const tbodyRef = createRef<HTMLElement>()
   const rowsSelectorRef = createRef<SlCheckbox>()
-  const selectedRows = new Set<number>([2, 3, 4, 5, 6])
+  const selectedRows = new Set<number>()
   const emitSortChange = useEmitter('c-sort-change', () => self.onSortChange)
 
   const emitRowsSelectionChange = useEmitter(
