@@ -72,8 +72,8 @@ table > tbody > tr > td {
   color: rgb(var(--sl-color-neutral-1000));
 }
 
-table > tbody > tr:nth-child(2n) td {
-  background-color: rgb(var(--sl-color-neutral-100) / 70%);
+table > tbody > tr:nth-child(even) td {
+  background-color: rgb(var(--sl-color-neutral-100));
 }
 
 .selector-column {
@@ -87,13 +87,15 @@ table > tbody > tr:nth-child(2n) td {
 
 .row > td {
   padding: 4px 5px;
-  border-color: transparent;
-  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+
+.row.selected-row {
+  border-color: rgb(var(--sl-color-primary-400));
+  border-style: solid;
+  border-width: 0.5px 0;
 }
 
 .row.selected-row > td {
   background-color: rgb(var(--sl-color-primary-200));
-  border: 0 solid rgb(var(--sl-color-primary-300));
-  border-width: 1px 0;
-  padding: 4px 5px;
 }

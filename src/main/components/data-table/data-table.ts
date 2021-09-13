@@ -1,5 +1,5 @@
 // external imports
-import { component, elem, prop, Attrs } from 'js-element'
+import { component, elem, prop, setMethods, Attrs } from 'js-element'
 
 import {
   classMap,
@@ -62,7 +62,9 @@ type HeaderCell = {
   uses: [SlCheckbox],
   impl: lit(dataTableImpl)
 })
-class DataTable extends component() {
+class DataTable extends component<{
+  reset(): void
+}>() {
   @prop
   columns: DataTable.Column[] | null = null
 
@@ -87,6 +89,7 @@ function dataTableImpl(self: DataTable) {
   const containerRef = createRef<HTMLElement>()
   const theadRef = createRef<HTMLElement>()
   const tbodyRef = createRef<HTMLElement>()
+  const rowsSelectorRef = createRef<SlCheckbox>()
   const selectedRows = new Set<number>([2, 3, 4, 5, 6])
 
   const [state, setState] = useState({})
@@ -103,6 +106,15 @@ function dataTableImpl(self: DataTable) {
     return () => resizeObserver.unobserve(container)
   })
 
+  setMethods(self, {
+    reset() {
+      if (selectedRows.size > 0) {
+        selectedRows.clear()
+        refreshSelection()
+      }
+    }
+  })
+
   function updateColumnSizes() {
     const theadHeight = theadRef.value!.offsetHeight
 
@@ -114,6 +126,20 @@ function dataTableImpl(self: DataTable) {
     `
 
     columnSizesStyles.innerText = newStyles
+  }
+
+  function toggleRowsSelection() {
+    const numRows = self.data!.length
+
+    if (numRows > selectedRows.size) {
+      for (let i = 0; i < numRows; ++i) {
+        selectedRows.add(i)
+      }
+    } else {
+      selectedRows.clear()
+    }
+
+    refreshSelection()
   }
 
   function toggleRowSelection(idx: number) {
@@ -131,8 +157,13 @@ function dataTableImpl(self: DataTable) {
       return
     }
 
+    const rowsSelector = rowsSelectorRef.value!
     const tbody = tbodyRef.value!
     const checkboxes = tbody.querySelectorAll('tr > td:first-child sl-checkbox')
+    const numRows = self.data!.length
+    const numSelectedRows = selectedRows.size
+
+    rowsSelector.checked = numSelectedRows === numRows
 
     for (let i = 0; i < self.data.length; ++i) {
       const selected = selectedRows.has(i)
@@ -166,7 +197,11 @@ function dataTableImpl(self: DataTable) {
       self.selectMode === 'single' || self.selectMode === 'multi'
         ? html`
             <th class="selector-column" rowspan=${headerCells.length}>
-              <sl-checkbox class="checkbox"></sl-checkbox>
+              <sl-checkbox
+                class="checkbox"
+                @sl-change=${toggleRowsSelection}
+                ${ref(rowsSelectorRef)}
+              ></sl-checkbox>
             </th>
           `
         : null
