@@ -1,7 +1,8 @@
-import { h } from '../../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { AppLayout, DataExplorer, ThemeProvider, Theme } from 'js-cockpit'
+
+import faker from 'faker'
 
 export default {
   title: 'data-explorer'
@@ -26,8 +27,8 @@ const columns: DataExplorer.Column[] = [
   },
   {
     type: 'column',
-    text: 'Postcode',
-    field: 'postcode',
+    text: 'Zip Code',
+    field: 'zipCode',
     sortable: true
   },
   {
@@ -35,49 +36,12 @@ const columns: DataExplorer.Column[] = [
     text: 'City',
     field: 'city',
     sortable: true
-  }
-]
-
-const data = [
-  {
-    firstName: 'Jane',
-    lastName: 'Doe',
-    street: 'Golden Avenue 11',
-    postcode: 12345,
-    city: 'New York',
-    country: 'USA'
   },
   {
-    firstName: 'John',
-    lastName: 'Doe',
-    street: 'Golden Avenue 11',
-    postcode: 12345,
-    city: 'New York',
-    country: 'USA'
-  },
-  {
-    firstName: 'Peter',
-    lastName: 'Goodyear',
-    street: 'Main Street 123',
-    postcode: 98765,
-    city: 'Los Angeles',
-    country: 'USA'
-  },
-  {
-    firstName: 'Mary',
-    lastName: 'Smith',
-    street: 'Long Road 123',
-    postcode: 45678,
-    city: 'London',
-    country: 'Great Britain'
-  },
-  {
-    firstName: 'Julia',
-    lastName: 'Mayfield',
-    street: 'Main Road 99',
-    postcode: 65432,
-    city: 'Sidney',
-    country: 'Australia'
+    type: 'column',
+    text: 'Country',
+    field: 'coutry',
+    sortable: true
   }
 ]
 
@@ -93,7 +57,7 @@ function sharedDataExplorerDemoImpl() {
     <c-data-explorer
       .title=${'Customers'}
       .columns=${columns}
-      .data=${data.slice(0, 5)}
+      .fetchItems=${fetchFakeItems}
       .sortField=${'lastName'}
       .selectionMode=${'multi'}
       .actions=${[
@@ -136,4 +100,40 @@ function sharedDataExplorerDemoImpl() {
       ]}
     ></c-data-explorer>
   `
+}
+
+const totalItemCount = 3234
+let fakeItems: Record<string, string>[] = []
+
+faker.seed(100)
+
+for (let i = 0; i < totalItemCount; ++i) {
+  fakeItems.push({
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    street: faker.address.streetName(),
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    country: faker.address.country()
+  })
+}
+
+const fetchFakeItems: DataExplorer.FetchItems = (params) => {
+  return new Promise((resolve, reject) => {
+    let items = [...fakeItems]
+
+    if (params.sortField) {
+      const sig = params.sortDir === 'asc' ? 1 : -1
+
+      items.sort((a, b) =>
+        a[params.sortField] >= b[params.sortField] ? sig : -sig
+      )
+    }
+
+    items = items.slice(params.offset, params.offset + params.count)
+
+    setTimeout(() => {
+      resolve({ items, totalItemCount })
+    }, 0)
+  })
 }

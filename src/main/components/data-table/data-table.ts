@@ -16,7 +16,7 @@ import { useAfterMount, useEmitter, useState } from 'js-element/hooks'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
 
 // events
-import { RowsSelectionChangeEvent } from '../../events/rows-selection-change-event'
+import { SelectionChangeEvent } from '../../events/selection-change-event'
 import { SortChangeEvent } from '../../events/sort-change-event'
 
 // styles
@@ -85,13 +85,13 @@ class DataTable extends component<{
   bordered = true
 
   @prop
-  data: any[][] | object[] | null = null
+  items: any[][] | object[] | null = null
 
   @prop
   onSortChange?: Listener<SortChangeEvent>
 
   @prop
-  onRowsSelectionChange?: Listener<RowsSelectionChangeEvent>
+  onSelectionChange?: Listener<SelectionChangeEvent>
 }
 
 function dataTableImpl(self: DataTable) {
@@ -103,9 +103,9 @@ function dataTableImpl(self: DataTable) {
   const selectedRows = new Set<number>()
   const emitSortChange = useEmitter('c-sort-change', () => self.onSortChange)
 
-  const emitRowsSelectionChange = useEmitter(
-    'c-rows-selection-change',
-    () => self.onRowsSelectionChange
+  const emitSelectionChange = useEmitter(
+    'c-selection-change',
+    () => self.onSelectionChange
   )
 
   columnSizesStyles.append(document.createTextNode(''))
@@ -142,7 +142,7 @@ function dataTableImpl(self: DataTable) {
     columnSizesStyles.innerText = newStyles
   }
 
-  function requestSortChange(
+  function dispatchSortChange(
     sortField: number | string,
     sortDir: 'asc' | 'desc'
   ) {
@@ -153,7 +153,7 @@ function dataTableImpl(self: DataTable) {
   }
 
   function toggleRowsSelection() {
-    const numRows = self.data!.length
+    const numRows = self.items!.length
 
     if (numRows > selectedRows.size) {
       for (let i = 0; i < numRows; ++i) {
@@ -179,25 +179,25 @@ function dataTableImpl(self: DataTable) {
   }
 
   function dispatchRowsSelectionChange() {
-    const rows = new Set(selectedRows)
+    const selection = new Set(selectedRows)
 
-    emitRowsSelectionChange({ rows })
+    emitSelectionChange({ selection })
   }
 
   function refreshSelection() {
-    if (!self.data) {
+    if (!self.items) {
       return
     }
 
     const rowsSelector = rowsSelectorRef.value!
     const tbody = tbodyRef.value!
     const checkboxes = tbody.querySelectorAll('tr > td:first-child sl-checkbox')
-    const numRows = self.data!.length
+    const numRows = self.items!.length
     const numSelectedRows = selectedRows.size
 
     rowsSelector.checked = numSelectedRows === numRows
 
-    for (let i = 0; i < self.data.length; ++i) {
+    for (let i = 0; i < self.items!.length; ++i) {
       const selected = selectedRows.has(i)
 
       if (selected) {
@@ -211,7 +211,7 @@ function dataTableImpl(self: DataTable) {
   }
 
   function render() {
-    //return html`<div class="test">xxx</div>`
+    console.log('render datatable')
     return html`
       <div class="base">
         <div class="container" ${ref(containerRef)}>
@@ -266,7 +266,7 @@ function dataTableImpl(self: DataTable) {
                       : 'asc'
                     : 'asc'
 
-                requestSortChange(sortField, sortDir)
+                dispatchSortChange(sortField, sortDir)
               }
             : null
 
@@ -304,42 +304,43 @@ function dataTableImpl(self: DataTable) {
   function renderTableBody() {
     console.log('renderTableBody')
     const { columns } = getTableHeadInfo(self.columns || [])
-    const data = self.data || []
     const rows: TemplateResult[] = []
 
-    data.forEach((rec, idx) => {
-      const selected = selectedRows.has(idx)
+    if (self.items) {
+      self.items.forEach((rec, idx) => {
+        const selected = selectedRows.has(idx)
 
-      const rowSelector =
-        self.selectionMode === 'single' || self.selectionMode === 'multi'
-          ? html`
-              <td class="selector-column">
-                <sl-checkbox
-                  type="checkbox"
-                  ?checked=${selected}
-                  @sl-change=${() => toggleRowSelection(idx)}
-                >
-                </sl-checkbox>
-              </td>
-            `
-          : null
+        const rowSelector =
+          self.selectionMode === 'single' || self.selectionMode === 'multi'
+            ? html`
+                <td class="selector-column">
+                  <sl-checkbox
+                    type="checkbox"
+                    ?checked=${selected}
+                    @sl-change=${() => toggleRowSelection(idx)}
+                  >
+                  </sl-checkbox>
+                </td>
+              `
+            : null
 
-      const cells: TemplateResult[] = []
+        const cells: TemplateResult[] = []
 
-      columns.forEach((column) => {
-        cells.push(html`<td>${renderCellContent(column, rec)}</td>`)
+        columns.forEach((column) => {
+          cells.push(html`<td>${renderCellContent(column, rec)}</td>`)
+        })
+
+        rows.push(
+          html`<tr
+            class="row ${classMap({
+              'selected-row': selected
+            })}"
+          >
+            ${rowSelector}${cells}
+          </tr>`
+        )
       })
-
-      rows.push(
-        html`<tr
-          class="row ${classMap({
-            'selected-row': selected
-          })}"
-        >
-          ${rowSelector}${cells}
-        </tr>`
-      )
-    })
+    }
 
     return html`
       <div class="xxx yyy">

@@ -1,7 +1,7 @@
 // external imports
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useRefresher, useState } from 'js-element/hooks'
+import { useAfterMount, useRefresher } from 'js-element/hooks'
 
 // internal imports
 import { ActionBar } from '../action-bar/action-bar'
@@ -9,7 +9,10 @@ import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 
 // events
-import { RowsSelectionChangeEvent } from '../../events/rows-selection-change-event'
+import { SelectionChangeEvent } from '../../events/selection-change-event'
+import { SortChangeEvent } from '../../events/sort-change-event'
+import { PageChangeEvent } from '../../events/page-change-event'
+import { PageSizeChangeEvent } from '../../events/page-size-change-event'
 
 // icons
 import searchIcon from '../../icons/search.svg'
@@ -59,6 +62,17 @@ namespace DataExplorer {
   }
 
   export type Actions = (Action | ActionGroup)[]
+
+  export type FetchItems = (params: {
+    count: number
+    offset: number
+    sortField: string
+    sortDir: 'asc' | 'desc'
+    locale: string
+  }) => Promise<{
+    items: Record<string, any>[]
+    totalItemCount: number
+  }>
 }
 
 // === DataExplorer ==================================================
@@ -90,24 +104,74 @@ class DataExplorer extends component() {
 
   @prop
   actions?: DataExplorer.Actions
+
+  @prop
+  fetchItems?: DataExplorer.FetchItems
 }
 
 function dataExplorerImpl(self: DataExplorer) {
   const refresh = useRefresher()
 
-  const [state, setState] = useState({
-    data: [] as any[][] | object[]
-  })
-
   const actionBarRef = createRef<ActionBar>()
+  const dataTableRef = createRef<DataTable>()
+  const paginationBarRef = createRef<PaginationBar>()
+
+  let pageIndex = 0
+  let pageSize = 50
+  let totalItemCount = -1
+  let sortField: string | null = null
+  let sortDir: 'asc' | 'desc' = 'asc'
+  let items: Record<string, any>[] = []
   let numSelectedRows = 0
 
-  const onSortChange = () => {}
+  const onSortChange = (ev: SortChangeEvent) => {
+    console.log(ev)
+  }
 
-  const onRowsSelectionChange = (ev: RowsSelectionChangeEvent) => {
-    numSelectedRows = ev.detail.rows.size
+  const onSelectionChange = (ev: SelectionChangeEvent) => {
+    numSelectedRows = ev.detail.selection.size
 
     actionBarRef.value!.actions = convertActions()
+  }
+
+  const onPageChange = (ev: PageChangeEvent) => {
+    pageIndex = ev.detail.pageIndex
+    fetchItems()
+  }
+
+  const onPageSizeChange = (ev: PageSizeChangeEvent) => {
+    pageSize = ev.detail.pageSize
+    pageIndex = 0
+    fetchItems()
+  }
+
+  useAfterMount(() => {
+    fetchItems()
+  })
+
+  function fetchItems() {
+    console.log(5)
+    if (!self.fetchItems) {
+      return
+    }
+    console.log(555, pageSize)
+    self
+      .fetchItems({
+        count: pageSize,
+        locale: 'de',
+        offset: pageIndex * pageSize,
+        sortField: 'lastName',
+        sortDir: 'asc'
+      })
+      .then(({ items, totalItemCount }) => {
+        Object.assign(paginationBarRef.value!, {
+          pageIndex,
+          pageSize,
+          totalItemCount
+        })
+
+        dataTableRef.value!.items = items
+      })
   }
 
   function convertActions(): ActionBar.Actions {
@@ -166,21 +230,23 @@ function dataExplorerImpl(self: DataExplorer) {
           class="table"
           .columns=${self.columns}
           .selectionMode=${self.selectionMode}
-          .data=${[...data, ...data /* , ...data, ...data, ...data*/]}
+          .data=${items}
           .bordered=${false}
           .sortField=${self.sortField}
           .sortDir=${self.sortDir}
-          @c-sort-change=${onSortChange}
-          @c-rows-selection-change=${onRowsSelectionChange}
+          .onSortChange=${onSortChange}
+          .onSelectionChange=${onSelectionChange}
+          ${ref(dataTableRef)}
         >
         </c-data-table>
         <div class="footer">
           <c-pagination-bar
-            page-index="3"
-            page-size="500"
-            total-item-count="10002"
-            .onPageChange=${(ev: any) => console.log(ev)}
-            .onPageSizeChange=${(ev: any) => console.log(ev)}
+            .pageIndex=${pageIndex}
+            .pageSize=${pageSize}
+            .totalItemCount=${totalItemCount}
+            .onPageChange=${onPageChange}
+            .onPageSizeChange=${onPageSizeChange}
+            ${ref(paginationBarRef)}
           ></c-pagination-bar>
         </div>
       </div>
@@ -200,48 +266,3 @@ function dataExplorerImpl(self: DataExplorer) {
 
   return render
 }
-
-// TODO: get rid of this ==================================================
-
-const data = [
-  {
-    firstName: 'Jane',
-    lastName: 'Doe',
-    street: 'Golden Avenue 11',
-    postcode: 12345,
-    city: 'New York',
-    country: 'USA'
-  },
-  {
-    firstName: 'John',
-    lastName: 'Doe',
-    street: 'Golden Avenue 11',
-    postcode: 12345,
-    city: 'New York',
-    country: 'USA'
-  },
-  {
-    firstName: 'Peter',
-    lastName: 'Goodyear',
-    street: 'Main Street 123',
-    postcode: 98765,
-    city: 'Los Angeles',
-    country: 'USA'
-  },
-  {
-    firstName: 'Mary',
-    lastName: 'Smith',
-    street: 'Long Road 123',
-    postcode: 45678,
-    city: 'London',
-    country: 'Great Britain'
-  },
-  {
-    firstName: 'Julia',
-    lastName: 'Mayfield',
-    street: 'Main Road 99',
-    postcode: 65432,
-    city: 'Sidney',
-    country: 'Australia'
-  }
-]
