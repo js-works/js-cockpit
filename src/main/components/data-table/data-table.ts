@@ -1,5 +1,5 @@
 // external imports
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
 
 import {
   classMap,
@@ -10,18 +10,22 @@ import {
   TemplateResult
 } from 'js-element/lit'
 
-import { useAfterMount, useStatus, useState } from 'js-element/hooks'
+import { useAfterMount, useEmitter, useState } from 'js-element/hooks'
 
 // custom elements
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
+
+// events
+import { RowsSelectionChangeEvent } from '../../events/rows-selection-change-event'
+import { SortChangeEvent } from '../../events/sort-change-event'
 
 // styles
 import dataTableStyles from './data-table.css'
 
 // icons
-import downArrowSvg from './assets/down-arrow.svg'
-import upArrowSvg from './assets/up-arrow.svg'
-import downUpArrowsSvg from './assets/down-up-arrows.svg'
+import downArrowIcon from './assets/down-arrow.svg'
+import upArrowIcon from './assets/up-arrow.svg'
+import downUpArrowsIcon from './assets/down-up-arrows.svg'
 
 // === exports =======================================================
 
@@ -59,8 +63,8 @@ type HeaderCell = {
 @elem({
   tag: 'c-data-table',
   styles: [dataTableStyles],
-  uses: [SlCheckbox],
-  impl: lit(dataTableImpl)
+  impl: lit(dataTableImpl),
+  uses: [SlCheckbox]
 })
 class DataTable extends component<{
   reset(): void
@@ -75,13 +79,19 @@ class DataTable extends component<{
   sortDir: 'asc' | 'desc' = 'asc'
 
   @prop
-  selectMode: 'single' | 'multi' | 'none' = 'none'
+  selectionMode: 'single' | 'multi' | 'none' = 'none'
 
   @prop
   bordered = true
 
   @prop
   data: any[][] | object[] | null = null
+
+  @prop
+  onSortChange?: Listener<SortChangeEvent>
+
+  @prop
+  onRowsSelectionChange?: Listener<RowsSelectionChangeEvent>
 }
 
 function dataTableImpl(self: DataTable) {
@@ -91,8 +101,12 @@ function dataTableImpl(self: DataTable) {
   const tbodyRef = createRef<HTMLElement>()
   const rowsSelectorRef = createRef<SlCheckbox>()
   const selectedRows = new Set<number>([2, 3, 4, 5, 6])
+  const emitSortChange = useEmitter('c-sort-change', () => self.onSortChange)
 
-  const [state, setState] = useState({})
+  const emitRowsSelectionChange = useEmitter(
+    'c-rows-selection-change',
+    () => self.onRowsSelectionChange
+  )
 
   columnSizesStyles.append(document.createTextNode(''))
   self.shadowRoot!.firstChild!.appendChild(columnSizesStyles)
@@ -128,6 +142,16 @@ function dataTableImpl(self: DataTable) {
     columnSizesStyles.innerText = newStyles
   }
 
+  function requestSortChange(
+    sortField: number | string,
+    sortDir: 'asc' | 'desc'
+  ) {
+    emitSortChange({
+      sortField: String(sortField),
+      sortDir
+    })
+  }
+
   function toggleRowsSelection() {
     const numRows = self.data!.length
 
@@ -140,6 +164,7 @@ function dataTableImpl(self: DataTable) {
     }
 
     refreshSelection()
+    dispatchRowsSelectionChange()
   }
 
   function toggleRowSelection(idx: number) {
@@ -150,6 +175,13 @@ function dataTableImpl(self: DataTable) {
     }
 
     refreshSelection()
+    dispatchRowsSelectionChange()
+  }
+
+  function dispatchRowsSelectionChange() {
+    const rows = new Set(selectedRows)
+
+    emitRowsSelectionChange({ rows })
   }
 
   function refreshSelection() {
@@ -194,7 +226,7 @@ function dataTableImpl(self: DataTable) {
     const { headerCells } = getTableHeadInfo(self.columns || [])
 
     const rowsSelector =
-      self.selectMode === 'single' || self.selectMode === 'multi'
+      self.selectionMode === 'single' || self.selectionMode === 'multi'
         ? html`
             <th class="selector-column" rowspan=${headerCells.length}>
               <sl-checkbox
@@ -214,19 +246,36 @@ function dataTableImpl(self: DataTable) {
 
         if (cell.sortable) {
           if (cell.field !== self.sortField) {
-            icon = downUpArrowsSvg
-          } else if (self.sortDir !== 'desc') {
-            icon = downArrowSvg
+            icon = downUpArrowsIcon
+          } else if (self.sortDir === 'desc') {
+            icon = downArrowIcon
           } else {
-            icon = upArrowSvg
+            icon = upArrowIcon
           }
         }
+
+        const onClick =
+          cell.sortable && cell.field != null
+            ? () => {
+                const sortField = cell.field!
+
+                const sortDir =
+                  sortField === self.sortField
+                    ? self.sortDir === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc'
+
+                requestSortChange(sortField, sortDir)
+              }
+            : null
 
         cells.push(html`
           <th
             colspan=${cell.colSpan}
             rowspan=${cell.rowSpan}
             class=${classMap({ sortable: cell.sortable })}
+            @click=${onClick}
           >
             <div class="content">
               ${cell.text}
@@ -262,7 +311,7 @@ function dataTableImpl(self: DataTable) {
       const selected = selectedRows.has(idx)
 
       const rowSelector =
-        self.selectMode === 'single' || self.selectMode === 'multi'
+        self.selectionMode === 'single' || self.selectionMode === 'multi'
           ? html`
               <td class="selector-column">
                 <sl-checkbox

@@ -36,6 +36,22 @@ namespace DataExplorer {
         text?: string
         columns: Column[]
       }
+
+  export type Action = {
+    text: string
+    actionId: string
+    type: 'general' | 'single-row' | 'multi-row'
+  }
+
+  export type ActionGroup = {
+    text: string
+
+    actions: {
+      text: string
+      actionId: string
+      type: 'general' | 'single-row' | 'multi-row'
+    }[]
+  }
 }
 
 // === DataExplorer ==================================================
@@ -60,7 +76,7 @@ class DataExplorer extends component() {
   sortDir: 'asc' | 'desc' = 'asc'
 
   @prop({ attr: Attrs.string })
-  selectMode: 'single' | 'multi' | 'none' = 'none'
+  selectionMode: 'single' | 'multi' | 'none' = 'none'
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
@@ -71,48 +87,57 @@ function dataExplorerImpl(self: DataExplorer) {
     data: [] as any[][] | object[]
   })
 
-  return () => html`
-    <div class="base ${classMap({ 'full-size': self.fullSize })}">
-      <div class="header">
-        <h3 class="title">${self.title}</h3>
-        <div class="actions">
-          <c-action-bar></c-action-bar>
+  function render() {
+    return html`
+      <div class="base ${classMap({ 'full-size': self.fullSize })}">
+        <div class="header">
+          <h3 class="title">${self.title}</h3>
+          <div class="actions">${renderActionBar()}</div>
+          <div class="search">
+            <sl-input size="small" placeholder="Search...">
+              <sl-icon
+                src=${searchIcon}
+                slot="prefix"
+                class="search-icon"
+              ></sl-icon>
+            </sl-input>
+            <sl-button type="primary" size="small" class="filter-button">
+              <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
+              Filter...
+            </sl-button>
+          </div>
         </div>
-        <div class="search">
-          <sl-input size="small" placeholder="Search...">
-            <sl-icon
-              src=${searchIcon}
-              slot="prefix"
-              class="search-icon"
-            ></sl-icon>
-          </sl-input>
-          <sl-button type="primary" size="small" class="filter-button">
-            <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
-            Filter...
-          </sl-button>
+        <c-data-table
+          class="table"
+          .columns=${self.columns}
+          .selectionMode=${self.selectionMode}
+          .data=${[...data, ...data /* , ...data, ...data, ...data*/]}
+          .bordered=${false}
+          .sortField=${self.sortField}
+          .sortDir=${self.sortDir}
+          @c-sort-change=${(ev: any) => console.log('sort-change', ev)}
+          @c-rows-selection-change=${(ev: any) =>
+            console.log('selections-change', ev)}
+        >
+        </c-data-table>
+        <div class="footer">
+          <c-pagination-bar
+            page-index="3"
+            page-size="500"
+            total-item-count="10002"
+            .onPageChange=${(ev: any) => console.log(ev)}
+            .onPageSizeChange=${(ev: any) => console.log(ev)}
+          ></c-pagination-bar>
         </div>
       </div>
-      <c-data-table
-        class="table"
-        .columns=${self.columns}
-        .selectMode=${self.selectMode}
-        .data=${[...data, ...data /* , ...data, ...data, ...data*/]}
-        .bordered=${false}
-        .sortField=${self.sortField}
-        .sortDir=${self.sortDir}
-      >
-      </c-data-table>
-      <div class="footer">
-        <c-pagination-bar
-          page-index="3"
-          page-size="500"
-          total-item-count="10002"
-          .onPageChange=${(ev: any) => console.log(ev)}
-          .onPageSizeChange=${(ev: any) => console.log(ev)}
-        ></c-pagination-bar>
-      </div>
-    </div>
-  `
+    `
+  }
+
+  function renderActionBar() {
+    return html`<c-action-bar></c-action-bar>`
+  }
+
+  return render
 }
 
 // TODO: get rid of this ==================================================

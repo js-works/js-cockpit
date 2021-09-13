@@ -95,7 +95,21 @@ function sharedDataExplorerDemoImpl() {
       .columns=${columns}
       .data=${data.slice(0, 5)}
       .sortField=${'lastName'}
-      .selectMode=${'multi'}
+      .selectionMode=${'multi'}
+      .actions=${[
+        {
+          text: 'New',
+          type: 'general'
+        },
+        {
+          text: 'Edit',
+          type: 'single-row'
+        },
+        {
+          text: 'Delete',
+          type: 'multi-row'
+        }
+      ]}
     ></c-data-explorer>
   `
 }
