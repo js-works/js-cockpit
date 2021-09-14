@@ -71,9 +71,7 @@ type HeaderCell = {
   impl: lit(dataTableImpl),
   uses: [SlCheckbox]
 })
-class DataTable extends component<{
-  reset(): void
-}>() {
+class DataTable extends component() {
   @prop
   columns: DataTable.Column[] | null = null
 
@@ -135,15 +133,6 @@ function dataTableImpl(self: DataTable) {
   useAfterUpdate(() => {
     refreshSelection()
     dispatchSelectionChange()
-  })
-
-  setMethods(self, {
-    reset() {
-      if (selectedRows.size > 0) {
-        selectedRows.clear()
-        refreshSelection()
-      }
-    }
   })
 
   function updateColumnSizes() {

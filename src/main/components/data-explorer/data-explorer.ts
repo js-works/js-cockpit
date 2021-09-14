@@ -12,10 +12,6 @@ import { SortChangeEvent } from '../../events/sort-change-event'
 import { PageChangeEvent } from '../../events/page-change-event'
 import { PageSizeChangeEvent } from '../../events/page-size-change-event'
 
-// icons
-import searchIcon from '../../icons/search.svg'
-import filterIcon from '../../icons/filter.svg'
-
 // styles
 import dataExplorerStyles from './data-explorer.css'
 
@@ -267,20 +263,9 @@ function dataExplorerImpl(self: DataExplorer) {
           <h3 class="title">${self.title}</h3>
           <div class="actions">${renderActionBar()}</div>
           <div class="search">
-            <sl-input size="small" placeholder="Search...">
-              <sl-icon
-                src=${searchIcon}
-                slot="prefix"
-                class="search-icon"
-              ></sl-icon>
-            </sl-input>
-            <sl-button type="primary" size="small" class="filter-button">
-              <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
-              Filter...
-            </sl-button>
+            <slot name="search"></slot>
           </div>
         </div>
-        <slot name="filters"></slot>
         <c-data-table
           class="table"
           .columns=${self.columns}

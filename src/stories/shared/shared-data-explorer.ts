@@ -3,6 +3,7 @@ import { html, lit } from 'js-element/lit'
 import {
   AppLayout,
   DataExplorer,
+  SearchBox,
   ThemeProvider,
   Theme,
   TextField
@@ -53,7 +54,7 @@ const columns: DataExplorer.Column[] = [
 
 @elem({
   tag: 'shared-data-explorer',
-  uses: [AppLayout, DataExplorer],
+  uses: [AppLayout, DataExplorer, SearchBox],
   impl: lit(sharedDataExplorerDemoImpl)
 })
 export class SharedDataExplorer extends component() {}
@@ -106,6 +107,7 @@ function sharedDataExplorerDemoImpl() {
         }
       ]}
     >
+      <c-search-box slot="search"></c-search-box>
     </c-data-explorer>
   `
 }
