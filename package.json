@@ -40,16 +40,16 @@
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
-    "esbuild": "^0.12.26",
+    "esbuild": "^0.12.28",
     "faker": "^5.5.3",
     "remixicon": "^2.5.0",
     "svg-url-loader": "^7.1.1",
-    "terser": "^5.7.2",
+    "terser": "^5.8.0",
     "typescript": "^4.4.3"
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.51",
-    "js-element": "^0.0.224",
+    "js-element": "^0.0.228",
     "lit-html": "^2.0.0-rc.5"
   }
 }

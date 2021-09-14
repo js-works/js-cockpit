@@ -10,7 +10,12 @@ import {
   TemplateResult
 } from 'js-element/lit'
 
-import { useAfterMount, useEmitter, useState } from 'js-element/hooks'
+import {
+  useAfterUpdate,
+  useAfterMount,
+  useBeforeUpdate,
+  useEmitter
+} from 'js-element/hooks'
 
 // custom elements
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
@@ -99,6 +104,7 @@ function dataTableImpl(self: DataTable) {
   const containerRef = createRef<HTMLElement>()
   const theadRef = createRef<HTMLElement>()
   const tbodyRef = createRef<HTMLElement>()
+  const scrollPaneRef = createRef<HTMLElement>()
   const rowsSelectorRef = createRef<SlCheckbox>()
   const selectedRows = new Set<number>()
   const emitSortChange = useEmitter('c-sort-change', () => self.onSortChange)
@@ -118,6 +124,17 @@ function dataTableImpl(self: DataTable) {
     resizeObserver.observe(container)
 
     return () => resizeObserver.unobserve(container)
+  })
+
+  useBeforeUpdate(() => {
+    selectedRows.clear()
+    scrollPaneRef.value!.scroll({ top: 0, left: 0 })
+  })
+
+  // TODO - this is ugly!!!
+  useAfterUpdate(() => {
+    refreshSelection()
+    dispatchSelectionChange()
   })
 
   setMethods(self, {
@@ -164,7 +181,7 @@ function dataTableImpl(self: DataTable) {
     }
 
     refreshSelection()
-    dispatchRowsSelectionChange()
+    dispatchSelectionChange()
   }
 
   function toggleRowSelection(idx: number) {
@@ -175,10 +192,10 @@ function dataTableImpl(self: DataTable) {
     }
 
     refreshSelection()
-    dispatchRowsSelectionChange()
+    dispatchSelectionChange()
   }
 
-  function dispatchRowsSelectionChange() {
+  function dispatchSelectionChange() {
     const selection = new Set(selectedRows)
 
     emitSelectionChange({ selection })
@@ -342,7 +359,7 @@ function dataTableImpl(self: DataTable) {
 
     return html`
       <div class="xxx yyy">
-        <div class="scroll-pane">
+        <div class="scroll-pane" ${ref(scrollPaneRef)}>
           <table class="body-table">
             <tbody ${ref(tbodyRef)}>
               ${rows}

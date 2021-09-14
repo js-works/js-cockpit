@@ -1,6 +1,6 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useAfterMount, useRefresher } from 'js-element/hooks'
+import { useAfterMount, useOnInit, useRefresher } from 'js-element/hooks'
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
@@ -64,7 +64,7 @@ namespace DataExplorer {
   export type FetchItems = (params: {
     count: number
     offset: number
-    sortField: string
+    sortField: string | number | null
     sortDir: 'asc' | 'desc'
     locale: string
   }) => Promise<{
@@ -93,10 +93,10 @@ class DataExplorer extends component() {
   columns: DataExplorer.Column[] | null = null
 
   @prop
-  sortField: number | string | null = null
+  initialSortField: number | string | null = null
 
   @prop
-  sortDir: 'asc' | 'desc' = 'asc'
+  initialSortDir: 'asc' | 'desc' = 'asc'
 
   @prop({ attr: Attrs.string })
   selectionMode: 'single' | 'multi' | 'none' = 'none'
@@ -112,8 +112,7 @@ class DataExplorer extends component() {
 }
 
 function dataExplorerImpl(self: DataExplorer) {
-  const refresh = useRefresher()
-  const { t } = useI18n('js-cockpit', texts)
+  const { i18n, t } = useI18n('js-cockpit', texts)
 
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
@@ -123,7 +122,7 @@ function dataExplorerImpl(self: DataExplorer) {
   let pageIndex = 0
   let pageSize = 50
   let totalItemCount = -1
-  let sortField: string | null = null
+  let sortField: string | number | null = null
   let sortDir: 'asc' | 'desc' = 'asc'
   let items: Record<string, any>[] = []
   let numSelectedRows = 0
@@ -131,7 +130,10 @@ function dataExplorerImpl(self: DataExplorer) {
   let timeoutId: any = null
 
   const onSortChange = (ev: SortChangeEvent) => {
-    console.log(ev)
+    sortField = ev.detail.sortField
+    sortDir = ev.detail.sortDir
+
+    fetchItems({ pageIndex: 0, sortField, sortDir })
   }
 
   const onSelectionChange = (ev: SelectionChangeEvent) => {
@@ -142,20 +144,45 @@ function dataExplorerImpl(self: DataExplorer) {
 
   const onPageChange = (ev: PageChangeEvent) => {
     pageIndex = ev.detail.pageIndex
-    fetchItems()
+    fetchItems({ pageIndex })
   }
 
   const onPageSizeChange = (ev: PageSizeChangeEvent) => {
-    pageSize = ev.detail.pageSize
-    pageIndex = 0
-    fetchItems()
+    fetchItems({ pageIndex: 0, pageSize: ev.detail.pageSize })
   }
 
-  useAfterMount(() => {
-    fetchItems()
+  useOnInit(() => {
+    sortField = self.initialSortField
+    sortDir = self.initialSortDir
   })
 
-  function fetchItems() {
+  useAfterMount(() => {
+    fetchItems({
+      pageIndex,
+      pageSize,
+      sortField,
+      sortDir
+    })
+  })
+
+  function fetchItems(
+    params: Partial<{
+      pageIndex: number
+      pageSize: number
+      sortField: string | number | null
+      sortDir: 'asc' | 'desc'
+    }>
+  ) {
+    const par = Object.assign(
+      {
+        pageIndex,
+        pageSize,
+        sortField,
+        sortDir
+      },
+      params
+    )
+
     if (!self.fetchItems) {
       return
     }
@@ -167,19 +194,28 @@ function dataExplorerImpl(self: DataExplorer) {
 
     self
       .fetchItems({
-        count: pageSize,
-        locale: 'de',
-        offset: pageIndex * pageSize,
-        sortField: 'lastName',
-        sortDir: 'asc'
+        count: par.pageSize,
+        locale: i18n.getLocale(),
+        offset: par.pageIndex * par.pageSize,
+        sortField: par.sortField,
+        sortDir: par.sortDir
       })
-      .then(({ items, totalItemCount }) => {
+      .then((result) => {
+        pageIndex = par.pageIndex
+        pageSize = par.pageSize
+        totalItemCount = result.totalItemCount
+        sortField = par.sortField
+        sortDir = par.sortDir
+        items = result.items
+
         Object.assign(paginationBarRef.value!, {
           pageIndex,
           pageSize,
           totalItemCount
         })
 
+        dataTableRef.value!.sortField = sortField
+        dataTableRef.value!.sortDir = sortDir
         dataTableRef.value!.items = items
 
         if (timeoutId) {
@@ -251,8 +287,8 @@ function dataExplorerImpl(self: DataExplorer) {
           .selectionMode=${self.selectionMode}
           .data=${items}
           .bordered=${false}
-          .sortField=${self.sortField}
-          .sortDir=${self.sortDir}
+          .sortField=${self.initialSortField}
+          .sortDir=${self.initialSortDir}
           .onSortChange=${onSortChange}
           .onSelectionChange=${onSelectionChange}
           ${ref(dataTableRef)}
