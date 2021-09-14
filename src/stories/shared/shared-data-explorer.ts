@@ -47,7 +47,7 @@ const columns: DataExplorer.Column[] = [
   {
     type: 'column',
     text: 'Country',
-    field: 'coutry',
+    field: 'country',
     sortable: true
   }
 ]
@@ -107,7 +107,13 @@ function sharedDataExplorerDemoImpl() {
         }
       ]}
     >
-      <c-search-box slot="search"></c-search-box>
+      <c-search-box slot="search">
+        <c-text-field label="First name"></c-text-field>
+        <c-text-field label="Last name"></c-text-field>
+        <c-text-field label="Zip code"></c-text-field>
+        <c-text-field label="City"></c-text-field>
+        <c-text-field label="Country"></c-text-field>
+      </c-search-box>
     </c-data-explorer>
   `
 }

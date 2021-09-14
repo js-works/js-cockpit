@@ -272,7 +272,7 @@ class Theme {
       "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
 
     // TODO!!!!
-    tokens['input-placeholder-color'] = 'var(--sl-color-neutral-600)'
+    tokens['input-placeholder-color'] = 'red'
     tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
 
     /*

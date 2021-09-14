@@ -1,8 +1,42 @@
 .base {
   display: flex;
-  flex-direction: row;
   gap: 2px;
   font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
   white-space: norwap;
   user-select: none;
+}
+
+sl-button.filter-button::part(prefix) {
+  font-size: var(--sl-font-size-large);
+}
+
+sl-button.filter-button::part(label) {
+  font-size: 110%;
+}
+
+.filters-header {
+  font-size: 120%;
+  padding: 0.75rem 1rem 0 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 1rem 1rem;
+}
+
+.filters-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: right;
+  padding: 4px 10px 5px 10px;
+  background-color: rgb(var(--sl-color-neutral-50));
+  border: 0 solid rgb(var(--sl-color-neutral-200));
+  border-width: 1px 0 0 0;
+}
+
+sl-button.button::part(label) {
+  font-size: 120%;
 }
