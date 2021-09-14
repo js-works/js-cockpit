@@ -1,12 +1,10 @@
-// external imports
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useAfterMount, useRefresher } from 'js-element/hooks'
-
-// internal imports
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
+import { useI18n } from '../../utils/hooks'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -77,6 +75,10 @@ namespace DataExplorer {
 
 // === DataExplorer ==================================================
 
+const texts = {
+  'loading-message': 'Loading...'
+}
+
 @elem({
   tag: 'c-data-explorer',
   styles: [dataExplorerStyles],
@@ -111,6 +113,7 @@ class DataExplorer extends component() {
 
 function dataExplorerImpl(self: DataExplorer) {
   const refresh = useRefresher()
+  const { t } = useI18n('js-cockpit', texts)
 
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
@@ -125,6 +128,7 @@ function dataExplorerImpl(self: DataExplorer) {
   let items: Record<string, any>[] = []
   let numSelectedRows = 0
   let showOverlay = false
+  let timeoutId: any = null
 
   const onSortChange = (ev: SortChangeEvent) => {
     console.log(ev)
@@ -156,8 +160,10 @@ function dataExplorerImpl(self: DataExplorer) {
       return
     }
 
-    showOverlay = true
-    overlayRef.value!.classList.remove('hide')
+    timeoutId = setTimeout(() => {
+      showOverlay = true
+      overlayRef.value!.classList.replace('overlay-hide', 'overlay-show')
+    }, 200)
 
     self
       .fetchItems({
@@ -176,8 +182,13 @@ function dataExplorerImpl(self: DataExplorer) {
 
         dataTableRef.value!.items = items
 
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+
         showOverlay = false
-        overlayRef.value!.classList.add('hide')
+        overlayRef.value!.classList.replace('overlay-show', 'overlay-hide')
       })
   }
 
@@ -258,15 +269,15 @@ function dataExplorerImpl(self: DataExplorer) {
           ></c-pagination-bar>
         </div>
         <div
-          class="overlay ${classMap({ hide: !showOverlay })}"
+          class="overlay ${classMap({
+            'overlay-show': showOverlay,
+            'overlay-hide': !showOverlay
+          })}"
           ${ref(overlayRef)}
         >
           <div class="overlay-top"></div>
           <div class="overlay-center">
-            <div class="loading-message">
-              Loading data.<br />
-              Please wait ...
-            </div>
+            <div class="loading-message">${t('loading-message')}</div>
             <sl-spinner class="loading-spinner"></sl-spinner>
           </div>
           <div class="overlay-bottom"></div>

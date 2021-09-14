@@ -108,6 +108,10 @@
   --indicator-color: rgb(var(--sl-color-neutral-100));
 }
 
-.hide {
+.overlay-show {
+  display: flex;
+}
+
+.overlay-hide {
   display: none;
 }

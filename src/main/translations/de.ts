@@ -11,6 +11,10 @@ export default {
       'c-login-form.log-in': 'Anmelden'
     },
 
+    'c-data-explorer': {
+      'loading-message': 'Lade Daten...'
+    },
+
     'c-pagination-bar': {
       'items-x-to-y-of-z': '{0} - {1} / {2}',
       'item-x-of-y': '{0} / {1}',

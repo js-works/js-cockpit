@@ -211,7 +211,6 @@ function dataTableImpl(self: DataTable) {
   }
 
   function render() {
-    console.log('render datatable')
     return html`
       <div class="base">
         <div class="container" ${ref(containerRef)}>
@@ -302,7 +301,6 @@ function dataTableImpl(self: DataTable) {
   }
 
   function renderTableBody() {
-    console.log('renderTableBody')
     const { columns } = getTableHeadInfo(self.columns || [])
     const rows: TemplateResult[] = []
 
