@@ -1,4 +1,5 @@
 .base {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0 6px;
@@ -64,4 +65,49 @@
   border: 0 solid rgb(var(--sl-color-neutral-300));
   border-width: 1px 0 0 0;
   padding: 1px 0 2px 0;
+}
+
+.overlay {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  height: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30000;
+  background-color: rgba(0 0 0 / 10%);
+}
+
+.overlay-top {
+  flex-grow: 3;
+}
+
+.overlay-center {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: rgb(var(--sl-color-neutral-600));
+  padding: 1rem 1.7rem;
+  border-radius: 2px;
+}
+
+.overlay-bottom {
+  flex-grow: 4;
+}
+
+.loading-message {
+  color: rgb(var(--sl-color-neutral-0));
+  font-size: var(--sl-font-size-medium);
+}
+
+.loading-spinner {
+  font-size: 1.8rem;
+  --indicator-color: rgb(var(--sl-color-neutral-100));
+}
+
+.hide {
+  display: none;
 }

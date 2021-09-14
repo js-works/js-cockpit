@@ -115,6 +115,7 @@ function dataExplorerImpl(self: DataExplorer) {
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
   const paginationBarRef = createRef<PaginationBar>()
+  const overlayRef = createRef<HTMLElement>()
 
   let pageIndex = 0
   let pageSize = 50
@@ -123,6 +124,7 @@ function dataExplorerImpl(self: DataExplorer) {
   let sortDir: 'asc' | 'desc' = 'asc'
   let items: Record<string, any>[] = []
   let numSelectedRows = 0
+  let showOverlay = false
 
   const onSortChange = (ev: SortChangeEvent) => {
     console.log(ev)
@@ -150,11 +152,13 @@ function dataExplorerImpl(self: DataExplorer) {
   })
 
   function fetchItems() {
-    console.log(5)
     if (!self.fetchItems) {
       return
     }
-    console.log(555, pageSize)
+
+    showOverlay = true
+    overlayRef.value!.classList.remove('hide')
+
     self
       .fetchItems({
         count: pageSize,
@@ -171,6 +175,9 @@ function dataExplorerImpl(self: DataExplorer) {
         })
 
         dataTableRef.value!.items = items
+
+        showOverlay = false
+        overlayRef.value!.classList.add('hide')
       })
   }
 
@@ -226,6 +233,7 @@ function dataExplorerImpl(self: DataExplorer) {
             </sl-button>
           </div>
         </div>
+        <slot name="filters"></slot>
         <c-data-table
           class="table"
           .columns=${self.columns}
@@ -248,6 +256,20 @@ function dataExplorerImpl(self: DataExplorer) {
             .onPageSizeChange=${onPageSizeChange}
             ${ref(paginationBarRef)}
           ></c-pagination-bar>
+        </div>
+        <div
+          class="overlay ${classMap({ hide: !showOverlay })}"
+          ${ref(overlayRef)}
+        >
+          <div class="overlay-top"></div>
+          <div class="overlay-center">
+            <div class="loading-message">
+              Loading data.<br />
+              Please wait ...
+            </div>
+            <sl-spinner class="loading-spinner"></sl-spinner>
+          </div>
+          <div class="overlay-bottom"></div>
         </div>
       </div>
     `

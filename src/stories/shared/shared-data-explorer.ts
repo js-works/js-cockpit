@@ -1,6 +1,12 @@
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { AppLayout, DataExplorer, ThemeProvider, Theme } from 'js-cockpit'
+import {
+  AppLayout,
+  DataExplorer,
+  ThemeProvider,
+  Theme,
+  TextField
+} from 'js-cockpit'
 
 import faker from 'faker'
 
@@ -98,7 +104,8 @@ function sharedDataExplorerDemoImpl() {
           ]
         }
       ]}
-    ></c-data-explorer>
+    >
+    </c-data-explorer>
   `
 }
 
@@ -134,6 +141,6 @@ const fetchFakeItems: DataExplorer.FetchItems = (params) => {
 
     setTimeout(() => {
       resolve({ items, totalItemCount })
-    }, 0)
+    }, 1000)
   })
 }
