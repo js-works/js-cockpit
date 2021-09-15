@@ -47,6 +47,7 @@ type I18n = Readonly<{
     mapper: (self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>
   ): void
 
+  getLocale(elem: HTMLElement): string
   addTexts(locale: string, texts: I18n.Texts): void
 }>
 
@@ -423,6 +424,7 @@ const I18n: I18n = Object.freeze({
     i18nCtrl.setBehavior(Object.assign(self, mapper(self, baseBehavior)))
   },
 
+  getLocale: i18nCtrl.determineLocale,
   addTexts: dict.addTexts
 })
 

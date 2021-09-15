@@ -97,8 +97,6 @@ function brandDemoImpl() {
 
 export const brand = () => h('brand-demo')
 
-/*
-Dialogs.prompt('Please enter your telephone number', '124').then((result) =>
+Dialogs.info('Please enter your telephone number', 'Info').then((result) =>
   alert(result)
 )
-*/

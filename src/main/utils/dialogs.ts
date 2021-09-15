@@ -5,6 +5,7 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import { ThemeProvider } from '../components/theme-provider/theme-provider'
 
+// icons
 import infoIcon from '../icons/info-circle.svg'
 import warningIcon from '../icons/exclamation-circle.svg'
 import errorIcon from '../icons/exclamation-triangle.svg'
@@ -12,6 +13,8 @@ import questionIcon from '../icons/question-circle.svg'
 import promptIcon from '../icons/keyboard.svg'
 
 // === types =========================================================
+
+// === styles ========================================================
 
 const styles = `
   ._base_ {
@@ -29,7 +32,15 @@ const styles = `
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
     padding: 0;
-    --header-spacing: 1rem;
+  }
+
+  ._dialog_::part(title) {
+    padding-bottom: 0.5rem;
+  }
+  
+  ._dialog_::part(body) {
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
   }
 
   ._dialog_::part(close-button) {
@@ -92,7 +103,7 @@ function info(arg1: any, arg2?: any, arg3?: any): Promise<void> {
     title: arg3 || 'Information',
     message: arg2 || '',
     parent: arg1 || document.body,
-    buttons: ['Okay']
+    buttons: ['OK']
   })
 }
 
@@ -115,7 +126,7 @@ function warn(arg1: any, arg2?: any, arg3?: any): Promise<void> {
     title: arg3 || 'Warning',
     message: arg2 || '',
     parent: arg1 || document.body,
-    buttons: ['Okay']
+    buttons: ['OK']
   })
 }
 
@@ -138,7 +149,7 @@ function error(arg1: any, arg2?: any, arg3?: any): Promise<void> {
     title: arg3 || 'Error',
     message: arg2 || '',
     parent: arg1 || document.body,
-    buttons: ['Okay']
+    buttons: ['OK']
   })
 }
 
@@ -162,7 +173,7 @@ function confirm(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
     message: arg2 || '',
     parent: arg1 || document.body,
     mapResult: (data) => data.button === '1',
-    buttons: ['Cancel', 'Okay']
+    buttons: ['Cancel', 'OK']
   })
 }
 
@@ -201,7 +212,7 @@ function prompt(
     content: inputField,
     parent: arg1 || document.body,
     mapResult: (data) => (data.button === '0' ? null : data.input),
-    buttons: ['Cancel', 'Okay']
+    buttons: ['Cancel', 'OK']
   })
 }
 
