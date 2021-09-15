@@ -98,7 +98,7 @@ function brandDemoImpl() {
 export const brand = () => h('brand-demo')
 
 /*
-Dialogs.confirm({
-  message: 'Are you sure that you want to delete file "my-file.txt"?'
-}).then((result) => alert(result))
+Dialogs.prompt('Please enter your telephone number', '124').then((result) =>
+  alert(result)
+)
 */
