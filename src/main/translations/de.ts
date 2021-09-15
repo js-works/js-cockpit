@@ -1,5 +1,16 @@
 export default {
   'js-cockpit': {
+    dialogs: {
+      ok: 'OK',
+      cancel: 'Abbrechen',
+      information: 'Information',
+      warning: 'Warnung',
+      error: 'Fehler',
+      input: 'Eingabe',
+      confirmation: 'Bestätigung',
+      approval: 'Zustimmung'
+    },
+
     'c-login-form': {
       'login-intro-headline': 'Anmeldung',
       'login-intro-text':

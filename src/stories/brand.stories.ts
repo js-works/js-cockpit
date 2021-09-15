@@ -2,7 +2,6 @@ import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Brand } from 'js-cockpit'
-import { Dialogs } from '../main/utils/dialogs'
 
 export default {
   title: 'brand'
@@ -96,7 +95,9 @@ function brandDemoImpl() {
 }
 
 export const brand = () => h('brand-demo')
-
-Dialogs.info('Please enter your telephone number', 'Info').then((result) =>
+/*
+document.documentElement.lang = 'de'
+Dialogs.error('Please enter your telephone number').then((result) =>
   alert(result)
 )
+*/

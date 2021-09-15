@@ -5,6 +5,7 @@ import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { useI18n } from '../../utils/hooks'
+import { Dialogs } from '../../utils/dialogs'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -109,7 +110,6 @@ class DataExplorer extends component() {
 
 function dataExplorerImpl(self: DataExplorer) {
   const { i18n, t } = useI18n('js-cockpit', texts)
-
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
   const paginationBarRef = createRef<PaginationBar>()
