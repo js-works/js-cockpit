@@ -48,7 +48,7 @@ export class SharedCockpit extends component() {}
 
 function sharedCockpitImpl() {
   return () => html`
-    <c-cockpit .theme=${Theme.default}>
+    <c-cockpit .theme=${Theme.coral}>
       <c-brand
         slot="header-start"
         class="orangered"

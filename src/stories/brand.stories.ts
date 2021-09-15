@@ -2,6 +2,7 @@ import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Brand } from 'js-cockpit'
+import { Dialogs } from '../main/utils/dialogs'
 
 export default {
   title: 'brand'
@@ -95,3 +96,9 @@ function brandDemoImpl() {
 }
 
 export const brand = () => h('brand-demo')
+
+/*
+Dialogs.confirm({
+  message: 'Are you sure that you want to delete file "my-file.txt"?'
+}).then((result) => alert(result))
+*/
