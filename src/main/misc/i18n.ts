@@ -60,7 +60,7 @@ namespace I18n {
     getText(
       locale: string,
       textId: string,
-      baseText?: string | null,
+      fallbackText?: string | null,
       replacements?: string[] | null
     ): string | null
 
@@ -82,7 +82,7 @@ namespace I18n {
 
     getText(
       textId: string,
-      baseText?: string | null,
+      fallbackText?: string | null,
       replacements?: string[] | null
     ): string
 
@@ -200,8 +200,8 @@ function createFacade(
   const facade: I18n.Facade = {
     getLocale,
 
-    getText(textId: string, baseText?: string, replacements?: any) {
-      let ret = getBehavior().getText(getLocale(), textId, baseText) || ''
+    getText(textId: string, fallbackText?: string, replacements?: any) {
+      let ret = getBehavior().getText(getLocale(), textId, fallbackText) || ''
 
       if (arguments.length > 2) {
         if (Array.isArray(replacements)) {
@@ -270,15 +270,15 @@ function createFacade(
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  getText(locale, textId, baseText?): string | null {
+  getText(locale, textId, fallbackText?): string | null {
     let ret = dict.getText(locale, textId)
 
     if (
       ret === null &&
-      typeof baseText === 'string' &&
+      typeof fallbackText === 'string' &&
       locale === DEFAULT_LOCALE
     ) {
-      ret = baseText
+      ret = fallbackText
     }
 
     return ret
@@ -492,9 +492,11 @@ function createEmitter<T>(): Emitter<T> {
 
 I18n.customize((self, base) => {
   return {
-    getText(locale, textId, baseText?, replacements?) {
+    getText(locale, textId, fallbackText?, replacements?) {
       return (
-        base.getText(locale, textId, baseText, replacements) ?? baseText ?? null
+        base.getText(locale, textId, fallbackText, replacements) ??
+        fallbackText ??
+        null
       )
     }
   }
