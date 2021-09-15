@@ -44,7 +44,10 @@ type I18n = Readonly<{
   ): I18n.Facade
 
   customize(
-    mapper: (self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>
+    ...mappers: ((
+      self: I18n.Behavior,
+      prev: I18n.Behavior
+    ) => Partial<I18n.Behavior>)[]
   ): void
 
   getLocale(elem: HTMLElement): string
@@ -417,11 +420,18 @@ const I18n: I18n = Object.freeze({
   },
 
   customize(
-    mapper: (self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>
+    ...mappers: ((
+      self: I18n.Behavior,
+      base: I18n.Behavior
+    ) => Partial<I18n.Behavior>)[]
   ): void {
     const self = Object.assign({}, baseBehavior)
 
-    i18nCtrl.setBehavior(Object.assign(self, mapper(self, baseBehavior)))
+    mappers.forEach((mapper) => {
+      Object.assign(self, mapper(self, Object.assign({}, self)))
+    })
+
+    i18nCtrl.setBehavior(self)
   },
 
   getLocale: i18nCtrl.determineLocale,

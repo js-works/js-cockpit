@@ -26,8 +26,6 @@ export default {
   title: 'cockpit'
 }
 
-document.documentElement.lang = 'de'
-
 const demo1Styles = `
   .orange {
     padding: 4px 8px;

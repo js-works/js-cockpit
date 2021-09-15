@@ -47,9 +47,9 @@ function brandImpl(self: Brand) {
 
     self.onclick = () =>
       Dialogs.approve(self, {
-        message: 'Are you really sure that you want to delete the how project?',
-        okText: 'Delete file'
-        //cancelText: 'Dismiss'
+        message:
+          'Are you really sure that you want to delete the whole project?',
+        okText: 'Delete File'
       })
 
     return html`

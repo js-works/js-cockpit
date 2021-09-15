@@ -119,7 +119,7 @@ const styles = `
   ._header_ {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.7rem;
     font-size: var(--sl-font-size-large);
   }
 
