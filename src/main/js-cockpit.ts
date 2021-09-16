@@ -28,7 +28,8 @@ export { UserMenu } from './components/user-menu/user-menu'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
-// theming
+// misc
+export { Dialogs } from './misc/dialogs'
 export { Theme } from './misc/theming'
 
 // translations

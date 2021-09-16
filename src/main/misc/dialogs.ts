@@ -3,7 +3,8 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
 import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { I18n } from '../misc/i18n'
+import { FocusTrap } from '@a11y/focus-trap'
+import { I18n } from './i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -78,16 +79,21 @@ const styles = `
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
     padding: 0;
-    user-select: none;
   }
 
   ._dialog_::part(title) {
     padding-bottom: 0.5rem;
+    user-select: none;
   }
   
   ._dialog_::part(body) {
     padding-top: 0.5rem;
     padding-bottom: 0.25rem;
+    user-select: none;
+  }
+  
+  ._dialog_::part(footer) {
+    user-select: none;
   }
 
   ._dialog_::part(close-button) {
@@ -194,7 +200,7 @@ function warn(arg1: any, arg2?: any, arg3?: any): Promise<void> {
   }
 
   if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
-    return info(arg1, {
+    return warn(arg1, {
       message: arg2,
       title: arg3
     })
@@ -309,6 +315,7 @@ function confirm(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
     icon: confirmationIcon,
     title: params.title || translate('confirmation'),
     message: params.message || '',
+    mapResult: ({ button }) => button === '1',
 
     buttons: [
       {
@@ -362,6 +369,7 @@ function approve(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
     icon: approvalIcon,
     title: params.title || translate('approval'),
     message: params.message || '',
+    mapResult: ({ button }) => button === '1',
 
     buttons: [
       {
@@ -426,6 +434,8 @@ function prompt(
   const inputField = document.createElement('sl-input')
   inputField.name = 'input'
   inputField.value = params.value || ''
+  inputField.size = 'small'
+  inputField.setAttribute('autofocus', '')
 
   return showDialog(parent, (translate) => ({
     type: 'normal',
@@ -433,6 +443,7 @@ function prompt(
     title: params.title || translate('input'),
     message: params.message || '',
     content: inputField,
+    mapResult: ({ button, input }) => (button === '0' ? null : input),
 
     buttons: [
       {
@@ -478,20 +489,22 @@ function showDialog<T = void>(
   }
 
   // required custom elements
-  void (SlButton || SlForm || SlIcon || SlInput || SlDialog)
+  void (FocusTrap || SlButton || SlForm || SlIcon || SlInput || SlDialog)
 
   container.innerHTML = `
     <style></style>
     <sl-form class="_form_">
-      <sl-dialog open class="_dialog_">
-        <div slot="label" class="_header_">
-          <sl-icon class="_icon_"></sl-icon>
-          <div class="_title_"></div>
-        </div>
-        <div class="_message_"></div>
-        <div class="_content_"></div>
-        <div slot="footer" class="_buttons_"></div>
-      </sl-dialog>
+      <focus-trap>
+        <sl-dialog open class="_dialog_">
+          <div slot="label" class="_header_">
+            <sl-icon class="_icon_"></sl-icon>
+            <div class="_title_"></div>
+          </div>
+          <div class="_message_"></div>
+          <div class="_content_"></div>
+          <div slot="footer" class="_buttons_"></div>
+        </sl-dialog>
+      </focus-trap>
     </sl-form>
   `
 
@@ -517,6 +530,7 @@ function showDialog<T = void>(
 
     parent.removeEventListener('keydown', onKeyDown)
     container.remove()
+    console.log('data', data)
     emitResult(params.mapResult?.(data))
   })
 
@@ -538,7 +552,6 @@ function showDialog<T = void>(
   icon.src = params.icon
 
   setText(styles, 'style')
-  ;(parent.shadowRoot || parent).appendChild(container)
 
   const buttonBox = container.querySelector('._buttons_')!
   const hiddenField = document.createElement('input')
@@ -547,10 +560,16 @@ function showDialog<T = void>(
   hiddenField.name = 'button'
   buttonBox.append(hiddenField)
 
+  const hasPrimaryButton = params.buttons.some((it) => it.type === 'primary')
+
   params.buttons.forEach(({ text, type = 'default' }, idx) => {
     const button: SlButton = document.createElement('sl-button')
     button.type = type
     button.innerText = text
+
+    if (type === 'primary' || (!hasPrimaryButton && idx === 0)) {
+      button.setAttribute('autofocus', '')
+    }
 
     button.onclick = () => {
       hiddenField.value = String(idx)
@@ -564,6 +583,13 @@ function showDialog<T = void>(
 
     buttonBox.append(button)
   })
+  ;(parent.shadowRoot || parent).appendChild(container)
+
+  const elem: any = dialog.querySelector('[autofocus]')
+
+  if (elem && typeof elem.focus === 'function') {
+    setTimeout(() => elem.focus())
+  }
 
   let emitResult: (result: any) => void
 

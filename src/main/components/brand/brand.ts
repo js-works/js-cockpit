@@ -1,6 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
-import { Dialogs } from '../../utils/dialogs'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -44,13 +43,6 @@ function brandImpl(self: Brand) {
   return () => {
     const logo = self.logo?.trim() || defaultLogoSvg
     const size = self.size || 'medium'
-
-    self.onclick = () =>
-      Dialogs.approve(self, {
-        message:
-          'Are you really sure that you want to delete the whole project?',
-        okText: 'Delete File'
-      })
 
     return html`
       <div class="base">
