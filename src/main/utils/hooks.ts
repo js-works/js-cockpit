@@ -5,6 +5,8 @@ import {
   useHost,
   useRefresher
 } from 'js-element/hooks'
+
+import { observeLocale } from '../misc/locales'
 import { I18n } from '../misc/i18n'
 
 // === useI18n =======================================================
@@ -27,12 +29,11 @@ function useI18nFn(namespace?: string, defaultTexts?: Record<string, string>) {
   const refresh = useRefresher()
   const element = useHost()
 
-  const facade = I18n.localize({
-    element,
-    onConnect: useAfterMount,
-    onDisconnect: useBeforeUnmount,
-    refresh
-  })
+  const { connect, disconnect, getLocale } = observeLocale(element, refresh)
+  const facade = I18n.getFacade(getLocale)
+
+  useAfterMount(connect)
+  useBeforeUnmount(disconnect)
 
   let ret: any = {
     i18n: facade,

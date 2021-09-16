@@ -4,6 +4,7 @@ import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
+import { detectLocale } from './locales'
 import { I18n } from './i18n'
 
 // icons
@@ -471,8 +472,8 @@ function showDialog<T = void>(
   init: DialogInit<T>
 ): Promise<T> {
   const target = parent || document.body
-  const locale = I18n.getLocale(target)
-  const facade = I18n.localize(locale)
+  const locale = detectLocale(target)
+  const facade = I18n.getFacade(locale)
 
   const translate: TranslateFn = (textId) =>
     facade.getText('js-cockpit.dialogs.' + textId, fallbackTexts[textId])

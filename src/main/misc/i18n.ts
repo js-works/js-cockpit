@@ -32,16 +32,7 @@ const firstDayOfWeekData: Record<number, string> = {
 // === public types ==================================================
 
 type I18n = Readonly<{
-  localize(
-    subject:
-      | {
-          element: HTMLElement
-          refresh(): void
-          onConnect(action: () => void): void
-          onDisconnect(action: () => void): void
-        }
-      | string // locale
-  ): I18n.Facade
+  getFacade(subject: string | null | (() => string | null)): I18n.Facade
 
   customize(
     ...mappers: ((
@@ -50,7 +41,6 @@ type I18n = Readonly<{
     ) => Partial<I18n.Behavior>)[]
   ): void
 
-  getLocale(elem: HTMLElement): string
   addTexts(locale: string, texts: I18n.Texts): void
 }>
 
@@ -119,13 +109,6 @@ type Subscribable<T> = (subscriber: Subscriber<T>) => Unsubscribe
 type Emitter<T> = {
   emit(value: T): void
   subscribe: Subscribable<T>
-}
-
-type Subject = {
-  element: HTMLElement
-  refresh(): void
-  onConnect(action: () => void): void
-  onDisconnect(action: () => void): void
 }
 
 // === dictionary for translations ===================================
@@ -305,7 +288,6 @@ const baseBehavior: I18n.Behavior = {
 
 const i18nCtrl = (() => {
   let behavior = baseBehavior
-  let version = 0
   const emitter = createEmitter<boolean>()
 
   return {
@@ -318,105 +300,21 @@ const i18nCtrl = (() => {
       }
     },
 
-    getVersion() {
-      if (version === 0) {
-        const observer = new MutationObserver((mutations) => {
-          ++version
-          emitter.emit(false)
-        })
-
-        const config = {
-          attributes: true,
-          attributeFilter: ['lang'],
-          subtree: true
-        }
-
-        observer.observe(document, config)
-        version = 1
-      }
-
-      return version
-    },
-
-    watch: emitter.subscribe,
-
-    // be careful, this is an expensive
-    determineLocale(elem: HTMLElement): string {
-      if (elem.lang && !(elem.getRootNode() instanceof ShadowRoot)) {
-        return elem.lang
-      } else {
-        let el: any = elem
-
-        while (el) {
-          if (el.host) {
-            while (el.host) {
-              el = el.host
-            }
-          } else {
-            el = el.parentNode
-
-            while (el && el.host) {
-              el = el.host
-            }
-          }
-
-          if (!el) {
-            return DEFAULT_LOCALE
-          } else if (el.lang) {
-            return el.lang
-          }
-        }
-      }
-
-      return DEFAULT_LOCALE
-    }
+    watch: emitter.subscribe
   }
 })()
 
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  localize(subject: Subject | string): I18n.Facade {
-    if (typeof subject === 'string') {
-      return createFacade(() => subject, i18nCtrl.getBehavior)
-    }
+  getFacade(subject) {
+    return createFacade(
+      typeof subject === 'function'
+        ? () => subject() || DEFAULT_LOCALE
+        : () => subject || DEFAULT_LOCALE,
 
-    const elem = (subject as any).element
-    let version = 0
-    let locale = DEFAULT_LOCALE
-
-    const getLocale = () => {
-      const currentVersion = i18nCtrl.getVersion()
-
-      if (version !== currentVersion) {
-        version = currentVersion
-        locale = i18nCtrl.determineLocale(elem)
-      }
-
-      return locale
-    }
-
-    const { refresh, onConnect, onDisconnect } = subject as Subject
-
-    let cleanup: Unsubscribe | null = null
-
-    onConnect(() => {
-      cleanup = i18nCtrl.watch((forceUpdate) => {
-        const oldLocale = locale
-        const newLocale = getLocale()
-
-        if (forceUpdate || oldLocale !== newLocale) {
-          refresh()
-        }
-      })
-    })
-
-    onDisconnect(() => {
-      cleanup && cleanup()
-      cleanup = null
-    })
-
-    return createFacade(getLocale, i18nCtrl.getBehavior)
+      i18nCtrl.getBehavior
+    )
   },
 
   customize(
@@ -434,7 +332,6 @@ const I18n: I18n = Object.freeze({
     i18nCtrl.setBehavior(self)
   },
 
-  getLocale: i18nCtrl.determineLocale,
   addTexts: dict.addTexts
 })
 
