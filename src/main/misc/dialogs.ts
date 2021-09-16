@@ -467,11 +467,11 @@ export const Dialogs = Object.freeze({
 })
 
 function showDialog<T = void>(
-  target: HTMLElement | undefined,
+  parent: HTMLElement | undefined,
   init: DialogInit<T>
 ): Promise<T> {
-  const parent = target || document.body
-  const locale = I18n.getLocale(parent)
+  const target = parent || document.body
+  const locale = I18n.getLocale(target)
   const facade = I18n.localize(locale)
 
   const translate: TranslateFn = (textId) =>
@@ -528,15 +528,26 @@ function showDialog<T = void>(
       data[key] = value
     })
 
-    parent.removeEventListener('keydown', onKeyDown)
+    contentBox.removeEventListener('keydown', onKeyDown)
+    buttonBox.removeEventListener('keydown', onKeyDown)
     container.remove()
-    console.log('data', data)
+    container.innerHTML = ''
+
     emitResult(params.mapResult?.(data))
   })
 
   dialog.addEventListener('sl-request-close', (ev: Event) => {
     ev.preventDefault()
   })
+
+  const icon: SlIcon = container.querySelector('sl-icon._icon_')!
+  icon.classList.add(`_${params.type}_`)
+  icon.src = params.icon
+
+  setText(styles, 'style')
+
+  const buttonBox: HTMLElement = container.querySelector('._buttons_')!
+  const hiddenField = document.createElement('input')
 
   const onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Escape') {
@@ -545,16 +556,8 @@ function showDialog<T = void>(
     }
   }
 
-  parent.addEventListener('keydown', onKeyDown)
-
-  const icon: SlIcon = container.querySelector('sl-icon._icon_')!
-  icon.classList.add(`_${params.type}_`)
-  icon.src = params.icon
-
-  setText(styles, 'style')
-
-  const buttonBox = container.querySelector('._buttons_')!
-  const hiddenField = document.createElement('input')
+  contentBox.addEventListener('keydown', onKeyDown)
+  buttonBox.addEventListener('keydown', onKeyDown)
 
   hiddenField.type = 'hidden'
   hiddenField.name = 'button'
@@ -583,7 +586,7 @@ function showDialog<T = void>(
 
     buttonBox.append(button)
   })
-  ;(parent.shadowRoot || parent).appendChild(container)
+  ;(target.shadowRoot || target).appendChild(container)
 
   const elem: any = dialog.querySelector('[autofocus]')
 
