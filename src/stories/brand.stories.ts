@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, ThemeProvider, Theme } from 'js-cockpit'
+import { Brand, ThemeProvider, Themes } from 'js-cockpit'
 
 export default {
   title: 'brand'
@@ -26,7 +26,7 @@ function brandDemoImpl() {
   return () =>
     html`
       <div class="brand-demo">
-        <c-theme-provider .theme=${Theme.apricot}>
+        <c-theme-provider .theme=${Themes.apricot}>
           <div>
             <c-brand
               headline="Size: small"

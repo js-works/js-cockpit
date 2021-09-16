@@ -1,6 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
-import { Theme } from '../../misc/theming'
+import { Theme } from '../../misc/themes'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 

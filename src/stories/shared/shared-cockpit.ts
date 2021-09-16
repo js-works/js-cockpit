@@ -15,7 +15,7 @@ import {
   Tabs,
   TextArea,
   TextField,
-  Theme,
+  Themes,
   UserMenu
 } from 'js-cockpit'
 
@@ -48,7 +48,7 @@ export class SharedCockpit extends component() {}
 
 function sharedCockpitImpl() {
   return () => html`
-    <c-cockpit .theme=${Theme.coral}>
+    <c-cockpit .theme=${Themes.coral}>
       <c-brand
         slot="header-start"
         class="orangered"

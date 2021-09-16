@@ -5,7 +5,7 @@ import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { useI18n } from '../../utils/hooks'
-import { Dialogs } from '../../utils/dialogs'
+import { Dialogs } from '../../misc/dialogs'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'

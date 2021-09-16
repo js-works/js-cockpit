@@ -4,7 +4,7 @@
 
 // === exports =======================================================
 
-export { Theme }
+export { Theme, Themes }
 
 // === constants =====================================================
 
@@ -83,90 +83,6 @@ class Theme {
   #invertedTheme: Theme | null = null
 
   static #colorNames: Set<string> | null = null
-
-  static get default(): Theme {
-    return Theme.#deriveTheme('default', 'sky')
-  }
-
-  static get apricot(): Theme {
-    return Theme.#setThemeProperty('apricot', { primaryColor: '#F19035' })
-  }
-
-  static get aquamarine(): Theme {
-    return Theme.#setThemeProperty('aquamarine', { primaryColor: '#7FFFD4' })
-  }
-
-  static get coral(): Theme {
-    return Theme.#setThemeProperty('coral', { primaryColor: '#ff7f50' })
-  }
-
-  static get turquoise(): Theme {
-    return Theme.#setThemeProperty('turquoise', { primaryColor: '#40e0d0' })
-  }
-
-  static get amber(): Theme {
-    return Theme.#deriveTheme('amber', 'amber')
-  }
-
-  static get blue(): Theme {
-    return Theme.#deriveTheme('blue', 'blue')
-  }
-
-  static get cyan(): Theme {
-    return Theme.#deriveTheme('cyan', 'cyan')
-  }
-
-  static get emerald(): Theme {
-    return Theme.#deriveTheme('emerald', 'emerald')
-  }
-
-  static get fuchsia(): Theme {
-    return Theme.#deriveTheme('fuchsia', 'fuchsia')
-  }
-
-  static get green(): Theme {
-    return Theme.#deriveTheme('green', 'green')
-  }
-
-  static get indigo(): Theme {
-    return Theme.#deriveTheme('indigo', 'indigo')
-  }
-
-  static get lime(): Theme {
-    return Theme.#deriveTheme('lime', 'lime')
-  }
-
-  static get orange(): Theme {
-    return Theme.#deriveTheme('orange', 'orange')
-  }
-
-  static get pink(): Theme {
-    return Theme.#deriveTheme('pink', 'pink')
-  }
-
-  static get purple(): Theme {
-    return Theme.#deriveTheme('purple', 'purple')
-  }
-
-  static get red(): Theme {
-    return Theme.#deriveTheme('red', 'red')
-  }
-
-  static get rose(): Theme {
-    return Theme.#deriveTheme('rose', 'rose')
-  }
-
-  static get teal(): Theme {
-    return Theme.#deriveTheme('teal', 'teal')
-  }
-
-  static get violet(): Theme {
-    return Theme.#deriveTheme('violet', 'violet')
-  }
-
-  static get yellow(): Theme {
-    return Theme.#deriveTheme('yellow', 'yellow')
-  }
 
   constructor(customizing: ThemeCustomizing) {
     if (Object.keys(customizing).length === 0) {
@@ -285,39 +201,6 @@ class Theme {
     */
   }
 
-  static #deriveTheme(propName: string, primaryColorName: string): Theme {
-    const ret = new Theme({})
-    const base: any = lightThemeTokens
-    const tokens: any = { ...lightThemeTokens }
-
-    for (const shade of COLOR_SHADES) {
-      tokens[`color-primary-${shade}`] =
-        base[`color-${primaryColorName}-${shade}`]
-    }
-
-    ret.#themeTokens = tokens
-    ret.#adjustThemeTokens()
-
-    Object.defineProperty(Theme, propName, {
-      value: ret
-    })
-
-    return ret
-  }
-
-  static #setThemeProperty(
-    propName: Exclude<keyof typeof Theme, 'prototype'>,
-    customizing: ThemeCustomizing
-  ): Theme {
-    const theme: Theme = new Theme(customizing)
-
-    Object.defineProperty(Theme, propName, {
-      value: theme
-    })
-
-    return theme
-  }
-
   static #calcColorShades(
     colorName: string,
     colorHex: string,
@@ -338,6 +221,60 @@ class Theme {
 
     return ret
   }
+}
+
+// === themes ========================================================
+
+const Themes = {
+  get default(): Theme {
+    return materializeTheme(this, 'default', {
+      primaryColor: '#0EA5E9' //
+    })
+  },
+
+  get aquamarine(): Theme {
+    return materializeTheme(this, 'aquamarine', {
+      primaryColor: '#7FFFD4' //
+    })
+  },
+
+  get apricot(): Theme {
+    return materializeTheme(this, 'apricot', {
+      primaryColor: '#F19035' //
+    })
+  },
+
+  get coral(): Theme {
+    return materializeTheme(this, 'coral', {
+      primaryColor: '#ff7f50' //
+    })
+  },
+
+  get pink(): Theme {
+    return materializeTheme(this, 'pink', {
+      primaryColor: '#d24899' //
+    })
+  },
+
+  get torquoise(): Theme {
+    return materializeTheme(this, 'torquoise', {
+      primaryColor: '#40e0d0' //
+    })
+  }
+}
+
+function materializeTheme<T>(
+  themesObject: T,
+  themeName: keyof T,
+  customizing: ThemeCustomizing
+): Theme {
+  const theme: Theme = new Theme(customizing)
+
+  Object.defineProperty(themesObject, themeName, {
+    value: theme
+  })
+
+  return theme
 }
 
 // === color utility functions =======================================

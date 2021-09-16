@@ -30,7 +30,7 @@ export { PageSizeChangeEvent } from './events/page-size-change-event'
 
 // misc
 export { Dialogs } from './misc/dialogs'
-export { Theme } from './misc/theming'
+export { Theme, Themes } from './misc/themes'
 
 // translations
 import { I18n } from './misc/i18n'

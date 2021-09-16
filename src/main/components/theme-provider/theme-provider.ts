@@ -1,6 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Theme } from '../../misc/theming'
+import { Theme, Themes } from '../../misc/themes'
 
 // === exports =======================================================
 
@@ -21,7 +21,7 @@ function themeProviderImpl(self: ThemeProvider) {
   return () =>
     html`
       <style>
-        ${self.theme?.asCss() || Theme.default.asCss()}
+        ${self.theme?.asCss() || Themes.default.asCss()}
       </style>
       <slot></slot>
     `

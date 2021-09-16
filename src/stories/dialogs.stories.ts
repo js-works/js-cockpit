@@ -8,7 +8,7 @@ export default {
 }
 
 const styles = `
-  sl-button {
+  .demo sl-button {
     width: 100px;
     margin: 4px 2px;
   }
@@ -113,7 +113,7 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   return () => html`
-    <c-theme-provider>
+    <div class="demo">
       <div>
         <sl-button @click=${onInfo1Click}>Info 1</sl-button>
         <sl-button @click=${onInfo2Click}>Info 2</sl-button>
@@ -138,7 +138,7 @@ function dialogDemoImpl(self: DialogsDemo) {
         <sl-button @click=${onPrompt1Click}>Prompt 1</sl-button>
         <sl-button @click=${onPrompt2Click}>Prompt 2</sl-button>
       </div>
-    </c-theme-provider>
+    </div>
   `
 }
 
