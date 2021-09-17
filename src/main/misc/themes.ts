@@ -4,7 +4,7 @@
 
 // === exports =======================================================
 
-export { Theme, Themes }
+export { loadTheme, Theme, Themes }
 
 // === constants =====================================================
 
@@ -106,14 +106,14 @@ class Theme {
     this.#adjustThemeTokens()
   }
 
-  asCss(): string {
+  asCss(selector = ':root, :host'): string {
     let css = this.#css
 
     if (css) {
       return css
     }
 
-    const lines: string[] = [':host {']
+    const lines: string[] = [`${selector} {`]
 
     Object.entries(this.#themeTokens).forEach(([key, value]) => {
       lines.push(`--sl-${key}: ${value};`)
@@ -221,6 +221,16 @@ class Theme {
 
     return ret
   }
+}
+
+// === public functions ==============================================
+
+function loadTheme(theme: Theme, selector?: string) {
+  const elem = document.createElement('style')
+  elem.append(document.createTextNode(theme.asCss(selector)))
+  document.head.append(elem)
+
+  return () => elem.remove()
 }
 
 // === themes ========================================================

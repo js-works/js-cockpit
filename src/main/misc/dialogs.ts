@@ -448,7 +448,12 @@ function showDialog<T = void>(
   parent: HTMLElement | null,
   init: DialogInit<T>
 ): Promise<T> {
-  const target = parent || document.body
+  const target =
+    parent ||
+    document.querySelector('#root') ||
+    document.querySelector('#app') ||
+    document.body
+
   const locale = detectLocale(target)
   const facade = I18n.getFacade(locale)
 

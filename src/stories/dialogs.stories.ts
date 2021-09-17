@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
-import { createRef, html, lit, ref } from 'js-element/lit'
-import { Brand, Dialogs, ThemeProvider, Theme } from 'js-cockpit'
+import { html, lit } from 'js-element/lit'
+import { Dialogs, ThemeProvider } from 'js-cockpit'
 
 export default {
   title: 'dialogs'
