@@ -136,35 +136,33 @@ const styles = `
 `
 
 function info(params: InfoDialogParams): Promise<void>
-function info(parent: HTMLElement, params: InfoDialogParams): Promise<void>
+
+function info(
+  parent: HTMLElement | null,
+  params: InfoDialogParams
+): Promise<void>
+
 function info(message: string, title?: string): Promise<void>
 
 function info(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   title?: string
 ): Promise<void>
 
 function info(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (typeof arg1 === 'string') {
-    return info(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return info(null, arg1, arg2)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return info(arg1, {
       message: arg2,
       title: arg3
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return info(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: InfoDialogParams = arg2
 
   return showDialog(parent, (translate) => ({
@@ -183,35 +181,33 @@ function info(arg1: any, arg2?: any, arg3?: any): Promise<void> {
 }
 
 function warn(params: WarningDialogParams): Promise<void>
-function warn(parent: HTMLElement, params: WarningDialogParams): Promise<void>
+
+function warn(
+  parent: HTMLElement | null,
+  params: WarningDialogParams
+): Promise<void>
+
 function warn(message: string, title?: string): Promise<void>
 
 function warn(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   title?: string
 ): Promise<void>
 
 function warn(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (typeof arg1 === 'string') {
-    return warn(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return warn(null, arg1, arg2)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return warn(arg1, {
       message: arg2,
       title: arg3
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return warn(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: WarningDialogParams = arg2
 
   return showDialog(parent, (translate) => ({
@@ -230,35 +226,33 @@ function warn(arg1: any, arg2?: any, arg3?: any): Promise<void> {
 }
 
 function error(params: ErrorDialogParams): Promise<void>
-function error(parent: HTMLElement, params: ErrorDialogParams): Promise<void>
+
+function error(
+  parent: HTMLElement | null,
+  params: ErrorDialogParams
+): Promise<void>
+
 function error(message: string, title?: string): Promise<void>
 
 function error(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   title?: string
 ): Promise<void>
 
 function error(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (typeof arg1 === 'string') {
-    return error(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return error(null, arg1, arg2)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return error(arg1, {
       message: arg2,
       title: arg3
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return error(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: ErrorDialogParams = arg2
 
   return showDialog(parent, (translate) => ({
@@ -277,38 +271,33 @@ function error(arg1: any, arg2?: any, arg3?: any): Promise<void> {
 }
 
 function confirm(params: ConfirmDialogParams): Promise<boolean>
+
 function confirm(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   params: ConfirmDialogParams
 ): Promise<boolean>
+
 function confirm(message: string, title?: string): Promise<boolean>
 
 function confirm(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   title?: string
 ): Promise<boolean>
 
 function confirm(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
-  if (typeof arg1 === 'string') {
-    return confirm(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return confirm(null, arg1, arg2)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return confirm(arg1, {
       message: arg2,
       title: arg3
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return confirm(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: ConfirmDialogParams = arg2
 
   return showDialog(parent, (translate) => ({
@@ -331,38 +320,33 @@ function confirm(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
 }
 
 function approve(params: ApproveDialogParams): Promise<boolean>
+
 function approve(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   params: ApproveDialogParams
 ): Promise<boolean>
+
 function approve(message: string, title?: string): Promise<boolean>
 
 function approve(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   title?: string
 ): Promise<boolean>
 
 function approve(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
-  if (typeof arg1 === 'string') {
-    return approve(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return approve(null, arg1, arg2)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return approve(arg1, {
       message: arg2,
       title: arg3
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return approve(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: ApproveDialogParams = arg2
 
   return showDialog(parent, (translate) => ({
@@ -387,7 +371,7 @@ function approve(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
 function prompt(params: PromptDialogParams): Promise<string | null>
 
 function prompt(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   params: PromptDialogParams
 ): Promise<string | null>
 
@@ -398,7 +382,7 @@ function prompt(
 ): Promise<string | null>
 
 function prompt(
-  parent: HTMLElement,
+  parent: HTMLElement | null,
   message: string,
   value?: string,
   title?: string
@@ -410,14 +394,11 @@ function prompt(
   arg3?: any,
   arg4?: any
 ): Promise<string | null> {
-  if (typeof arg1 === 'string') {
-    return prompt(undefined as any, {
-      message: arg1,
-      title: arg2
-    })
+  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
+    return prompt(null, arg1, arg2, arg3)
   }
 
-  if (arg1 instanceof HTMLElement && typeof arg2 === 'string') {
+  if (typeof arg2 === 'string') {
     return prompt(arg1, {
       message: arg2,
       value: arg3,
@@ -425,11 +406,7 @@ function prompt(
     })
   }
 
-  if (!(arg1 instanceof HTMLElement)) {
-    return prompt(undefined as any, arg1)
-  }
-
-  const parent: HTMLElement | undefined = arg1
+  const parent: HTMLElement | null = arg1
   const params: PromptDialogParams = arg2
 
   const inputField = document.createElement('sl-input')
@@ -468,7 +445,7 @@ export const Dialogs = Object.freeze({
 })
 
 function showDialog<T = void>(
-  parent: HTMLElement | undefined,
+  parent: HTMLElement | null,
   init: DialogInit<T>
 ): Promise<T> {
   const target = parent || document.body

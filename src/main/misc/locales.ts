@@ -10,7 +10,6 @@ const LOCALE_EVENT_NAME = 'locale-subscription'
 
 interface LocaleEvent extends Event {
   type: typeof LOCALE_EVENT_NAME
-
   detail(notifyChange: () => void, unsubscribe: () => void): () => void
 }
 
@@ -34,7 +33,7 @@ function detectLocale(elem: HTMLElement): string | null {
 
 // === observeLocale =================================================
 
-let version = 0
+let version: number | null = null
 
 function observeLocale(
   elem: HTMLElement,
@@ -50,14 +49,25 @@ function observeLocale(
   let cleanup1: (() => void) | null = () => {}
   let cleanup2: (() => void) | null = null
 
-  return {
+  const ret = {
     connect() {
       document.dispatchEvent(
         new CustomEvent(LOCALE_EVENT_NAME, {
           detail: (notifyChange: () => void, unsubscribe: () => void) => {
             notify = notifyChange
-            cleanup1 = unsubscribe
 
+            if (version === null) {
+              let cb: (() => void) | null = callback
+              cleanup1 = () => (cb = null)
+              version = 0
+
+              return () => {
+                ++version!
+                cb && cb()
+              }
+            }
+
+            cleanup1 = unsubscribe
             return callback
           }
         })
@@ -67,7 +77,7 @@ function observeLocale(
         const callbacks = new Set<() => void>([callback])
 
         notify = () => {
-          ++version
+          ++version!
           callbacks.forEach((it) => it())
         }
 
@@ -107,12 +117,19 @@ function observeLocale(
     },
 
     getLocale(): string | null {
+      if (version === null) {
+        ret.connect()
+        ret.disconnect()
+      }
+
       if (ownVersion !== version) {
         locale = detectLocale(elem)
-        ownVersion = version
+        ownVersion = version!
       }
 
       return locale
     }
   }
+
+  return ret
 }

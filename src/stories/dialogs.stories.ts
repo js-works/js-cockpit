@@ -112,6 +112,32 @@ function dialogDemoImpl(self: DialogsDemo) {
     }).then((name) => void (name && Dialogs.info(self, `Hello, ${name}!`)))
   }
 
+  const onDestroyPlanet = async () => {
+    const confirmed = await Dialogs.confirm(
+      self,
+      'Are you really sure that the planet shall be destroyed?'
+    )
+
+    if (confirmed) {
+      const approved = await Dialogs.approve(self, {
+        message:
+          'But this is such a lovely planet. ' +
+          'Are you really, really sure it shall be destroyed?',
+
+        okText: 'Destroy!',
+        cancelText: 'Abort'
+      })
+
+      if (approved) {
+        Dialogs.error(
+          self,
+          'You are not allowed to destroy planets. ' +
+            'Only Darth Vader is authorized.'
+        )
+      }
+    }
+  }
+
   return () => html`
     <div class="demo">
       <div>
@@ -138,6 +164,8 @@ function dialogDemoImpl(self: DialogsDemo) {
         <sl-button @click=${onPrompt1Click}>Prompt 1</sl-button>
         <sl-button @click=${onPrompt2Click}>Prompt 2</sl-button>
       </div>
+      <br />
+      <sl-button @click=${onDestroyPlanet}>Destroy planet</sl-button>
     </div>
   `
 }
