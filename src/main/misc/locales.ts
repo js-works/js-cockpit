@@ -20,7 +20,7 @@ interface LocaleEvent extends Event {
     unsubscribe: () => void
   ): {
     element: HTMLElement
-    callback: (locale: string | null) => void
+    callback(locale: string | null): void
   }
 }
 
