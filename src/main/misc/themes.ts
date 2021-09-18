@@ -266,8 +266,8 @@ const Themes = {
     })
   },
 
-  get torquoise(): Theme {
-    return materializeTheme(this, 'torquoise', {
+  get turquoise(): Theme {
+    return materializeTheme(this, 'turquoise', {
       primaryColor: '#40e0d0' //
     })
   }

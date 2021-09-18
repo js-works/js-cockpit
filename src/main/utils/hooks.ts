@@ -26,8 +26,8 @@ function useI18nFn<T extends Record<string, string>>(
 }
 
 function useI18nFn(namespace?: string, defaultTexts?: Record<string, string>) {
-  const refresh = useRefresher()
   const element = useHost()
+  const refresh = useRefresher()
 
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
   const facade = I18n.getFacade(getLocale)
