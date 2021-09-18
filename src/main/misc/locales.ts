@@ -14,14 +14,7 @@ const localeByElem = new Map<HTMLElement, string | null>()
 
 interface LocaleEvent extends Event {
   type: typeof LOCALE_EVENT_NAME
-
-  detail(
-    notifyChange: () => void,
-    unsubscribe: () => void
-  ): {
-    element: HTMLElement
-    callback(locale: string | null): void
-  }
+  detail(notifyChange: () => void, unsubscribe: () => void): () => void
 }
 
 declare global {
@@ -63,14 +56,10 @@ function observeLocale(
             notify = notifyChange
             cleanup1 = unsubscribe
 
-            return {
-              element: elem,
-
-              callback(newLocale: string | null) {
-                locale = newLocale
-                localeByElem.set(elem, locale)
-                callback()
-              }
+            return () => {
+              locale = getLocale(elem)
+              localeByElem.set(elem, locale)
+              callback()
             }
           },
 
@@ -79,22 +68,15 @@ function observeLocale(
       )
 
       if (!notify) {
-        const callbacks = new Map<
-          HTMLElement,
-          (locale: string | null) => void
-        >()
+        const callbacks = new Set<() => void>()
 
-        callbacks.set(elem, (newLocale: string | null) => {
-          locale = newLocale
+        callbacks.add(() => {
+          locale = getLocale(elem)
           localeByElem.set(elem, locale)
           callback()
         })
 
-        notify = () => {
-          for (const [el, cb] of callbacks.entries()) {
-            cb(getLocale(el))
-          }
-        }
+        notify = () => callbacks.forEach((it) => it())
 
         new MutationObserver(notify).observe(document, {
           attributes: true,
@@ -103,11 +85,8 @@ function observeLocale(
         })
 
         document.addEventListener(LOCALE_EVENT_NAME, (ev: LocaleEvent) => {
-          const { element, callback } = ev.detail(notify!, () =>
-            callbacks.delete(element)
-          )
-
-          callbacks.set(element, callback)
+          const cb = ev.detail(notify!, () => callbacks.delete(cb))
+          callbacks.add(cb)
         })
       }
 
