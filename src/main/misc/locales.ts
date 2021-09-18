@@ -70,12 +70,14 @@ function observeLocale(
       if (!notify) {
         const callbacks = new Set<() => void>()
 
-        callbacks.add(() => {
+        const cb = () => {
           locale = getLocale(elem)
           localeByElem.set(elem, locale)
           callback()
-        })
+        }
 
+        callbacks.add(cb)
+        cleanup1 = () => callbacks.delete(cb)
         notify = () => callbacks.forEach((it) => it())
 
         new MutationObserver(notify).observe(document, {
@@ -85,7 +87,10 @@ function observeLocale(
         })
 
         document.addEventListener(LOCALE_EVENT_NAME, (ev: LocaleEvent) => {
-          const cb = ev.detail(notify!, () => callbacks.delete(cb))
+          const cb = ev
+            .detail(notify!, () => callbacks.delete(cb))
+            .bind(null) as any
+
           callbacks.add(cb)
         })
       }
