@@ -2,25 +2,90 @@
 
 export { detectLocale, observeLocale }
 
-// === constants =====================================================
+// === constants / module data =======================================
 
-const LOCALE_EVENT_NAME = 'locale-subscription'
-
-// === global data ===================================================
-
+const LOCALE_OBSERVATION = 'locale-observation'
 const localeByElem = new Map<HTMLElement, string | null>()
 
 // === types =========================================================
 
-interface LocaleEvent extends Event {
-  type: typeof LOCALE_EVENT_NAME
-  detail(notifyChange: () => void, unsubscribe: () => void): () => void
+type LocaleObservationApi = {
+  subscribe(subscriber: () => void): () => void
+  notify(): void
+}
+
+type LocaleObservationEvent = {
+  type: typeof LOCALE_OBSERVATION
+  detail(api: LocaleObservationApi): void
 }
 
 declare global {
   interface DocumentEventMap {
-    [LOCALE_EVENT_NAME]: LocaleEvent
+    [LOCALE_OBSERVATION]: LocaleObservationEvent
   }
+}
+
+// === default api ===================================================
+
+const defaultApi = ((): LocaleObservationApi => {
+  let initialized = false
+  const subscribers = new Set<() => void>()
+  const notify = () => subscribers.forEach((it) => it())
+
+  return {
+    subscribe(subscriber) {
+      if (!initialized) {
+        new MutationObserver(notify).observe(document, {
+          attributes: true,
+          attributeFilter: ['lang'],
+          subtree: true
+        })
+      }
+
+      const sub = () => subscriber()
+      subscribers.add(sub)
+      initialized = true
+      return () => subscribers.delete(sub)
+    },
+    notify
+  }
+})()
+
+// === locale observation functions ==================================
+
+const { subscribe, notify } = ((): LocaleObservationApi => {
+  let api: LocaleObservationApi | null = null
+
+  document.dispatchEvent(
+    new CustomEvent(LOCALE_OBSERVATION, {
+      detail: (otherApi: LocaleObservationApi) => (api = otherApi)
+    })
+  )
+
+  if (!api) {
+    api = defaultApi
+    document.addEventListener(LOCALE_OBSERVATION, (ev) => ev.detail(defaultApi))
+  }
+
+  return api
+})()
+
+// === getLocale =====================================================
+
+function getLocale(elem: HTMLElement): string | null {
+  let el: Element = elem
+
+  while (el && !(el instanceof Window) && !(el instanceof Document)) {
+    const next = el.closest<HTMLElement>('[lang]')
+
+    if (next) {
+      return next.lang || null
+    }
+
+    el = (el.getRootNode() as ShadowRoot).host
+  }
+
+  return null
 }
 
 // === detectLocale ==================================================
@@ -32,68 +97,20 @@ function detectLocale(elem: HTMLElement) {
 
 // === observeLocale =================================================
 
-function observeLocale(
-  elem: HTMLElement,
-  callback: () => void
-): {
-  connect(): void
-  disconnect(): void
-  getLocale(): string | null
-} {
+function observeLocale(elem: HTMLElement, callback: () => void) {
   let locale: string | null = null
-  let notify: (() => void) | null = null
-  let cleanup1: (() => void) | null = () => {}
+  let cleanup1: (() => void) | null = null
   let cleanup2: (() => void) | null = null
 
   return {
     connect() {
       locale = getLocale(elem)
-      localeByElem.set(elem, locale)
 
-      document.dispatchEvent(
-        new CustomEvent(LOCALE_EVENT_NAME, {
-          detail(notifyChange: () => void, unsubscribe: () => void) {
-            notify = notifyChange
-            cleanup1 = unsubscribe
-
-            return () => {
-              locale = getLocale(elem)
-              localeByElem.set(elem, locale)
-              callback()
-            }
-          },
-
-          bubbles: false
-        })
-      )
-
-      if (!notify) {
-        const callbacks = new Set<() => void>()
-
-        const cb = () => {
-          locale = getLocale(elem)
-          localeByElem.set(elem, locale)
-          callback()
-        }
-
-        callbacks.add(cb)
-        cleanup1 = () => callbacks.delete(cb)
-        notify = () => callbacks.forEach((it) => it())
-
-        new MutationObserver(notify).observe(document, {
-          attributes: true,
-          attributeFilter: ['lang'],
-          subtree: true
-        })
-
-        document.addEventListener(LOCALE_EVENT_NAME, (ev: LocaleEvent) => {
-          const cb = ev
-            .detail(notify!, () => callbacks.delete(cb))
-            .bind(null) as any
-
-          callbacks.add(cb)
-        })
-      }
+      cleanup1 = subscribe(() => {
+        locale = getLocale(elem)
+        localeByElem.set(elem, locale)
+        callback()
+      })
 
       if (elem.getRootNode() instanceof ShadowRoot) {
         const observer = new MutationObserver(notify)
@@ -116,22 +133,4 @@ function observeLocale(
 
     getLocale: () => locale
   }
-}
-
-// === local functions ===============================================
-
-function getLocale(elem: HTMLElement): string | null {
-  let el: Element = elem
-
-  while (el && !(el instanceof Window) && !(el instanceof Document)) {
-    const next = el.closest<HTMLElement>('[lang]')
-
-    if (next) {
-      return next.lang || null
-    }
-
-    el = (el.getRootNode() as ShadowRoot).host
-  }
-
-  return null
 }
