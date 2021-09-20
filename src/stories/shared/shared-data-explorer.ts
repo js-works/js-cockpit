@@ -137,7 +137,7 @@ for (let i = 0; i < totalItemCount; ++i) {
 const fetchFakeItems: DataExplorer.FetchItems = (params) => {
   return new Promise((resolve, reject) => {
     let items = [...fakeItems]
-    console.log(params)
+
     if (params.sortField) {
       const sig = params.sortDir === 'desc' ? -1 : 1
 

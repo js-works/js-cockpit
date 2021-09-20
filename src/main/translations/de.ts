@@ -1,3 +1,5 @@
+import { I18n } from '../misc/i18n'
+
 export default {
   'js-cockpit': {
     dialogs: {
@@ -27,10 +29,26 @@ export default {
     },
 
     'c-pagination-bar': {
-      'items-x-to-y-of-z': '{0} - {1} / {2}',
-      'item-x-of-y': '{0} / {1}',
-      'of-x-pages': 'von {0}',
-      'of-1-page': 'von 1',
+      'items-x-to-y-of-z'(x: number, y: number, z: number) {
+        const i18n = I18n.getFacade('de')
+
+        return `${i18n.formatNumber(x)} - ${i18n.formatNumber(
+          y
+        )} / ${i18n.formatNumber(z)}`
+      },
+
+      'item-x-of-y'(x: number, y: number) {
+        const i18n = I18n.getFacade('de')
+
+        return `${i18n.formatNumber(x)} - ${i18n.formatNumber(y)}`
+      },
+
+      'of-x-pages'(x: number) {
+        const i18n = I18n.getFacade('de')
+
+        return `von ${i18n.formatNumber(x)}`
+      },
+
       page: 'Seite',
       'page-size': 'Datensätze/Seite'
     }

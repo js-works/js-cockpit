@@ -102,7 +102,10 @@ namespace I18n {
   export type DateFormat = Intl.DateTimeFormatOptions
   export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
   export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
-  export type Texts = { [key: string]: string | Texts }
+
+  export type Texts = {
+    [key: string]: string | ((...args: any[]) => string) | Texts
+  }
 }
 
 // === local types ===================================================
@@ -119,7 +122,10 @@ type Emitter<T> = {
 // === dictionary for translations ===================================
 
 const dict = (() => {
-  const texts = new Map<string, Map<string, string>>()
+  const texts = new Map<
+    string,
+    Map<string, string | ((...args: any[]) => string)>
+  >()
 
   const addTextsWithNamespace = (
     locale: string,
@@ -127,7 +133,7 @@ const dict = (() => {
     texts: I18n.Texts
   ) => {
     Object.entries(texts).forEach(([key, value]) => {
-      if (typeof value === 'string') {
+      if (typeof value === 'string' || typeof value === 'function') {
         const newKey = namespace === '' ? key : `${namespace}.${key}`
 
         dict.addText(locale, newKey, value)
@@ -140,7 +146,11 @@ const dict = (() => {
   }
 
   return {
-    addText(locale: string, textId: string, translation: string): void {
+    addText(
+      locale: string,
+      textId: string,
+      translation: string | ((...args: any[]) => string)
+    ): void {
       let map = texts.get(locale)
 
       if (!map) {
@@ -155,7 +165,7 @@ const dict = (() => {
       addTextsWithNamespace(locale, '', texts)
     },
 
-    getText(locale: string, textId: string): string | null {
+    getText(locale: string, textId: string, replacements?: any): string | null {
       let ret = texts.get(locale)?.get(textId) || null
 
       if (ret === null && locale) {
@@ -174,7 +184,22 @@ const dict = (() => {
         }
       }
 
-      return ret
+      if (ret !== null && replacements) {
+        if (typeof ret !== 'function') {
+          console.log(ret)
+          throw new Error(
+            `Invalid translation parameters for key "${textId}" in locale "${locale}"`
+          )
+        }
+
+        if (Array.isArray(replacements)) {
+          ret = ret(...replacements)
+        } else {
+          ret = ret(replacements)
+        }
+      }
+
+      return ret as string
     }
   }
 })()
@@ -247,19 +272,7 @@ function createFacade(
 
 const baseBehavior: I18n.Behavior = {
   getText(locale, textId, replacements): string | null {
-    let text = dict.getText(locale, textId)
-
-    if (text && replacements) {
-      if (Array.isArray(replacements)) {
-        replacements.forEach((value, idx) => {
-          text = text!.replaceAll(`{${idx}}`, value)
-        })
-      } else {
-        text = text.replaceAll(`{0}`, replacements)
-      }
-    }
-
-    return text
+    return dict.getText(locale, textId, replacements)
   },
 
   formatDate(locale, value, format): string {

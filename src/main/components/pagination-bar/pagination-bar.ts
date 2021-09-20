@@ -1,6 +1,7 @@
 import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
 import { html, createRef, repeat, lit, ref } from 'js-element/lit'
 import { useEmitter } from 'js-element/hooks'
+import { I18n } from '../../misc/i18n'
 import { useI18n } from '../../utils/hooks'
 
 // events
@@ -50,14 +51,32 @@ type AuxData = {
 
 // === Paginator =====================================================
 
-const texts = {
-  'items-x-to-y-of-z': '{0} - {1} of {2}',
-  'item-x-of-y': '{0} of {1}',
-  'of-x-pages': 'of {0}',
-  'of-1-page': 'of 1',
-  page: 'Page',
-  'page-size': 'Items/Page'
-}
+I18n.addTexts('en-US', {
+  'js-cockpit.c-pagination-bar': {
+    'items-x-to-y-of-z'(x: number, y: number, z: number) {
+      const i18n = I18n.getFacade('en-US')
+
+      return `${i18n.formatNumber(x)} - ${i18n.formatNumber(
+        y
+      )} / ${i18n.formatNumber(z)}`
+    },
+
+    'item-x-of-y'(x: number, y: number) {
+      const i18n = I18n.getFacade('en-US')
+
+      return `${i18n.formatNumber(x)} - ${i18n.formatNumber(y)}`
+    },
+
+    'of-x-pages'(x: number) {
+      const i18n = I18n.getFacade('en-US')
+
+      return `of ${i18n.formatNumber(x)}`
+    },
+
+    page: 'Page',
+    'page-size': 'Items/Page'
+  }
+})
 
 @elem({
   tag: 'c-pagination-bar',
@@ -89,7 +108,7 @@ class PaginationBar extends component<{
 
 function paginationBarImpl(self: PaginationBar) {
   let aux: AuxData
-  const { i18n, t } = useI18n('js-cockpit', texts)
+  const { i18n, t } = useI18n('js-cockpit')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
   const emitPageChange = useEmitter('c-page-change', () => self.onPageChange)
@@ -163,10 +182,7 @@ function paginationBarImpl(self: PaginationBar) {
 
     const pageTransl = t('page')
 
-    const ofXPagesTransl =
-      aux.pageCount > 1
-        ? t('of-x-pages', i18n.formatNumber(aux.pageCount))
-        : t('of-1-page', 'of 1 page')
+    const ofXPagesTransl = t('of-x-pages', aux.pageCount)
 
     return html`
       <div class="pagination">
@@ -247,21 +263,13 @@ function paginationBarImpl(self: PaginationBar) {
       return null
     }
 
-    const startNumberText = i18n.formatNumber(aux.firstShownItemIndex)
-    const endNumberText = i18n.formatNumber(aux.lastShownItemIndex)
-    const totalCountText = i18n.formatNumber(aux.totalItemCount)
-
     let info: String
 
-    if (aux.shownItemsCount > 1) {
-      info = t('items-x-to-y-of-z', [
-        startNumberText,
-        endNumberText,
-        totalCountText
-      ])
-    } else {
-      info = t('item-x-of-y', [startNumberText, totalCountText])
-    }
+    info = t('items-x-to-y-of-z', [
+      aux.firstShownItemIndex,
+      aux.lastShownItemIndex,
+      aux.totalItemCount
+    ])
 
     return html`<div class="pagination-info">${info}</div>`
   }
