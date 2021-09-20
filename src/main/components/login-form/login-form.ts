@@ -33,14 +33,16 @@ export { LoginForm }
 
 // === LoginForm ===================================================
 
-const texts = {
-  'login-intro-headline': 'Login',
-  'login-intro-text': 'Please enter your credentials to log in',
-  username: 'Username',
-  password: 'Password',
-  'remember-login': 'Remember login',
-  'log-in': 'Log in'
-}
+I18n.addTexts('en-US', {
+  'js-cockpit.c-login-form': {
+    'login-intro-headline': 'Login',
+    'login-intro-text': 'Please enter your credentials to log in',
+    username: 'Username',
+    password: 'Password',
+    'remember-login': 'Remember login',
+    'log-in': 'Log in'
+  }
+})
 
 @elem({
   tag: 'c-login-form',
@@ -66,7 +68,7 @@ class LoginForm extends component() {
 }
 
 function loginFormImpl(self: LoginForm) {
-  const { t } = useI18n('js-cockpit', texts)
+  const { t } = useI18n('js-cockpit')
 
   const formCtrl: FormCtrl = {
     submit() {

@@ -17,20 +17,22 @@ import promptIcon from '../icons/keyboard.svg'
 
 // === texts =========================================================
 
-const fallbackTexts = {
-  ok: 'OK',
-  cancel: 'Cancel',
-  information: 'Information',
-  warning: 'Warning',
-  error: 'Error',
-  input: 'Input',
-  confirmation: 'Confirmation',
-  approval: 'Approval'
-}
+I18n.addTexts('en-US', {
+  'js-cockpit.dialogs': {
+    ok: 'OK',
+    cancel: 'Cancel',
+    information: 'Information',
+    warning: 'Warning',
+    error: 'Error',
+    input: 'Input',
+    confirmation: 'Confirmation',
+    approval: 'Approval'
+  }
+})
 
 // === types =========================================================
 
-type TranslateFn = (textId: keyof typeof fallbackTexts) => string
+type TranslateFn = (textId: string) => string
 
 type DialogConfig<T> = {
   type: 'normal' | 'warning' | 'danger'
@@ -458,7 +460,7 @@ function showDialog<T = void>(
   const facade = I18n.getFacade(locale)
 
   const translate: TranslateFn = (textId) =>
-    facade.getText('js-cockpit.dialogs.' + textId, fallbackTexts[textId])
+    facade.getText('js-cockpit.dialogs.' + textId)
 
   const params = init(translate)
   const container = document.createElement('div')

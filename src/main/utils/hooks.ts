@@ -11,21 +11,20 @@ import { I18n } from '../misc/i18n'
 
 // === useI18n =======================================================
 
-function useI18nFn<T extends Record<string, string>>(): {
+function useI18nFn(): {
   i18n: I18n.Facade
   g(key: string, replacements?: any): string
 }
 
-function useI18nFn<T extends Record<string, string>>(
-  namespace: string,
-  defaultTexts: T
+function useI18nFn(
+  namespace: string
 ): {
   i18n: I18n.Facade
-  t(key: keyof T, replacements?: any): string
+  t(key: string, replacements?: any): string
   g(key: string, replacements?: any): string
 }
 
-function useI18nFn(namespace?: string, defaultTexts?: Record<string, string>) {
+function useI18nFn(namespace?: string) {
   const element = useHost()
   const refresh = useRefresher()
 
@@ -54,23 +53,15 @@ function useI18nFn(namespace?: string, defaultTexts?: Record<string, string>) {
             : [replacements]
           : null
 
-      return facade.getText(key as string, null, repl)
+      return facade.getText(key as string, repl)
     }
   }
 
   if (arguments.length > 0) {
     ret.t = function (key: string, replacements?: any) {
-      const repl =
-        arguments.length > 1
-          ? Array.isArray(replacements)
-            ? replacements
-            : [replacements]
-          : null
-
       return facade.getText(
         `${namespace}.${element.localName}.${key}`,
-        defaultTexts![key],
-        repl
+        replacements
       )
     }
   }

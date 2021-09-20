@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import de from '../translations/de'
+
 // === exports =======================================================
 
 // I18n is a singleton object, the type of that singleton object
@@ -42,7 +44,11 @@ type I18n = Readonly<{
 
     behavior?:
       | I18n.Behavior
-      | ((self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>)
+      | ((
+          self: I18n.Behavior,
+          base: I18n.Behavior,
+          getDefaultLocale: () => string
+        ) => Partial<I18n.Behavior>)
   }): void
 
   watchDefaults(callback: () => void): () => void
@@ -74,13 +80,7 @@ namespace I18n {
 
   export type Facade = {
     getLocale(): string
-
-    getText(
-      textId: string,
-      fallbackText?: string | null,
-      replacements?: string[] | null
-    ): string
-
+    getText(textId: string, replacements?: any): string
     formatDate(value: Date, format?: DateFormat): string
     formatNumber(value: number, format?: NumberFormat): string
 
@@ -188,20 +188,8 @@ function createFacade(
   const facade: I18n.Facade = {
     getLocale,
 
-    getText(textId: string, fallbackText?: string, replacements?: any) {
-      let ret = getBehavior().getText(getLocale(), textId, fallbackText) || ''
-
-      if (arguments.length > 2) {
-        if (Array.isArray(replacements)) {
-          replacements.forEach((value, idx) => {
-            ret = ret.replaceAll(`{${idx}}`, value)
-          })
-        } else {
-          ret = ret.replaceAll(`{0}`, replacements)
-        }
-      }
-
-      return ret
+    getText(textId: string, replacements?: any) {
+      return getBehavior().getText(getLocale(), textId, replacements) || ''
     },
 
     formatNumber: (number, format) =>
@@ -258,14 +246,20 @@ function createFacade(
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  getText(locale, textId, fallbackText?): string | null {
-    let ret = dict.getText(locale, textId)
+  getText(locale, textId, replacements): string | null {
+    let text = dict.getText(locale, textId)
 
-    if (ret === null && typeof fallbackText === 'string' && locale === EN_US) {
-      ret = fallbackText
+    if (text && replacements) {
+      if (Array.isArray(replacements)) {
+        replacements.forEach((value, idx) => {
+          text = text!.replaceAll(`{${idx}}`, value)
+        })
+      } else {
+        text = text.replaceAll(`{0}`, replacements)
+      }
     }
 
-    return ret
+    return text
   },
 
   formatDate(locale, value, format): string {
@@ -335,7 +329,11 @@ const I18n: I18n = Object.freeze({
 
     behavior?:
       | I18n.Behavior
-      | ((self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>)
+      | ((
+          self: I18n.Behavior,
+          base: I18n.Behavior,
+          getDefaultLocale: () => string
+        ) => Partial<I18n.Behavior>)
   }): void {
     if (params.defaultLocale) {
       i18nCtrl.setDefaultLocale(params.defaultLocale)
@@ -347,7 +345,10 @@ const I18n: I18n = Object.freeze({
       if (typeof params.behavior === 'function') {
         const mapper = params.behavior as Function
         const self = { ...baseBehavior }
-        newBehavior = Object.assign(self, mapper(self, baseBehavior))
+        newBehavior = Object.assign(
+          self,
+          mapper(self, baseBehavior, i18nCtrl.getDefaultLocale)
+        )
       } else {
         newBehavior = params.behavior as I18n.Behavior
       }
@@ -415,13 +416,19 @@ function createEmitter<T>(): Emitter<T> {
 I18n.setDefaults({
   defaultLocale: EN_US,
 
-  behavior: (self, base) => ({
-    getText(locale, textId, fallbackText?, replacements?) {
-      return (
-        base.getText(locale, textId, fallbackText, replacements) ??
-        fallbackText ??
-        null
-      )
+  behavior: (self, base, getDefaultLocale) => ({
+    getText(locale, textId, replacements?) {
+      let text = base.getText(locale, textId, replacements)
+
+      if (text === null) {
+        const defaultLocale = getDefaultLocale()
+
+        if (defaultLocale !== locale) {
+          text = base.getText(defaultLocale, textId, replacements)
+        }
+      }
+
+      return text
     }
   })
 })

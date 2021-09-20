@@ -6,6 +6,7 @@ import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { useI18n } from '../../utils/hooks'
 import { Dialogs } from '../../misc/dialogs'
+import { I18n } from '../../misc/i18n'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -72,9 +73,11 @@ namespace DataExplorer {
 
 // === DataExplorer ==================================================
 
-const texts = {
-  'loading-message': 'Loading...'
-}
+I18n.addTexts('en-US', {
+  'js-cockpit.c-data-explorer': {
+    'loading-message': 'Loading...'
+  }
+})
 
 @elem({
   tag: 'c-data-explorer',
@@ -109,7 +112,7 @@ class DataExplorer extends component() {
 }
 
 function dataExplorerImpl(self: DataExplorer) {
-  const { i18n, t } = useI18n('js-cockpit', texts)
+  const { i18n, t } = useI18n('js-cockpit')
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
   const paginationBarRef = createRef<PaginationBar>()

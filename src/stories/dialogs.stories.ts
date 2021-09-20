@@ -9,7 +9,7 @@ export default {
 
 const styles = `
   .demo sl-button {
-    width: 100px;
+    width: 8rem;
     margin: 4px 2px;
   }
 `
