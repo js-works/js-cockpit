@@ -31,9 +31,17 @@ function useI18nFn(namespace?: string, defaultTexts?: Record<string, string>) {
 
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
   const facade = I18n.getFacade(getLocale)
+  let unwatch: (() => void) | null = null
 
-  useAfterMount(connect)
-  useBeforeUnmount(disconnect)
+  useAfterMount(() => {
+    unwatch = I18n.watchDefaults(refresh)
+    connect()
+  })
+
+  useBeforeUnmount(() => {
+    unwatch!()
+    disconnect()
+  })
 
   let ret: any = {
     i18n: facade,

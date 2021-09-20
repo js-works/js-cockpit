@@ -19,7 +19,7 @@ export default {
       username: 'Benutzername',
       password: 'Passwort',
       'remember-login': 'Angemeldet bleiben',
-      'c-login-form.log-in': 'Anmelden'
+      'log-in': 'Anmelden'
     },
 
     'c-data-explorer': {

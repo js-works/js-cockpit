@@ -8,7 +8,7 @@ export { I18n }
 
 // === constants (used locally) ======================================
 
-const DEFAULT_LOCALE = 'en-US'
+const EN_US = 'en-US'
 const DEFAULT_FIRST_DAY_OF_WEEK = 0
 
 // === data for first day of week per country (used locally) =========
@@ -32,15 +32,20 @@ const firstDayOfWeekData: Record<number, string> = {
 // === public types ==================================================
 
 type I18n = Readonly<{
-  getFacade(subject: string | null | (() => string | null)): I18n.Facade
+  getFacade(
+    localeOrGetLocale: string | null | (() => string | null),
+    behaviorOrGetBehavior?: I18n.Behavior | (() => I18n.Behavior)
+  ): I18n.Facade
 
-  customize(
-    ...mappers: ((
-      self: I18n.Behavior,
-      prev: I18n.Behavior
-    ) => Partial<I18n.Behavior>)[]
-  ): void
+  setDefaults(params: {
+    defaultLocale?: string
 
+    behavior?:
+      | I18n.Behavior
+      | ((self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>)
+  }): void
+
+  watchDefaults(callback: () => void): () => void
   addTexts(locale: string, texts: I18n.Texts): void
 }>
 
@@ -256,11 +261,7 @@ const baseBehavior: I18n.Behavior = {
   getText(locale, textId, fallbackText?): string | null {
     let ret = dict.getText(locale, textId)
 
-    if (
-      ret === null &&
-      typeof fallbackText === 'string' &&
-      locale === DEFAULT_LOCALE
-    ) {
+    if (ret === null && typeof fallbackText === 'string' && locale === EN_US) {
       ret = fallbackText
     }
 
@@ -287,16 +288,26 @@ const baseBehavior: I18n.Behavior = {
 // === i18n controller ===============================================
 
 const i18nCtrl = (() => {
-  let behavior = baseBehavior
-  const emitter = createEmitter<boolean>()
+  let defaultLocale = EN_US
+  let defaultBehavior = baseBehavior
+  const emitter = createEmitter<void>()
 
   return {
-    getBehavior: () => behavior,
+    getDefaultLocale: () => defaultLocale,
 
-    setBehavior(newBehavior: I18n.Behavior) {
-      if (newBehavior !== behavior) {
-        behavior = newBehavior
-        emitter.emit(true)
+    setDefaultLocale(locale: string) {
+      if (locale !== defaultLocale) {
+        defaultLocale = locale
+        emitter.emit()
+      }
+    },
+
+    getDefaultBehavior: () => defaultBehavior,
+
+    setDefaultBehavior(behavior: I18n.Behavior) {
+      if (behavior !== defaultBehavior) {
+        defaultBehavior = behavior
+        emitter.emit()
       }
     },
 
@@ -307,31 +318,45 @@ const i18nCtrl = (() => {
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  getFacade(subject) {
+  getFacade(localeOrGetLocale, behaviorOrGetBehavior?) {
     return createFacade(
-      typeof subject === 'function'
-        ? () => subject() || DEFAULT_LOCALE
-        : () => subject || DEFAULT_LOCALE,
+      typeof localeOrGetLocale === 'function'
+        ? () => localeOrGetLocale() || EN_US
+        : () => localeOrGetLocale || EN_US,
 
-      i18nCtrl.getBehavior
+      typeof behaviorOrGetBehavior === 'function'
+        ? behaviorOrGetBehavior
+        : i18nCtrl.getDefaultBehavior
     )
   },
 
-  customize(
-    ...mappers: ((
-      self: I18n.Behavior,
-      base: I18n.Behavior
-    ) => Partial<I18n.Behavior>)[]
-  ): void {
-    const self = Object.assign({}, baseBehavior)
+  setDefaults(params: {
+    defaultLocale?: string
 
-    mappers.forEach((mapper) => {
-      Object.assign(self, mapper(self, Object.assign({}, self)))
-    })
+    behavior?:
+      | I18n.Behavior
+      | ((self: I18n.Behavior, base: I18n.Behavior) => Partial<I18n.Behavior>)
+  }): void {
+    if (params.defaultLocale) {
+      i18nCtrl.setDefaultLocale(params.defaultLocale)
+    }
 
-    i18nCtrl.setBehavior(self)
+    if (params.behavior) {
+      let newBehavior: I18n.Behavior
+
+      if (typeof params.behavior === 'function') {
+        const mapper = params.behavior as Function
+        const self = { ...baseBehavior }
+        newBehavior = Object.assign(self, mapper(self, baseBehavior))
+      } else {
+        newBehavior = params.behavior as I18n.Behavior
+      }
+
+      i18nCtrl.setDefaultBehavior(newBehavior)
+    }
   },
 
+  watchDefaults: i18nCtrl.watch,
   addTexts: dict.addTexts
 })
 
@@ -387,8 +412,10 @@ function createEmitter<T>(): Emitter<T> {
 
 // === set standard behavior =========================================
 
-I18n.customize((self, base) => {
-  return {
+I18n.setDefaults({
+  defaultLocale: EN_US,
+
+  behavior: (self, base) => ({
     getText(locale, textId, fallbackText?, replacements?) {
       return (
         base.getText(locale, textId, fallbackText, replacements) ??
@@ -396,5 +423,5 @@ I18n.customize((self, base) => {
         null
       )
     }
-  }
+  })
 })
