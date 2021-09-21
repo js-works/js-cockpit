@@ -34,7 +34,4 @@ export { Dialogs } from './misc/dialogs'
 export { loadTheme, Theme, Themes } from './misc/themes'
 
 // translations
-import { I18n } from './misc/i18n'
-import texts_de from './translations/de'
-
-I18n.addTexts('de', texts_de)
+import './translations/de'

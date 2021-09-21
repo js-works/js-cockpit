@@ -17,16 +17,18 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-login-form full-size .theme=${Themes.coral}>
-        <div slot="header">
-          <c-brand
-            headline="my-company"
-            subheadline="Back Office"
-            size="large"
-          ></c-brand>
-        </div>
-        <div slot="footer">&copy; 2021, my-company</div>
-      </c-login-form>
+      <div>
+        <c-login-form full-size .theme=${Themes.coral}>
+          <div slot="header">
+            <c-brand
+              headline="my-company"
+              subheadline="Back Office"
+              size="large"
+            ></c-brand>
+          </div>
+          <div slot="footer">&copy; 2021, my-company</div>
+        </c-login-form>
+      </div>
     `
 }
 

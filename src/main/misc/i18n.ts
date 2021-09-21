@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-import de from '../translations/de'
-
 // === exports =======================================================
 
 // I18n is a singleton object, the type of that singleton object

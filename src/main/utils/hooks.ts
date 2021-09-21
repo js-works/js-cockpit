@@ -1,6 +1,6 @@
 import {
   hook,
-  useAfterMount,
+  useBeforeMount,
   useBeforeUnmount,
   useHost,
   useRefresher
@@ -32,7 +32,7 @@ function useI18nFn(namespace?: string) {
   const facade = I18n.getFacade(getLocale)
   let unwatch: (() => void) | null = null
 
-  useAfterMount(() => {
+  useBeforeMount(() => {
     unwatch = I18n.watchDefaults(refresh)
     connect()
   })
