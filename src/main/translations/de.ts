@@ -3,7 +3,7 @@ import { I18n } from '../misc/i18n'
 const { formatNumber } = I18n.getFacade('de')
 
 // prettier-ignore
-I18n.addTexts('de', {
+I18n.addTranslations('de', {
   'js-cockpit': {
     dialogs: {
       'ok': 'OK',

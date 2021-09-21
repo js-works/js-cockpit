@@ -51,7 +51,7 @@ type AuxData = {
 
 // === Paginator =====================================================
 
-I18n.addTexts('en-US', {
+I18n.addTranslations('en-US', {
   'js-cockpit.c-pagination-bar': {
     'items-x-to-y-of-z'(x: number, y: number, z: number) {
       const i18n = I18n.getFacade('en-US')

@@ -45,13 +45,13 @@ function useI18nFn(namespace?: string) {
             : [replacements]
           : null
 
-      return facade.getText(key as string, repl)
+      return facade.translate(key as string, repl)
     }
   }
 
   if (arguments.length > 0) {
     ret.t = function (key: string, replacements?: any) {
-      return facade.getText(
+      return facade.translate(
         `${namespace}.${element.localName}.${key}`,
         replacements
       )

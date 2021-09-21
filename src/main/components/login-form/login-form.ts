@@ -33,7 +33,7 @@ export { LoginForm }
 
 // === LoginForm ===================================================
 
-I18n.addTexts('en-US', {
+I18n.addTranslations('en-US', {
   'js-cockpit.c-login-form': {
     'login-intro-headline': 'Login',
     'login-intro-text': 'Please enter your credentials to log in',

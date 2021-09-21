@@ -73,7 +73,7 @@ namespace DataExplorer {
 
 // === DataExplorer ==================================================
 
-I18n.addTexts('en-US', {
+I18n.addTranslations('en-US', {
   'js-cockpit.c-data-explorer': {
     'loading-message': 'Loading...'
   }

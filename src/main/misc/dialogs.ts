@@ -17,7 +17,7 @@ import promptIcon from '../icons/keyboard.svg'
 
 // === texts =========================================================
 
-I18n.addTexts('en-US', {
+I18n.addTranslations('en-US', {
   'js-cockpit.dialogs': {
     ok: 'OK',
     cancel: 'Cancel',
@@ -460,7 +460,7 @@ function showDialog<T = void>(
   const facade = I18n.getFacade(locale)
 
   const translate: TranslateFn = (textId) =>
-    facade.getText('js-cockpit.dialogs.' + textId)
+    facade.translate('js-cockpit.dialogs.' + textId)
 
   const params = init(translate)
   const container = document.createElement('div')

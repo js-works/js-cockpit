@@ -44,15 +44,15 @@ type I18n = Readonly<{
     ): Partial<I18n.Behavior>
   }): void
 
-  addTexts(locale: string, texts: I18n.Texts): void
+  addTranslations(locale: string, translations: I18n.Translations): void
 }>
 
 // eslint-disable-next-line
 namespace I18n {
   export type Behavior = {
-    getText(
+    translate(
       locale: string,
-      textId: string,
+      key: string,
       replacements?: string[] | null
     ): string | null
 
@@ -71,7 +71,7 @@ namespace I18n {
 
   export type Facade = {
     getLocale(): string
-    getText(textId: string, replacements?: any): string
+    translate(key: string, replacements?: any): string
     formatDate(value: Date, format?: DateFormat): string
     formatNumber(value: number, format?: NumberFormat): string
 
@@ -94,8 +94,8 @@ namespace I18n {
   export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
   export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 
-  export type Texts = {
-    [key: string]: string | ((...args: any[]) => string) | Texts
+  export type Translations = {
+    [key: string]: string | ((...args: any[]) => string) | Translations
   }
 }
 
@@ -113,64 +113,64 @@ type Emitter<T> = {
 // === dictionary for translations ===================================
 
 const dict = (() => {
-  const texts = new Map<
+  const translations = new Map<
     string,
     Map<string, string | ((...args: any[]) => string)>
   >()
 
-  const addTextsWithNamespace = (
+  const addTranslationsWithNamespace = (
     locale: string,
     namespace: string,
-    texts: I18n.Texts
+    translations: I18n.Translations
   ) => {
-    Object.entries(texts).forEach(([key, value]) => {
+    Object.entries(translations).forEach(([key, value]) => {
       if (typeof value === 'string' || typeof value === 'function') {
         const newKey = namespace === '' ? key : `${namespace}.${key}`
 
-        dict.addText(locale, newKey, value)
+        dict.addTranslation(locale, newKey, value)
       } else {
         const newNamespace = namespace === '' ? key : `${namespace}.${key}`
 
-        addTextsWithNamespace(locale, newNamespace, value)
+        addTranslationsWithNamespace(locale, newNamespace, value)
       }
     })
   }
 
   return {
-    addText(
+    addTranslation(
       locale: string,
-      textId: string,
+      key: string,
       translation: string | ((...args: any[]) => string)
     ): void {
-      let map = texts.get(locale)
+      let map = translations.get(locale)
 
       if (!map) {
         map = new Map()
-        texts.set(locale, map)
+        translations.set(locale, map)
       }
 
-      map.set(textId, translation)
+      map.set(key, translation)
     },
 
-    addTexts(locale: string, texts: I18n.Texts) {
-      addTextsWithNamespace(locale, '', texts)
+    addTranslations(locale: string, translations: I18n.Translations) {
+      addTranslationsWithNamespace(locale, '', translations)
     },
 
-    getText(locale: string, textId: string, replacements?: any): string | null {
-      let ret = texts.get(locale)?.get(textId) || null
+    translate(locale: string, key: string, replacements?: any): string | null {
+      let ret = translations.get(locale)?.get(key) || null
 
       if (ret === null && locale) {
         const shortLocale = getShortLocale(locale)
 
         if (shortLocale && shortLocale !== locale) {
-          ret = texts.get(shortLocale)?.get(textId) || null
+          ret = translations.get(shortLocale)?.get(key) || null
         }
 
         if (ret === null) {
           const langCode = getLanguageCode(locale)
 
           if (langCode && langCode !== shortLocale) {
-            ret = texts.get(langCode)?.get(textId) || null
+            ret = translations.get(langCode)?.get(key) || null
           }
         }
       }
@@ -179,7 +179,7 @@ const dict = (() => {
         if (typeof ret !== 'function') {
           console.log(ret)
           throw new Error(
-            `Invalid translation parameters for key "${textId}" in locale "${locale}"`
+            `Invalid translation parameters for key "${key}" in locale "${locale}"`
           )
         }
 
@@ -203,8 +203,8 @@ function createFacade(getLocale: () => string): I18n.Facade {
   const facade: I18n.Facade = {
     getLocale,
 
-    getText(textId: string, replacements?: any) {
-      return getBehavior().getText(getLocale(), textId, replacements) || ''
+    translate(key: string, replacements?: any) {
+      return getBehavior().translate(getLocale(), key, replacements) || ''
     },
 
     formatNumber: (number, format) =>
@@ -261,8 +261,8 @@ function createFacade(getLocale: () => string): I18n.Facade {
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  getText(locale, textId, replacements): string | null {
-    return dict.getText(locale, textId, replacements)
+  translate(locale, key, replacements): string | null {
+    return dict.translate(locale, key, replacements)
   },
 
   formatDate(locale, value, format): string {
@@ -351,7 +351,7 @@ const I18n: I18n = Object.freeze({
     }
   },
 
-  addTexts: dict.addTexts
+  addTranslations: dict.addTranslations
 })
 
 // === utils ==========================================================
@@ -410,16 +410,16 @@ I18n.init({
   defaultLocale: EN_US,
 
   customize: (_, base, defaultLocale) => ({
-    getText(locale, textId, replacements?) {
-      let text = base.getText(locale, textId, replacements)
+    translate(locale, key, replacements?) {
+      let translation = base.translate(locale, key, replacements)
 
-      if (text === null) {
+      if (translation === null) {
         if (defaultLocale !== locale) {
-          text = base.getText(defaultLocale, textId, replacements)
+          translation = base.translate(defaultLocale, key, replacements)
         }
       }
 
-      return text
+      return translation
     }
   })
 })
