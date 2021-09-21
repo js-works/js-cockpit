@@ -1,11 +1,11 @@
 import { I18n } from '../misc/i18n'
 
-const { formatNumber } = I18n.getFacade('de')
+const { formatNumber } = I18n.localizer('de')
 
 // prettier-ignore
 I18n.addTranslations('de', {
   'js-cockpit': {
-    dialogs: {
+    'dialogs': {
       'ok': 'OK',
       'cancel': 'Abbrechen',
       'information': 'Information',
@@ -16,8 +16,9 @@ I18n.addTranslations('de', {
       'approval': 'Zustimmung'
     },
 
-    'c-login-form': {
+    'login-form': {
       'login-intro-headline': 'Anmeldung',
+
       'login-intro-text':
         'Herzlich willkommen! Bitte geben Sie Ihre Anmeldedaten ein.',
 
@@ -27,23 +28,18 @@ I18n.addTranslations('de', {
       'log-in': 'Anmelden'
     },
 
-    'c-data-explorer': {
+    'data-explorer': {
       'loading-message': 'Lade Daten...'
     },
 
-    'c-pagination-bar': {
-      'items-x-to-y-of-z'(x: number, y: number, z: number) {
-        return `${formatNumber(x)} - ${formatNumber(y)} / ${formatNumber(z)}`
-      },
+    'pagination-bar': {
+      'items-x-to-y-of-z': (x: number, y: number, z: number) =>
+        `${formatNumber(x)} - ${formatNumber(y)} / ${formatNumber(z)}`,
 
-      'item-x-of-y'(x: number, y: number) {
-        return `${formatNumber(x)} - ${formatNumber(y)}`
-      },
+      'item-x-of-y': (x: number, y: number) =>
+        `${formatNumber(x)} - ${formatNumber(y)}`,
 
-      'of-x-pages'(x: number) {
-        return `von ${formatNumber(x)}`
-      },
-
+      'of-x-pages': (x: number) => `von ${formatNumber(x)}`,
       'page': 'Seite',
       'page-size': 'Datensätze/Seite'
     }

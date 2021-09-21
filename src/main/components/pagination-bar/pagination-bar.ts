@@ -51,10 +51,11 @@ type AuxData = {
 
 // === Paginator =====================================================
 
-I18n.addTranslations('en-US', {
-  'js-cockpit.c-pagination-bar': {
+// prettier-ignore
+I18n.addTranslations('en', {
+  'js-cockpit.pagination-bar': {
     'items-x-to-y-of-z'(x: number, y: number, z: number) {
-      const i18n = I18n.getFacade('en-US')
+      const i18n = I18n.localizer('en-US')
 
       return `${i18n.formatNumber(x)} - ${i18n.formatNumber(
         y
@@ -62,18 +63,18 @@ I18n.addTranslations('en-US', {
     },
 
     'item-x-of-y'(x: number, y: number) {
-      const i18n = I18n.getFacade('en-US')
+      const i18n = I18n.localizer('en-US')
 
       return `${i18n.formatNumber(x)} - ${i18n.formatNumber(y)}`
     },
 
     'of-x-pages'(x: number) {
-      const i18n = I18n.getFacade('en-US')
+      const i18n = I18n.localizer('en-US')
 
       return `of ${i18n.formatNumber(x)}`
     },
 
-    page: 'Page',
+    'page': 'Page',
     'page-size': 'Items/Page'
   }
 })
@@ -108,7 +109,7 @@ class PaginationBar extends component<{
 
 function paginationBarImpl(self: PaginationBar) {
   let aux: AuxData
-  const { i18n, t } = useI18n('js-cockpit')
+  const { i18n, t } = useI18n('js-cockpit.pagination-bar')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
   const emitPageChange = useEmitter('c-page-change', () => self.onPageChange)
@@ -181,7 +182,6 @@ function paginationBarImpl(self: PaginationBar) {
     }
 
     const pageTransl = t('page')
-
     const ofXPagesTransl = t('of-x-pages', aux.pageCount)
 
     return html`

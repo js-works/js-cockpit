@@ -33,12 +33,13 @@ export { LoginForm }
 
 // === LoginForm ===================================================
 
-I18n.addTranslations('en-US', {
-  'js-cockpit.c-login-form': {
+// prettier-ignore
+I18n.addTranslations('en', {
+  'js-cockpit.login-form': {
     'login-intro-headline': 'Login',
     'login-intro-text': 'Please enter your credentials to log in',
-    username: 'Username',
-    password: 'Password',
+    'username': 'Username',
+    'password': 'Password',
     'remember-login': 'Remember login',
     'log-in': 'Log in'
   }
@@ -68,7 +69,7 @@ class LoginForm extends component() {
 }
 
 function loginFormImpl(self: LoginForm) {
-  const { t } = useI18n('js-cockpit')
+  const { t } = useI18n('js-cockpit.login-form')
 
   const formCtrl: FormCtrl = {
     submit() {

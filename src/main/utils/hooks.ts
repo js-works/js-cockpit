@@ -12,14 +12,14 @@ import { I18n } from '../misc/i18n'
 // === useI18n =======================================================
 
 function useI18nFn(): {
-  i18n: I18n.Facade
+  i18n: I18n.Localizer
   g(key: string, replacements?: any): string
 }
 
 function useI18nFn(
   namespace: string
 ): {
-  i18n: I18n.Facade
+  i18n: I18n.Localizer
   t(key: string, replacements?: any): string
   g(key: string, replacements?: any): string
 }
@@ -29,13 +29,13 @@ function useI18nFn(namespace?: string) {
   const refresh = useRefresher()
 
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
-  const facade = I18n.getFacade(getLocale)
+  const localizer = I18n.localizer(getLocale)
 
   useBeforeMount(connect)
   useBeforeUnmount(disconnect)
 
   let ret: any = {
-    i18n: facade,
+    i18n: localizer,
 
     g(key: string, replacements?: any) {
       const repl =
@@ -45,16 +45,13 @@ function useI18nFn(namespace?: string) {
             : [replacements]
           : null
 
-      return facade.translate(key as string, repl)
+      return localizer.translate(key as string, repl)
     }
   }
 
   if (arguments.length > 0) {
     ret.t = function (key: string, replacements?: any) {
-      return facade.translate(
-        `${namespace}.${element.localName}.${key}`,
-        replacements
-      )
+      return localizer.translate(`${namespace}.${key}`, replacements)
     }
   }
 

@@ -457,10 +457,10 @@ function showDialog<T = void>(
     document.body
 
   const locale = detectLocale(target)
-  const facade = I18n.getFacade(locale)
+  const localizer = I18n.localizer(locale)
 
   const translate: TranslateFn = (textId) =>
-    facade.translate('js-cockpit.dialogs.' + textId)
+    localizer.translate('js-cockpit.dialogs.' + textId)
 
   const params = init(translate)
   const container = document.createElement('div')

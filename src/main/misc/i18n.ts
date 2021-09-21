@@ -30,9 +30,9 @@ const firstDayOfWeekData: Record<number, string> = {
 // === public types ==================================================
 
 type I18n = Readonly<{
-  getFacade(
+  localizer(
     localeOrGetLocale: string | null | (() => string | null)
-  ): I18n.Facade
+  ): I18n.Localizer
 
   init(params: {
     defaultLocale?: string
@@ -69,7 +69,7 @@ namespace I18n {
     getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
   }
 
-  export type Facade = {
+  export type Localizer = {
     getLocale(): string
     translate(key: string, replacements?: any): string
     formatDate(value: Date, format?: DateFormat): string
@@ -195,28 +195,27 @@ const dict = (() => {
   }
 })()
 
-// === facade impl ===================================================
+// === localizer impl ===================================================
 
-function createFacade(getLocale: () => string): I18n.Facade {
-  const getBehavior = () => i18nCtrl.getDefaultBehavior()
+function createLocalizer(getLocale: () => string): I18n.Localizer {
+  const i18n = i18nCtrl.behavior
 
-  const facade: I18n.Facade = {
+  const localizer: I18n.Localizer = {
     getLocale,
 
     translate(key: string, replacements?: any) {
-      return getBehavior().translate(getLocale(), key, replacements) || ''
+      return i18n.translate(getLocale(), key, replacements) || ''
     },
 
     formatNumber: (number, format) =>
-      getBehavior().formatNumber(getLocale(), number, format),
+      i18n.formatNumber(getLocale(), number, format),
 
-    formatDate: (date, format) =>
-      getBehavior().formatDate(getLocale(), date, format),
+    formatDate: (date, format) => i18n.formatDate(getLocale(), date, format),
 
     formatRelativeTime: (number, unit, format) =>
-      getBehavior().formatRelativeTime(getLocale(), number, unit, format),
+      i18n.formatRelativeTime(getLocale(), number, unit, format),
 
-    getFirstDayOfWeek: () => getBehavior().getFirstDayOfWeek(getLocale()),
+    getFirstDayOfWeek: () => i18n.getFirstDayOfWeek(getLocale()),
 
     getDayName(index, format = 'long') {
       const date = new Date(1970, 0, 4 + (index % 7))
@@ -230,7 +229,7 @@ function createFacade(getLocale: () => string): I18n.Facade {
       const arr: string[] = []
 
       for (let i = 0; i < 7; ++i) {
-        arr.push(facade.getDayName(i, format))
+        arr.push(localizer.getDayName(i, format))
       }
 
       return arr
@@ -248,14 +247,14 @@ function createFacade(getLocale: () => string): I18n.Facade {
       const arr: string[] = []
 
       for (let i = 0; i < 12; ++i) {
-        arr.push(facade.getMonthName(i, format))
+        arr.push(localizer.getMonthName(i, format))
       }
 
       return arr
     }
   }
 
-  return facade
+  return localizer
 }
 
 // === base i18n behavior =========================================
@@ -285,41 +284,65 @@ const baseBehavior: I18n.Behavior = {
 // === i18n controller ===============================================
 
 const i18nCtrl = (() => {
+  let isFinal = false
   let defaultLocale = EN_US
-  let defaultBehavior = baseBehavior
-  const emitter = createEmitter<void>()
+
+  let behavior: I18n.Behavior = {
+    ...baseBehavior,
+
+    translate(locale, key, replacements?) {
+      let translation = baseBehavior.translate(locale, key, replacements)
+
+      if (translation === null) {
+        if (defaultLocale !== locale) {
+          translation = baseBehavior.translate(defaultLocale, key, replacements)
+        }
+      }
+
+      return translation
+    }
+  }
 
   return {
-    getDefaultLocale: () => defaultLocale,
-
-    setDefaultLocale(locale: string) {
-      if (locale !== defaultLocale) {
-        defaultLocale = locale
-        emitter.emit()
-      }
+    get isFinal() {
+      return isFinal
     },
 
-    getDefaultBehavior: () => defaultBehavior,
-
-    setDefaultBehavior(behavior: I18n.Behavior) {
-      if (behavior !== defaultBehavior) {
-        defaultBehavior = behavior
-        emitter.emit()
-      }
+    get defaultLocale() {
+      isFinal = true
+      return defaultLocale
     },
 
-    watch: emitter.subscribe
+    set defaultLocale(locale: string) {
+      isFinal = true
+      defaultLocale = locale
+    },
+
+    get behavior() {
+      isFinal = true
+      return behavior
+    },
+
+    set behavior(behavior: I18n.Behavior) {
+      isFinal = true
+      behavior = behavior
+    },
+
+    addTranslations(locale: string, translations: I18n.Translations): void {
+      isFinal = true
+      return dict.addTranslations(locale, translations)
+    }
   }
 })()
 
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  getFacade(localeOrGetLocale) {
-    return createFacade(
+  localizer(localeOrGetLocale) {
+    return createLocalizer(
       typeof localeOrGetLocale === 'function'
-        ? () => localeOrGetLocale() || i18nCtrl.getDefaultLocale()
-        : () => localeOrGetLocale || i18nCtrl.getDefaultLocale()
+        ? () => localeOrGetLocale() || i18nCtrl.defaultLocale
+        : () => localeOrGetLocale || i18nCtrl.defaultLocale
     )
   },
 
@@ -332,8 +355,16 @@ const I18n: I18n = Object.freeze({
       defaultLocale: string
     ) => Partial<I18n.Behavior>
   }): void {
+    if (i18nCtrl.isFinal) {
+      throw (
+        'Illegal invocation of `i18n.init(...)`' +
+        '- must only be used at start of the app' +
+        ' before any other I18n function has been used'
+      )
+    }
+
     if (params.defaultLocale) {
-      i18nCtrl.setDefaultLocale(params.defaultLocale)
+      i18nCtrl.defaultLocale = params.defaultLocale
     }
 
     if (params.customize) {
@@ -343,15 +374,15 @@ const I18n: I18n = Object.freeze({
         const self = { ...baseBehavior }
         newBehavior = Object.assign(
           self,
-          params.customize(self, baseBehavior, i18nCtrl.getDefaultLocale())
+          params.customize(self, baseBehavior, i18nCtrl.defaultLocale)
         )
 
-        i18nCtrl.setDefaultBehavior(newBehavior)
+        i18nCtrl.behavior = newBehavior
       }
     }
   },
 
-  addTranslations: dict.addTranslations
+  addTranslations: i18nCtrl.addTranslations
 })
 
 // === utils ==========================================================
@@ -390,36 +421,3 @@ const getFirstDayOfWeek: (locale: string) => number = (() => {
     )
   }
 })()
-
-function createEmitter<T>(): Emitter<T> {
-  const subscribers = new Set<Subscriber<T>>()
-
-  return {
-    emit: (value) => subscribers.forEach((subscriber) => subscriber(value)),
-
-    subscribe(subscriber) {
-      subscribers.add(subscriber)
-      return () => subscribers.delete(subscriber)
-    }
-  }
-}
-
-// === set standard behavior =========================================
-
-I18n.init({
-  defaultLocale: EN_US,
-
-  customize: (_, base, defaultLocale) => ({
-    translate(locale, key, replacements?) {
-      let translation = base.translate(locale, key, replacements)
-
-      if (translation === null) {
-        if (defaultLocale !== locale) {
-          translation = base.translate(defaultLocale, key, replacements)
-        }
-      }
-
-      return translation
-    }
-  })
-})
