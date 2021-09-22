@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, LoginForm, Themes } from 'js-cockpit'
+import { Brand, DateField, LoginForm, Themes } from 'js-cockpit'
 
 export default {
   title: 'login-form'
@@ -19,12 +19,15 @@ function loginFormDemoImpl() {
     html`
       <div>
         <c-login-form full-size .theme=${Themes.coral}>
-          <div slot="header">
+          <div slot="heder">
             <c-brand
               headline="my-company"
               subheadline="Back Office"
               size="large"
             ></c-brand>
+          </div>
+          <div slot="login-fields">
+            <c-date-field></c-date-field>
           </div>
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>

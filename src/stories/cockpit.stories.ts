@@ -5,6 +5,7 @@ import { html, lit } from 'js-element/lit'
 import {
   Brand,
   Cockpit,
+  DateField,
   DataForm,
   Fieldset,
   RadioGroup,
@@ -67,7 +68,7 @@ const demo1Styles = `
   tag: 'cockpit-demo1',
   styles: demo1Styles,
   impl: lit(cockpitDemo1Impl),
-  uses: [Cockpit, SectionsMenu, SharedCockpit]
+  uses: [Cockpit, DateField, SectionsMenu, SharedCockpit]
 })
 class CockpitDemo1 extends component() {}
 
@@ -157,6 +158,7 @@ function createDataForm() {
   return html`<div>
     <c-data-form headline="Customer">
       <c-section>
+        <c-date-field></c-date-field>
         <c-fieldset orient="horizontal">
           <c-text-field label="Customer No." required></c-text-field>
           <c-text-field label="Short name" required></c-text-field>
