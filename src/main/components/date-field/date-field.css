@@ -1,0 +1,15 @@
+.base {
+  display: flex;
+}
+
+.date-input {
+  padding: 6px;
+  padding-right: 28px;
+}
+
+.calendar-icon {
+  position: relative;
+  top: 8px;
+  left: -22px;
+  cursor: pointer;
+}

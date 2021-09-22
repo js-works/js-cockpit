@@ -158,7 +158,6 @@ function createDataForm() {
   return html`<div>
     <c-data-form headline="Customer">
       <c-section>
-        <c-date-field></c-date-field>
         <c-fieldset orient="horizontal">
           <c-text-field label="Customer No." required></c-text-field>
           <c-text-field label="Short name" required></c-text-field>
@@ -177,6 +176,7 @@ function createDataForm() {
             <c-fieldset>
               <c-text-field label="Company" required></c-text-field>
               <c-text-field label="Alias name"></c-text-field>
+              <c-date-field label="Day of birth" required></c-date-field>
               <c-radio-group
                 label="Options"
                 orient="horizontal"

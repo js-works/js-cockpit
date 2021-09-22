@@ -5,9 +5,17 @@ import { useAfterMount } from 'js-element/hooks'
 // @ts-ignore
 import { Datepicker } from 'vanillajs-datepicker'
 
+// custom elements
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
+
+// icons
+import calendarIcon from '../../icons/calendar3.svg'
+
 // styles
 import dateFieldStyles from './date-field.css'
 import datepickerStyles from 'vanillajs-datepicker/dist/css/datepicker-foundation.css'
+import controlStyles from '../../shared/css/control.css'
 
 // === exports =======================================================
 
@@ -21,13 +29,27 @@ document.head.append(styleElem)
 
 @elem({
   tag: 'c-date-field',
-  styles: dateFieldStyles,
-  impl: lit(dateFieldImpl)
+  styles: [dateFieldStyles, controlStyles],
+  impl: lit(dateFieldImpl),
+  uses: [SlIcon, SlIconButton]
 })
-class DateField extends component() {}
+class DateField extends component() {
+  @prop({ attr: Attrs.string })
+  label = ''
+
+  @prop({ attr: Attrs.string })
+  error = ''
+
+  @prop({ attr: Attrs.boolean })
+  disabled = false
+
+  @prop({ attr: Attrs.boolean })
+  required = false
+}
 
 function dateFieldImpl(self: DateField) {
   const input = document.createElement('input')
+  input.className = 'date-input'
 
   const datepicker = new Datepicker(input, {
     calendarWeeks: true,
@@ -70,5 +92,16 @@ function dateFieldImpl(self: DateField) {
     ev.stopPropagation()
   }
 
-  return () => html` <div class="base">${input}</div> `
+  return () => html`
+    <div class="base">
+      <div class="field-wrapper">
+        <div class="label">${self.label}</div>
+        <div class="control">
+          ${input}
+          <sl-icon class="calendar-icon" src=${calendarIcon}></sl-icon>
+          <div class="error">${self.error}</div>
+        </div>
+      </div>
+    </div>
+  `
 }
