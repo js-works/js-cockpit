@@ -3,8 +3,31 @@
 }
 
 .date-input {
-  padding: 6px;
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: start;
+  position: relative;
+  width: 100%;
+  font-family: var(--sl-input-font-family);
+  font-weight: var(--sl-input-font-weight);
+  letter-spacing: var(--sl-input-letter-spacing);
+  background-color: rgb(var(--sl-input-background-color));
+  border: solid var(--sl-input-border-width) rgb(var(--sl-input-border-color));
+  vertical-align: middle;
+  overflow: hidden;
+  transition: var(--sl-transition-fast) color, var(--sl-transition-fast) border,
+    var(--sl-transition-fast) box-shadow;
+  cursor: text;
+
+  height: calc(var(--sl-input-height-small) - var(--sl-input-border-width) * 2);
+  padding: 0 var(--sl-input-spacing-small);
+
   padding-right: 28px;
+  color: rgb(var(--sl-color-neutral-1000));
+  background-color: rgb(var(--sl-color-neutral-0));
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-icon {
