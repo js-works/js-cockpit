@@ -93,34 +93,48 @@ function sideMenuImpl(self: SideMenu) {
         (group) => {
           return html`
             <div class="group-header">${group.title}</div>
-            <div>${renderItems(group.items)}</div>
+            ${renderItems(group.items)}
+          `
+        }
+      )
+    } else {
+      content = repeat(
+        groups.groups,
+        (_, idx) => idx,
+        (group) => {
+          return html`
+            <sl-details summary=${group.title}>
+              ${renderItems(group.items)}
+            </sl-details>
           `
         }
       )
     }
 
     return html`
-      <div class=${classMap({ uncollapsible })}>
-        ${'                             '} ${content}
+      <div class=${classMap({ collapsible: !uncollapsible, uncollapsible })}>
+        ${content}
       </div>
     `
   }
 
   function renderItems(items: SideMenu.Item[]) {
     return html`
-      ${repeat(
-        items,
-        (_, idx) => idx,
-        (item) => {
-          return html`<div
-            class="item ${classMap({
-              active: item.itemId === self.activeItemId
-            })}"
-          >
-            ${item.title}
-          </div>`
-        }
-      )}
+      <div class="items">
+        ${repeat(
+          items,
+          (_, idx) => idx,
+          (item) => {
+            return html`<div
+              class="item ${classMap({
+                active: item.itemId === self.activeItemId
+              })}"
+            >
+              ${item.title}
+            </div>`
+          }
+        )}
+      </div>
     `
   }
 

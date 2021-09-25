@@ -49,7 +49,7 @@ export class SharedCockpit extends component() {}
 function sharedCockpitImpl() {
   const menu: SideMenu.Menu = {
     kind: 'groups',
-
+    collapseMode: 'full',
     groups: [
       {
         kind: 'group',
@@ -107,7 +107,7 @@ function sharedCockpitImpl() {
   }
 
   return () => html`
-    <c-cockpit .theme=${Themes.pink}>
+    <c-cockpit .theme=${Themes.default}>
       <c-brand
         slot="header-start"
         class="orangered"

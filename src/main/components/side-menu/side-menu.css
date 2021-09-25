@@ -17,7 +17,7 @@
 /* === uncollapsible ============================================== */
 
 .uncollapsible {
-  margin-top: 0.3rem;
+  margin: 0.3rem 0 0 1px;
 }
 
 .uncollapsible .group-header {
@@ -60,43 +60,26 @@ sl-details::part(content) {
   padding: 0;
 }
 
-sl-menu::part(base) {
-  padding: 0 0 0.8rem 0;
+.collapsible .items {
+  margin: 0.15rem 0 0.5rem 1px;
 }
 
-sl-menu-item::part(label)::before {
-  position: relative;
-  content: '⤷';
-  content: 'ᐅ';
-  content: '▪';
-  top: -1px;
-  margin-left: -13px;
-  margin-left: -9px;
-  font-size: 12px;
-  color: rgb(var(--sl-color-primary-500));
+.collapsible .item {
+  padding: 0.3rem 2rem;
+  cursor: pointer;
 }
 
-sl-menu-item::part(label) {
-  position: relative;
-  left: 14px;
+.collapsible .item.active {
+  padding: 0.3rem 2rem 0.3rem calc(2rem - 3px);
+  background-color: rgb(var(--sl-color-primary-200) / 0.7);
+  border: 0 solid rgb(var(--sl-color-primary-500));
+  border-left-width: 3px;
+  box-sizing: border-box;
+  cursor: default;
 }
 
-sl-menu-item::part(base) {
-  margin: 2px 0;
-  padding: 0.15rem 2rem;
-  font-size: var(--sl-font-size-medium);
-  white-space: normal;
-  line-height: calc(var(--sl-font-size-medium) + 5px);
-}
-
-sl-menu-item::part(base):hover {
-  color: rgb(var(--sl-color-primary-950));
-  background-color: rgb(var(--sl-color-primary-200));
-}
-
-sl-menu-item::part(base):active {
-  color: rgb(var(--sl-color-primary-950));
-  background-color: rgb(var(--sl-color-primary-100));
+.collapsible .item:not(.active):hover {
+  background-color: rgb(var(--sl-color-neutral-200) / 0.7);
 }
 
 .menu-header {
