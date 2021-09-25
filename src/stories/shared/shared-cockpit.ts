@@ -47,8 +47,67 @@ export default {
 export class SharedCockpit extends component() {}
 
 function sharedCockpitImpl() {
+  const menu: SideMenu.Menu = {
+    kind: 'groups',
+
+    groups: [
+      {
+        kind: 'group',
+        title: 'Products',
+        items: [
+          {
+            kind: 'item',
+            title: 'Manage products',
+            itemId: '1'
+          },
+          {
+            kind: 'item',
+            title: 'Price calculation',
+            itemId: '2'
+          },
+          {
+            kind: 'item',
+            title: 'Import products'
+          }
+        ]
+      },
+      {
+        kind: 'group',
+        title: 'Services',
+        items: [
+          {
+            kind: 'item',
+            title: 'Assign services to products'
+          },
+          {
+            kind: 'item',
+            title: 'Export services'
+          }
+        ]
+      },
+      {
+        kind: 'group',
+        title: 'Administration',
+        items: [
+          {
+            kind: 'item',
+            title: 'User management'
+          },
+          {
+            kind: 'item',
+            title: 'Configuration'
+          },
+          {
+            kind: 'item',
+            title: 'Cronjobs'
+          }
+        ]
+      }
+    ]
+  }
+
   return () => html`
-    <c-cockpit .theme=${Themes.coral}>
+    <c-cockpit .theme=${Themes.pink}>
       <c-brand
         slot="header-start"
         class="orangered"
@@ -81,7 +140,7 @@ function sharedCockpitImpl() {
       ></c-sections-menu>
       <c-user-menu slot="header-end"></c-user-menu>
       <div slot="sidebar" class="lightgreen full-height">
-        <c-side-menu></c-side-menu>
+        <c-side-menu .menu=${menu} .activeItemId=${'1'}></c-side-menu>
       </div>
       <div slot="main" class="yellow full-height"><slot></slot></div>
     </c-cockpit>

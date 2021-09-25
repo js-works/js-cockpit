@@ -20,26 +20,23 @@ export { SideMenu }
 // === types =========================================================
 
 namespace SideMenu {
+  export type Menu = Groups | null
+
   export type Groups = {
-    type: 'item-groups'
-    groups: GroupLevel0[]
-    activeItemId?: string | null
+    kind: 'groups'
+    groups: Group[]
+    collapseMode?: 'none' | 'full' | 'auto'
+    openByDefault?: boolean
   }
 
-  export type GroupLevel0 = {
-    type: 'item-group'
-    title: string
-    items: (GroupLevel1 | Item)[]
-  }
-
-  export type GroupLevel1 = {
-    type: 'item-group'
+  export type Group = {
+    kind: 'group'
     title: string
     items: Item[]
   }
 
   export type Item = {
-    type: 'item'
+    kind: 'item'
     title: string
     itemId?: string
   }
@@ -50,15 +47,18 @@ namespace SideMenu {
 @elem({
   tag: 'c-side-menu',
   styles: sideMenuStyles,
-  impl: lit(loginScreenImpl),
+  impl: lit(sideMenuImpl),
   uses: [SlDetails, SlMenu, SlMenuItem]
 })
 class SideMenu extends component() {
   @prop
-  menu: SideMenu.Groups | (() => SideMenu.Groups | null) | null = null
+  menu: SideMenu.Menu = null
+
+  @prop
+  activeItemId: string | null = null
 }
 
-function loginScreenImpl(self: SideMenu) {
+function sideMenuImpl(self: SideMenu) {
   function render() {
     return html`
       <div class="base">
@@ -72,34 +72,55 @@ function loginScreenImpl(self: SideMenu) {
             ></sl-icon>
           </sl-button>
         </div>
-        <sl-details summary="Products">
-          <sl-menu>
-            <sl-menu-item>Manage products</sl-menu-item>
-            <sl-menu-item>Price calculation</sl-menu-item>
-            <sl-menu-item>Import products</sl-menu-item>
-          </sl-menu>
-        </sl-details>
-        <sl-details summary="Services">
-          <sl-menu>
-            <sl-menu-item>Assign services to products bla bla bla</sl-menu-item>
-            <sl-menu-item>Export services</sl-menu-item>
-          </sl-menu>
-        </sl-details>
-        <sl-details summary="Administration">
-          <sl-menu>
-            <sl-menu-item>User management</sl-menu-item>
-            <sl-menu-item>Configuration</sl-menu-item>
-            <sl-menu-item>Cronjobs</sl-menu-item>
-          </sl-menu>
-        </sl-details>
-        <sl-details summary="Miscellaneous">
-          <sl-menu>
-            <sl-menu-item>Manage products</sl-menu-item>
-            <sl-menu-item>Price calculation</sl-menu-item>
-            <sl-menu-item>Import products</sl-menu-item>
-          </sl-menu>
-        </sl-details>
+        ${renderMenu(self.menu)}
       </div>
+    `
+  }
+
+  function renderMenu(menu: SideMenu.Menu) {
+    return !menu ? null : renderGroups(menu!)
+  }
+
+  function renderGroups(groups: SideMenu.Groups) {
+    let content: any
+    const collapseMode = self.menu!.collapseMode
+    const uncollapsible = collapseMode !== 'full' && collapseMode !== 'auto'
+
+    if (uncollapsible) {
+      content = repeat(
+        groups.groups,
+        (_, idx) => idx,
+        (group) => {
+          return html`
+            <div class="group-header">${group.title}</div>
+            <div>${renderItems(group.items)}</div>
+          `
+        }
+      )
+    }
+
+    return html`
+      <div class=${classMap({ uncollapsible })}>
+        ${'                             '} ${content}
+      </div>
+    `
+  }
+
+  function renderItems(items: SideMenu.Item[]) {
+    return html`
+      ${repeat(
+        items,
+        (_, idx) => idx,
+        (item) => {
+          return html`<div
+            class="item ${classMap({
+              active: item.itemId === self.activeItemId
+            })}"
+          >
+            ${item.title}
+          </div>`
+        }
+      )}
     `
   }
 

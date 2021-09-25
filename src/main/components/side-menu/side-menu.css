@@ -9,7 +9,41 @@
   max-height: 100%;
   overflow: auto;
   box-sizing: border-box;
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+  user-select: none;
 }
+
+/* === uncollapsible ============================================== */
+
+.uncollapsible {
+  margin-top: 0.3rem;
+}
+
+.uncollapsible .group-header {
+  font-weight: 600;
+  padding: 0.5rem 1rem 0.25rem 1rem;
+}
+
+.uncollapsible .item {
+  padding: 0.25rem 2rem;
+  cursor: pointer;
+}
+
+.uncollapsible .item.active {
+  padding: 0.25rem 2rem 0.25rem calc(2rem - 3px);
+  background-color: rgb(var(--sl-color-primary-200));
+  border: 0 solid rgb(var(--sl-color-primary-600));
+  border-left-width: 3px;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.uncollapsible .item:not(.active):hover {
+  background-color: rgb(var(--sl-color-primary-200));
+}
+
+/* === collapsible ================================================ */
 
 sl-details::part(base) {
   border-width: 0 0 1px 0;
