@@ -130,7 +130,8 @@ function sideMenuImpl(self: SideMenu) {
                 active: item.itemId === self.activeItemId
               })}"
             >
-              ${item.title}
+              <span class="mark"></span>
+              <span>${item.title}</span>
             </div>`
           }
         )}
