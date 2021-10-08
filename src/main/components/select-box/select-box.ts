@@ -6,7 +6,7 @@ import { useFormCtrl } from '../../ctrls/form-ctrl'
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'
 import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
-import SlMenuDivider from '@shoelace-style/shoelace/dist/components/menu-divider/menu-divider'
+import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
 
 // styles
 import controlStyles from '../../shared/css/control.css'
@@ -23,7 +23,7 @@ export { SelectBox }
 @elem({
   tag: 'c-select-box',
   styles: [controlStyles, selectBoxStyles],
-  uses: [SlMenuDivider, SlMenuItem, SlSelect],
+  uses: [SlDivider, SlMenuItem, SlSelect],
   impl: lit(selectBoxImpl)
 })
 class SelectBox extends component<{
@@ -57,7 +57,7 @@ function selectBoxImpl(self: SelectBox) {
             <sl-menu-item value="option-1">Option 1</sl-menu-item>
             <sl-menu-item value="option-2">Option 2</sl-menu-item>
             <sl-menu-item value="option-3">Option 3</sl-menu-item>
-            <sl-menu-divider></sl-menu-divider>
+            <sl-divider></sl-divider>
             <sl-menu-item value="option-4">Option 4</sl-menu-item>
             <sl-menu-item value="option-5">Option 5</sl-menu-item>
             <sl-menu-item value="option-6">Option 6</sl-menu-item>

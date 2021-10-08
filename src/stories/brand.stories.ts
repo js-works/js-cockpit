@@ -25,8 +25,8 @@ class BrandDemo extends component() {}
 function brandDemoImpl() {
   return () =>
     html`
-      <div class="brand-demo">
-        <c-theme-provider .theme=${Themes.apricot}>
+      <c-theme-provider .theme=${Themes.apricot}>
+        <div class="brand-demo">
           <div>
             <c-brand
               headline="Size: small"
@@ -88,8 +88,8 @@ function brandDemoImpl() {
               multi-color
             ></c-brand>
           </div>
-        </c-theme-provider>
-      </div>
+        </div>
+      </c-theme-provider>
     `
 }
 

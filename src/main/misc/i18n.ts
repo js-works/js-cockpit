@@ -9,6 +9,14 @@ export { I18n }
 const EN_US = 'en-US'
 const DEFAULT_FIRST_DAY_OF_WEEK = 0
 
+// === parsers by locale =============================================
+
+const numberParserByLocale = new Map<
+  string,
+  (number: string) => number | null
+>()
+const dateParserByLocale = new Map<string, (date: string) => Date | null>()
+
 // === data for first day of week per country (used locally) =========
 
 // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
@@ -56,8 +64,11 @@ namespace I18n {
       replacements?: string[] | null
     ): string | null
 
-    formatDate(locale: string, value: Date, format?: DateFormat): string
+    parseNumber(locale: string, numberString: string): number | null
+    parseDate(locale: string, dateString: string): Date | null
+
     formatNumber(locale: string, value: number, format?: NumberFormat): string
+    formatDate(locale: string, value: Date, format?: DateFormat): string
 
     formatRelativeTime(
       locale: string,
@@ -72,8 +83,12 @@ namespace I18n {
   export type Localizer = {
     getLocale(): string
     translate(key: string, replacements?: any): string
-    formatDate(value: Date, format?: DateFormat): string
+
+    parseNumber(numberString: string): number | null
+    parseDate(dateString: string): Date | null
+
     formatNumber(value: number, format?: NumberFormat): string
+    formatDate(value: Date, format?: DateFormat): string
 
     formatRelativeTime(
       value: number,
@@ -207,6 +222,9 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
       return i18n.translate(getLocale(), key, replacements) || ''
     },
 
+    parseNumber: (numberString) => i18n.parseNumber(getLocale(), numberString),
+    parseDate: (dateString) => i18n.parseDate(getLocale(), dateString),
+
     formatNumber: (number, format) =>
       i18n.formatNumber(getLocale(), number, format),
 
@@ -264,12 +282,112 @@ const baseBehavior: I18n.Behavior = {
     return dict.translate(locale, key, replacements)
   },
 
-  formatDate(locale, value, format): string {
-    return new Intl.DateTimeFormat(locale, format).format(value)
+  parseNumber(locale: string, numberString: string): number | null {
+    let numberParser = numberParserByLocale.get(locale)
+
+    if (!numberParser) {
+      const example = Intl.NumberFormat(locale).format(3.4)
+
+      if (
+        example.indexOf('3') !== 0 ||
+        example.indexOf('4') !== 2 ||
+        example.length !== 3
+      ) {
+        throw new Error('Unsupported locale for automatic number parser')
+      }
+
+      const separators = new Set(
+        Intl.NumberFormat(locale).format(123456789).replace(/\d/g, '').split('')
+      )
+
+      if (separators.size > 1) {
+        throw new Error('Unsupported locale for automatic number parser')
+      }
+
+      const decimalSeparator = example[1]
+      const digitGroupSeparator = [...separators.values()][0] || ''
+
+      const regExp = new RegExp(
+        `^\\d(\\d|${escapeRegExp(digitGroupSeparator)})*(${escapeRegExp(
+          decimalSeparator
+        )}\\d+)?$`
+      )
+
+      numberParser = (s: string) => {
+        if (!s.match(regExp)) {
+          return null
+        }
+
+        let numberString = s
+
+        if (digitGroupSeparator) {
+          numberString = numberString.replaceAll(digitGroupSeparator, '')
+        }
+
+        numberString = numberString.replace(decimalSeparator, '.')
+
+        let number = parseFloat(numberString)
+
+        if (numberString !== number.toString()) {
+          return null
+        }
+
+        return number
+      }
+
+      numberParserByLocale.set(locale, numberParser)
+    }
+
+    return numberParser(numberString)
+  },
+
+  parseDate(locale: string, dateString: string): Date | null {
+    let dateParser = dateParserByLocale.get(locale)
+
+    if (!dateParser) {
+      const example = Intl.DateTimeFormat(locale).format(new Date('2100-11-23'))
+
+      if (
+        example.indexOf('2100') === -1 ||
+        example.indexOf('11') === -1 ||
+        example.indexOf('23') === -1
+      ) {
+        throw new Error('Unsupported locale for automatic date parser')
+      }
+
+      const regExp = new RegExp(
+        '^' +
+          escapeRegExp(example)
+            .replace('2100', '\\s*(?<year>\\d{1,4})\\s*')
+            .replace('11', '\\s*(?<month>\\d{1,2})\\s*')
+            .replace('23', '\\s*(?<day>\\d{1,2})\\s*') +
+          '$'
+      )
+
+      dateParser = (s: string) => {
+        const match = regExp.exec(s)
+
+        if (!match) {
+          return null
+        }
+
+        const { year, month, day } = match.groups!
+
+        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+      }
+
+      dateParserByLocale.set(locale, dateParser)
+    }
+
+    return dateParser(dateString)
   },
 
   formatNumber(locale, value, format): string {
     return new Intl.NumberFormat(locale, format).format(value)
+  },
+
+  formatDate(locale, value, format): string {
+    return new Intl.DateTimeFormat(locale, format).format(value)
   },
 
   formatRelativeTime(locale, value, unit, format): string {
@@ -421,3 +539,7 @@ const getFirstDayOfWeek: (locale: string) => number = (() => {
     )
   }
 })()
+
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}

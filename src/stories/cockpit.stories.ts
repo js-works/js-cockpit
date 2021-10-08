@@ -171,17 +171,19 @@ function createDataForm() {
               <c-text-field label="First name" required></c-text-field>
               <c-text-field label="Last name" required></c-text-field>
               <c-text-field label="Phone" required></c-text-field>
-              <c-text-field label="Mobile"></c-text-field>
             </c-fieldset>
             <c-fieldset>
               <c-text-field label="Company" required></c-text-field>
+              <c-text-field label="Display name"></c-text-field>
               <c-text-field label="Alias name"></c-text-field>
               <c-date-field label="Day of birth" required></c-date-field>
+              <!--
               <c-radio-group
                 label="Options"
                 orient="horizontal"
                 required
               ></c-radio-group>
+-->
             </c-fieldset>
           </c-section>
           <c-section caption="Contact">
@@ -189,6 +191,7 @@ function createDataForm() {
               <c-text-field label="Phone" required></c-text-field>
               <c-text-field label="Mobile"></c-text-field>
               <c-text-area label="Comments"></c-text-area>
+              <c-date-field label="Day of birth" required></c-date-field>
             </c-fieldset>
           </c-section>
         </c-tab>

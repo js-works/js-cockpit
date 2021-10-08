@@ -1,6 +1,21 @@
 .base {
+  position: relative;
   display: flex;
 }
+
+.datepicker-container {
+  position: absolute;
+}
+
+sl-input {
+  position: relative;
+  width: 280px;
+}
+
+.datepicker {
+  left: 0 !important;
+}
+/*
 
 .date-input {
   flex: 1 1 auto;
@@ -29,10 +44,12 @@
   width: 100%;
   box-sizing: border-box;
 }
-
+*/
+/*
 .calendar-icon {
   position: relative;
   top: 8px;
   left: -22px;
   cursor: pointer;
 }
+*/

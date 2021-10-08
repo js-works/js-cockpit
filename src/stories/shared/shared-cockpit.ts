@@ -53,52 +53,61 @@ function sharedCockpitImpl() {
     groups: [
       {
         kind: 'group',
+        groupId: 'products',
         title: 'Products',
         items: [
           {
             kind: 'item',
-            title: 'Manage products',
-            itemId: '1'
+            itemId: 'manage-products',
+            title: 'Manage products'
           },
           {
             kind: 'item',
-            title: 'Price calculation',
-            itemId: '2'
+            itemId: 'price-calculation',
+            title: 'Price calculation'
           },
           {
             kind: 'item',
+            itemId: 'import-products',
             title: 'Import products'
           }
         ]
       },
       {
         kind: 'group',
+        groupId: 'services',
         title: 'Services',
         items: [
           {
             kind: 'item',
+            itemId: 'assign-services-to-products',
             title: 'Assign services to products'
           },
           {
             kind: 'item',
+            itemId: 'export-services',
             title: 'Export services'
           }
         ]
       },
       {
         kind: 'group',
+        groupId: 'administration',
         title: 'Administration',
         items: [
           {
             kind: 'item',
+            itemId: 'user-management',
             title: 'User management'
           },
           {
             kind: 'item',
+            itemId: 'configuration',
             title: 'Configuration'
           },
           {
             kind: 'item',
+            itemId: 'cronjobs',
             title: 'Cronjobs'
           }
         ]
@@ -140,7 +149,7 @@ function sharedCockpitImpl() {
       ></c-sections-menu>
       <c-user-menu slot="header-end"></c-user-menu>
       <div slot="sidebar" class="lightgreen full-height">
-        <c-side-menu .menu=${menu} .activeItemId=${'1'}></c-side-menu>
+        <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>
       </div>
       <div slot="main" class="yellow full-height"><slot></slot></div>
     </c-cockpit>

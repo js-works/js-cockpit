@@ -26,19 +26,19 @@ namespace SideMenu {
     kind: 'groups'
     groups: Group[]
     collapseMode?: 'none' | 'full' | 'auto'
-    openByDefault?: boolean
   }
 
   export type Group = {
     kind: 'group'
+    groupId: string
     title: string
     items: Item[]
   }
 
   export type Item = {
     kind: 'item'
+    itemId: string
     title: string
-    itemId?: string
   }
 }
 
@@ -59,6 +59,8 @@ class SideMenu extends component() {
 }
 
 function sideMenuImpl(self: SideMenu) {
+  const openGroups = new Set<string>()
+
   function render() {
     return html`
       <div class="base">
@@ -98,12 +100,29 @@ function sideMenuImpl(self: SideMenu) {
         }
       )
     } else {
+      let activeGroupIdx = -1
+
+      if (self.activeItemId) {
+        for (
+          let i = 0;
+          i < groups.groups.length && activeGroupIdx === -1;
+          ++i
+        ) {
+          for (let j = 0; j < groups.groups[i].items.length; ++j) {
+            if (groups.groups[i].items[j].itemId === self.activeItemId) {
+              activeGroupIdx = i
+              break
+            }
+          }
+        }
+      }
+
       content = repeat(
         groups.groups,
         (_, idx) => idx,
-        (group) => {
+        (group, idx) => {
           return html`
-            <sl-details summary=${group.title}>
+            <sl-details summary=${group.title} ?open=${idx === activeGroupIdx}>
               ${renderItems(group.items)}
             </sl-details>
           `

@@ -6,6 +6,7 @@ import { useAfterMount } from 'js-element/hooks'
 import { Datepicker } from 'vanillajs-datepicker'
 
 // custom elements
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
 
@@ -23,15 +24,25 @@ export { DateField }
 
 // === Cockpit ===================================================
 
-const styleElem = document.createElement('style')
-styleElem.innerText = datepickerStyles
-document.head.append(styleElem)
+const datepickerStyles2 = `
+  .datepicker {
+    z-index: 32000;
+  }
+`
+
+//const styleElem = document.createElement('style')
+//styleElem.innerText = datepickerStyles + '\n' + datepickerStyles2
+//document.head.append(styleElem)
+
+document.addEventListener('mousedown', () => {
+  //  console.log('mouse down')
+})
 
 @elem({
   tag: 'c-date-field',
-  styles: [dateFieldStyles, controlStyles],
+  styles: [dateFieldStyles, controlStyles, datepickerStyles],
   impl: lit(dateFieldImpl),
-  uses: [SlIcon, SlIconButton]
+  uses: [SlIcon, SlIconButton, SlInput]
 })
 class DateField extends component() {
   @prop({ attr: Attrs.string })
@@ -48,23 +59,56 @@ class DateField extends component() {
 }
 
 function dateFieldImpl(self: DateField) {
-  const input = document.createElement('input')
-  input.className = 'date-input'
+  //const input = document.createElement('input')
+  //input.className = 'date-input'
 
-  const datepicker = new Datepicker(input, {
-    calendarWeeks: true,
-    daysOfWeekHighlighted: [0, 6],
-    prevArrow: '&#x1F860;',
-    nextArrow: '&#x1F862;',
-    weekStart: 0,
-    autohide: true,
-    autoHide: true,
-    showOnFocus: true,
-    updateOnBlur: false,
-    todayHighlight: true
-    //language: locale
+  let datepicker: any = null
+  let input: HTMLInputElement | null = null
+
+  const onDatepickerHide = () => {} //alert('wooohooo')
+
+  useAfterMount(() => {
+    setTimeout(() => {
+      console.clear()
+
+      input = self
+        .shadowRoot!.querySelector('sl-input')!
+        .shadowRoot!.querySelector('input')
+
+      const container = self.shadowRoot!.querySelector('.datepicker-container')!,
+
+      datepicker = new Datepicker(input, {
+        calendarWeeks: true,
+        daysOfWeekHighlighted: [0, 6],
+        prevArrow: '&#x1F860;',
+        nextArrow: '&#x1F862;',
+        weekStart: 0,
+        autohide: true,
+        showOnFocus: true,
+        updateOnBlur: false,
+        todayHighlight: true,
+        container,
+        weeknumbers: true,
+        format: {
+          toValue(s: string) {
+            return new Date(s)
+          },
+
+          toDisplay(date: Date) {
+            return date.toISOString().substr(0, 10)
+          }
+        }
+
+        //language: locale
+      })
+
+      container.addEventListener('mousedown', (ev) => {
+        ev.preventDefault()
+      })
+    }, 0)
   })
 
+  /*
   useAfterMount(() => {
     const onDocumentClick = (ev: MouseEvent) => {
       if (!datepicker.active) {
@@ -91,17 +135,28 @@ function dateFieldImpl(self: DateField) {
   datepicker.pickerElement.onclick = (ev: Event) => {
     ev.stopPropagation()
   }
+  */
 
-  return () => html`
-    <div class="base">
-      <div class="field-wrapper">
-        <div class="label">${self.label}</div>
-        <div class="control">
-          ${input}
-          <sl-icon class="calendar-icon" src=${calendarIcon}></sl-icon>
-          <div class="error">${self.error}</div>
+  function render() {
+    return html`
+      <div class="base">
+        <div class="field-wrapper">
+          <div class="label">${self.label}</div>
+          <div class="control">
+            <sl-input size="small">
+              <sl-icon
+                slot="suffix"
+                class="calendar-icon"
+                src=${calendarIcon}
+              ></sl-icon>
+            </sl-input>
+            <div class="error">${self.error}</div>
+            <div class="datepicker-container"></div>
+          </div>
         </div>
       </div>
-    </div>
-  `
+    `
+  }
+
+  return render
 }
