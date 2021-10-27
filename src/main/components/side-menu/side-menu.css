@@ -3,8 +3,8 @@
   background-color: rgb(var(--sl-color-neutral-50));
   border: 0 solid rgb(var(--sl-color-neutral-300));
   border-width: 0 1px 0 0;
-  min-width: 17rem;
-  max-width: 17rem;
+  min-width: 15rem;
+  max-width: 15rem;
   min-height: 100%;
   max-height: 100%;
   overflow: auto;
@@ -58,6 +58,7 @@ sl-details::part(header) {
 
 sl-details::part(content) {
   padding: 0;
+  margin-top: -2px;
 }
 
 .collapsible .items {
@@ -66,15 +67,17 @@ sl-details::part(content) {
 
 .collapsible .item {
   display: flex;
-  padding: 0.3rem 2rem;
+  padding: 0.3rem 0.5rem 0.3rem 2rem;
   cursor: pointer;
 }
 
+/*
 .collapsible .item > .mark:before {
   color: rgb(var(--sl-color-primary-600));
   content: '\25aa';
   margin: 0.4rem;
 }
+*/
 
 .collapsible .item.active {
   padding: 0.3rem 2rem 0.3rem calc(2rem - 3px);

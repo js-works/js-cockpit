@@ -75,32 +75,33 @@ function dateFieldImpl(self: DateField) {
         .shadowRoot!.querySelector('sl-input')!
         .shadowRoot!.querySelector('input')
 
-      const container = self.shadowRoot!.querySelector('.datepicker-container')!,
+      const container = self.shadowRoot!.querySelector(
+          '.datepicker-container'
+        )!,
+        datepicker = new Datepicker(input, {
+          calendarWeeks: true,
+          daysOfWeekHighlighted: [0, 6],
+          prevArrow: '&#x1F860;',
+          nextArrow: '&#x1F862;',
+          weekStart: 0,
+          autohide: true,
+          showOnFocus: true,
+          updateOnBlur: false,
+          todayHighlight: true,
+          container,
+          weeknumbers: true,
+          format: {
+            toValue(s: string) {
+              return new Date(s)
+            },
 
-      datepicker = new Datepicker(input, {
-        calendarWeeks: true,
-        daysOfWeekHighlighted: [0, 6],
-        prevArrow: '&#x1F860;',
-        nextArrow: '&#x1F862;',
-        weekStart: 0,
-        autohide: true,
-        showOnFocus: true,
-        updateOnBlur: false,
-        todayHighlight: true,
-        container,
-        weeknumbers: true,
-        format: {
-          toValue(s: string) {
-            return new Date(s)
-          },
-
-          toDisplay(date: Date) {
-            return date.toISOString().substr(0, 10)
+            toDisplay(date: Date) {
+              return date.toISOString().substr(0, 10)
+            }
           }
-        }
 
-        //language: locale
-      })
+          //language: locale
+        })
 
       container.addEventListener('mousedown', (ev) => {
         ev.preventDefault()

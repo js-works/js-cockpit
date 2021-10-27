@@ -15,6 +15,11 @@ sl-input {
 .datepicker {
   left: 0 !important;
 }
+
+.datepicker-view {
+  width: 290px !important;
+}
+
 /*
 
 .date-input {

@@ -18,8 +18,8 @@ function loginFormDemoImpl() {
   return () =>
     html`
       <div>
-        <c-login-form full-size .theme=${Themes.coral}>
-          <div slot="heder">
+        <c-login-form full-size .theme=${Themes.default}>
+          <div slot="header">
             <c-brand
               headline="my-company"
               subheadline="Back Office"

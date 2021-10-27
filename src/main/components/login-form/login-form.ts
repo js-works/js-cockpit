@@ -113,6 +113,10 @@ function loginFormImpl(self: LoginForm) {
                     required
                   ></c-password-field>
                 </slot>
+                <br/>
+              <div style="text-align: right; font-size: var(--sl-font-size-small); xxxfont-style: italic">
+                Forgot passwort?
+              </div>
               </div>
               <div class="column2-bottom">
                 <sl-checkbox>${t('remember-login')}</sl-checkbox>
