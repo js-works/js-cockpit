@@ -242,6 +242,45 @@ const Themes = {
     })
   },
 
+  get temp(): Theme {
+    return materializeTheme(this, 'temp', {
+      primaryColor: '#40a6ff' //
+      //
+      //primaryColor: '#c05c5c' // indian red 2
+      //primaryColor: '#8b008b' // +
+      //primaryColor: '#b22222' //
+      //primaryColor: '#cd5c5c' // indian red
+      //primaryColor: '#00bbff' // default?
+      //primaryColor: '#cd5c5c' //
+      //primaryColor: '#a9ddff' //
+      //primaryColor: '#dd1493' //
+      //primaryColor: '#7FFFD4' // aquamarine
+      //primaryColor: '#00FFFF' // aqua?
+      //primaryColor: '#008B8B' // cyan
+      //primaryColor: '#00CED1' // dark turquoise
+      //primaryColor: '#008000' // green
+      //primaryColor: '#008080' // teal
+      //primaryColor: '#800080' // purple
+      //primaryColor: '#DA70D6' // orchid ++
+      //primaryColor: '#C71585' // violet red
+      //primaryColor: '#BA55D3' // orchid
+      //primaryColor: '#66CDAA' // aquamarine
+      //primaryColor: '#FF69B4' // +
+      //primaryColor: '#00BFFF' // sky blue
+      //primaryColor: '#FF7F50' // coral
+      //primaryColor: '#7EC0EE' //
+      //primaryColor: '#F660AB' //
+      //primaryColor: '#00bbff' //
+      //primaryColor: '#9c36b5' //
+      //primaryColor: '#4F84C4' // +
+      //primaryColor: '#EA7E5D' // -
+      //primaryColor: '#008b8b' // +
+      //primaryColor: '#00bfff' //
+      //primaryColor: '#5f9ea0' //
+      //primaryColor: '#ff8c00' //
+    })
+  },
+
   get aquamarine(): Theme {
     return materializeTheme(this, 'aquamarine', {
       primaryColor: '#7FFFD4' //

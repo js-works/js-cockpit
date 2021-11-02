@@ -25,6 +25,7 @@ I18n.addTranslations('de', {
       'username': 'Benutzername',
       'password': 'Passwort',
       'remember-login': 'Angemeldet bleiben',
+      'forgot-password': 'Passwort vergessen?',
       'log-in': 'Anmelden'
     },
 

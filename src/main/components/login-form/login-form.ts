@@ -38,10 +38,19 @@ I18n.addTranslations('en', {
   'js-cockpit.login-form': {
     'login-intro-headline': 'Login',
     'login-intro-text': 'Please enter your credentials to log in',
+    'forgot-password-headline': 'Forgot password?',
+    'forgot-password-text': "Please fill out and submit the form and you'll receive an e-mail with further instructions",
+    'reset-password-headline': 'Reset password',
+    'reset-password-text': 'Please fill out and submit the form to reset your password',
     'username': 'Username',
     'password': 'Password',
+    'security-token': 'Security token',
     'remember-login': 'Remember login',
-    'log-in': 'Log in'
+    'log-in': 'Log in',
+    'send-e-mail': 'Send e-mail',
+    'reset-password': 'Reset password',
+    'forgot-password': 'Forgot password?',
+    'go-to-login-form': 'Go to login from'
   }
 })
 
@@ -61,6 +70,9 @@ I18n.addTranslations('en', {
   ]
 })
 class LoginForm extends component() {
+  @prop({ attr: Attrs.string })
+  initialView: 'login' | 'forgotPassword' | 'resetPassword' = 'login'
+
   @prop({ attr: Attrs.boolean })
   fullSize = false
 
@@ -83,58 +95,62 @@ function loginFormImpl(self: LoginForm) {
     formCtrl.submit(() => alert('handler'))
   }
 
-  return () => html`
-    <c-theme-provider .theme=${self.theme}>
-      <div class="base ${classMap({ 'full-size': self.fullSize })}">
-        <div class="container">
-          <div class="header">
-            <slot name="header"></slot>
-          </div>
-          <div class="main">
-            <div class="column1">
-              <div class="column1-top login-intro" slot="login-intro">
-                <div class="default-login-intro">
-                  <slot name="login-intro">
-                    <h3>${t('login-intro-headline')}</h3>
-                    <p>${t('login-intro-text')}</p>
-                  </slot>
+  return () => {
+    return html`
+      <c-theme-provider .theme=${self.theme}>
+        <div class="base ${classMap({ 'full-size': self.fullSize })}">
+          <div class="container">
+            <div class="header">
+              <slot name="header"></slot>
+            </div>
+            <div class="main">
+              <div class="column1">
+                <div class="column1-top login-intro" slot="login-intro">
+                  <div class="default-login-intro">
+                    <slot name="login-intro">
+                      <h3>${t('login-intro-headline')}</h3>
+                      <p>${t('login-intro-text')}</p>
+                    </slot>
+                  </div>
+                </div>
+                <div class="column1-bottom">
+                  <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
                 </div>
               </div>
-              <div class="column1-bottom">
-                <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
-              </div>
+              <form-ctrl-provider class="column2" .value=${formCtrl}>
+                <div class="column2-top">
+                  <slot name="login-fields">
+                    <c-text-field label=${t(
+                      'username'
+                    )} required></c-text-field>
+                    <c-password-field
+                      label=${t('password')}
+                      required
+                    ></c-password-field>
+                  </slot>
+                  <br/>
+                <div style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic">
+                  ${t('forgot-password')}
+                </div>
+                </div>
+                <div class="column2-bottom">
+                  <sl-checkbox>${t('remember-login')}</sl-checkbox>
+                  <sl-button
+                    type="primary"
+                    class="login-button"
+                    submit
+                    @click=${onSubmitClick}
+                    >${t('log-in')}</sl-button
+                  >
+                </div>
+              </c-form-ctrl-provider>
             </div>
-            <form-ctrl-provider class="column2" .value=${formCtrl}>
-              <div class="column2-top">
-                <slot name="login-fields">
-                  <c-text-field label=${t('username')} required></c-text-field>
-                  <c-password-field
-                    label=${t('password')}
-                    required
-                  ></c-password-field>
-                </slot>
-                <br/>
-              <div style="text-align: right; font-size: var(--sl-font-size-small); xxxfont-style: italic">
-                Forgot passwort?
-              </div>
-              </div>
-              <div class="column2-bottom">
-                <sl-checkbox>${t('remember-login')}</sl-checkbox>
-                <sl-button
-                  type="primary"
-                  class="login-button"
-                  submit
-                  @click=${onSubmitClick}
-                  >${t('log-in')}</sl-button
-                >
-              </div>
-            </c-form-ctrl-provider>
-          </div>
-          <div class="footer">
-            <slot name="footer"></slot>
+            <div class="footer">
+              <slot name="footer"></slot>
+            </div>
           </div>
         </div>
-      </div>
-    </c-theme-provider>
-  `
+      </c-theme-provider>
+    `
+  }
 }

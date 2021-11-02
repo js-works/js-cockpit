@@ -18,7 +18,11 @@ function loginFormDemoImpl() {
   return () =>
     html`
       <div>
-        <c-login-form full-size .theme=${Themes.default}>
+        <c-login-form
+          full-size
+          initialView="forgotPassword"
+          .theme=${Themes.temp}
+        >
           <div slot="header">
             <c-brand
               headline="my-company"

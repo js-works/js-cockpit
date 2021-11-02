@@ -29,29 +29,29 @@
   "devDependencies": {
     "@a11y/focus-trap": "^1.0.5",
     "@babel/core": "^7.15.8",
-    "@storybook/addon-actions": "^6.3.11",
-    "@storybook/addon-essentials": "^6.3.11",
-    "@storybook/addon-links": "^6.3.11",
-    "@storybook/web-components": "^6.3.11",
+    "@storybook/addon-actions": "^6.3.12",
+    "@storybook/addon-essentials": "^6.3.12",
+    "@storybook/addon-links": "^6.3.12",
+    "@storybook/web-components": "^6.3.12",
     "@types/chroma-js": "^2.1.3",
     "@types/color": "^3.0.2",
-    "@types/faker": "^5.5.8",
+    "@types/faker": "^5.5.9",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.3",
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
-    "esbuild": "^0.13.4",
+    "esbuild": "^0.13.9",
     "faker": "^5.5.3",
     "focus-trap": "^6.7.1",
     "remixicon": "^2.5.0",
     "svg-url-loader": "^7.1.1",
     "terser": "^5.9.0",
     "typescript": "^4.4.4",
-    "vanillajs-datepicker": "^1.1.4"
+    "vanillajs-datepicker": "github:mymth/vanillajs-datepicker"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.0.0-beta.55",
+    "@shoelace-style/shoelace": "^2.0.0-beta.58",
     "js-element": "^0.0.230",
     "lit-html": "^2.0.1"
   }

@@ -24,23 +24,9 @@ export { DateField }
 
 // === Cockpit ===================================================
 
-const datepickerStyles2 = `
-  .datepicker {
-    z-index: 32000;
-  }
-`
-
-//const styleElem = document.createElement('style')
-//styleElem.innerText = datepickerStyles + '\n' + datepickerStyles2
-//document.head.append(styleElem)
-
-document.addEventListener('mousedown', () => {
-  //  console.log('mouse down')
-})
-
 @elem({
   tag: 'c-date-field',
-  styles: [dateFieldStyles, controlStyles, datepickerStyles],
+  styles: [datepickerStyles, dateFieldStyles, controlStyles],
   impl: lit(dateFieldImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
@@ -59,9 +45,6 @@ class DateField extends component() {
 }
 
 function dateFieldImpl(self: DateField) {
-  //const input = document.createElement('input')
-  //input.className = 'date-input'
-
   let datepicker: any = null
   let input: HTMLInputElement | null = null
 
@@ -69,74 +52,43 @@ function dateFieldImpl(self: DateField) {
 
   useAfterMount(() => {
     setTimeout(() => {
-      console.clear()
+      const shadowRoot = self.shadowRoot!
+      const slInput = shadowRoot.querySelector('sl-input')!
+      const container: HTMLElement = shadowRoot.querySelector(
+        '.datepicker-container'
+      )!
 
-      input = self
-        .shadowRoot!.querySelector('sl-input')!
-        .shadowRoot!.querySelector('input')
+      input = slInput.shadowRoot!.querySelector('input')
+      const base = shadowRoot.querySelector('.base')!
 
-      const container = self.shadowRoot!.querySelector(
-          '.datepicker-container'
-        )!,
-        datepicker = new Datepicker(input, {
-          calendarWeeks: true,
-          daysOfWeekHighlighted: [0, 6],
-          prevArrow: '&#x1F860;',
-          nextArrow: '&#x1F862;',
-          weekStart: 0,
-          autohide: true,
-          showOnFocus: true,
-          updateOnBlur: false,
-          todayHighlight: true,
-          container,
-          weeknumbers: true,
-          format: {
-            toValue(s: string) {
-              return new Date(s)
-            },
+      const datepicker = new Datepicker(input, {
+        calendarWeeks: true,
+        daysOfWeekHighlighted: [0, 6],
+        prevArrow: '&#x1F860;',
+        nextArrow: '&#x1F862;',
+        weekStart: 0,
+        autohide: true,
+        showOnFocus: true,
+        updateOnBlur: false,
+        todayHighlight: true,
+        container,
+        weeknumbers: true,
+        format: {
+          toValue(s: string) {
+            return new Date(s)
+          },
 
-            toDisplay(date: Date) {
-              return date.toISOString().substr(0, 10)
-            }
+          toDisplay(date: Date) {
+            return date.toISOString().substr(0, 10)
           }
-
-          //language: locale
-        })
+        }
+      })
 
       container.addEventListener('mousedown', (ev) => {
         ev.preventDefault()
       })
     }, 0)
   })
-
-  /*
-  useAfterMount(() => {
-    const onDocumentClick = (ev: MouseEvent) => {
-      if (!datepicker.active) {
-        return
-      }
-
-      const { pageX, pageY } = ev
-      const x = input.offsetLeft
-      const y = input.offsetTop
-      const w = input.offsetWidth
-      const h = input.offsetHeight
-
-      if (pageX >= x && pageX < x + w && pageY >= y && pageY < y + h) {
-        return
-      }
-
-      datepicker.hide()
-    }
-
-    document.addEventListener('click', onDocumentClick)
-    return () => document.removeEventListener('click', onDocumentClick)
-  })
-
-  datepicker.pickerElement.onclick = (ev: Event) => {
-    ev.stopPropagation()
-  }
-  */
 
   function render() {
     return html`

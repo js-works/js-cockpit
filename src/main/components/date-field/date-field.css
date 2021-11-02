@@ -1,10 +1,9 @@
 .base {
-  position: relative;
   display: flex;
 }
 
 .datepicker-container {
-  position: absolute;
+  position: relative;
 }
 
 sl-input {
@@ -12,49 +11,46 @@ sl-input {
   width: 280px;
 }
 
+/* === datepicker === */
+
 .datepicker {
   left: 0 !important;
+}
+
+.datepicker,
+.button {
+  font-family: var(--sl-font-sans);
+}
+
+.datepicker,
+.datepicker .button,
+.datepicker-view .dow,
+.datepicker-view .week {
+  font-size: var(--sl-font-size-small);
 }
 
 .datepicker-view {
   width: 290px !important;
 }
 
-/*
-
-.date-input {
-  flex: 1 1 auto;
-  display: inline-flex;
-  align-items: stretch;
-  justify-content: start;
-  position: relative;
-  width: 100%;
-  font-family: var(--sl-input-font-family);
-  font-weight: var(--sl-input-font-weight);
-  letter-spacing: var(--sl-input-letter-spacing);
-  background-color: rgb(var(--sl-input-background-color));
-  border: solid var(--sl-input-border-width) rgb(var(--sl-input-border-color));
-  vertical-align: middle;
-  overflow: hidden;
-  transition: var(--sl-transition-fast) color, var(--sl-transition-fast) border,
-    var(--sl-transition-fast) box-shadow;
-  cursor: text;
-
-  height: calc(var(--sl-input-height-small) - var(--sl-input-border-width) * 2);
-  padding: 0 var(--sl-input-spacing-small);
-
-  padding-right: 28px;
-  color: rgb(var(--sl-color-neutral-1000));
-  background-color: rgb(var(--sl-color-neutral-0));
-  width: 100%;
-  box-sizing: border-box;
+.datepicker-view .dow {
+  height: 1.75em;
+  line-height: 1.75em;
+  font-weight: bold;
 }
-*/
-/*
-.calendar-icon {
-  position: relative;
-  top: 8px;
-  left: -22px;
-  cursor: pointer;
+
+.datepicker-view .week,
+.datepicker-cell {
+  height: 1.75em;
+  line-height: 1.75em;
 }
-*/
+
+.datepicker-view.datepicker-grid .datepicker-cell {
+  height: 4em;
+  line-height: 4em;
+}
+
+.datepicker-cell.today:not(.selected),
+.datepicker-cell.today.focused:not(.selected) {
+  background-color: rgb(var(--sl-color-primary-300));
+}
