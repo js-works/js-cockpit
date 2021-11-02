@@ -17,8 +17,10 @@
   max-width: 50px;
   min-height: 50px;
   max-height: 50px;
-  background-color: rgb(var(--sl-color-primary-600));
   cursor: pointer;
+
+  background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
+    var(--sl-dark, rgb(var(--sl-color-primary-400)));
 }
 
 .logout-button:hover {

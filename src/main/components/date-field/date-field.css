@@ -15,6 +15,11 @@ sl-input {
 
 .datepicker {
   left: 0 !important;
+  color: rgb(var(--sl-color-neutral-1000));
+}
+
+.datepicker-picker {
+  background-color: rgb(var(--sl-color-neutral-0));
 }
 
 .datepicker,
@@ -43,6 +48,7 @@ sl-input {
 .datepicker-cell {
   height: 1.75em;
   line-height: 1.75em;
+  padding: 0 0 2px 0;
 }
 
 .datepicker-view.datepicker-grid .datepicker-cell {
@@ -50,7 +56,67 @@ sl-input {
   line-height: 4em;
 }
 
+.datepicker-header .datepicker-controls .button {
+  padding: 0 0 2px 0;
+}
+
+.datepicker-cell.today:not(.selected):not(.disabled) {
+  color: inherit;
+}
+
 .datepicker-cell.today:not(.selected),
 .datepicker-cell.today.focused:not(.selected) {
-  background-color: rgb(var(--sl-color-primary-300));
+  background-color: rgb(var(--sl-color-success-100));
+}
+
+.datepicker-cell.selected,
+.datepicker-cell.selected:hover {
+  background-color: rgb(var(--sl-color-primary-500));
+}
+
+.datepicker-controls .button {
+  cursor: pointer;
+  color: rgb(var(--sl-neutral-1000));
+  background-color: rgb(var(--sl-color-neutral-0));
+}
+
+.datepicker-controls .button:hover,
+.datepicker-controls .button:focus {
+  background-color: rgb(var(--sl-color-neutral-100));
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
+  background-color: rgb(var(--sl-color-neutral-100));
+}
+
+.datepicker-dropdown .datepicker-picker {
+  box-shadow: var(
+      --sl-light,
+      0 2px 3px rgba(10, 10, 10, 0.1),
+      0 0 0 1px rgba(10, 10, 10, 0.1)
+    )
+    var(--sl-dark, none);
+
+  border: var(--sl-light, none)
+    var(--sl-dark, 1px solid rgb(var(--sl-color-neutral-300)));
+}
+
+.datepicker-cell:not(.disabled):hover {
+  background-color: rgb(var(--sl-color-neutral-200));
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today):not(.disabled):hover {
+  background-color: rgb(var(--sl-color-neutral-200));
+}
+
+.datepicker-cell:not(.disabled):hover {
+  background-color: rgb(var(--sl-color-neutral-200));
+}
+
+.datepicker-cell.focused:not(.selected) {
+  background-color: rgb(var(--sl-color-neutral-300));
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today).focused {
+  background-color: rgb(var(--sl-color-neutral-300));
 }

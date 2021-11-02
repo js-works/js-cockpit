@@ -127,7 +127,7 @@ class Theme {
   }
 
   isDark() {
-    return this.#themeTokens['theme-mode'] === '1'
+    return this.#themeTokens['light'] !== 'inherit'
   }
 
   invert(): Theme {
@@ -140,9 +140,12 @@ class Theme {
     const tokens: Record<string, string> = this.#themeTokens
     const invertedTokens = Object.assign({}, tokens)
 
-    invertedTokens['theme-mode'] = tokens['theme-mode'] === '0' ? '1' : '0'
-    invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
-    invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
+    invertedTokens['light'] = tokens['light'] === ' ' ? 'inherit' : ' '
+    invertedTokens['dark'] = tokens['dark'] === ' ' ? 'inherit' : ' '
+
+    // TODO
+    //invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
+    //invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
 
     ALL_COLORS.forEach((color) => {
       for (let i = 0; i < 5; ++i) {
@@ -153,6 +156,36 @@ class Theme {
         invertedTokens[key2] = tokens[key1]
       }
     })
+
+    // TODO!!!!!
+    if (this.isDark()) {
+      COLOR_SHADES.forEach((shade) => {
+        invertedTokens[`color-neutral-${shade}`] = (lightThemeTokens as any)[
+          `color-neutral-${shade}`
+        ]
+      })
+
+      Object.assign(invertedTokens, {
+        'color-neutral-0': lightThemeTokens['color-neutral-0'],
+        'color-neutral-1000': lightThemeTokens['color-neutral-1000']
+      })
+    } else {
+      Object.assign(invertedTokens, {
+        'color-neutral-0': '25 25 25',
+        'color-neutral-50': '35 35 35',
+        'color-neutral-100': '45 45 45',
+        'color-neutral-200': '65 65 65',
+        'color-neutral-300': '80 80 80',
+        'color-neutral-400': '110 110 110',
+        'color-neutral-500': '140 140 140',
+        'color-neutral-600': '160 160 160',
+        'color-neutral-700': '180 180 180',
+        'color-neutral-800': '200 200 200',
+        'color-neutral-900': '220 220 220',
+        'color-neutral-950': '240 240 240',
+        'color-neutral-1000': '255 255 255'
+      })
+    }
 
     const invertedTheme = new Theme({})
     invertedTheme.#themeTokens = invertedTokens as ThemeTokens
@@ -392,7 +425,10 @@ function luminanceOfValue(x: number): number {
 // === Shoelace original light theme =================================
 
 const lightThemeTokens = {
-  'theme-mode': '0', // '0': light theme, '1': dark theme
+  // used for conditional "light vs. dark" theming
+  light: 'inherit' as 'inherit' | ' ',
+  dark: ' ' as 'inherit' | ' ',
+
   'color-blue-gray-50': '248 250 252',
   'color-blue-gray-100': '241 245 249',
   'color-blue-gray-200': '226 232 240',

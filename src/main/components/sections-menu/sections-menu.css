@@ -9,9 +9,10 @@
 }
 
 .icon {
-  color: rgb(var(--sl-color-primary-600));
   margin: 18px -10px 0 0;
   font-smooth: never;
+  color: var(--sl-light, rgb(var(--sl-color-primary-600)))
+    var(--sl-dark, rgb(var(--sl-color-primary-400)));
 }
 
 .section {

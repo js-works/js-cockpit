@@ -12,14 +12,6 @@
   white-space: normal;
   font-size: var(--sl-font-size-medium);
   color: var(--sl-input-label-color);
-  xxxfont-weight: var(--sl-font-weight-semibold);
-
-  /*
-  font-size: calc(
-    var(--sl-font-size-small) * var(--c-label-and-field-mode, 0) +
-      var(--sl-font-size-small) * (1 - var(--c-label-and-field-mode, 0))
-  );
-  */
 }
 
 .label:after {
