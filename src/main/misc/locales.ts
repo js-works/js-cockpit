@@ -82,13 +82,17 @@ function getLocale(elem: HTMLElement): string | null {
   let el: Element = elem
 
   while (el && !(el instanceof Window) && !(el instanceof Document)) {
-    const next = el.closest<HTMLElement>('[lang]')
+    const foundElem = el.closest<HTMLElement>('[lang]')
 
-    if (next) {
-      return next.lang || null
+    if (foundElem) {
+      return foundElem.lang || null
     }
 
-    el = (el.getRootNode() as ShadowRoot).host
+    if (el.assignedSlot) {
+      el = el.assignedSlot
+    } else {
+      el = (el.getRootNode() as ShadowRoot).host
+    }
   }
 
   return null

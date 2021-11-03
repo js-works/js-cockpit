@@ -82,7 +82,7 @@ sl-input {
 
 .datepicker-controls .button:hover,
 .datepicker-controls .button:focus {
-  background-color: rgb(var(--sl-color-neutral-100));
+  background-color: rgb(var(--sl-color-primary-100));
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
@@ -102,15 +102,15 @@ sl-input {
 }
 
 .datepicker-cell:not(.disabled):hover {
-  background-color: rgb(var(--sl-color-neutral-200));
+  background-color: rgb(var(--sl-color-primary-200));
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today):not(.disabled):hover {
-  background-color: rgb(var(--sl-color-neutral-200));
+  background-color: rgb(var(--sl-color-primary-200));
 }
 
 .datepicker-cell:not(.disabled):hover {
-  background-color: rgb(var(--sl-color-neutral-200));
+  background-color: rgb(var(--sl-color-primary-200));
 }
 
 .datepicker-cell.focused:not(.selected) {
@@ -119,4 +119,17 @@ sl-input {
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today).focused {
   background-color: rgb(var(--sl-color-neutral-300));
+}
+
+.datepicker-view .dow {
+  text-transform: capitalize;
+  font-weight: var(--sl-font-weight-semibold);
+}
+
+.datepicker .view-switch {
+  text-transform: capitalize;
+}
+
+.datepicker-cell.month {
+  text-transform: capitalize;
 }

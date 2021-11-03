@@ -172,17 +172,17 @@ class Theme {
     } else {
       Object.assign(invertedTokens, {
         'color-neutral-0': '25 25 25',
-        'color-neutral-50': '35 35 35',
-        'color-neutral-100': '45 45 45',
-        'color-neutral-200': '65 65 65',
-        'color-neutral-300': '80 80 80',
-        'color-neutral-400': '110 110 110',
-        'color-neutral-500': '140 140 140',
-        'color-neutral-600': '160 160 160',
-        'color-neutral-700': '180 180 180',
-        'color-neutral-800': '200 200 200',
-        'color-neutral-900': '220 220 220',
-        'color-neutral-950': '240 240 240',
+        'color-neutral-50': '28 28 31',
+        'color-neutral-100': '33 33 37',
+        'color-neutral-200': '43 43 46',
+        'color-neutral-300': '67 67 74',
+        'color-neutral-400': '86 86 95',
+        'color-neutral-500': '118 118 127',
+        'color-neutral-600': '166 166 175',
+        'color-neutral-700': '217 217 221',
+        'color-neutral-800': '233 233 236',
+        'color-neutral-900': '249 249 250',
+        'color-neutral-950': '252 252 253',
         'color-neutral-1000': '255 255 255'
       })
     }

@@ -154,6 +154,7 @@ function cockpitDemo3Impl() {
 }
 
 export const cockpit3 = () => h('cockpit-demo3')
+
 function createDataForm() {
   return html`<div>
     <c-data-form headline="Customer">
@@ -165,7 +166,7 @@ function createDataForm() {
       </c-section>
       <c-tabs>
         <c-tab caption="Customer data">
-          <c-section caption="Address">
+          <c-section caption="Customer address">
             <c-fieldset>
               <c-select-box label="Salutation"></c-select-box>
               <c-text-field label="First name" required></c-text-field>
@@ -186,7 +187,7 @@ function createDataForm() {
 -->
             </c-fieldset>
           </c-section>
-          <c-section caption="Contact">
+          <c-section caption="Contact information">
             <c-fieldset>
               <c-text-field label="Phone" required></c-text-field>
               <c-text-field label="Mobile"></c-text-field>

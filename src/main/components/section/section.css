@@ -1,14 +1,16 @@
 .base {
+  xxxbackground-color: rgb(var(--sl-color-neutral-50));
+  margin-bottom: 8px;
+  padding: 0.125rem 1rem;
+  xxxborder-radius: 6px;
 }
 
 .caption {
-  margin: 0 0 4px 0;
+  margin: 4px 0 4px 0;
   padding: 0 8px 1px 6px;
-  opacity: 0.8;
-  border: 0 solid rgb(var(--sl-color-neutral-200));
-  border-width: 0 0 1px 0;
   color: rgb(var(--sl-color-neutral-900));
-  font-size: var(--sl-font-size-small);
+  font-size: var(--sl-font-size-medium);
+  font-weight: var(--sl-font-weight-semibold);
 }
 
 .caption:empty {
