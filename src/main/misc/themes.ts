@@ -277,13 +277,13 @@ const Themes = {
 
   get temp(): Theme {
     return materializeTheme(this, 'temp', {
-      primaryColor: '#40a6ff' //
       //
+      //primaryColor: '#40a6ff' //
       //primaryColor: '#c05c5c' // indian red 2
       //primaryColor: '#8b008b' // +
       //primaryColor: '#b22222' //
       //primaryColor: '#cd5c5c' // indian red
-      //primaryColor: '#00bbff' // default?
+      primaryColor: '#00bbff' // default?
       //primaryColor: '#cd5c5c' //
       //primaryColor: '#a9ddff' //
       //primaryColor: '#dd1493' //
