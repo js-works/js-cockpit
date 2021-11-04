@@ -1,6 +1,6 @@
 .base {
   display: flex;
-  gap: 16px;
+  gap: 4px;
   font-family: var(--sl-font-sans);
   user-select: none;
   height: 50px;
@@ -9,7 +9,7 @@
 }
 
 .icon {
-  margin: 18px -10px 0 0;
+  margin: 18px 0 0 0;
   font-smooth: never;
   color: var(--sl-light, rgb(var(--sl-color-primary-600)))
     var(--sl-dark, rgb(var(--sl-color-primary-400)));
@@ -22,14 +22,16 @@
 }
 
 .section .title {
-  padding: 13px 8px;
+  padding: 13px 14px;
   margin-top: 2px;
   white-space: nowrap;
 }
 
 .section:not(.active) .title:hover {
-  background-color: rgb(var(--sl-color-primary-600));
-  border-radius: 2px;
+  background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
+    var(--sl-dark, rgb(var(--sl-color-primary-400)));
+
+  border-radius: 1px;
 }
 
 .section:not(.active) .title:active {
@@ -39,13 +41,11 @@
 .section.active {
   font-weight: 600;
   border: 0 solid rgb(var(--sl-color-primary-500));
+
+  background-color: var(--sl-light, rgb(var(--sl-color-neutral-600) / 60%))
+    var(--sl-dark, rgb(var(--sl-color-neutral-300)));
+
+  padding: 0 8px;
   border-bottom-width: 3px;
-
-  /*
-  padding: 0 10px;
-  margin: -1px;
-  background-color: rgb(var(--sl-color-primary-600));
-  */
-
   cursor: default;
 }

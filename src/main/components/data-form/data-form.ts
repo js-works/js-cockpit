@@ -32,13 +32,36 @@ class DataForm extends component() {
 }
 
 function dataFormImpl(self: DataForm) {
+  const actions: ActionBar.Actions = [
+    {
+      kind: 'action',
+      actionId: 'edit',
+      text: 'Edit'
+    },
+    {
+      kind: 'action',
+      actionId: 'deactivate',
+      text: 'Deactivate'
+    },
+    {
+      kind: 'action',
+      actionId: 'print',
+      text: 'Print'
+    },
+    {
+      kind: 'action',
+      actionId: 'delete',
+      text: 'Delete'
+    }
+  ]
+
   return () => {
     return html`
       <div class="base">
         <div class="header">
           <div class="headline">${self.headline}</div>
           <div class="actions">
-            <c-action-bar></c-action-bar>
+            <c-action-bar .actions=${actions}></c-action-bar>
           </div>
           <div>
             <sl-button class="close-button" size="small">

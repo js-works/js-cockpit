@@ -57,19 +57,19 @@ class DateField extends component() {
 function dateFieldImpl(self: DateField) {
   const { i18n } = useI18n()
   let input: HTMLInputElement | null = null
+  let datepicker: any
 
   useAfterMount(() => {
     setTimeout(() => {
       const shadowRoot = self.shadowRoot!
-      const slInput = shadowRoot.querySelector('sl-input')!
+      const slInput: HTMLElement = shadowRoot.querySelector('sl-input') as any
       const container: HTMLElement = shadowRoot.querySelector(
         '.datepicker-container'
       )!
 
-      input = slInput.shadowRoot!.querySelector('input')
-      const base = shadowRoot.querySelector('.base')!
+      input = slInput.shadowRoot!.querySelector('input')!
 
-      const datepicker = new Datepicker(input, {
+      datepicker = new Datepicker(input, {
         calendarWeeks: true,
         daysOfWeekHighlighted: [0, 6],
         prevArrow: '&#x1F860;',
@@ -104,6 +104,13 @@ function dateFieldImpl(self: DateField) {
 
     if (!Datepicker.locales[locale]) {
       Datepicker.locales[locale] = createLocalization(locale)
+    }
+
+    if (datepicker) {
+      datepicker.setOptions({
+        language: i18n.getLocale(),
+        weekStart: i18n.getFirstDayOfWeek()
+      })
     }
   })
 

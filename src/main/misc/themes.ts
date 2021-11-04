@@ -168,11 +168,14 @@ class Theme {
       Object.assign(invertedTokens, {
         'color-neutral-0': lightThemeTokens['color-neutral-0'],
         'color-neutral-1000': lightThemeTokens['color-neutral-1000']
+
+        //'input-background-color': lightThemeTokens['input-background-color'],
+        //'input-border-color': lightThemeTokens['input-border-color']
       })
     } else {
       Object.assign(invertedTokens, {
-        'color-neutral-0': '25 25 25',
-        'color-neutral-50': '28 28 31',
+        'color-neutral-0': '30 30 33',
+        'color-neutral-50': '32 32 36',
         'color-neutral-100': '33 33 37',
         'color-neutral-200': '43 43 46',
         'color-neutral-300': '67 67 74',
@@ -184,6 +187,9 @@ class Theme {
         'color-neutral-900': '249 249 250',
         'color-neutral-950': '252 252 253',
         'color-neutral-1000': '255 255 255'
+
+        //'input-background-color': '42 42 46',
+        //'input-border-color': 'var(--sl-color-neutral-200)'
       })
     }
 

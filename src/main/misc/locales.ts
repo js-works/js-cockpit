@@ -88,11 +88,7 @@ function getLocale(elem: HTMLElement): string | null {
       return foundElem.lang || null
     }
 
-    if (el.assignedSlot) {
-      el = el.assignedSlot
-    } else {
-      el = (el.getRootNode() as ShadowRoot).host
-    }
+    el = (el.getRootNode() as ShadowRoot).host
   }
 
   return null

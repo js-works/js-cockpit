@@ -33,7 +33,9 @@
   align-items: flex-end;
   justify-content: center;
   font-size: var(--sl-font-size-large);
-  color: rgba(var(--sl-color-primary-950) / 60%);
+
+  color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
+    var(--sl-dark, rgb(var(--sl-color-primary-950) / 80%));
 }
 
 .main {
@@ -113,7 +115,9 @@
   align-items: flex-start;
   justify-content: center;
   flex-grow: 5;
-  color: rgba(var(--sl-color-primary-950) / 60%);
+
+  color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
+    var(--sl-dark, rgb(var(--sl-color-primary-950) / 80%));
 }
 
 .default-login-intro h3 {

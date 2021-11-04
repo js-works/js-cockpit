@@ -116,7 +116,7 @@ function sharedCockpitImpl() {
   }
 
   return () => html`
-    <c-cockpit .theme=${Themes.default.invert()} lang="fr-FR">
+    <c-cockpit .theme=${Themes.default}>
       <c-brand
         slot="header-start"
         class="orangered"

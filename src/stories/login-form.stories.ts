@@ -21,7 +21,7 @@ function loginFormDemoImpl() {
         <c-login-form
           full-size
           initialView="forgotPassword"
-          .theme=${Themes.temp}
+          .theme=${Themes.default}
         >
           <div slot="header">
             <c-brand
