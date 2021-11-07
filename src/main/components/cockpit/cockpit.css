@@ -27,7 +27,7 @@
   background-color: var(--sl-light, rgb(var(--sl-color-neutral-700)))
     var(--sl-dark, rgb(var(--sl-color-neutral-300) / 70%));
 
-  max-height: 50px;
+  max-height: 46px;
 }
 
 .header {

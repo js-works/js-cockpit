@@ -13,10 +13,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 50px;
-  max-width: 50px;
-  min-height: 50px;
-  max-height: 50px;
+  min-width: 46px;
+  max-width: 46px;
+  min-height: 46px;
+  max-height: 46px;
   cursor: pointer;
 
   background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))

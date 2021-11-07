@@ -3,13 +3,13 @@
   gap: 4px;
   font-family: var(--sl-font-sans);
   user-select: none;
-  height: 50px;
+  height: 46px;
   padding: 1px;
   box-sizing: border-box;
 }
 
 .icon {
-  margin: 18px 0 0 0;
+  margin: 16px 0 0 0;
   font-smooth: never;
   color: var(--sl-light, rgb(var(--sl-color-primary-600)))
     var(--sl-dark, rgb(var(--sl-color-primary-400)));
@@ -23,7 +23,6 @@
 
 .section .title {
   padding: 13px 14px;
-  margin-top: 2px;
   white-space: nowrap;
 }
 

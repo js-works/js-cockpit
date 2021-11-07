@@ -1,6 +1,7 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { html, lit, createRef, ref } from 'js-element/lit'
 import { useAfterMount, useBeforeRender } from 'js-element/hooks'
+import { createPopper, Instance as PopperInstance } from '@popperjs/core'
 import { I18n } from '../../misc/i18n'
 import { useI18n } from '../../utils/hooks'
 
@@ -58,6 +59,7 @@ function dateFieldImpl(self: DateField) {
   const { i18n } = useI18n()
   let input: HTMLInputElement | null = null
   let datepicker: any
+  let popper: PopperInstance
 
   useAfterMount(() => {
     setTimeout(() => {
@@ -91,6 +93,21 @@ function dateFieldImpl(self: DateField) {
             return date.toISOString().substr(0, 10)
           }
         }
+      })
+
+      popper = createPopper(slInput, datepicker.picker.element, {
+        placement: 'bottom-start',
+        strategy: 'fixed',
+
+        modifiers: [
+          {
+            name: 'offset',
+
+            options: {
+              offset: [0, 3]
+            }
+          }
+        ]
       })
 
       container.addEventListener('mousedown', (ev) => {
