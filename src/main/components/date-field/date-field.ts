@@ -57,48 +57,48 @@ class DateField extends component() {
 
 function dateFieldImpl(self: DateField) {
   const { i18n } = useI18n()
+  const getLocale = () => i18n.getLocale()
   let input: HTMLInputElement | null = null
   let datepicker: any
   let popper: PopperInstance
 
-  // this is an ugly workaround because of some
-  // strange positioning issues with popper
-  const openPicker = () => {
-    const pickerElem = datepicker.picker.element
-    const pickerVisible = pickerElem.classList.contains('active')
-
-    if (!self.disabled /*&& !pickerVisible*/) {
-      pickerElem.style.visibility = 'hidden'
-      pickerElem.style.overflow = 'hidden'
-      datepicker.picker.show()
-
-      setTimeout(() => {
-        popper.update()
-
-        setTimeout(() => {
-          popper.update()
-          pickerElem.style.visibility = ''
-          pickerElem.style.overflow = ''
-        }, 0)
-      }, 0)
-    }
-  }
-
   useAfterMount(() => {
     setTimeout(() => {
+      const locale = getLocale()
       const shadowRoot = self.shadowRoot!
-      const slInput: HTMLElement = shadowRoot.querySelector('sl-input') as any
+      const slInput: HTMLElement & SlInput = shadowRoot.querySelector(
+        'sl-input'
+      ) as any
       const container: HTMLElement = shadowRoot.querySelector(
         '.datepicker-container'
       )!
 
       input = slInput.shadowRoot!.querySelector('input')!
 
-      container.addEventListener('mousedown', (ev) => {
-        ev.preventDefault()
+      container.addEventListener('mousedown', (ev) => ev.preventDefault())
+
+      // this is an ugly workaround because of some
+      // strange positioning issues with popper
+      input.addEventListener('show', () => {
+        const pickerElem = datepicker.picker.element
+
+        pickerElem.style.visibility = 'hidden'
+        pickerElem.style.overflow = 'hidden'
+
+        requestAnimationFrame(() => {
+          popper.update()
+
+          requestAnimationFrame(() => {
+            popper.update()
+            pickerElem.style.visibility = ''
+            pickerElem.style.overflow = ''
+          })
+        })
       })
 
-      input.addEventListener('show', (ev) => openPicker())
+      input.addEventListener('hide', () => {
+        slInput.value = input!.value
+      })
 
       datepicker = new Datepicker(input, {
         calendarWeeks: true,
@@ -111,17 +111,9 @@ function dateFieldImpl(self: DateField) {
         todayHighlight: true,
         container,
         weeknumbers: true,
-        language: i18n.getLocale(),
-        weekStart: i18n.getFirstDayOfWeek(),
-        format: {
-          toValue(s: string) {
-            return i18n.parseDate(s)
-          },
-
-          toDisplay(date: Date) {
-            return i18n.formatDate(date)
-          }
-        }
+        language: locale,
+        weekStart: Datepicker.locales[locale].weekStart,
+        format: Datepicker.locales[locale].format
       })
 
       popper = createPopper(slInput, datepicker.picker.element, {
@@ -144,16 +136,19 @@ function dateFieldImpl(self: DateField) {
   })
 
   useBeforeRender(() => {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     if (!Datepicker.locales[locale]) {
       Datepicker.locales[locale] = createLocalization(locale)
     }
 
     if (datepicker) {
+      const locale = getLocale()
+
       datepicker.setOptions({
-        language: i18n.getLocale(),
-        weekStart: i18n.getFirstDayOfWeek()
+        language: locale,
+        weekStart: Datepicker.locales[locale].weekStart,
+        format: Datepicker.locales[locale].format
       })
     }
   })
@@ -194,10 +189,16 @@ function createLocalization(locale: string) {
     months: localizer.getMonthNames('long'),
     monthsShort: localizer.getMonthNames('short'),
     weekStart: localizer.getFirstDayOfWeek(),
+    titleFormat: 'MM y',
 
-    today: 'Today', // not needed here
-    clear: 'Clear', // not needed here
-    titleFormat: 'MM y', // not neded here
-    format: 'mm/dd/yyyy' // not needed here
+    format: {
+      toValue(s: string) {
+        return localizer.parseDate(s)
+      },
+
+      toDisplay(date: Date) {
+        return localizer.formatDate(date)
+      }
+    }
   }
 }
