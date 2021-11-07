@@ -1,5 +1,5 @@
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, lit, createRef, ref } from 'js-element/lit'
+import { html, lit } from 'js-element/lit'
 import { useAfterMount, useBeforeRender } from 'js-element/hooks'
 import { createPopper, Instance as PopperInstance } from '@popperjs/core'
 import { I18n } from '../../misc/i18n'
@@ -61,6 +61,29 @@ function dateFieldImpl(self: DateField) {
   let datepicker: any
   let popper: PopperInstance
 
+  // this is an ugly workaround because of some
+  // strange positioning issues with popper
+  const openPicker = () => {
+    const pickerElem = datepicker.picker.element
+    const pickerVisible = pickerElem.classList.contains('active')
+
+    if (!self.disabled /*&& !pickerVisible*/) {
+      pickerElem.style.visibility = 'hidden'
+      pickerElem.style.overflow = 'hidden'
+      datepicker.picker.show()
+
+      setTimeout(() => {
+        popper.update()
+
+        setTimeout(() => {
+          popper.update()
+          pickerElem.style.visibility = ''
+          pickerElem.style.overflow = ''
+        }, 0)
+      }, 0)
+    }
+  }
+
   useAfterMount(() => {
     setTimeout(() => {
       const shadowRoot = self.shadowRoot!
@@ -71,13 +94,19 @@ function dateFieldImpl(self: DateField) {
 
       input = slInput.shadowRoot!.querySelector('input')!
 
+      container.addEventListener('mousedown', (ev) => {
+        ev.preventDefault()
+      })
+
+      input.addEventListener('show', (ev) => openPicker())
+
       datepicker = new Datepicker(input, {
         calendarWeeks: true,
         daysOfWeekHighlighted: [0, 6],
         prevArrow: '&#x1F860;',
         nextArrow: '&#x1F862;',
         autohide: true,
-        showOnFocus: true,
+        showOnFocus: false,
         updateOnBlur: false,
         todayHighlight: true,
         container,
@@ -86,32 +115,30 @@ function dateFieldImpl(self: DateField) {
         weekStart: i18n.getFirstDayOfWeek(),
         format: {
           toValue(s: string) {
-            return new Date(s)
+            return i18n.parseDate(s)
           },
 
           toDisplay(date: Date) {
-            return date.toISOString().substr(0, 10)
+            return i18n.formatDate(date)
           }
         }
       })
 
       popper = createPopper(slInput, datepicker.picker.element, {
         placement: 'bottom-start',
-        strategy: 'fixed',
+        strategy: 'absolute',
 
         modifiers: [
           {
             name: 'offset',
 
             options: {
-              offset: [0, 3]
+              offset({ placement }: { placement: string }) {
+                return placement === 'top-start' ? [0, 4] : [0, 0]
+              }
             }
           }
         ]
-      })
-
-      container.addEventListener('mousedown', (ev) => {
-        ev.preventDefault()
       })
     }, 0)
   })

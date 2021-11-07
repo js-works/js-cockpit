@@ -157,7 +157,7 @@ export const cockpit3 = () => h('cockpit-demo3')
 
 function createDataForm() {
   return html`<div>
-    <c-data-form headline="Customer">
+    <c-data-form headline="Customer" lang="de-DE">
       <c-section>
         <c-fieldset orient="horizontal">
           <c-text-field label="Customer No." required></c-text-field>
@@ -184,7 +184,7 @@ function createDataForm() {
                 orient="horizontal"
                 required
               ></c-radio-group>
--->
+              -->
             </c-fieldset>
           </c-section>
           <c-section caption="Contact information">

@@ -11,6 +11,11 @@ sl-input {
   width: 280px;
 }
 
+.calendar-icon:hover {
+  color: rgb(var(--sl-color-primary-500));
+  cursor: pointer;
+}
+
 /* === datepicker === */
 
 .datepicker {
