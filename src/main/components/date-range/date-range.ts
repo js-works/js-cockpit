@@ -4,10 +4,10 @@ import { useAfterMount, useBeforeRender } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 
 import {
-  createDatepicker,
+  createDateRangePicker,
   getLocalization,
   DatepickerInstance
-} from './date-utils'
+} from '../date-field/date-utils'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -15,26 +15,28 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
 
 // icons
-import calendarIcon from '../../icons/calendar3.svg'
+import calendarIcon from '../../icons/calendar-range.svg'
+import arrowRightIcon from '../../icons/arrow-right.svg'
 
 // styles
-import dateFieldStyles from './date-field.css'
+import dateFieldStyles from '../date-field/date-field.css'
+import dateRangeStyles from './date-range.css'
 import datepickerStyles from 'vanillajs-datepicker/dist/css/datepicker-foundation.css'
 import controlStyles from '../../shared/css/control.css'
 
 // === exports =======================================================
 
-export { DateField }
+export { DateRange }
 
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'c-date-field',
-  styles: [datepickerStyles, dateFieldStyles, controlStyles],
-  impl: lit(dateFieldImpl),
+  tag: 'c-date-range',
+  styles: [datepickerStyles, dateRangeStyles, controlStyles],
+  impl: lit(dateRangeImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
-class DateField extends component() {
+class DateRange extends component() {
   @prop({ attr: Attrs.string })
   label = ''
 
@@ -48,7 +50,7 @@ class DateField extends component() {
   required = false
 }
 
-function dateFieldImpl(self: DateField) {
+function dateRangeImpl(self: DateRange) {
   const { i18n } = useI18n()
   const getLocale = () => i18n.getLocale()
   const shadowRoot = self.shadowRoot!
@@ -56,25 +58,14 @@ function dateFieldImpl(self: DateField) {
 
   useAfterMount(() => {
     setTimeout(() => {
-      datepicker = createDatepicker({
+      datepicker = createDateRangePicker({
         getLocale,
-        slInput: shadowRoot.querySelector('sl-input')!,
+        range: shadowRoot.querySelector('.fields')!,
+        slInput1: (shadowRoot.querySelector('.input1')! as any) as SlInput,
+        slInput2: (shadowRoot.querySelector('.input2')! as any) as SlInput,
         pickerContainer: shadowRoot.querySelector('.picker-container')!
       })
     }, 0)
-  })
-
-  useBeforeRender(() => {
-    const locale = getLocale()
-    const localization = getLocalization(locale)
-
-    if (datepicker) {
-      datepicker.setOptions({
-        language: locale,
-        weekStart: localization.weekStart,
-        format: localization.format
-      })
-    }
   })
 
   function render() {
@@ -83,13 +74,19 @@ function dateFieldImpl(self: DateField) {
         <div class="field-wrapper">
           <div class="label">${self.label}</div>
           <div class="control">
-            <sl-input size="small">
-              <sl-icon
-                slot="suffix"
-                class="calendar-icon"
-                src=${calendarIcon}
-              ></sl-icon>
-            </sl-input>
+            <div class="fields">
+              <sl-input size="small" class="input1"></sl-input>
+              <div class="separator">
+                <sl-icon src=${arrowRightIcon}></sl-icon>
+              </div>
+              <sl-input size="small" class="input2">
+                <sl-icon
+                  slot="suffix"
+                  class="calendar-icon"
+                  src=${calendarIcon}
+                ></sl-icon>
+              </sl-input>
+            </div>
             <div class="error">${self.error}</div>
             <div class="picker-container"></div>
           </div>

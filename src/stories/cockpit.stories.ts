@@ -178,6 +178,7 @@ function createDataForm() {
               <c-text-field label="Display name"></c-text-field>
               <c-text-field label="Alias name"></c-text-field>
               <c-date-field label="Day of birth" required></c-date-field>
+              <c-date-range label="Date range" required></c-date-range>
               <!--
               <c-radio-group
                 label="Options"
@@ -193,6 +194,7 @@ function createDataForm() {
               <c-text-field label="Mobile"></c-text-field>
               <c-text-area label="Comments"></c-text-area>
               <c-date-field label="Day of birth" required></c-date-field>
+              <c-date-range label="Date range" required></c-date-range>
             </c-fieldset>
           </c-section>
         </c-tab>
