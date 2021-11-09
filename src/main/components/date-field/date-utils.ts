@@ -74,9 +74,7 @@ function createDatepicker(params: {
       format: localization.format
     })
 
-    popper = makePopper(slInput as any, datepicker.picker.element)
-
-    initPopperWorkaround(popper, input, datepicker)
+    popper = initPopper(slInput, datepicker)
   }, 0)
 }
 
@@ -97,38 +95,20 @@ function createDateRangePicker(params: {
   const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!
   const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!
   let dateRangePicker: any
-  let popper1: PopperInstance
-  let popper2: PopperInstance
 
   container.addEventListener('mousedown', (ev) => ev.preventDefault())
 
   setTimeout(() => {
     const locale = getLocale()
     const localization = getLocalization(getLocale())
-    /*
-    // this is an ugly workaround because of some
-    // strange positioning issues with popper
-    ;[input1, input2].forEach((input) => input.addEventListener('show', () => {
-      const pickerElem = datepicker.picker.element
 
-      pickerElem.style.visibility = 'hidden'
-      pickerElem.style.overflow = 'hidden'
-
-      requestAnimationFrame(() => {
-        popper.update()
-
-        requestAnimationFrame(() => {
-          popper.update()
-          pickerElem.style.visibility = ''
-          pickerElem.style.overflow = ''
-        })
-      })
+    input1.addEventListener('hide', () => {
+      slInput1.value = input1!.value
     })
 
-    input.addEventListener('hide', () => {
-      slInput.value = input!.value
+    input2.addEventListener('hide', () => {
+      slInput2.value = input2.value
     })
-  */
 
     dateRangePicker = new DateRangePicker(range, {
       inputs: [input1, input2],
@@ -147,25 +127,18 @@ function createDateRangePicker(params: {
       format: localization.format
     })
 
-    popper1 = makePopper(
-      slInput1 as any,
-      dateRangePicker.datepickers[0].picker.element
-    )
-
-    popper2 = makePopper(
-      slInput2 as any,
-      dateRangePicker.datepickers[1].picker.element
-    )
-
-    initPopperWorkaround(popper1, input1, dateRangePicker.datepickers[0])
-    initPopperWorkaround(popper2, input2, dateRangePicker.datepickers[1])
+    initPopper(slInput1, dateRangePicker.datepickers[0])
+    initPopper(slInput2, dateRangePicker.datepickers[1])
   }, 0)
 }
 
 // === helpers =======================================================
 
-function makePopper(inputElem: HTMLElement, pickerElem: HTMLElement) {
-  return createPopper(inputElem, pickerElem, {
+function initPopper(slInput: SlInput, datepicker: DatepickerInstance) {
+  const inputElem = (slInput as any).shadowRoot!.querySelector('input')
+  const pickerElem = datepicker.picker.element
+
+  const popper = createPopper(slInput as any, pickerElem, {
     placement: 'bottom-start',
     strategy: 'absolute',
 
@@ -181,17 +154,9 @@ function makePopper(inputElem: HTMLElement, pickerElem: HTMLElement) {
       }
     ]
   })
-}
 
-// this is an ugly workaround because of some
-// strange positioning issues with popper
-function initPopperWorkaround(
-  popper: PopperInstance,
-  inputElem: HTMLInputElement,
-  datepicker: DatepickerInstance
-) {
-  const pickerElem = datepicker.picker.element
-
+  // ugly workaround due to some strange popper
+  // positioning issues
   inputElem.addEventListener('show', () => {
     pickerElem.style.visibility = 'hidden'
     pickerElem.style.overflow = 'hidden'
@@ -206,6 +171,8 @@ function initPopperWorkaround(
       })
     })
   })
+
+  return popper
 }
 
 function createLocalization(locale: string) {

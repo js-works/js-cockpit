@@ -25,6 +25,8 @@
 .input2::part(base) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .input1:not(:hover):not(:focus)::part(base) {
@@ -33,6 +35,7 @@
 
 .input2:not(:hover):not(:focus)::part(base) {
   border-left-width: 0;
+  border-right-width: 0;
 }
 
 .separator {
@@ -41,6 +44,20 @@
   border-width: 1px 0 1px 0;
   color: rgb(var(--sl-color-primary-500));
   box-sizing: borrder-box;
+}
+
+.calendar-icon {
+  padding: 0 12px;
+  border: 0 solid rgb(var(--sl-color-neutral-400));
+  border-width: 1px 1px 1px 0;
+  height: 28.5px; /* TODO */
+  box-sizing: border-box;
+  color: rgb(var(--sl-input-icon-color));
+  cursor: pointer;
+}
+
+.calendar-icon:hover {
+  color: rgb(var(--sl-color-primary-500));
 }
 
 .picker-container {

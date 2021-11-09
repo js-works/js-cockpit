@@ -79,13 +79,12 @@ function dateRangeImpl(self: DateRange) {
               <div class="separator">
                 <sl-icon src=${arrowRightIcon}></sl-icon>
               </div>
-              <sl-input size="small" class="input2">
-                <sl-icon
-                  slot="suffix"
-                  class="calendar-icon"
-                  src=${calendarIcon}
-                ></sl-icon>
-              </sl-input>
+              <sl-input size="small" class="input2"> </sl-input>
+              <sl-icon
+                slot="suffix"
+                class="calendar-icon"
+                src=${calendarIcon}
+              ></sl-icon>
             </div>
             <div class="error">${self.error}</div>
             <div class="picker-container"></div>
