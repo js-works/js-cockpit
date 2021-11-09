@@ -40,7 +40,6 @@
   border: 0 solid rgb(var(--sl-color-neutral-400));
   border-width: 1px 0 1px 0;
   color: rgb(var(--sl-color-primary-500));
-  xbackground-color: rgb(var(--sl-color-neutral-50));
   box-sizing: borrder-box;
 }
 
@@ -48,5 +47,4 @@
   display: block;
   position: relative;
   left: 0 !important;
-  border: 1px solid red;
 }

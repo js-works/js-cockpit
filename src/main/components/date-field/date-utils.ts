@@ -53,24 +53,6 @@ function createDatepicker(params: {
   setTimeout(() => {
     const locale = getLocale()
     const localization = getLocalization(getLocale())
-    // this is an ugly workaround because of some
-    // strange positioning issues with popper
-    input.addEventListener('show', () => {
-      const pickerElem = datepicker.picker.element
-
-      pickerElem.style.visibility = 'hidden'
-      pickerElem.style.overflow = 'hidden'
-
-      requestAnimationFrame(() => {
-        popper.update()
-
-        requestAnimationFrame(() => {
-          popper.update()
-          pickerElem.style.visibility = ''
-          pickerElem.style.overflow = ''
-        })
-      })
-    })
 
     input.addEventListener('hide', () => {
       slInput.value = input!.value
@@ -92,22 +74,9 @@ function createDatepicker(params: {
       format: localization.format
     })
 
-    popper = createPopper(slInput as any, datepicker.picker.element, {
-      placement: 'bottom-start',
-      strategy: 'absolute',
+    popper = makePopper(slInput as any, datepicker.picker.element)
 
-      modifiers: [
-        {
-          name: 'offset',
-
-          options: {
-            offset({ placement }: { placement: string }) {
-              return placement === 'top-start' ? [0, 4] : [0, 0]
-            }
-          }
-        }
-      ]
-    })
+    initPopperWorkaround(popper, input, datepicker)
   }, 0)
 }
 
@@ -127,8 +96,9 @@ function createDateRangePicker(params: {
   } = params
   const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!
   const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!
-  let datepicker: any
-  let popper: PopperInstance
+  let dateRangePicker: any
+  let popper1: PopperInstance
+  let popper2: PopperInstance
 
   container.addEventListener('mousedown', (ev) => ev.preventDefault())
 
@@ -160,7 +130,7 @@ function createDateRangePicker(params: {
     })
   */
 
-    datepicker = new DateRangePicker(range, {
+    dateRangePicker = new DateRangePicker(range, {
       inputs: [input1, input2],
       calendarWeeks: true,
       daysOfWeekHighlighted: [0, 6],
@@ -177,28 +147,66 @@ function createDateRangePicker(params: {
       format: localization.format
     })
 
-    /*
-    popper = createPopper(slInput as any, datepicker.picker.element, {
-      placement: 'bottom-start',
-      strategy: 'absolute',
+    popper1 = makePopper(
+      slInput1 as any,
+      dateRangePicker.datepickers[0].picker.element
+    )
 
-      modifiers: [
-        {
-          name: 'offset',
+    popper2 = makePopper(
+      slInput2 as any,
+      dateRangePicker.datepickers[1].picker.element
+    )
 
-          options: {
-            offset({ placement }: { placement: string }) {
-              return placement === 'top-start' ? [0, 4] : [0, 0]
-            }
-          }
-        }
-      ]
-    })
-*/
+    initPopperWorkaround(popper1, input1, dateRangePicker.datepickers[0])
+    initPopperWorkaround(popper2, input2, dateRangePicker.datepickers[1])
   }, 0)
 }
 
 // === helpers =======================================================
+
+function makePopper(inputElem: HTMLElement, pickerElem: HTMLElement) {
+  return createPopper(inputElem, pickerElem, {
+    placement: 'bottom-start',
+    strategy: 'absolute',
+
+    modifiers: [
+      {
+        name: 'offset',
+
+        options: {
+          offset({ placement }: { placement: string }) {
+            return placement === 'top-start' ? [0, 4] : [0, 0]
+          }
+        }
+      }
+    ]
+  })
+}
+
+// this is an ugly workaround because of some
+// strange positioning issues with popper
+function initPopperWorkaround(
+  popper: PopperInstance,
+  inputElem: HTMLInputElement,
+  datepicker: DatepickerInstance
+) {
+  const pickerElem = datepicker.picker.element
+
+  inputElem.addEventListener('show', () => {
+    pickerElem.style.visibility = 'hidden'
+    pickerElem.style.overflow = 'hidden'
+
+    requestAnimationFrame(() => {
+      popper.update()
+
+      requestAnimationFrame(() => {
+        popper.update()
+        pickerElem.style.visibility = ''
+        pickerElem.style.overflow = ''
+      })
+    })
+  })
+}
 
 function createLocalization(locale: string) {
   const localizer = I18n.localizer(locale)
