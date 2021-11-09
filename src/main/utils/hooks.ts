@@ -3,6 +3,7 @@ import {
   useBeforeMount,
   useBeforeUnmount,
   useHost,
+  useInternals,
   useRefresher
 } from 'js-element/hooks'
 
@@ -59,3 +60,35 @@ function useI18nFn(namespace?: string) {
 }
 
 export const useI18n = hook('useI18n', useI18nFn)
+
+export const useValidation = hook(
+  'useValidation',
+  (callback: (msg: string) => void) => {
+    const host = useHost()
+    const refresh = useRefresher()
+    const internals: any = useInternals() // TODO
+
+    host.addEventListener('invalid', (ev) => {
+      ev.preventDefault()
+      callback(internals.validationMessage)
+    })
+
+    const ret = {
+      setMessage(msg: string) {
+        internals.setValidity({ valueMissing: true }, msg) // TODO
+        refresh()
+      },
+
+      getMessage() {
+        return internals.validationMessage || null
+      },
+
+      clearMessage() {
+        internals.setValidity({})
+        refresh()
+      }
+    }
+
+    return ret
+  }
+)

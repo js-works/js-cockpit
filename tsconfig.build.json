@@ -22,7 +22,8 @@
     "paths": {
       "js-cockpit": ["js-cockpit.ts"]
     },
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "types": ["web"]
   },
   "files": ["src/main/js-cockpit.ts"],
   "include": ["src/main/**/*.ts", "src/main/**/*.tsx"],

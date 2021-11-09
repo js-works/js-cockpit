@@ -1,5 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, html, lit } from 'js-element/lit'
+import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { Theme } from '../../misc/themes'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
@@ -8,11 +8,8 @@ import { I18n } from '../../misc/i18n'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
-import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import { TextField } from '../text-field/text-field'
 import { PasswordField } from '../password-field/password-field'
-import { FormCtrlProvider } from '../form-ctrl-provider/form-ctrl-provider'
-import { FormCtrl } from '../../ctrls/form-ctrl'
 import { ThemeProvider } from '../theme-provider/theme-provider'
 //import { formCtrlCtx } from '../../ctxs/form-ctrl-ctx'
 
@@ -58,16 +55,7 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-  uses: [
-    FormCtrlProvider,
-    PasswordField,
-    TextField,
-    ThemeProvider,
-    SlButton,
-    SlCheckbox,
-    SlIcon,
-    SlForm
-  ]
+  uses: [PasswordField, TextField, ThemeProvider, SlButton, SlCheckbox, SlIcon]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
@@ -81,21 +69,35 @@ class LoginForm extends component() {
 }
 
 function loginFormImpl(self: LoginForm) {
+  const formRef = createRef<HTMLFormElement>()
   const { t } = useI18n('js-cockpit.login-form')
 
-  const formCtrl: FormCtrl = {
-    submit() {
-      alert('submit')
-    },
+  const onSubmit = (ev?: any) => {
+    if (ev) {
+      ev.preventDefault()
+    } else if (!formRef.value!.checkValidity()) {
+      return
+    }
 
-    subscribeField: () => () => {}
+    const formData = new FormData(formRef.value!)
+    let text = ''
+
+    for (const key of formData.keys()) {
+      if (text) {
+        text += ', '
+      }
+
+      text += key + ': ' + formData.get(key)
+    }
+
+    alert(text)
   }
 
   const onSubmitClick = () => {
-    formCtrl.submit(() => alert('handler'))
+    onSubmit()
   }
 
-  return () => {
+  function render() {
     return html`
       <c-theme-provider .theme=${self.theme}>
         <div class="base ${classMap({ 'full-size': self.fullSize })}">
@@ -117,33 +119,37 @@ function loginFormImpl(self: LoginForm) {
                   <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
                 </div>
               </div>
-              <form-ctrl-provider class="column2" .value=${formCtrl}>
+              <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
                 <div class="column2-top">
                   <slot name="login-fields">
-                    <c-text-field label=${t(
-                      'username'
-                    )} required></c-text-field>
+                    <c-text-field
+                      name="username"
+                      label=${t('username')}
+                      required
+                    ></c-text-field>
                     <c-password-field
                       label=${t('password')}
                       required
                     ></c-password-field>
                   </slot>
-                  <br/>
-                <div style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic">
-                  ${t('forgot-password')}
-                </div>
+                  <br />
+                  <div
+                    style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic"
+                  >
+                    ${t('forgot-password')}
+                  </div>
                 </div>
                 <div class="column2-bottom">
                   <sl-checkbox>${t('remember-login')}</sl-checkbox>
                   <sl-button
                     type="primary"
                     class="login-button"
-                    submit
                     @click=${onSubmitClick}
-                    >${t('log-in')}</sl-button
                   >
+                    ${t('log-in')}
+                  </sl-button>
                 </div>
-              </c-form-ctrl-provider>
+              </form>
             </div>
             <div class="footer">
               <slot name="footer"></slot>
@@ -153,4 +159,6 @@ function loginFormImpl(self: LoginForm) {
       </c-theme-provider>
     `
   }
+
+  return render
 }
