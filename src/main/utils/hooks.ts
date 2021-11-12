@@ -74,8 +74,17 @@ export const useValidation = hook(
     })
 
     const ret = {
-      setMessage(msg: string) {
-        internals.setValidity({ valueMissing: true }, msg) // TODO
+      setFormValue(value: any) {
+        internals.setFormValue(value)
+      },
+
+      setError(msg: string) {
+        if (msg) {
+          internals.setValidity({ valueMissing: true }, msg) // TODO
+        } else {
+          internals.setValidity(null)
+        }
+
         refresh()
       },
 

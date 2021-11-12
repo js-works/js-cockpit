@@ -1,9 +1,12 @@
 .base {
   display: flex;
+  position: relative;
 }
 
 .picker-container {
-  position: relative;
+  position: absolute;
+  left: 0 !important;
+  top: 0 !important;
 }
 
 sl-input {

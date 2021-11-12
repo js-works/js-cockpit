@@ -65,7 +65,7 @@ function dateFieldImpl(self: DateField) {
       datepicker = createDatepicker({
         getLocale,
         slInput: shadowRoot.querySelector('sl-input')!,
-        pickerContainer: shadowRoot.querySelector('.picker-container')!
+        pickerContainer: shadowRoot.querySelector('.picker-container')! as any
       })
     }, 0)
   })

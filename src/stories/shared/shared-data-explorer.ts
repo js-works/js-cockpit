@@ -113,7 +113,7 @@ function sharedDataExplorerDemoImpl() {
         <c-text-field label="Zip code"></c-text-field>
         <c-text-field label="City"></c-text-field>
         <c-text-field label="Country"></c-text-field>
-        <c-date-range label="DOB range"></c-date-range>
+        <c-date-field label="Date of birth"></c-date-range>
       </c-search-box>
     </c-data-explorer>
   `

@@ -53,7 +53,8 @@
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.60",
-    "js-element": "^0.0.231",
-    "lit-html": "^2.0.1"
+    "element-internals-polyfill": "^0.1.46",
+    "js-element": "^0.0.236",
+    "lit-html": "^2.0.2"
   }
 }

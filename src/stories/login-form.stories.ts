@@ -3,6 +3,8 @@ import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Brand, LoginForm, Themes } from 'js-cockpit'
 
+import 'element-internals-polyfill'
+
 export default {
   title: 'login-form'
 }

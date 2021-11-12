@@ -1,6 +1,6 @@
 .datepicker {
-  left: 0 !important;
   color: rgb(var(--sl-color-neutral-1000));
+  z-index: 32000;
 }
 
 .datepicker-picker {

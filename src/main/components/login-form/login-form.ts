@@ -1,5 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, createRef, html, lit, ref } from 'js-element/lit'
+import { classMap, createRef, html, lit, ref, Ref } from 'js-element/lit'
 import { Theme } from '../../misc/themes'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
@@ -69,7 +69,7 @@ class LoginForm extends component() {
 }
 
 function loginFormImpl(self: LoginForm) {
-  const formRef = createRef<HTMLFormElement>()
+  const formRef = createRef<HTMLFormElement & Element>()
   const { t } = useI18n('js-cockpit.login-form')
 
   const onSubmit = (ev?: any) => {
@@ -119,18 +119,26 @@ function loginFormImpl(self: LoginForm) {
                   <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
                 </div>
               </div>
-              <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
+              <form
+                disabled
+                ${ref(formRef)}
+                class="column2"
+                @submit=${onSubmit}
+              >
                 <div class="column2-top">
                   <slot name="login-fields">
-                    <c-text-field
-                      name="username"
-                      label=${t('username')}
-                      required
-                    ></c-text-field>
-                    <c-password-field
-                      label=${t('password')}
-                      required
-                    ></c-password-field>
+                    <fieldset disabled>
+                      <c-text-field
+                        name="username"
+                        label=${t('username')}
+                        required
+                      ></c-text-field>
+
+                      <c-password-field
+                        label=${t('password')}
+                        required
+                      ></c-password-field>
+                    </fieldset>
                   </slot>
                   <br />
                   <div
