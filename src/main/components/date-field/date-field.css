@@ -4,9 +4,8 @@
 }
 
 .picker-container {
-  position: absolute;
-  left: 0 !important;
-  top: 0 !important;
+  position: fixed;
+  z-index: 32767;
 }
 
 sl-input {
