@@ -53,7 +53,12 @@ function createDatepicker(params: {
   container.addEventListener('mousedown', (ev) => ev.preventDefault())
 
   input.addEventListener('hide', () => {
+    slInput.readonly = false
     slInput.value = input!.value
+  })
+
+  input.addEventListener('show', () => {
+    slInput.readonly = true
   })
 
   datepicker = new Datepicker(input, {
@@ -164,6 +169,7 @@ function initPopper(slInput: SlInput, datepicker: DatepickerInstance) {
   inputElem.addEventListener('show', () => {
     pickerElem.style.visibility = 'hidden'
     pickerElem.style.overflow = 'hidden'
+    slInput.readonly = true
 
     requestAnimationFrame(() => {
       popper.update()

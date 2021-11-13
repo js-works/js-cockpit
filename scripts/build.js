@@ -20,7 +20,12 @@ try {
         sourcemap: true,
         format,
         loader: { '.svg': 'dataurl', '.css': 'text' },
-        external: ['lit-html', 'js-element', '@shoelace-style/shoelace/*'],
+        external: [
+          'lit-html',
+          'js-element',
+          '@shoelace-style/shoelace/*',
+          'vanillajs-datepicker/dist/css/datepicker-foundation.css'
+        ],
         define: {
           'process.env.NODE_ENV': '"production"'
         }

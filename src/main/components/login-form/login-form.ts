@@ -82,13 +82,13 @@ function loginFormImpl(self: LoginForm) {
     const formData = new FormData(formRef.value!)
     let text = ''
 
-    for (const key of formData.keys()) {
+    formData.forEach((value, key) => {
       if (text) {
         text += ', '
       }
 
-      text += key + ': ' + formData.get(key)
-    }
+      text += key + ': ' + value
+    })
 
     alert(text)
   }

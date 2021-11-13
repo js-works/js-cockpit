@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "target": "ESNext",
     "module": "ES2020",
     "moduleResolution": "node",
@@ -23,7 +23,7 @@
       "js-cockpit": ["./src/main/js-cockpit.ts"]
     },
     "typeRoots": ["node_modules/@types"],
-    "types": ["web"]
+    "types": []
   },
   "files": ["src/main/js-cockpit.ts"],
   "include": ["./src/main/**/*.*", "./src/stories/**/*.*"],
