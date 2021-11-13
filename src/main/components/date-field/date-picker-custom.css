@@ -119,3 +119,7 @@
 .datepicker-cell.month {
   text-transform: capitalize;
 }
+
+.datepicker-cell.day.range {
+  background-color: rgb(var(--sl-color-neutral-300));
+}
