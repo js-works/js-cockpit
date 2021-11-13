@@ -177,7 +177,18 @@ function createDataForm() {
               <c-text-field label="Company" required></c-text-field>
               <c-text-field label="Display name"></c-text-field>
               <c-text-field label="Alias name"></c-text-field>
-              <c-date-field label="Day of birth" required></c-date-field>
+              <c-date-field
+                label="Day of birth"
+                value="2017-01-01"
+                required
+                lang="en-US"
+              ></c-date-field>
+              <c-date-field
+                label="Day of birth 2"
+                value="2017-01-01"
+                required
+                lang="de-DE"
+              ></c-date-field>
               <c-date-range label="Date range" required></c-date-range>
               <!--
               <c-radio-group

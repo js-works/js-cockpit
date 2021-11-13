@@ -27,9 +27,6 @@
   content: '*';
 }
 
-.control {
-}
-
 .error {
   margin: 2px 0;
   color: rgb(var(--sl-color-danger-700));

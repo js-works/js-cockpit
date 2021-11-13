@@ -1,6 +1,10 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { useAfterMount, useBeforeRender } from 'js-element/hooks'
+import {
+  useAfterMount,
+  useBeforeRender,
+  useAfterUpdate
+} from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 
 import {
@@ -44,6 +48,9 @@ class DateField extends component() {
   @prop({ attr: Attrs.string })
   label = ''
 
+  @prop()
+  value: Date | null = null
+
   @prop({ attr: Attrs.string })
   error = ''
 
@@ -65,9 +72,9 @@ function dateFieldImpl(self: DateField) {
       datepicker = createDatepicker({
         getLocale,
         slInput: shadowRoot.querySelector('sl-input')!,
-        pickerContainer: shadowRoot.querySelector('.picker-container')! as any
+        pickerContainer: shadowRoot.querySelector('.picker-container')!
       })
-    }, 0)
+    })
   })
 
   useBeforeRender(() => {
@@ -81,6 +88,13 @@ function dateFieldImpl(self: DateField) {
         format: localization.format
       })
     }
+  })
+
+  useAfterMount(() => {
+    setTimeout(() => {
+      const value = new Date('2017-01-01')
+      datepicker.setDate(value)
+    }, 1000)
   })
 
   function render() {

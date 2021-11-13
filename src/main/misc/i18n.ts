@@ -78,6 +78,7 @@ namespace I18n {
     ): string
 
     getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
+    getCalendarWeek(locale: string, date: Date): number // 1 to 53
   }
 
   export type Localizer = {
@@ -97,6 +98,7 @@ namespace I18n {
     ): string
 
     getFirstDayOfWeek(): number // 0 to 6, 0 means Sunday
+    getCalendarWeek(date: Date): number // 1 to 53
     getDayName(index: number, format?: 'long' | 'short' | 'narrow'): string
     getDayNames(format?: 'long' | 'short' | 'narrow'): string[]
     getMonthName(index: number, format?: 'long' | 'short' | 'narrow'): string
@@ -234,6 +236,7 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
       i18n.formatRelativeTime(getLocale(), number, unit, format),
 
     getFirstDayOfWeek: () => i18n.getFirstDayOfWeek(getLocale()),
+    getCalendarWeek: (date: Date) => i18n.getCalendarWeek(getLocale(), date),
 
     getDayName(index, format = 'long') {
       const date = new Date(1970, 0, 4 + (index % 7))
@@ -396,6 +399,27 @@ const baseBehavior: I18n.Behavior = {
 
   getFirstDayOfWeek(locale) {
     return getFirstDayOfWeek(locale)
+  },
+
+  getCalendarWeek(locale: string, date: Date) {
+    // Code is based on this solution here:
+    // https://stackoverflow.com/questions/23781366/date-get-week-number-for-custom-week-start-day
+    // TODO - check algorithm
+
+    const weekstart = this.getFirstDayOfWeek(locale)
+    const target = new Date(date)
+
+    // Replaced offset of (6) with (7 - weekstart)
+    const dayNum = (date.getDay() + 7 - weekstart) % 7
+    target.setDate(target.getDate() - dayNum + 3)
+    const firstThursday = target.valueOf()
+    target.setMonth(0, 1)
+
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7))
+    }
+
+    return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000)
   }
 }
 

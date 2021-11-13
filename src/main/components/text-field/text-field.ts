@@ -80,6 +80,7 @@ function textFieldImpl(self: TextField) {
     const value = slInputRef.value!.value
     internals.setFormValue(value)
 
+    /*
     if (self.required && value === '') {
       internals.setValidity({ valueMissing: true }, 'Field is mandatory')
 
@@ -87,6 +88,7 @@ function textFieldImpl(self: TextField) {
         refresh()
       }
     }
+    */
   }
 
   const onInput = () => {
@@ -114,7 +116,6 @@ function textFieldImpl(self: TextField) {
   }
 
   function render() {
-    console.log('render')
     return html`
       <div class="base ${classMap({ required: self.required })}">
         <div class="field-wrapper">

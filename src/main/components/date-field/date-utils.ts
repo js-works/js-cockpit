@@ -40,42 +40,45 @@ function getLocalization(locale: string): Localization {
 
 function createDatepicker(params: {
   slInput: SlInput
-  pickerContainer: HTMLElement
+  pickerContainer: Element
   getLocale: () => string
 }): DatepickerInstance {
-  const { slInput, pickerContainer: container, getLocale } = params
-  const input = (slInput as any).shadowRoot!.querySelector('input')!
   let datepicker: any
   let popper: PopperInstance
+  const { slInput, pickerContainer: container, getLocale } = params
+  const input = (slInput as any).shadowRoot!.querySelector('input')!
+  const locale = getLocale()
+  const localization = getLocalization(getLocale())
 
   container.addEventListener('mousedown', (ev) => ev.preventDefault())
 
-  setTimeout(() => {
-    const locale = getLocale()
-    const localization = getLocalization(getLocale())
+  input.addEventListener('hide', () => {
+    slInput.value = input!.value
+  })
 
-    input.addEventListener('hide', () => {
-      slInput.value = input!.value
-    })
+  datepicker = new Datepicker(input, {
+    calendarWeeks: true,
+    daysOfWeekHighlighted: [0, 6],
+    prevArrow: '&#x1F860;',
+    nextArrow: '&#x1F862;',
+    autohide: true,
+    showOnFocus: false,
+    updateOnBlur: false,
+    todayHighlight: true,
+    container: container,
+    weeknumbers: true,
+    language: locale,
+    weekStart: localization.weekStart,
+    format: localization.format,
 
-    datepicker = new Datepicker(input, {
-      calendarWeeks: true,
-      daysOfWeekHighlighted: [0, 6],
-      prevArrow: '&#x1F860;',
-      nextArrow: '&#x1F862;',
-      autohide: true,
-      showOnFocus: false,
-      updateOnBlur: false,
-      todayHighlight: true,
-      container: container,
-      weeknumbers: true,
-      language: locale,
-      weekStart: localization.weekStart,
-      format: localization.format
-    })
+    getCalendarWeek(timestamp: number, weekStart: number) {
+      return localization.getCalendarWeek(new Date(timestamp))
+    }
+  })
 
-    popper = initPopper(slInput, datepicker)
-  }, 0)
+  popper = initPopper(slInput, datepicker)
+
+  return datepicker
 }
 
 function createDateRangePicker(params: {
@@ -92,6 +95,7 @@ function createDateRangePicker(params: {
     pickerContainer: container,
     getLocale
   } = params
+
   const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!
   const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!
   let dateRangePicker: any
@@ -204,6 +208,10 @@ function createLocalization(locale: string) {
           year: 'numeric'
         })
       }
+    },
+
+    getCalendarWeek(date: Date) {
+      return localizer.getCalendarWeek(date)
     }
   }
 }

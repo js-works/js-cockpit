@@ -71,7 +71,8 @@
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
-  background-color: rgb(var(--sl-color-neutral-100));
+  background-color: var(--sl-light, rgb(var(--sl-color-neutral-100)))
+    var(--sl-dark, rgb(var(--sl-color-neutral-200)));
 }
 
 .datepicker-dropdown .datepicker-picker {
