@@ -140,17 +140,6 @@ namespace I18n {
   }
 }
 
-// === local types ===================================================
-
-type Subscriber<T> = (value: T) => void
-type Unsubscribe = () => void
-type Subscribable<T> = (subscriber: Subscriber<T>) => Unsubscribe
-
-type Emitter<T> = {
-  emit(value: T): void
-  subscribe: Subscribable<T>
-}
-
 // === dictionary for translations ===================================
 
 const dict = (() => {

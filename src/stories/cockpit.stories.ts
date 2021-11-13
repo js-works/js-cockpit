@@ -16,7 +16,6 @@ import {
   Tabs,
   TextArea,
   TextField,
-  Theme,
   UserMenu
 } from 'js-cockpit'
 
