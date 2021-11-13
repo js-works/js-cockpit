@@ -8,6 +8,7 @@ export { I18n }
 
 const EN_US = 'en-US'
 const DEFAULT_FIRST_DAY_OF_WEEK = 1
+const DEFAULT_WEEKEND_DAYS = Object.freeze([0, 6]) // Sunday and Saturday
 
 const DEFAULT_DATE_FORMAT = Object.freeze({
   day: '2-digit',
@@ -74,7 +75,7 @@ namespace I18n {
     parseDate(locale: string, dateString: string): Date | null
 
     formatNumber(locale: string, value: number, format?: NumberFormat): string
-    formatDate(locale: string, value: Date, format?: DateFormat): string
+    formatDate(locale: string, value: Date, format?: DateFormat | null): string
 
     formatRelativeTime(
       locale: string,
@@ -85,6 +86,7 @@ namespace I18n {
 
     getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
     getCalendarWeek(locale: string, date: Date): number // 1 to 53
+    getWeekendDays(locale: string): Readonly<number[]> // array of integers between 0 and 6
   }
 
   export type Localizer = {
@@ -95,7 +97,7 @@ namespace I18n {
     parseDate(dateString: string): Date | null
 
     formatNumber(value: number, format?: NumberFormat): string
-    formatDate(value: Date, format?: DateFormat): string
+    formatDate(value: Date, format?: DateFormat | null): string
 
     formatRelativeTime(
       value: number,
@@ -104,6 +106,7 @@ namespace I18n {
     ): string
 
     getFirstDayOfWeek(): number // 0 to 6, 0 means Sunday
+    getWeekendDays(): Readonly<number[]> // array of integer form 0 to 6
     getCalendarWeek(date: Date): number // 1 to 53
     getDayName(index: number, format?: 'long' | 'short' | 'narrow'): string
     getDayNames(format?: 'long' | 'short' | 'narrow'): string[]
@@ -243,6 +246,7 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
       i18n.formatRelativeTime(getLocale(), number, unit, format),
 
     getFirstDayOfWeek: () => i18n.getFirstDayOfWeek(getLocale()),
+    getWeekendDays: () => i18n.getWeekendDays(getLocale()),
     getCalendarWeek: (date: Date) => i18n.getCalendarWeek(getLocale(), date),
 
     getDayName(index, format = 'long') {
@@ -444,6 +448,10 @@ const baseBehavior: I18n.Behavior = {
     }
 
     return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000)
+  },
+
+  getWeekendDays(locale: string) {
+    return DEFAULT_WEEKEND_DAYS
   }
 }
 

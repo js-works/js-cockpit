@@ -58,7 +58,7 @@ function createDatepicker(params: {
 
   datepicker = new Datepicker(input, {
     calendarWeeks: true,
-    daysOfWeekHighlighted: [0, 6],
+    daysOfWeekHighlighted: localization.weekendDays,
     prevArrow: '&#x1F860;',
     nextArrow: '&#x1F862;',
     autohide: true,
@@ -117,7 +117,7 @@ function createDateRangePicker(params: {
     dateRangePicker = new DateRangePicker(range, {
       inputs: [input1, input2],
       calendarWeeks: true,
-      daysOfWeekHighlighted: [0, 6],
+      daysOfWeekHighlighted: localization.weekendDays,
       prevArrow: '&#x1F860;',
       nextArrow: '&#x1F862;',
       autohide: true,
@@ -194,6 +194,7 @@ function createLocalization(locale: string) {
     months: localizer.getMonthNames('long'),
     monthsShort: localizer.getMonthNames('short'),
     weekStart: localizer.getFirstDayOfWeek(),
+    weekendDays: localizer.getWeekendDays(),
     titleFormat: 'MM y',
 
     format: {
