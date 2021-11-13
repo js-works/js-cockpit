@@ -23,7 +23,7 @@ import calendarIcon from '../../icons/calendar3.svg'
 
 // styles
 import dateFieldStyles from './date-field.css'
-import datePickerBaseStyles from 'vanillajs-datepicker/dist/css/datepicker-foundation.css'
+import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
 import datePickerCustomStyles from './date-picker-custom.css'
 import controlStyles from '../../shared/css/control.css'
 

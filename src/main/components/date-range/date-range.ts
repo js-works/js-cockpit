@@ -21,7 +21,7 @@ import arrowRightIcon from '../../icons/arrow-right.svg'
 // styles
 
 import dateRangeStyles from './date-range.css'
-import datePickerBaseStyles from 'vanillajs-datepicker/dist/css/datepicker-foundation.css'
+import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
 import datePickerCustomStyles from '../date-field/date-picker-custom.css'
 import controlStyles from '../../shared/css/control.css'
 

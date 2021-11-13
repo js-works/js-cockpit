@@ -1,4 +1,8 @@
 .base {
+  display: flex;
+  position: relative;
+  font-family: var(--sl-font-sans);
+  user-select: none;
 }
 
 .fields {

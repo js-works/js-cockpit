@@ -3,13 +3,15 @@
   margin-bottom: 8px;
   padding: 0.125rem 1rem;
   xxxborder-radius: 6px;
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+  user-select: none;
 }
 
 .caption {
   margin: 4px 0 4px 0;
   padding: 0 8px 1px 6px;
   color: rgb(var(--sl-color-neutral-900));
-  font-size: var(--sl-font-size-medium);
   font-weight: var(--sl-font-weight-semibold);
 }
 
