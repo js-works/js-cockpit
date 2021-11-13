@@ -42,6 +42,21 @@ const firstDayOfWeekData: Record<number, string> = {
   6: 'AE,AF,BH,DJ,DZ,EG,IQ,IR,JO,KW,LY,OM,QA,SD,SY'
 }
 
+// Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+const weekendData: Record<string, string> = {
+  // Friday and Saturday
+  '5+6': 'AE,BH,DZ,EG,IL,IQ,JO,KW,LY,OM,QA,SA,SD,SY,YE',
+
+  // Thursday and Friday
+  '4+5': 'AF',
+
+  // Sunday
+  '6': 'IN,UG',
+
+  // Friday
+  '5': 'IR'
+}
+
 // === public types ==================================================
 
 type I18n = Readonly<{
@@ -451,7 +466,7 @@ const baseBehavior: I18n.Behavior = {
   },
 
   getWeekendDays(locale: string) {
-    return DEFAULT_WEEKEND_DAYS
+    return getWeekendDays(locale)
   }
 }
 
@@ -594,6 +609,22 @@ const getFirstDayOfWeek: (locale: string) => number = (() => {
       DEFAULT_FIRST_DAY_OF_WEEK
     )
   }
+})()
+
+const getWeekendDays = ((): ((locale: string) => Readonly<number[]>) => {
+  const weekendDaysByCountryCode = new Map<string, Readonly<number[]>>()
+
+  for (const [key, value] of Object.entries(weekendData)) {
+    const days = Object.freeze(key.split('+').map((it) => parseInt(it)))
+    const countryCodes = value.split(',')
+
+    countryCodes.forEach((countryCode) =>
+      weekendDaysByCountryCode.set(countryCode, days)
+    )
+  }
+
+  return (locale: string) =>
+    weekendDaysByCountryCode.get(getCountryCode(locale)) || DEFAULT_WEEKEND_DAYS
 })()
 
 function parseIsoDateString(s: string): Date | null {
