@@ -7,7 +7,13 @@ export { I18n }
 // === constants (used locally) ======================================
 
 const EN_US = 'en-US'
-const DEFAULT_FIRST_DAY_OF_WEEK = 0
+const DEFAULT_FIRST_DAY_OF_WEEK = 1
+
+const DEFAULT_DATE_FORMAT = Object.freeze({
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+} as const)
 
 // === parsers by locale =============================================
 
@@ -194,7 +200,8 @@ const dict = (() => {
 
       if (ret !== null && replacements) {
         if (typeof ret !== 'function') {
-          console.log(ret)
+          console.log(ret) // TODO
+
           throw new Error(
             `Invalid translation parameters for key "${key}" in locale "${locale}"`
           )
@@ -355,7 +362,9 @@ const baseBehavior: I18n.Behavior = {
         example.indexOf('11') === -1 ||
         example.indexOf('23') === -1
       ) {
-        throw new Error('Unsupported locale for automatic date parser')
+        // too complex date format - use ISO format as fallback
+        dateParserByLocale.set(locale, parseIsoDateString)
+        return parseIsoDateString(dateString)
       }
 
       const regExp = new RegExp(
@@ -390,6 +399,21 @@ const baseBehavior: I18n.Behavior = {
   },
 
   formatDate(locale, value, format): string {
+    if (!format) {
+      let dateParser = dateParserByLocale.get(locale)
+
+      if (!dateParserByLocale.has(locale)) {
+        baseBehavior.parseDate(locale, '1970-01-01') // TODO!!!
+        dateParser = dateParserByLocale.get(locale)
+      }
+
+      if (dateParser === parseIsoDateString) {
+        return value.toISOString().substr(0, 10)
+      }
+
+      format = DEFAULT_DATE_FORMAT
+    }
+
     return new Intl.DateTimeFormat(locale, format).format(value)
   },
 
@@ -563,6 +587,11 @@ const getFirstDayOfWeek: (locale: string) => number = (() => {
     )
   }
 })()
+
+function parseIsoDateString(s: string): Date | null {
+  // TODO!!!!!
+  return new Date(s)
+}
 
 function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

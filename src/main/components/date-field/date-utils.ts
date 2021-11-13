@@ -202,11 +202,7 @@ function createLocalization(locale: string) {
       },
 
       toDisplay(date: Date) {
-        return localizer.formatDate(date, {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        })
+        return localizer.formatDate(date)
       }
     },
 

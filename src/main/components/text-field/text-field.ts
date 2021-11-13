@@ -102,17 +102,17 @@ function textFieldImpl(self: TextField) {
   })
 
   useOnFormAssociated((frm) => {
-    console.log('----> form associated', frm)
+    //console.log('----> form associated', frm)
   })
 
   useOnFormDisabled((disabled) => {
-    console.log('----> form disabled', disabled)
+    //console.log('----> form disabled', disabled)
   })
   ;(self as any).formAssociatedCallback = (frm: HTMLFormElement) => {
-    console.log(33, 'associated', frm)
+    //console.log(33, 'associated', frm)
   }
   ;(self as any).formDisabledCallback = (disabled: boolean) => {
-    console.log(33, 'disabled', disabled)
+    //console.log(33, 'disabled', disabled)
   }
 
   function render() {
