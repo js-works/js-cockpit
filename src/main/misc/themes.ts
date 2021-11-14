@@ -281,6 +281,12 @@ const Themes = {
     })
   },
 
+  get blue(): Theme {
+    return materializeTheme(this, 'blue', {
+      primaryColor: '#00B0FF'
+    })
+  },
+
   get temp(): Theme {
     return materializeTheme(this, 'temp', {
       //

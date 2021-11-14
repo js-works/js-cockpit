@@ -1,11 +1,10 @@
 import { component, elem, prop, Attrs } from 'js-element'
-import { html, lit } from 'js-element/lit'
-import { useAfterMount, useBeforeRender } from 'js-element/hooks'
+import { classMap, html, lit } from 'js-element/lit'
+import { useAfterMount } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 
 import {
   createDateRangePicker,
-  getLocalization,
   DatepickerInstance
 } from '../date-field/date-utils'
 
@@ -76,7 +75,7 @@ function dateRangeImpl(self: DateRange) {
 
   function render() {
     return html`
-      <div class="base">
+      <div class="base ${classMap({ required: self.required })}">
         <div class="field-wrapper">
           <div class="label">${self.label}</div>
           <div class="control">

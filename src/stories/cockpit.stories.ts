@@ -16,6 +16,7 @@ import {
   Tabs,
   TextArea,
   TextField,
+  ThemeProvider,
   UserMenu
 } from 'js-cockpit'
 
@@ -67,7 +68,7 @@ const demo1Styles = `
   tag: 'cockpit-demo1',
   styles: demo1Styles,
   impl: lit(cockpitDemo1Impl),
-  uses: [Cockpit, DateField, SectionsMenu, SharedCockpit]
+  uses: [Cockpit, DateField, SectionsMenu, SharedCockpit, ThemeProvider]
 })
 class CockpitDemo1 extends component() {}
 

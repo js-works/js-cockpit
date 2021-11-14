@@ -29,7 +29,9 @@ function fieldsetImpl(self: Fieldset) {
       <div
         class="base ${classMap({ horizontal: self.orient === 'horizontal' })}"
       >
-        <div class="caption">${self.caption}</div>
+        ${self.caption //
+          ? html`<div class="caption">${self.caption}</div>`
+          : ''}
         <div class="content">
           <slot></slot>
         </div>

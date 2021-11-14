@@ -1,7 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, LoginForm, Themes } from 'js-cockpit'
+import { Brand, LoginForm, ThemeProvider, Themes } from 'js-cockpit'
 
 import 'element-internals-polyfill'
 
@@ -11,7 +11,7 @@ export default {
 
 @elem({
   tag: 'login-form-demo',
-  uses: [Brand, LoginForm],
+  uses: [Brand, LoginForm, ThemeProvider],
   impl: lit(loginFormDemoImpl)
 })
 class LoginFormDemo extends component() {}
@@ -19,7 +19,7 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <div>
+      <c-theme-provider theme="blue">
         <c-login-form
           full-size
           initialView="forgotPassword"
@@ -34,7 +34,7 @@ function loginFormDemoImpl() {
           </div>
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>
-      </div>
+      </c-theme-provider>
     `
 }
 

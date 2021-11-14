@@ -1,6 +1,5 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, createRef, html, lit, ref, Ref } from 'js-element/lit'
-import { Theme } from '../../misc/themes'
+import { component, elem, prop, Attrs } from 'js-element'
+import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 
@@ -10,7 +9,6 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
 import { TextField } from '../text-field/text-field'
 import { PasswordField } from '../password-field/password-field'
-import { ThemeProvider } from '../theme-provider/theme-provider'
 //import { formCtrlCtx } from '../../ctxs/form-ctrl-ctx'
 
 // styles
@@ -55,7 +53,7 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-  uses: [PasswordField, TextField, ThemeProvider, SlButton, SlCheckbox, SlIcon]
+  uses: [PasswordField, TextField, SlButton, SlCheckbox, SlIcon]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
@@ -63,9 +61,6 @@ class LoginForm extends component() {
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
-
-  @prop
-  theme?: Theme
 }
 
 function loginFormImpl(self: LoginForm) {
@@ -99,72 +94,65 @@ function loginFormImpl(self: LoginForm) {
 
   function render() {
     return html`
-      <c-theme-provider .theme=${self.theme}>
-        <div class="base ${classMap({ 'full-size': self.fullSize })}">
-          <div class="container">
-            <div class="header">
-              <slot name="header"></slot>
-            </div>
-            <div class="main">
-              <div class="column1">
-                <div class="column1-top login-intro" slot="login-intro">
-                  <div class="default-login-intro">
-                    <slot name="login-intro">
-                      <h3>${t('login-intro-headline')}</h3>
-                      <p>${t('login-intro-text')}</p>
-                    </slot>
-                  </div>
-                </div>
-                <div class="column1-bottom">
-                  <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
+      <div class="base ${classMap({ 'full-size': self.fullSize })}">
+        <div class="container">
+          <div class="header">
+            <slot name="header"></slot>
+          </div>
+          <div class="main">
+            <div class="column1">
+              <div class="column1-top login-intro" slot="login-intro">
+                <div class="default-login-intro">
+                  <slot name="login-intro">
+                    <h3>${t('login-intro-headline')}</h3>
+                    <p>${t('login-intro-text')}</p>
+                  </slot>
                 </div>
               </div>
-              <form
-                disabled
-                ${ref(formRef)}
-                class="column2"
-                @submit=${onSubmit}
-              >
-                <div class="column2-top">
-                  <slot name="login-fields">
-                    <fieldset disabled>
-                      <c-text-field
-                        name="username"
-                        label=${t('username')}
-                        required
-                      ></c-text-field>
+              <div class="column1-bottom">
+                <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
+              </div>
+            </div>
+            <form disabled ${ref(formRef)} class="column2" @submit=${onSubmit}>
+              <div class="column2-top">
+                <slot name="login-fields">
+                  <fieldset disabled>
+                    <c-text-field
+                      name="username"
+                      label=${t('username')}
+                      required
+                    ></c-text-field>
 
-                      <c-password-field
-                        label=${t('password')}
-                        required
-                      ></c-password-field>
-                    </fieldset>
-                  </slot>
-                  <br />
-                  <div
-                    style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic"
-                  >
-                    ${t('forgot-password')}
-                  </div>
+                    <c-password-field
+                      label=${t('password')}
+                      required
+                    ></c-password-field>
+                  </fieldset>
+                </slot>
+                <br />
+                <div
+                  style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic"
+                >
+                  ${t('forgot-password')}
                 </div>
-                <div class="column2-bottom">
-                  <sl-checkbox>${t('remember-login')}</sl-checkbox>
-                  <sl-button
-                    type="primary"
-                    class="login-button"
-                    @click=${onSubmitClick}
-                  >
-                    ${t('log-in')}
-                  </sl-button>
-                </div>
-              </form>
-            </div>
-            <div class="footer">
-              <slot name="footer"></slot>
-            </div>
+              </div>
+              <div class="column2-bottom">
+                <sl-checkbox>${t('remember-login')}</sl-checkbox>
+                <sl-button
+                  type="primary"
+                  class="login-button"
+                  @click=${onSubmitClick}
+                >
+                  ${t('log-in')}
+                </sl-button>
+              </div>
+            </form>
+          </div>
+          <div class="footer">
+            <slot name="footer"></slot>
           </div>
         </div>
-      </c-theme-provider>
+      </div>
     `
   }
 

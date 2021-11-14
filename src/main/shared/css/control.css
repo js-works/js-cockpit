@@ -11,7 +11,7 @@
   padding: 3px 4px 3px 0;
   white-space: normal;
   font-size: var(--sl-font-size-medium);
-  color: var(--sl-input-label-color);
+  color: rgb(var(--sl-input-label-color));
 }
 
 .label:after {

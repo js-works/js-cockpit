@@ -6,7 +6,6 @@ import {
   Brand,
   Cockpit,
   DataForm,
-  Fieldset,
   RadioGroup,
   Section,
   SectionsMenu,
@@ -15,7 +14,6 @@ import {
   Tabs,
   TextArea,
   TextField,
-  Themes,
   UserMenu
 } from 'js-cockpit'
 
@@ -31,7 +29,6 @@ export default {
     Brand,
     Cockpit,
     DataForm,
-    Fieldset,
     RadioGroup,
     Section,
     SectionsMenu,
@@ -116,43 +113,45 @@ function sharedCockpitImpl() {
   }
 
   return () => html`
-    <c-cockpit .theme=${Themes.default.invert()}>
-      <c-brand
-        slot="header-start"
-        class="orangered"
-        headline="my-company"
-        subheadline="Back Office"
-        multi-color
-      ></c-brand>
-      <c-sections-menu
-        slot="header"
-        class="orange"
-        .sections=${[
-          {
-            id: 1,
-            title: 'Dashboard'
-          },
-          {
-            id: 2,
-            title: 'User management'
-          },
-          {
-            id: 3,
-            title: 'Catalog'
-          },
-          {
-            id: 4,
-            title: 'CMS'
-          }
-        ]}
-        .activeSection=${2}
-      ></c-sections-menu>
-      <c-user-menu slot="header-end"></c-user-menu>
-      <div slot="sidebar" class="lightgreen full-height">
-        <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>
-      </div>
-      <div slot="main" class="yellow full-height"><slot></slot></div>
-    </c-cockpit>
+    <c-theme-provider theme="default">
+      <c-cockpit>
+        <c-brand
+          slot="header-start"
+          class="orangered"
+          headline="my-company"
+          subheadline="Back Office"
+          multi-color
+        ></c-brand>
+        <c-sections-menu
+          slot="header"
+          class="orange"
+          .sections=${[
+            {
+              id: 1,
+              title: 'Dashboard'
+            },
+            {
+              id: 2,
+              title: 'User management'
+            },
+            {
+              id: 3,
+              title: 'Catalog'
+            },
+            {
+              id: 4,
+              title: 'CMS'
+            }
+          ]}
+          .activeSection=${2}
+        ></c-sections-menu>
+        <c-user-menu slot="header-end"></c-user-menu>
+        <div slot="sidebar" class="lightgreen full-height">
+          <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>
+        </div>
+        <div slot="main" class="yellow full-height"><slot></slot></div>
+      </c-cockpit>
+    </c-theme-provider>
   `
 }
 
