@@ -1,6 +1,4 @@
 :host {
-  --c-label-and-field-mode: 0;
-  --c-label-and-field-flex-direction: column;
-  --c-label-and-field-label-text-align: left;
-  --c-label-and-field-label-width: auto;
+  --sl-top-aligned-labels: var(--on);
+  --sl-right-aligned-labels: var(--off);
 }

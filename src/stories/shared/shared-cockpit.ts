@@ -113,7 +113,7 @@ function sharedCockpitImpl() {
   }
 
   return () => html`
-    <c-theme-provider theme="default">
+    <c-theme-provider theme="default/dark">
       <c-cockpit>
         <c-brand
           slot="header-start"

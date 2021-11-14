@@ -116,18 +116,16 @@ function loginFormImpl(self: LoginForm) {
             <form disabled ${ref(formRef)} class="column2" @submit=${onSubmit}>
               <div class="column2-top">
                 <slot name="login-fields">
-                  <fieldset disabled>
-                    <c-text-field
-                      name="username"
-                      label=${t('username')}
-                      required
-                    ></c-text-field>
+                  <c-text-field
+                    name="username"
+                    label=${t('username')}
+                    required
+                  ></c-text-field>
 
-                    <c-password-field
-                      label=${t('password')}
-                      required
-                    ></c-password-field>
-                  </fieldset>
+                  <c-password-field
+                    label=${t('password')}
+                    required
+                  ></c-password-field>
                 </slot>
                 <br />
                 <div

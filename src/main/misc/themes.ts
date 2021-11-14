@@ -113,7 +113,11 @@ class Theme {
       return css
     }
 
-    const lines: string[] = [`${selector} {`]
+    const lines: string[] = [
+      `${selector} {`, //
+      '  --on: inherit;',
+      '  --off: ;'
+    ]
 
     Object.entries(this.#themeTokens).forEach(([key, value]) => {
       lines.push(`--sl-${key}: ${value};`)
@@ -127,7 +131,7 @@ class Theme {
   }
 
   isDark() {
-    return this.#themeTokens['light'] !== 'inherit'
+    return this.#themeTokens['dark'] === 'var(--on)'
   }
 
   invert(): Theme {
@@ -140,8 +144,11 @@ class Theme {
     const tokens: Record<string, string> = this.#themeTokens
     const invertedTokens = Object.assign({}, tokens)
 
-    invertedTokens['light'] = tokens['light'] === ' ' ? 'inherit' : ' '
-    invertedTokens['dark'] = tokens['dark'] === ' ' ? 'inherit' : ' '
+    invertedTokens['light'] =
+      tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
+
+    invertedTokens['dark'] =
+      tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
 
     // TODO
     //invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
@@ -437,9 +444,21 @@ function luminanceOfValue(x: number): number {
 // === Shoelace original light theme =================================
 
 const lightThemeTokens = {
+  // The following both custom properties will be adden
+  // automtically to allow features to be turned on and off
+  // via CSS:
+  //
+  // --on: inherit
+  // --off: ' '
+
   // used for conditional "light vs. dark" theming
-  light: 'inherit' as 'inherit' | ' ',
-  dark: ' ' as 'inherit' | ' ',
+  light: 'var(--on)' as 'var(--on)' | 'var(--off)',
+  dark: 'var(--off)' as 'var(--on)' | 'var(--off)',
+
+  // used for conditional label alignment (top vs. right)
+  'top-aligned-labels': 'var(--on)',
+  'right-aligned-labels': 'var(--off)',
+  'right-aligned-labels-width': '8rem',
 
   'color-blue-gray-50': '248 250 252',
   'color-blue-gray-100': '241 245 249',
