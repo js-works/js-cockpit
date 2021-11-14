@@ -464,9 +464,11 @@ function showDialog<T = void>(
 
   const params = init(translate)
   const container = document.createElement('div')
+  container.attachShadow({ mode: 'open' })
+  const containerShadow = container.shadowRoot!
 
   const setText = (text: string | undefined, selector: string) => {
-    const target: HTMLElement = container.querySelector(selector)!
+    const target: HTMLElement = containerShadow.querySelector(selector)!
 
     if (text) {
       target.innerText = text
@@ -476,7 +478,7 @@ function showDialog<T = void>(
   // required custom elements
   void (FocusTrap || SlButton || SlForm || SlIcon || SlInput || SlDialog)
 
-  container.innerHTML = `
+  containerShadow.innerHTML = `
     <style></style>
     <sl-form class="_form_">
       <focus-trap>
@@ -496,9 +498,11 @@ function showDialog<T = void>(
   setText(params.title, '._title_')
   setText(params.message, '._message_')
 
-  const form: SlForm = container.querySelector('sl-form._form_')!
-  const dialog: SlDialog = container.querySelector('sl-dialog._dialog_')!
-  const contentBox: HTMLElement = container.querySelector('div._content_')!
+  const form: SlForm = containerShadow.querySelector('sl-form._form_')!
+  const dialog: SlDialog = containerShadow.querySelector('sl-dialog._dialog_')!
+  const contentBox: HTMLElement = containerShadow.querySelector(
+    'div._content_'
+  )!
 
   if (params.content) {
     contentBox.append(params.content)
@@ -516,7 +520,7 @@ function showDialog<T = void>(
     contentBox.removeEventListener('keydown', onKeyDown)
     buttonBox.removeEventListener('keydown', onKeyDown)
     container.remove()
-    container.innerHTML = ''
+    containerShadow.innerHTML = ''
 
     emitResult(params.mapResult?.(data))
   })
@@ -525,13 +529,13 @@ function showDialog<T = void>(
     ev.preventDefault()
   })
 
-  const icon: SlIcon = container.querySelector('sl-icon._icon_')!
+  const icon: SlIcon = containerShadow.querySelector('sl-icon._icon_')!
   icon.classList.add(`_${params.type}_`)
   icon.src = params.icon
 
   setText(styles, 'style')
 
-  const buttonBox: HTMLElement = container.querySelector('._buttons_')!
+  const buttonBox: HTMLElement = containerShadow.querySelector('._buttons_')!
   const hiddenField = document.createElement('input')
 
   const onKeyDown = (ev: KeyboardEvent) => {
