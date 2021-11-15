@@ -15,15 +15,15 @@ export default {
 })
 class LoginFormDemo extends component() {}
 
-function loginFormDemoImpl(self: LoginFormDemo) {
+function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider theme="pink">
+      <c-theme-provider theme="default">
         <c-login-form
           full-size
           enable-remember-login
           enable-forgot-password
-          enable-register
+          enable-registration
           initial-view="login"
         >
           <div slot="header">

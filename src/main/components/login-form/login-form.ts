@@ -27,7 +27,7 @@ export { LoginForm }
 
 // === types =========================================================
 
-type View = 'login' | 'register' | 'forgotPassword' | 'resetPassword'
+type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
 
 // === LoginForm ===================================================
 
@@ -42,6 +42,7 @@ I18n.addTranslations('en', {
     'forgot-password-intro-text': "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
     'forgot-password-submit-text': 'Request password reset',
     'go-to-login': 'Go to login form',
+    'go-to-registration': 'Need account?',
     'login-intro-headline': 'Login',
     'login-intro-text': 'Please enter your credentials in the form to log in',
     'login-submit-text': 'Log in',
@@ -97,6 +98,10 @@ function loginFormImpl(self: LoginForm) {
 
   const onGoToLoginClick = () => {
     setState('view', 'login')
+  }
+
+  const onGoToRegistrationClick = () => {
+    setState('view', 'registration')
   }
 
   const onSubmit = (ev?: any) => {
@@ -183,7 +188,7 @@ function loginFormImpl(self: LoginForm) {
             </div>
           </slot>
         `
-      case 'register':
+      case 'registration':
         return html`
           <slot name="register-intro">
             <div class="default-intro">
@@ -221,7 +226,8 @@ function loginFormImpl(self: LoginForm) {
   function renderFields() {
     switch (state.view) {
       case 'login':
-        return html`<slot name="login-fields">
+        return html`
+          <slot name="login-fields">
             <c-text-field
               name="username"
               label=${t('username')}
@@ -234,10 +240,12 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <br />
-          ${renderForgotPasswordLink()} `
+          <div class="links">
+            ${renderForgotPasswordLink()} ${renderGoToRegistrationLink()}
+          </div>
+        `
 
-      case 'register':
+      case 'registration':
         return html`<slot name="register-fields">
             <c-text-field
               name="username"
@@ -260,8 +268,9 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <br />
-          ${renderGoToLoginLink()}
+          <div class="links">
+            ${renderGoToLoginLink()}
+          </div>
         `
 
       case 'forgotPassword':
@@ -278,8 +287,9 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <br />
-          ${renderGoToLoginLink()}
+          <div class="links">
+            ${renderGoToLoginLink()}
+          </div>
         `
 
       case 'resetPassword':
@@ -306,8 +316,7 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-text-field>
           </slot>
-          <br />
-          ${renderGoToLoginLink()}
+          <div class="links">${renderGoToLoginLink()}</div>
         `
     }
   }
@@ -331,7 +340,7 @@ function loginFormImpl(self: LoginForm) {
       <div class="go-to-login-link-container">
         <sl-button
           type="text"
-          class="forgot-password-link"
+          class="go-to-login-link"
           @click=${onGoToLoginClick}
         >
           ${t('go-to-login')}
@@ -340,12 +349,26 @@ function loginFormImpl(self: LoginForm) {
     `
   }
 
+  function renderGoToRegistrationLink() {
+    return self.enableRegistration
+      ? html`<div class="go-to-registration-link-container">
+          <sl-button
+            type="text"
+            class="go-to-registration-link"
+            @click=${onGoToRegistrationClick}
+          >
+            ${t('go-to-registration')}
+          </sl-button>
+        </div>`
+      : ''
+  }
+
   function renderSubmitButtonText() {
     switch (state.view) {
       case 'login':
         return t('login-submit-text')
 
-      case 'register':
+      case 'registration':
         return t('register-submit-text')
 
       case 'forgotPassword':

@@ -25,6 +25,7 @@ I18n.addTranslations('de', {
     'forgot-password-intro-text': "Sie werden per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können",
     'forgot-password-submit-text': 'Passwort zurücksetzen',
     'go-to-login': 'Gehe zur Anmeldung',
+    'go-to-registration': 'Noch keinen Account?',
     'login-intro-headline': 'Anmeldung',
     'login-intro-text': 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an',
     'login-submit-text': 'Anmelden',

@@ -61,7 +61,7 @@
   color: var(--sl-light, rgb(var(--sl-color-neutral-0)))
     var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
 
-  background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
+  background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 90%))
     var(--sl-dark, rgb(var(--sl-color-primary-500) / 60%));
 
   border-radius: 6px 0 0 6px;
@@ -135,14 +135,27 @@
   height: 72px;
 }
 
+.links {
+  margin: 1.25rem 0 0 0;
+}
+
 .forgot-password-link-container,
-.go-to-login-link-container {
+.go-to-login-link-container,
+.go-to-registration-link-container {
   text-align: right;
 }
 
+sl-button.forgot-password-link::part(base),
+sl-button.go-to-login-link::part(base),
+sl-button.go-to-registration-link::part(base) {
+  height: unset !important;
+  line-height: unset !important;
+}
+
 sl-button.forgot-password-link::part(label),
-sl-button.go-to-login-link::part(label) {
-  padding: 0 4px !important;
+sl-button.go-to-login-link::part(label),
+sl-button.go-to-registration-link::part(label) {
+  padding: 4px !important;
 }
 
 .column1 {
