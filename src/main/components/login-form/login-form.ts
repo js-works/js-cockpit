@@ -130,6 +130,14 @@ function loginFormImpl(self: LoginForm) {
   }
 
   useOnInit(() => {
+    let view: View = 'login'
+
+    if (self.enableForgotPassword && self.initialView === 'forgotPassword') {
+      view = 'forgotPassword'
+    } else if (self.enableRegistration && self.initialView === 'registration') {
+      view = 'registration'
+    }
+
     setState('view', self.initialView || 'login')
   })
 
@@ -164,8 +172,8 @@ function loginFormImpl(self: LoginForm) {
                   >
                     ${renderSubmitButtonText()}
                   </sl-button>
+                  ${renderLinks()}
                 </div>
-                ${renderLinks()}
               </form>
             </div>
             <div class="footer">
