@@ -16,17 +16,30 @@ I18n.addTranslations('de', {
       'approval': 'Zustimmung'
     },
 
-    'login-form': {
-      'login-intro-headline': 'Anmeldung',
-
-      'login-intro-text':
-        'Herzlich willkommen! Bitte geben Sie Ihre Anmeldedaten ein.',
-
-      'username': 'Benutzername',
-      'password': 'Passwort',
-      'remember-login': 'Angemeldet bleiben',
-      'forgot-password': 'Passwort vergessen?',
-      'log-in': 'Anmelden'
+  'login-form': {
+    'email': 'E-mail',
+    'first-name': 'Vorname',
+    'last-name': 'Nachname',
+    'forgot-password': 'Passwort vergessen?',
+    'forgot-password-intro-headline': 'Passwort vergessen?',
+    'forgot-password-intro-text': "Bitte füllen Sie das Formular aus um per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können",
+    'forgot-password-submit-text': 'Passwort zurücksetzen',
+    'go-to-login': 'Gehe zum Login',
+    'login-intro-headline': 'Login',
+    'login-intro-text': 'Um sich anzumelden geben Sie bitte Ihre Zugangsdaten an',
+    'login-submit-text': 'Anmelden',
+    'new-password': 'Neues Passwort',
+    'new-password-repeat': 'Wiederhole Passwort',
+    'password': 'Passwort',
+    'register-intro-headline': 'Registrierung',
+    'register-intro-text': 'Please fill out the form and press the submit button to register',
+    'register-submit-text': 'Register',
+    'remember-login': 'Remember login',
+    'reset-password-intro-headline': 'Reset password',
+    'reset-password-intro-text': 'Please fill out and submit the form to reset your password',
+    'reset-password-submit-text': 'Reset password',
+    'security-code': 'Security code',
+    'username': 'Username',
     },
 
     'data-explorer': {

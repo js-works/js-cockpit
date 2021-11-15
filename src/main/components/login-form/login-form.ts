@@ -48,16 +48,14 @@ I18n.addTranslations('en', {
     'new-password': 'New passwort',
     'new-password-repeat': 'Repeat new password',
     'password': 'Password',
-    'register-intro-headline': 'Reset password',
+    'register-intro-headline': 'Registration',
     'register-intro-text': 'Please fill out the form and press the submit button to register',
     'register-submit-text': 'Register',
     'remember-login': 'Remember login',
-    'reset-password': 'Reset password',
     'reset-password-intro-headline': 'Reset password',
     'reset-password-intro-text': 'Please fill out and submit the form to reset your password',
     'reset-password-submit-text': 'Reset password',
     'security-code': 'Security code',
-    'send-e-mail': 'Send e-mail',
     'username': 'Username',
   }
 })
@@ -73,10 +71,13 @@ class LoginForm extends component() {
   initialView?: View
 
   @prop({ attr: Attrs.boolean })
-  showRememberLogin = false
+  enableRememberLogin = false
 
   @prop({ attr: Attrs.boolean })
-  showForgotPassword = false
+  enableForgotPassword = false
+
+  @prop({ attr: Attrs.boolean })
+  enableRegistration = false
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
@@ -142,7 +143,7 @@ function loginFormImpl(self: LoginForm) {
             <form disabled ${ref(formRef)} class="column2" @submit=${onSubmit}>
               <div class="column2-top">${renderFields()}</div>
               <div class="column2-bottom">
-                ${state.view === 'login' && self.showRememberLogin
+                ${state.view === 'login' && self.enableRememberLogin
                   ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
                   : ''}
                 <sl-button
@@ -226,17 +227,7 @@ function loginFormImpl(self: LoginForm) {
             ></c-password-field>
           </slot>
           <br />
-          ${self.showForgotPassword
-            ? html`<div class="forgot-password-link-container">
-                <sl-button
-                  type="text"
-                  class="forgot-password-link"
-                  @click=${onForgotPasswordClick}
-                >
-                  ${t('forgot-password')}
-                </sl-button>
-              </div>`
-            : ''}`
+          ${renderForgotPasswordLink()} `
 
       case 'register':
         return html`<slot name="register-fields">
@@ -262,19 +253,8 @@ function loginFormImpl(self: LoginForm) {
             ></c-password-field>
           </slot>
           <br />
-          ${
-            self.showForgotPassword
-              ? html`<div class="go-to-login-link-container">
-                  <sl-button
-                    type="text"
-                    class="forgot-password-link"
-                    @click=${onGoToLoginClick}
-                  >
-                    ${t('go-to-login')}
-                  </sl-button>
-                </div>`
-              : ''
-          }`
+          ${renderGoToLoginLink()}
+        `
 
       case 'forgotPassword':
         return html`<slot name="forgot-password-fields">
@@ -291,22 +271,12 @@ function loginFormImpl(self: LoginForm) {
             ></c-password-field>
           </slot>
           <br />
-          ${
-            self.showForgotPassword
-              ? html`<div class="go-to-login-link-container">
-                  <sl-button
-                    type="text"
-                    class="go-to-login-link"
-                    @click=${onGoToLoginClick}
-                  >
-                    ${t('go-to-login')}
-                  </sl-button>
-                </div>`
-              : ''
-          }`
+          ${renderGoToLoginLink()}
+        `
 
       case 'resetPassword':
-        return html`<slot name="reset-password-fields">
+        return html`
+          <slot name="reset-password-fields">
             <c-text-field
               name="username"
               label=${t('username')}
@@ -329,18 +299,37 @@ function loginFormImpl(self: LoginForm) {
             ></c-text-field>
           </slot>
           <br />
-          ${self.showForgotPassword
-            ? html`<div class="forgot-password-link-container">
-                <sl-button
-                  type="text"
-                  class="forgot-password-link"
-                  @click=${onGoToLoginClick}
-                >
-                  ${t('go-to-login')}
-                </sl-button>
-              </div>`
-            : ''}`
+          ${renderGoToLoginLink()}
+        `
     }
+  }
+
+  function renderForgotPasswordLink() {
+    return self.enableForgotPassword
+      ? html`<div class="forgot-password-link-container">
+          <sl-button
+            type="text"
+            class="forgot-password-link"
+            @click=${onForgotPasswordClick}
+          >
+            ${t('forgot-password')}
+          </sl-button>
+        </div>`
+      : ''
+  }
+
+  function renderGoToLoginLink() {
+    return html`
+      <div class="go-to-login-link-container">
+        <sl-button
+          type="text"
+          class="forgot-password-link"
+          @click=${onGoToLoginClick}
+        >
+          ${t('go-to-login')}
+        </sl-button>
+      </div>
+    `
   }
 
   function renderSubmitButtonText() {

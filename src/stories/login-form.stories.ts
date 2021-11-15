@@ -22,9 +22,10 @@ function loginFormDemoImpl() {
       <c-theme-provider theme="default">
         <c-login-form
           full-size
-          show-remember-login
-          show-forgot-password
-          initial-view="register"
+          enable-remember-login
+          enable-forgot-password
+          enable-register
+          initial-view="login"
         >
           <div slot="header">
             <c-brand
@@ -39,4 +40,4 @@ function loginFormDemoImpl() {
     `
 }
 
-export const loginForm = () => h('login-form-demo', { lang: 'en-US' })
+export const loginForm = () => h('login-form-demo', { lang: 'de-DE' })
