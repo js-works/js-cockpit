@@ -136,13 +136,13 @@
 }
 
 .links {
-  margin: 1.25rem 0 0 0;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
 }
 
-.forgot-password-link-container,
-.go-to-login-link-container,
-.go-to-registration-link-container {
-  text-align: right;
+.links > * {
+  margin: 0 0 -10px 0;
 }
 
 sl-button.forgot-password-link::part(base),

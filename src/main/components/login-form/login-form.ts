@@ -165,6 +165,7 @@ function loginFormImpl(self: LoginForm) {
                     ${renderSubmitButtonText()}
                   </sl-button>
                 </div>
+                ${renderLinks()}
               </form>
             </div>
             <div class="footer">
@@ -240,9 +241,6 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <div class="links">
-            ${renderForgotPasswordLink()} ${renderGoToRegistrationLink()}
-          </div>
         `
 
       case 'registration':
@@ -268,9 +266,6 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <div class="links">
-            ${renderGoToLoginLink()}
-          </div>
         `
 
       case 'forgotPassword':
@@ -287,9 +282,6 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-password-field>
           </slot>
-          <div class="links">
-            ${renderGoToLoginLink()}
-          </div>
         `
 
       case 'resetPassword':
@@ -321,9 +313,29 @@ function loginFormImpl(self: LoginForm) {
     }
   }
 
+  function renderLinks() {
+    switch (state.view) {
+      case 'login':
+        return html`
+          <div class="links">
+            ${renderForgotPasswordLink()} ${renderGoToRegistrationLink()}
+          </div>
+        `
+
+      case 'registration':
+        return html` <div class="links">${renderGoToLoginLink()}</div> `
+
+      case 'forgotPassword':
+        return html` <div class="links">${renderGoToLoginLink()}</div> `
+
+      case 'resetPassword':
+        return html` <div class="links">${renderGoToLoginLink()}</div> `
+    }
+  }
+
   function renderForgotPasswordLink() {
     return self.enableForgotPassword
-      ? html`<div class="forgot-password-link-container">
+      ? html`
           <sl-button
             type="text"
             class="forgot-password-link"
@@ -331,27 +343,25 @@ function loginFormImpl(self: LoginForm) {
           >
             ${t('forgot-password')}
           </sl-button>
-        </div>`
+        `
       : ''
   }
 
   function renderGoToLoginLink() {
     return html`
-      <div class="go-to-login-link-container">
-        <sl-button
-          type="text"
-          class="go-to-login-link"
-          @click=${onGoToLoginClick}
-        >
-          ${t('go-to-login')}
-        </sl-button>
-      </div>
+      <sl-button
+        type="text"
+        class="go-to-login-link"
+        @click=${onGoToLoginClick}
+      >
+        ${t('go-to-login')}
+      </sl-button>
     `
   }
 
   function renderGoToRegistrationLink() {
     return self.enableRegistration
-      ? html`<div class="go-to-registration-link-container">
+      ? html`
           <sl-button
             type="text"
             class="go-to-registration-link"
@@ -359,7 +369,7 @@ function loginFormImpl(self: LoginForm) {
           >
             ${t('go-to-registration')}
           </sl-button>
-        </div>`
+        `
       : ''
   }
 
