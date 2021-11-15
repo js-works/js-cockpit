@@ -51,18 +51,8 @@ class ThemeProvider extends component() {
   @prop({ attr: themePropConverter })
   theme?:
     | Theme
-    | 'default'
-    | 'default/dark'
-    | 'blue'
-    | 'blue/dark'
-    | 'aquamarine'
-    | 'aquamarine/dark'
-    | 'turquoise'
-    | 'turquoise/dark'
-    | 'pink'
-    | 'pink/dark'
-    | 'coral'
-    | 'coral/dark'
+    | keyof typeof Themes
+    | { [K in keyof typeof Themes]: `${K}/dark` }[keyof typeof Themes]
 }
 
 function themeProviderImpl(self: ThemeProvider) {

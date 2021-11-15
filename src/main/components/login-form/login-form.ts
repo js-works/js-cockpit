@@ -1,5 +1,6 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
+import { useOnInit, useState } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 
@@ -13,10 +14,10 @@ import { PasswordField } from '../password-field/password-field'
 
 // styles
 import loginFormStyles from './login-form.css'
-import topAlignedLabelsStyles from '../../shared/css/top-aligned-labels.css'
+import topAlignedLabelsStyles from '../../shared/css/label-alignment-above.css'
 
 // icons
-import unlockSvg from './assets/unlock.svg'
+import introIcon from './assets/unlock.svg'
 
 // === exports =======================================================
 
@@ -26,26 +27,38 @@ export { LoginForm }
 
 // === types =========================================================
 
+type View = 'login' | 'register' | 'forgotPassword' | 'resetPassword'
+
 // === LoginForm ===================================================
 
 // prettier-ignore
 I18n.addTranslations('en', {
   'js-cockpit.login-form': {
-    'login-intro-headline': 'Login',
-    'login-intro-text': 'Please enter your credentials to log in',
-    'forgot-password-headline': 'Forgot password?',
-    'forgot-password-text': "Please fill out and submit the form and you'll receive an e-mail with further instructions",
-    'reset-password-headline': 'Reset password',
-    'reset-password-text': 'Please fill out and submit the form to reset your password',
-    'username': 'Username',
-    'password': 'Password',
-    'security-token': 'Security token',
-    'remember-login': 'Remember login',
-    'log-in': 'Log in',
-    'send-e-mail': 'Send e-mail',
-    'reset-password': 'Reset password',
+    'email': 'Email',
+    'first-name': 'First name',
+    'last-name': 'Last name',
     'forgot-password': 'Forgot password?',
-    'go-to-login-form': 'Go to login from'
+    'forgot-password-intro-headline': 'Forgot password?',
+    'forgot-password-intro-text': "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
+    'forgot-password-submit-text': 'Request password reset',
+    'go-to-login': 'Go to login form',
+    'login-intro-headline': 'Login',
+    'login-intro-text': 'Please enter your credentials in the form to log in',
+    'login-submit-text': 'Log in',
+    'new-password': 'New passwort',
+    'new-password-repeat': 'Repeat new password',
+    'password': 'Password',
+    'register-intro-headline': 'Reset password',
+    'register-intro-text': 'Please fill out the form and press the submit button to register',
+    'register-submit-text': 'Register',
+    'remember-login': 'Remember login',
+    'reset-password': 'Reset password',
+    'reset-password-intro-headline': 'Reset password',
+    'reset-password-intro-text': 'Please fill out and submit the form to reset your password',
+    'reset-password-submit-text': 'Reset password',
+    'security-code': 'Security code',
+    'send-e-mail': 'Send e-mail',
+    'username': 'Username',
   }
 })
 
@@ -57,15 +70,33 @@ I18n.addTranslations('en', {
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
-  initialView: 'login' | 'forgotPassword' | 'resetPassword' = 'login'
+  initialView?: View
+
+  @prop({ attr: Attrs.boolean })
+  showRememberLogin = false
+
+  @prop({ attr: Attrs.boolean })
+  showForgotPassword = false
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
 }
 
 function loginFormImpl(self: LoginForm) {
+  const [state, setState] = useState({
+    view: 'login' as View
+  })
+
   const formRef = createRef<HTMLFormElement & Element>()
   const { t } = useI18n('js-cockpit.login-form')
+
+  const onForgotPasswordClick = () => {
+    setState('view', 'forgotPassword')
+  }
+
+  const onGoToLoginClick = () => {
+    setState('view', 'login')
+  }
 
   const onSubmit = (ev?: any) => {
     if (ev) {
@@ -92,6 +123,10 @@ function loginFormImpl(self: LoginForm) {
     onSubmit()
   }
 
+  useOnInit(() => {
+    setState('view', self.initialView || 'login')
+  })
+
   function render() {
     return html`
       <div class="base ${classMap({ 'full-size': self.fullSize })}">
@@ -101,47 +136,21 @@ function loginFormImpl(self: LoginForm) {
           </div>
           <div class="main">
             <div class="column1">
-              <div class="column1-top login-intro" slot="login-intro">
-                <div class="default-login-intro">
-                  <slot name="login-intro">
-                    <h3>${t('login-intro-headline')}</h3>
-                    <p>${t('login-intro-text')}</p>
-                  </slot>
-                </div>
-              </div>
-              <div class="column1-bottom">
-                <sl-icon alt="" src=${unlockSvg} class="unlock-icon" />
-              </div>
+              <div class="column1-top">${renderIntro()}</div>
+              <div class="column1-bottom">${renderIntroIcon()}</div>
             </div>
             <form disabled ${ref(formRef)} class="column2" @submit=${onSubmit}>
-              <div class="column2-top">
-                <slot name="login-fields">
-                  <c-text-field
-                    name="username"
-                    label=${t('username')}
-                    required
-                  ></c-text-field>
-
-                  <c-password-field
-                    label=${t('password')}
-                    required
-                  ></c-password-field>
-                </slot>
-                <br />
-                <div
-                  style="text-align: right; font-size: var(--sl-font-size-medium); color: rgb(var(--sl-color-primary-800)); xxxfont-style: italic"
-                >
-                  ${t('forgot-password')}
-                </div>
-              </div>
+              <div class="column2-top">${renderFields()}</div>
               <div class="column2-bottom">
-                <sl-checkbox>${t('remember-login')}</sl-checkbox>
+                ${state.view === 'login' && self.showRememberLogin
+                  ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
+                  : ''}
                 <sl-button
                   type="primary"
                   class="login-button"
                   @click=${onSubmitClick}
                 >
-                  ${t('log-in')}
+                  ${renderSubmitButtonText()}
                 </sl-button>
               </div>
             </form>
@@ -152,6 +161,202 @@ function loginFormImpl(self: LoginForm) {
         </div>
       </div>
     `
+  }
+
+  function renderIntro() {
+    switch (state.view) {
+      case 'login':
+        return html`
+          <slot name="login-intro">
+            <div class="default-intro">
+              <h3>${t('login-intro-headline')}</h3>
+              <p>${t('login-intro-text')}</p>
+            </div>
+          </slot>
+        `
+      case 'register':
+        return html`
+          <slot name="register-intro">
+            <div class="default-intro">
+              <h3>${t('register-intro-headline')}</h3>
+              <p>${t('register-intro-text')}</p>
+            </div>
+          </slot>
+        `
+
+      case 'forgotPassword':
+        return html`
+          <slot name="forgot-password-intro">
+            <div class="default-intro">
+              <h3>${t('forgot-password-intro-headline')}</h3>
+              <p>${t('forgot-password-intro-text')}</p>
+            </div>
+          </slot>
+        `
+      case 'resetPassword':
+        return html`
+          <slot name="reset-password-intro">
+            <div class="default-intro">
+              <h3>${t('reset-password-intro-headline')}</h3>
+              <p>${t('reset-password-intro-text')}</p>
+            </div>
+          </slot>
+        `
+    }
+  }
+
+  function renderIntroIcon() {
+    return html`<sl-icon alt="" src=${introIcon} class="intro-icon" />`
+  }
+
+  function renderFields() {
+    switch (state.view) {
+      case 'login':
+        return html`<slot name="login-fields">
+            <c-text-field
+              name="username"
+              label=${t('username')}
+              required
+            ></c-text-field>
+
+            <c-password-field
+              name="password"
+              label=${t('password')}
+              required
+            ></c-password-field>
+          </slot>
+          <br />
+          ${self.showForgotPassword
+            ? html`<div class="forgot-password-link-container">
+                <sl-button
+                  type="text"
+                  class="forgot-password-link"
+                  @click=${onForgotPasswordClick}
+                >
+                  ${t('forgot-password')}
+                </sl-button>
+              </div>`
+            : ''}`
+
+      case 'register':
+        return html`<slot name="register-fields">
+            <c-text-field
+              name="username"
+              label=${t('username')}
+              required
+            ></c-text-field>
+            <c-text-field
+              name="firstName"
+              label=${t('first-name')}
+              required
+            ></c-text-field>
+            <c-text-field
+              name="lastName"
+              label=${t('last-name')}
+              required
+            ></c-text-field>
+            <c-text-field
+              name="email"
+              label=${t('email')}
+              required
+            ></c-password-field>
+          </slot>
+          <br />
+          ${
+            self.showForgotPassword
+              ? html`<div class="go-to-login-link-container">
+                  <sl-button
+                    type="text"
+                    class="forgot-password-link"
+                    @click=${onGoToLoginClick}
+                  >
+                    ${t('go-to-login')}
+                  </sl-button>
+                </div>`
+              : ''
+          }`
+
+      case 'forgotPassword':
+        return html`<slot name="forgot-password-fields">
+            <c-text-field
+              name="username"
+              label=${t('username')}
+              required
+            ></c-text-field>
+
+            <c-text-field
+              name="email"
+              label=${t('email')}
+              required
+            ></c-password-field>
+          </slot>
+          <br />
+          ${
+            self.showForgotPassword
+              ? html`<div class="go-to-login-link-container">
+                  <sl-button
+                    type="text"
+                    class="go-to-login-link"
+                    @click=${onGoToLoginClick}
+                  >
+                    ${t('go-to-login')}
+                  </sl-button>
+                </div>`
+              : ''
+          }`
+
+      case 'resetPassword':
+        return html`<slot name="reset-password-fields">
+            <c-text-field
+              name="username"
+              label=${t('username')}
+              required
+            ></c-text-field>
+            <c-password-field
+              name="newPasswordRepeat"
+              label=${t('new-password')}
+              required
+            ></c-password-field>
+            <c-password-field
+              name="newPassword"
+              label=${t('new-password-repeat')}
+              required
+            ></c-password-field>
+            <c-text-field
+              name="securityCode"
+              label=${t('security-code')}
+              required
+            ></c-text-field>
+          </slot>
+          <br />
+          ${self.showForgotPassword
+            ? html`<div class="forgot-password-link-container">
+                <sl-button
+                  type="text"
+                  class="forgot-password-link"
+                  @click=${onGoToLoginClick}
+                >
+                  ${t('go-to-login')}
+                </sl-button>
+              </div>`
+            : ''}`
+    }
+  }
+
+  function renderSubmitButtonText() {
+    switch (state.view) {
+      case 'login':
+        return t('login-submit-text')
+
+      case 'register':
+        return t('register-submit-text')
+
+      case 'forgotPassword':
+        return t('forgot-password-submit-text')
+
+      case 'resetPassword':
+        return t('reset-password-submit-text')
+    }
   }
 
   return render

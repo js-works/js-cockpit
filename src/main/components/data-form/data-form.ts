@@ -9,7 +9,7 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 
 // styles
 import dataFormStyles from './data-form.css'
-import rightAlignedLabelsStyles from '../../shared/css/right-aligned-labels.css'
+import rightAlignedLabelsStyles from '../../shared/css/label-alignment-aside.css'
 
 // icons
 import closeIcon from 'remixicon/icons/System/close-fill.svg'

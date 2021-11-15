@@ -98,7 +98,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  gap: 12px;
+  gap: 4px;
   --sl-input-label-color: rgb(var(--sl-color-neutral-1000));
 }
 
@@ -120,19 +120,29 @@
     var(--sl-dark, rgb(var(--sl-color-primary-950) / 80%));
 }
 
-.default-login-intro h3 {
+.default-intro h3 {
   margin: 0;
   font-size: var(--sl-font-size-x-large);
   font-weight: var(--sl-font-weight-semibold);
 }
 
-.default-login-intro p {
+.default-intro p {
   margin: 12px 0;
 }
 
-.unlock-icon {
+.intro-icon {
   width: 72px;
   height: 72px;
+}
+
+.forgot-password-link-container,
+.go-to-login-link-container {
+  text-align: right;
+}
+
+sl-button.forgot-password-link::part(label),
+sl-button.go-to-login-link::part(label) {
+  padding: 0 4px !important;
 }
 
 .column1 {

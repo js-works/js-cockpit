@@ -284,7 +284,8 @@ function loadTheme(theme: Theme, selector?: string) {
 const Themes = {
   get default(): Theme {
     return materializeTheme(this, 'default', {
-      primaryColor: '#0EA5E9' //
+      //primaryColor: '#0EA5E9'
+      primaryColor: '#2899e2'
     })
   },
 
@@ -294,15 +295,53 @@ const Themes = {
     })
   },
 
+  get orange() {
+    return materializeTheme(this, 'orange', {
+      primaryColor: '#ff7606'
+    })
+  },
+
+  get teal() {
+    return materializeTheme(this, 'teal', {
+      primaryColor: '#008080'
+    })
+  },
+
+  get mint() {
+    return materializeTheme(this, 'mint', {
+      primaryColor: '#3EB489'
+    })
+  },
+
+  get orchid() {
+    return materializeTheme(this, 'orchid', {
+      primaryColor: '#DA70D6'
+    })
+  },
+
+  get cyan() {
+    return materializeTheme(this, 'cyan', {
+      primaryColor: '#008B8B'
+    })
+  },
+
   get temp(): Theme {
     return materializeTheme(this, 'temp', {
-      //
+      primaryColor: '#2889e2' // baseui based
+      //primaryColor: '#3366e2' // baseui based
+      //primaryColor: '#3366cc' // baseui
+      //primaryColor: '#0078d4' // fluentui
+      //primaryColor: '#6595c4' // industrial
+
+      // primaryColor: '#6595c4' // bluish
+      // primaryColor: '#c71d7c' // pink++
+      //primaryColor: '#f2704e' // coral?
       //primaryColor: '#40a6ff' //
       //primaryColor: '#c05c5c' // indian red 2
       //primaryColor: '#8b008b' // +
       //primaryColor: '#b22222' //
       //primaryColor: '#cd5c5c' // indian red
-      primaryColor: '#00bbff' // default?
+      //primaryColor: '#00bbff' // default?
       //primaryColor: '#cd5c5c' //
       //primaryColor: '#a9ddff' //
       //primaryColor: '#dd1493' //
@@ -444,7 +483,7 @@ function luminanceOfValue(x: number): number {
 // === Shoelace original light theme =================================
 
 const lightThemeTokens = {
-  // The following both custom properties will be adden
+  // The following two custom properties will be added
   // automtically to allow features to be turned on and off
   // via CSS:
   //
@@ -456,9 +495,9 @@ const lightThemeTokens = {
   dark: 'var(--off)' as 'var(--on)' | 'var(--off)',
 
   // used for conditional label alignment (top vs. right)
-  'top-aligned-labels': 'var(--on)',
-  'right-aligned-labels': 'var(--off)',
-  'right-aligned-labels-width': '8rem',
+  'label-alignment-above': 'var(--on)',
+  'label-alignment-aside': 'var(--off)',
+  'label-alignment-aside-width': '8rem',
 
   'color-blue-gray-50': '248 250 252',
   'color-blue-gray-100': '241 245 249',

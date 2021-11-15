@@ -1,21 +1,21 @@
 .field-wrapper {
   display: flex;
 
-  flex-direction: var(--sl-top-aligned-labels, column)
-    var(--sl-right-aligned-labels, row);
+  flex-direction: var(--sl-label-alignment-above, column)
+    var(--sl-label-alignment-aside, row);
 
   white-space: nowrap;
 }
 
 .label {
-  min-width: var(--sl-top-aligned-labels, auto)
-    var(--sl-right-aligned-labels, var(--sl-right-aligned-labels-width));
+  min-width: var(--sl-label-alignment-above, auto)
+    var(--sl-label-alignment-aside, var(--sl-label-alignment-aside-width));
 
-  max-width: var(--sl-top-aligned-labels, auto)
-    var(--sl-right-aligned-labels, var(--sl-right-aligned-labels-width));
+  max-width: var(--sl-label-alignment-above, auto)
+    var(--sl-label-alignment-aside, var(--sl-label-alignment-aside-width));
 
-  text-align: var(--sl-top-aligned-labels, left)
-    var(--sl-right-aligned-labels, right);
+  text-align: var(--sl-label-alignment-above, left)
+    var(--sl-label-alignment-aside, right);
 
   padding: 3px 4px 3px 0;
   white-space: normal;

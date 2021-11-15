@@ -1,0 +1,4 @@
+:host {
+  --sl-label-alignment-aside: var(--on);
+  --sl-label-alignment-above: var(--off);
+}

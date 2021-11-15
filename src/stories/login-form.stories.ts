@@ -19,11 +19,12 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider theme="blue">
+      <c-theme-provider theme="default">
         <c-login-form
           full-size
-          initialView="forgotPassword"
-          .theme=${Themes.default}
+          show-remember-login
+          show-forgot-password
+          initial-view="register"
         >
           <div slot="header">
             <c-brand
@@ -38,4 +39,4 @@ function loginFormDemoImpl() {
     `
 }
 
-export const loginForm = () => h('login-form-demo', { lang: 'de' })
+export const loginForm = () => h('login-form-demo', { lang: 'en-US' })
