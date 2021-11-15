@@ -120,7 +120,7 @@ class Theme {
     ]
 
     Object.entries(this.#themeTokens).forEach(([key, value]) => {
-      lines.push(`--sl-${key}: ${value};`)
+      lines.push(`  --sl-${key}: ${value};`)
     })
 
     lines.push('}\n')

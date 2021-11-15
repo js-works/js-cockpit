@@ -1,8 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, LoginForm, ThemeProvider, Themes } from 'js-cockpit'
-
+import { Brand, LoginForm, ThemeProvider } from 'js-cockpit'
 import 'element-internals-polyfill'
 
 export default {
@@ -16,10 +15,10 @@ export default {
 })
 class LoginFormDemo extends component() {}
 
-function loginFormDemoImpl() {
+function loginFormDemoImpl(self: LoginFormDemo) {
   return () =>
     html`
-      <c-theme-provider theme="default">
+      <c-theme-provider theme="pink">
         <c-login-form
           full-size
           enable-remember-login

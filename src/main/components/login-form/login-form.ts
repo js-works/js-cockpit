@@ -10,7 +10,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
 import { TextField } from '../text-field/text-field'
 import { PasswordField } from '../password-field/password-field'
-//import { formCtrlCtx } from '../../ctxs/form-ctrl-ctx'
+import { ThemeProvider } from '../theme-provider/theme-provider'
 
 // styles
 import loginFormStyles from './login-form.css'
@@ -64,7 +64,7 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-  uses: [PasswordField, TextField, SlButton, SlCheckbox, SlIcon]
+  uses: [PasswordField, SlButton, SlCheckbox, SlIcon, TextField, ThemeProvider]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
@@ -130,37 +130,45 @@ function loginFormImpl(self: LoginForm) {
 
   function render() {
     return html`
-      <div class="base ${classMap({ 'full-size': self.fullSize })}">
-        <div class="container">
-          <div class="header">
-            <slot name="header"></slot>
-          </div>
-          <div class="main">
-            <div class="column1">
-              <div class="column1-top">${renderIntro()}</div>
-              <div class="column1-bottom">${renderIntroIcon()}</div>
+      <c-theme-provider>
+        <div class="base ${classMap({ 'full-size': self.fullSize })}">
+          <div class="container">
+            <div class="header">
+              <slot name="header"></slot>
             </div>
-            <form disabled ${ref(formRef)} class="column2" @submit=${onSubmit}>
-              <div class="column2-top">${renderFields()}</div>
-              <div class="column2-bottom">
-                ${state.view === 'login' && self.enableRememberLogin
-                  ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
-                  : ''}
-                <sl-button
-                  type="primary"
-                  class="login-button"
-                  @click=${onSubmitClick}
-                >
-                  ${renderSubmitButtonText()}
-                </sl-button>
+            <div class="main">
+              <div class="column1">
+                <div class="column1-top">${renderIntro()}</div>
+                <div class="column1-bottom">${renderIntroIcon()}</div>
               </div>
-            </form>
-          </div>
-          <div class="footer">
-            <slot name="footer"></slot>
+              <form
+                disabled
+                ${ref(formRef)}
+                class="column2"
+                @submit=${onSubmit}
+              >
+                <div class="column2-top">${renderFields()}</div>
+                <div class="column2-bottom">
+                  ${state.view === 'login' && self.enableRememberLogin
+                    ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
+                    : ''}
+                  <sl-button
+                    type="primary"
+                    class="login-button"
+                    @click=${onSubmitClick}
+                  >
+                    ${renderSubmitButtonText()}
+                  </sl-button>
+                </div>
+              </form>
+            </div>
+            <div class="footer">
+              <slot name="footer"></slot>
+            </div>
           </div>
         </div>
-      </div>
+        <c-theme-provider> </c-theme-provider
+      ></c-theme-provider>
     `
   }
 

@@ -57,16 +57,23 @@ class ThemeProvider extends component() {
 
 function themeProviderImpl(self: ThemeProvider) {
   return () => {
-    const theme =
-      self.theme instanceof Theme
-        ? self.theme
-        : !self.theme
-        ? Themes.default
-        : getThemeByName(self.theme) || Themes.default
+    let theme: Theme | null = null
+
+    if (
+      self.theme ||
+      !window.getComputedStyle(self).getPropertyValue('--sl-color-primary-500')
+    ) {
+      theme =
+        self.theme instanceof Theme
+          ? self.theme
+          : !self.theme
+          ? Themes.default
+          : getThemeByName(self.theme) || Themes.default
+    }
 
     return html`
       <style>
-        ${theme.asCss()}
+        ${theme?.asCss()}
       </style>
       <div class="base">
         <slot></slot>

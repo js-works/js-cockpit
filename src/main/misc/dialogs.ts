@@ -6,6 +6,7 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 import { detectLocale } from './locales'
 import { I18n } from './i18n'
+import { Themes } from './themes'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -78,61 +79,61 @@ const styles = `
     overflow: hidden;
   }
 
-  ._dialog_ {
+  .dialog {
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
     padding: 0;
   }
 
-  ._dialog_::part(title) {
+  .dialog::part(title) {
     padding-bottom: 0.5rem;
     user-select: none;
   }
   
-  ._dialog_::part(body) {
+  .dialog::part(body) {
     padding-top: 0.5rem;
     padding-bottom: 0.25rem;
     user-select: none;
   }
   
-  ._dialog_::part(footer) {
+  .dialog::part(footer) {
     user-select: none;
   }
 
-  ._dialog_::part(close-button) {
+  .dialog::part(close-button) {
     display: none;
   }
 
-  ._buttons_ {
+  .buttons {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
   }
 
-  ._icon_ {
+  .icon {
     font-size: var(--sl-font-size-x-large);
   }
 
-  ._icon_._normal_ {
+  .icon._normal_ {
     color: rgb(var(--sl-color-primary-500));
   }
   
-  ._icon_._warning_ {
+  .icon._warning_ {
     color: rgb(var(--sl-color-warning-500));
   }
   
-  ._icon_._danger_ {
+  .icon._danger_ {
     color: rgb(var(--sl-color-danger-500));
   }
   
-  ._header_ {
+  .header {
     display: flex;
     align-items: center;
     gap: 0.7rem;
     font-size: var(--sl-font-size-large);
   }
 
-  ._message_ {
+  .message {
     margin-bottom: 0.5rem;
   }
 `
@@ -479,30 +480,31 @@ function showDialog<T = void>(
   void (FocusTrap || SlButton || SlForm || SlIcon || SlInput || SlDialog)
 
   containerShadow.innerHTML = `
-    <style></style>
-    <sl-form class="_form_">
+    <style>
+    </style>
+    <c-theme-provider>
+    <sl-form class="form">
       <focus-trap>
-        <sl-dialog open class="_dialog_">
-          <div slot="label" class="_header_">
-            <sl-icon class="_icon_"></sl-icon>
-            <div class="_title_"></div>
+        <sl-dialog open class="dialog">
+          <div slot="label" class="header">
+            <sl-icon class="icon"></sl-icon>
+            <div class="title"></div>
           </div>
-          <div class="_message_"></div>
-          <div class="_content_"></div>
-          <div slot="footer" class="_buttons_"></div>
+          <div class="message"></div>
+          <div class="content"></div>
+          <div slot="footer" class="buttons"></div>
         </sl-dialog>
       </focus-trap>
     </sl-form>
+    </c-theme-provider>
   `
 
-  setText(params.title, '._title_')
-  setText(params.message, '._message_')
+  setText(params.title, '.title')
+  setText(params.message, '.message')
 
-  const form: SlForm = containerShadow.querySelector('sl-form._form_')!
-  const dialog: SlDialog = containerShadow.querySelector('sl-dialog._dialog_')!
-  const contentBox: HTMLElement = containerShadow.querySelector(
-    'div._content_'
-  )!
+  const form: SlForm = containerShadow.querySelector('sl-form.form')!
+  const dialog: SlDialog = containerShadow.querySelector('sl-dialog.dialog')!
+  const contentBox: HTMLElement = containerShadow.querySelector('div.content')!
 
   if (params.content) {
     contentBox.append(params.content)
@@ -529,13 +531,13 @@ function showDialog<T = void>(
     ev.preventDefault()
   })
 
-  const icon: SlIcon = containerShadow.querySelector('sl-icon._icon_')!
+  const icon: SlIcon = containerShadow.querySelector('sl-icon.icon')!
   icon.classList.add(`_${params.type}_`)
   icon.src = params.icon
 
   setText(styles, 'style')
 
-  const buttonBox: HTMLElement = containerShadow.querySelector('._buttons_')!
+  const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!
   const hiddenField = document.createElement('input')
 
   const onKeyDown = (ev: KeyboardEvent) => {
