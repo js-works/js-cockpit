@@ -47,6 +47,15 @@
 
   box-shadow: var(--sl-light, 5px 5px 25px rgb(var(--sl-color-neutral-300)))
     var(--sl-dark, 2px 0px 500px rgb(var(--sl-color-neutral-300) / 75%));
+
+  position: relative;
+  transition: opacity 0.5s ease, transform 0.5s ease-in;
+  opacity: 1;
+}
+
+.main.hidden {
+  transform: translateX(-500px);
+  opacity: 0;
 }
 
 .column1 {

@@ -86,22 +86,23 @@ class LoginForm extends component() {
 
 function loginFormImpl(self: LoginForm) {
   const [state, setState] = useState({
-    view: 'login' as View
+    view: 'login' as View,
+    formHidden: false
   })
 
   const formRef = createRef<HTMLFormElement & Element>()
   const { t } = useI18n('js-cockpit.login-form')
 
   const onForgotPasswordClick = () => {
-    setState('view', 'forgotPassword')
+    changeView('forgotPassword')
   }
 
   const onGoToLoginClick = () => {
-    setState('view', 'login')
+    changeView('login')
   }
 
   const onGoToRegistrationClick = () => {
-    setState('view', 'registration')
+    changeView('registration')
   }
 
   const onSubmit = (ev?: any) => {
@@ -122,7 +123,7 @@ function loginFormImpl(self: LoginForm) {
       text += key + ': ' + value
     })
 
-    alert(text)
+    //alert(text)
   }
 
   const onSubmitClick = () => {
@@ -138,8 +139,16 @@ function loginFormImpl(self: LoginForm) {
       view = 'registration'
     }
 
-    setState('view', self.initialView || 'login')
+    setState('view', view)
   })
+
+  function changeView(view: View) {
+    setState('formHidden', (it) => !it)
+
+    setTimeout(() => {
+      setState({ view, formHidden: false })
+    }, 500)
+  }
 
   function render() {
     return html`
@@ -149,7 +158,11 @@ function loginFormImpl(self: LoginForm) {
             <div class="header">
               <slot name="header"></slot>
             </div>
-            <div class="main">
+            <div
+              class="main ${classMap({
+                hidden: state.formHidden
+              })}"
+            >
               <div class="column1">
                 <div class="column1-top">${renderIntro()}</div>
                 <div class="column1-bottom">${renderIntroIcon()}</div>
