@@ -8,15 +8,15 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import menuSvg from './assets/menu.svg'
 
 // styles
-import sectionsMenuStyles from './sections-menu.css'
+import navMenuStyles from './nav-menu.css'
 
 // === exports =======================================================
 
-export { SectionsMenu }
+export { NavMenu }
 
 // === types =========================================================
 
-namespace SectionsMenu {
+namespace NavMenu {
   export type Section = {
     id: number | string
     title: string
@@ -24,23 +24,23 @@ namespace SectionsMenu {
   }
 }
 
-// === SectionsMenu ===================================================
+// === NavMenu ===================================================
 
 @elem({
-  tag: 'c-sections-menu',
-  styles: sectionsMenuStyles,
+  tag: 'c-nav-menu',
+  styles: navMenuStyles,
   uses: [SlIcon],
-  impl: lit(sectionsMenuImpl)
+  impl: lit(navMenuImpl)
 })
-class SectionsMenu extends component() {
+class NavMenu extends component() {
   @prop
-  sections?: SectionsMenu.Section[]
+  sections?: NavMenu.Section[]
 
   @prop
   activeSection?: number | string
 }
 
-function sectionsMenuImpl(self: SectionsMenu) {
+function navMenuImpl(self: NavMenu) {
   return () => {
     return html`
       <div class="base">

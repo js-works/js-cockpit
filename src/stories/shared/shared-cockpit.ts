@@ -8,7 +8,7 @@ import {
   DataForm,
   RadioGroup,
   Section,
-  SectionsMenu,
+  NavMenu,
   SideMenu,
   Tab,
   Tabs,
@@ -31,7 +31,7 @@ export default {
     DataForm,
     RadioGroup,
     Section,
-    SectionsMenu,
+    NavMenu,
     SideMenu,
     Tab,
     Tabs,
@@ -122,7 +122,7 @@ function sharedCockpitImpl() {
           subheadline="Back Office"
           multi-color
         ></c-brand>
-        <c-sections-menu
+        <c-nav-menu
           slot="header"
           class="orange"
           .sections=${[
@@ -144,7 +144,7 @@ function sharedCockpitImpl() {
             }
           ]}
           .activeSection=${2}
-        ></c-sections-menu>
+        ></c-nav-menu>
         <c-user-menu slot="header-end"></c-user-menu>
         <div slot="sidebar" class="lightgreen full-height">
           <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>

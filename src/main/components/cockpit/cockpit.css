@@ -81,7 +81,7 @@
   bottom: 1px;
 }
 
-::slotted(c-sections-menu) {
+::slotted(c-nav-menu) {
   position: relative;
   left: 20px;
   right: 20px;

@@ -10,7 +10,7 @@ import {
   Fieldset,
   RadioGroup,
   Section,
-  SectionsMenu,
+  NavMenu,
   SideMenu,
   Tab,
   Tabs,
@@ -68,7 +68,7 @@ const demo1Styles = `
   tag: 'cockpit-demo1',
   styles: demo1Styles,
   impl: lit(cockpitDemo1Impl),
-  uses: [Cockpit, DateField, SectionsMenu, SharedCockpit, ThemeProvider]
+  uses: [Cockpit, DateField, NavMenu, SharedCockpit, ThemeProvider]
 })
 class CockpitDemo1 extends component() {}
 
@@ -104,7 +104,7 @@ export const cockpit1 = () => h('cockpit-demo1')
     Fieldset,
     RadioGroup,
     Section,
-    SectionsMenu,
+    NavMenu,
     SideMenu,
     SharedDataExplorer,
     Tab,
@@ -136,7 +136,7 @@ export const cockpit2 = () => h('cockpit-demo2')
     Fieldset,
     RadioGroup,
     Section,
-    SectionsMenu,
+    NavMenu,
     SideMenu,
     SharedDataExplorer,
     Tab,
