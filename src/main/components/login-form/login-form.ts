@@ -5,6 +5,7 @@ import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 
 // custom elements
+import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
@@ -68,7 +69,15 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-  uses: [PasswordField, SlButton, SlCheckbox, SlIcon, TextField, ThemeProvider]
+  uses: [
+    PasswordField,
+    SlAnimation,
+    SlButton,
+    SlCheckbox,
+    SlIcon,
+    TextField,
+    ThemeProvider
+  ]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
@@ -89,11 +98,11 @@ class LoginForm extends component() {
 
 function loginFormImpl(self: LoginForm) {
   const [state, setState] = useState({
-    view: 'login' as View,
-    formHidden: false
+    view: 'login' as View
   })
 
-  const formRef = createRef<HTMLFormElement & Element>()
+  const animationRef = createRef<SlAnimation>()
+  const formRef = createRef<HTMLFormElement>()
   const { t } = useI18n('js-cockpit.login-form')
 
   const onForgotPasswordClick = () => {
@@ -126,7 +135,7 @@ function loginFormImpl(self: LoginForm) {
       text += key + ': ' + value
     })
 
-    //alert(text)
+    alert(text)
   }
 
   const onSubmitClick = () => {
@@ -151,11 +160,18 @@ function loginFormImpl(self: LoginForm) {
   })
 
   function changeView(view: View) {
-    setState('formHidden', (it) => !it)
+    const animation = animationRef.value!
+    animation.duration = 500
+    animation.iterations = 1
+    animation.name = 'fadeOutLeft'
+    animation.play = true
 
-    setTimeout(() => {
-      setState({ view, formHidden: false })
-    }, 500)
+    animation.addEventListener('sl-finish', function listener() {
+      setState({ view })
+      animation.removeEventListener('sl-finish', listener)
+      animation.name = 'fadeInRight'
+      animation.play = true
+    })
   }
 
   function render() {
@@ -166,37 +182,31 @@ function loginFormImpl(self: LoginForm) {
             <div class="header">
               <slot name="header"></slot>
             </div>
-            <div
-              class="main ${classMap({
-                hidden: state.formHidden
-              })}"
-            >
-              <div class="column1">
-                <div class="column1-top">${renderIntro()}</div>
-                <div class="column1-bottom">${renderIntroIcon()}</div>
-              </div>
-              <form
-                disabled
-                ${ref(formRef)}
-                class="column2"
-                @submit=${onSubmit}
-              >
-                <div class="column2-top">${renderFields()}</div>
-                <div class="column2-bottom">
-                  ${state.view === 'login' && self.enableRememberLogin
-                    ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
-                    : ''}
-                  <sl-button
-                    type="primary"
-                    class="login-button"
-                    @click=${onSubmitClick}
-                  >
-                    ${renderSubmitButtonText()}
-                  </sl-button>
-                  ${renderLinks()}
+            <sl-animation class="animation" ${ref(animationRef)}>
+              <div class="main">
+                <div class="column1">
+                  <div class="column1-top">${renderIntro()}</div>
+                  <div class="column1-bottom">${renderIntroIcon()}</div>
                 </div>
-              </form>
-            </div>
+                <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
+                  <div class="column2-top">${renderFields()}</div>
+                  <div class="column2-bottom">
+                    ${state.view === 'login' && self.enableRememberLogin
+                      ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
+                      : ''}
+                    <sl-button
+                      type="primary"
+                      class="login-button"
+                      @click=${onSubmitClick}
+                    >
+                      ${renderSubmitButtonText()}
+                    </sl-button>
+                    ${renderLinks()}
+                  </div>
+                </form>
+              </div>
+            </sl-animation>
+            <!-- sl-animation -->
             <div class="footer">
               <slot name="footer"></slot>
             </div>

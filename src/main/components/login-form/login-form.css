@@ -16,6 +16,7 @@
   max-width: 100%;
   min-height: 100%;
   max-width: 100%;
+  overflow: hidden;
 
   background-color: var(--sl-light, rgb(var(--sl-color-neutral-100)))
     var(--sl-dark, rgb(var(--sl-color-neutral-100)));
@@ -39,24 +40,21 @@
     var(--sl-dark, rgb(var(--sl-color-neutral-950) / 80%));
 }
 
-.main {
+.animation {
+  position: relative;
   display: flex;
   height: 500px;
   margin: 16px;
   align-self: center;
+}
+
+.main {
+  position: relative;
+  display: flex;
   border-radius: 6px;
 
   box-shadow: var(--sl-light, 5px 5px 25px rgb(var(--sl-color-neutral-300)))
     var(--sl-dark, none);
-
-  position: relative;
-  transition: opacity 0.5s ease-out, transform 0.5s ease;
-  opacity: 1;
-}
-
-.main.hidden {
-  transform: translateX(-500px);
-  opacity: 0;
 }
 
 .column1 {
