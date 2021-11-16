@@ -17,7 +17,10 @@ import loginFormStyles from './login-form.css'
 import topAlignedLabelsStyles from '../../shared/css/label-alignment-above.css'
 
 // icons
-import introIcon from './assets/unlock.svg'
+import loginIntroIcon from './assets/unlock.svg'
+import forgotPasswordIntroIcon from './assets/shield.svg'
+import registrationIntroIcon from './assets/key.svg'
+import resetPasswordIntroIcon from './assets/reset.svg'
 
 // === exports =======================================================
 
@@ -137,6 +140,11 @@ function loginFormImpl(self: LoginForm) {
       view = 'forgotPassword'
     } else if (self.enableRegistration && self.initialView === 'registration') {
       view = 'registration'
+    } else if (
+      self.enableForgotPassword &&
+      self.initialView === 'resetPassword'
+    ) {
+      view = 'resetPassword'
     }
 
     setState('view', view)
@@ -242,7 +250,16 @@ function loginFormImpl(self: LoginForm) {
   }
 
   function renderIntroIcon() {
-    return html`<sl-icon alt="" src=${introIcon} class="intro-icon" />`
+    const icon =
+      state.view === 'registration'
+        ? registrationIntroIcon
+        : state.view === 'forgotPassword'
+        ? forgotPasswordIntroIcon
+        : state.view === 'resetPassword'
+        ? resetPasswordIntroIcon
+        : loginIntroIcon
+
+    return html`<sl-icon alt="" src=${icon} class="intro-icon" />`
   }
 
   function renderFields() {
@@ -329,7 +346,6 @@ function loginFormImpl(self: LoginForm) {
               required
             ></c-text-field>
           </slot>
-          <div class="links">${renderGoToLoginLink()}</div>
         `
     }
   }
