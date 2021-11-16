@@ -24,7 +24,7 @@ function loginFormDemoImpl() {
           enable-remember-login
           enable-forgot-password
           enable-registration
-          initial-view="resetPassword"
+          initial-view="login"
         >
           <div slot="header">
             <c-brand

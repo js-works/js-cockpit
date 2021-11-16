@@ -36,7 +36,7 @@
   font-size: var(--sl-font-size-large);
 
   color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
-    var(--sl-dark, rgb(var(--sl-color-neutral-950)));
+    var(--sl-dark, rgb(var(--sl-color-neutral-950) / 80%));
 }
 
 .main {
@@ -72,7 +72,7 @@
     var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
 
   background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 90%))
-    var(--sl-dark, rgb(var(--sl-color-neutral-200) / 70%));
+    var(--sl-dark, rgb(var(--sl-color-gray-300) / 42%));
 
   border-radius: 6px 0 0 6px;
   text-align: center;
@@ -128,7 +128,7 @@
   flex-grow: 5;
 
   color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
-    var(--sl-dark, rgb(var(--sl-color-neutral-950)));
+    var(--sl-dark, rgb(var(--sl-color-neutral-950) / 80%));
 }
 
 .default-intro h3 {
@@ -142,7 +142,9 @@
 }
 
 .intro-icon {
-  opacity: 0.95;
+  color: var(--sl-light, rgb(var(--sl-color-neutral) / 95%))
+    var(--sl-dark, rgb(var(--sl-color-gray-500) / 70%));
+
   width: 64px;
   height: 64px;
 }
@@ -171,8 +173,8 @@ sl-button.go-to-registration-link::part(label) {
 
 .column1 {
   background-image: var(
-    --sl-light,
-    url('data:image/svg+xml;charset=UTF-8,\
+      --sl-light,
+      url('data:image/svg+xml;charset=UTF-8,\
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
       <g transform="translate(0 15)">\
         <circle fill="white" opacity="0.14" cx="0" cy="50" r="30"/>\
@@ -182,7 +184,6 @@ sl-button.go-to-registration-link::part(label) {
         <circle fill="white" opacity="0.16" cx="120" cy="60" r="50"/>\
       </g>\
     </svg>')
-  );
-
-  background-image: var(--sl-dark, none);
+    )
+    var(--sl-dark, none);
 }

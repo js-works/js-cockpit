@@ -281,140 +281,121 @@ function loadTheme(theme: Theme, selector?: string) {
 
 // === themes ========================================================
 
-const Themes = {
-  get default(): Theme {
-    return materializeTheme(this, 'default', {
-      //primaryColor: '#0EA5E9'
-      primaryColor: '#2899e2'
-    })
+const Themes = predefineThemes({
+  default: {
+    primaryColor: '#2899e2'
   },
 
-  get blue(): Theme {
-    return materializeTheme(this, 'blue', {
-      primaryColor: '#00B0FF'
-    })
+  blue: {
+    primaryColor: '#00B0FF'
   },
 
-  get orange() {
-    return materializeTheme(this, 'orange', {
-      primaryColor: '#ff7606'
-    })
+  orange: {
+    primaryColor: '#ff7606'
   },
 
-  get teal() {
-    return materializeTheme(this, 'teal', {
-      primaryColor: '#008080'
-    })
+  teal: {
+    primaryColor: '#008080'
   },
 
-  get mint() {
-    return materializeTheme(this, 'mint', {
-      primaryColor: '#3EB489'
-    })
+  mint: {
+    primaryColor: '#3EB489'
   },
 
-  get orchid() {
-    return materializeTheme(this, 'orchid', {
-      primaryColor: '#DA70D6'
-    })
+  orchid: {
+    primaryColor: '#DA70D6'
   },
 
-  get cyan() {
-    return materializeTheme(this, 'cyan', {
-      primaryColor: '#008B8B'
-    })
+  cyan: {
+    primaryColor: '#008B8B'
   },
 
-  get temp(): Theme {
-    return materializeTheme(this, 'temp', {
-      primaryColor: '#2889e2' // baseui based
-      //primaryColor: '#3366e2' // baseui based
-      //primaryColor: '#3366cc' // baseui
-      //primaryColor: '#0078d4' // fluentui
-      //primaryColor: '#6595c4' // industrial
+  temp: {
+    primaryColor: '#2889e2' // baseui based
+    //primaryColor: '#3366e2' // baseui based
+    //primaryColor: '#3366cc' // baseui
+    //primaryColor: '#0078d4' // fluentui
+    //primaryColor: '#6595c4' // industrial
 
-      // primaryColor: '#6595c4' // bluish
-      // primaryColor: '#c71d7c' // pink++
-      //primaryColor: '#f2704e' // coral?
-      //primaryColor: '#40a6ff' //
-      //primaryColor: '#c05c5c' // indian red 2
-      //primaryColor: '#8b008b' // +
-      //primaryColor: '#b22222' //
-      //primaryColor: '#cd5c5c' // indian red
-      //primaryColor: '#00bbff' // default?
-      //primaryColor: '#cd5c5c' //
-      //primaryColor: '#a9ddff' //
-      //primaryColor: '#dd1493' //
-      //primaryColor: '#7FFFD4' // aquamarine
-      //primaryColor: '#00FFFF' // aqua?
-      //primaryColor: '#008B8B' // cyan
-      //primaryColor: '#00CED1' // dark turquoise
-      //primaryColor: '#008000' // green
-      //primaryColor: '#008080' // teal
-      //primaryColor: '#800080' // purple
-      //primaryColor: '#DA70D6' // orchid ++
-      //primaryColor: '#C71585' // violet red
-      //primaryColor: '#BA55D3' // orchid
-      //primaryColor: '#66CDAA' // aquamarine
-      //primaryColor: '#FF69B4' // +
-      //primaryColor: '#00BFFF' // sky blue
-      //primaryColor: '#FF7F50' // coral
-      //primaryColor: '#7EC0EE' //
-      //primaryColor: '#F660AB' //
-      //primaryColor: '#00bbff' //
-      //primaryColor: '#9c36b5' //
-      //primaryColor: '#4F84C4' // +
-      //primaryColor: '#EA7E5D' // -
-      //primaryColor: '#008b8b' // +
-      //primaryColor: '#00bfff' //
-      //primaryColor: '#5f9ea0' //
-      //primaryColor: '#ff8c00' //
-    })
+    // primaryColor: '#6595c4' // bluish
+    // primaryColor: '#c71d7c' // pink++
+    //primaryColor: '#f2704e' // coral?
+    //primaryColor: '#40a6ff' //
+    //primaryColor: '#c05c5c' // indian red 2
+    //primaryColor: '#8b008b' // +
+    //primaryColor: '#b22222' //
+    //primaryColor: '#cd5c5c' // indian red
+    //primaryColor: '#00bbff' // default?
+    //primaryColor: '#cd5c5c' //
+    //primaryColor: '#a9ddff' //
+    //primaryColor: '#dd1493' //
+    //primaryColor: '#7FFFD4' // aquamarine
+    //primaryColor: '#00FFFF' // aqua?
+    //primaryColor: '#008B8B' // cyan
+    //primaryColor: '#00CED1' // dark turquoise
+    //primaryColor: '#008000' // green
+    //primaryColor: '#008080' // teal
+    //primaryColor: '#800080' // purple
+    //primaryColor: '#DA70D6' // orchid ++
+    //primaryColor: '#C71585' // violet red
+    //primaryColor: '#BA55D3' // orchid
+    //primaryColor: '#66CDAA' // aquamarine
+    //primaryColor: '#FF69B4' // +
+    //primaryColor: '#00BFFF' // sky blue
+    //primaryColor: '#FF7F50' // coral
+    //primaryColor: '#7EC0EE' //
+    //primaryColor: '#F660AB' //
+    //primaryColor: '#00bbff' //
+    //primaryColor: '#9c36b5' //
+    //primaryColor: '#4F84C4' // +
+    //primaryColor: '#EA7E5D' // -
+    //primaryColor: '#008b8b' // +
+    //primaryColor: '#00bfff' //
+    //primaryColor: '#5f9ea0' //
+    //primaryColor: '#ff8c00' //
   },
 
-  get aquamarine(): Theme {
-    return materializeTheme(this, 'aquamarine', {
-      primaryColor: '#7FFFD4' //
-    })
+  aquamarine: {
+    primaryColor: '#7FFFD4'
   },
 
-  get apricot(): Theme {
-    return materializeTheme(this, 'apricot', {
-      primaryColor: '#F19035' //
-    })
+  apricot: {
+    primaryColor: '#F19035'
   },
 
-  get coral(): Theme {
-    return materializeTheme(this, 'coral', {
-      primaryColor: '#ff7f50' //
-    })
+  coral: {
+    primaryColor: '#ff7f50'
   },
 
-  get pink(): Theme {
-    return materializeTheme(this, 'pink', {
-      primaryColor: '#d24899' //
-    })
+  pink: {
+    primaryColor: '#d24899'
   },
 
-  get turquoise(): Theme {
-    return materializeTheme(this, 'turquoise', {
-      primaryColor: '#40e0d0' //
-    })
+  turquoise: {
+    primaryColor: '#40e0d0'
   }
-}
+})
 
-function materializeTheme<T>(
-  themesObject: T,
-  themeName: keyof T,
-  customizing: ThemeCustomizing
-): Theme {
-  const theme: Theme = new Theme(customizing)
+// === theme helpers =================================================
 
-  Object.defineProperty(themesObject, themeName, {
-    value: theme
+function predefineThemes(
+  config: Record<string, ThemeCustomizing>
+): Record<string, Theme> {
+  const ret: Record<string, Theme> = {}
+
+  Object.entries(config).forEach(([name, customizing]) => {
+    Object.defineProperty(ret, name, {
+      configurable: true,
+
+      get() {
+        const theme = new Theme(customizing)
+        Object.defineProperty(ret, name, { value: theme })
+        return theme
+      }
+    })
   })
 
-  return theme
+  return ret
 }
 
 // === color utility functions =======================================
