@@ -107,7 +107,8 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  gap: 4px;
+  gap: 5px;
+  color: rgb(var(--sl-color-neutral-1000));
   --sl-input-label-color: rgb(var(--sl-color-neutral-1000));
 }
 
@@ -147,9 +148,6 @@
 
 .links {
   text-align: center;
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
   margin: -12px 0;
 }
 
