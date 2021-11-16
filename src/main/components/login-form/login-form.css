@@ -140,6 +140,7 @@
 }
 
 .intro-icon {
+  opacity: 0.95;
   width: 64px;
   height: 64px;
 }

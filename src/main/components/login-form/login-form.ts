@@ -17,10 +17,10 @@ import loginFormStyles from './login-form.css'
 import topAlignedLabelsStyles from '../../shared/css/label-alignment-above.css'
 
 // icons
-import loginIntroIcon from './assets/unlock.svg'
-import forgotPasswordIntroIcon from './assets/shield.svg'
-import registrationIntroIcon from './assets/key.svg'
-import resetPasswordIntroIcon from './assets/reset.svg'
+import loginIntroIcon from './assets/login.svg'
+import forgotPasswordIntroIcon from './assets/forgot-password.svg'
+import registrationIntroIcon from './assets/registration.svg'
+import resetPasswordIntroIcon from './assets/reset-password.svg'
 
 // === exports =======================================================
 
