@@ -16,6 +16,7 @@
   max-width: 100%;
   min-height: 100%;
   max-width: 100%;
+
   background-color: var(--sl-light, rgb(var(--sl-color-neutral-100)))
     var(--sl-dark, rgb(var(--sl-color-neutral-100)));
 }
@@ -23,7 +24,7 @@
 .container {
   display: inline-flex;
   flex-direction: column;
-  color: rgb(var(--sl-color-cool-gray-0));
+  color: rgb(var(--sl-color-cool-neutral-0));
 }
 
 .header {
@@ -35,7 +36,7 @@
   font-size: var(--sl-font-size-large);
 
   color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
-    var(--sl-dark, rgb(var(--sl-color-primary-950) / 80%));
+    var(--sl-dark, rgb(var(--sl-color-neutral-950)));
 }
 
 .main {
@@ -46,7 +47,7 @@
   border-radius: 6px;
 
   box-shadow: var(--sl-light, 5px 5px 25px rgb(var(--sl-color-neutral-300)))
-    var(--sl-dark, 2px 0px 500px rgb(var(--sl-color-neutral-300) / 75%));
+    var(--sl-dark, none);
 
   position: relative;
   transition: opacity 0.5s ease-out, transform 0.5s ease;
@@ -71,7 +72,7 @@
     var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
 
   background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 90%))
-    var(--sl-dark, rgb(var(--sl-color-primary-500) / 60%));
+    var(--sl-dark, rgb(var(--sl-color-neutral-200) / 70%));
 
   border-radius: 6px 0 0 6px;
   text-align: center;
@@ -127,7 +128,7 @@
   flex-grow: 5;
 
   color: var(--sl-light, rgba(var(--sl-color-primary-950) / 60%))
-    var(--sl-dark, rgb(var(--sl-color-primary-950) / 80%));
+    var(--sl-dark, rgb(var(--sl-color-neutral-950)));
 }
 
 .default-intro h3 {
@@ -169,7 +170,9 @@ sl-button.go-to-registration-link::part(label) {
 }
 
 .column1 {
-  background-image: url('data:image/svg+xml;charset=UTF-8,\
+  background-image: var(
+    --sl-light,
+    url('data:image/svg+xml;charset=UTF-8,\
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
       <g transform="translate(0 15)">\
         <circle fill="white" opacity="0.14" cx="0" cy="50" r="30"/>\
@@ -178,5 +181,8 @@ sl-button.go-to-registration-link::part(label) {
         <circle fill="white" opacity="0.17" cx="70" cy="100" r="65"/>\
         <circle fill="white" opacity="0.16" cx="120" cy="60" r="50"/>\
       </g>\
-    </svg>');
+    </svg>')
+  );
+
+  background-image: var(--sl-dark, none);
 }

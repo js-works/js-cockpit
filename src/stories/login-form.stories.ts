@@ -18,7 +18,7 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider theme="default/dark">
+      <c-theme-provider theme="default">
         <c-login-form
           full-size
           enable-remember-login
