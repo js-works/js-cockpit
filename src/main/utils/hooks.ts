@@ -64,10 +64,20 @@ export const useI18n = hook('useI18n', useI18nFn)
 export const useFormField = hook('useFormField', function <T>(initialValue: T) {
   let value = initialValue
   let error = ''
+  const host = useHost()
+  const internals = useInternals()
+  const refresh = useRefresher()
+
+  host.addEventListener('invalid', (ev) => {
+    ev.stopPropagation()
+    error = 'Please fill out this field properly'
+    refresh()
+  })
 
   return {
     setValue(newValue: T) {
       value = newValue
+      internals.setF
     },
 
     getValue() {

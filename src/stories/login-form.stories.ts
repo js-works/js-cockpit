@@ -1,8 +1,15 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, LoginForm, ThemeProvider } from 'js-cockpit'
-import 'element-internals-polyfill'
+
+import {
+  Brand,
+  DateField,
+  LoginForm,
+  PasswordField,
+  TextField,
+  ThemeProvider
+} from 'js-cockpit'
 
 export default {
   title: 'login-form'
@@ -10,7 +17,7 @@ export default {
 
 @elem({
   tag: 'login-form-demo',
-  uses: [Brand, LoginForm, ThemeProvider],
+  uses: [Brand, DateField, LoginForm, TextField, PasswordField, ThemeProvider],
   impl: lit(loginFormDemoImpl)
 })
 class LoginFormDemo extends component() {}
@@ -32,6 +39,29 @@ function loginFormDemoImpl() {
               subheadline="Back Office"
               size="large"
             ></c-brand>
+          </div>
+          <div slot="login-fields">
+            <c-text-field label="Username" required></c-text-field>
+            <c-password-field label="Password" required></c-password-field>
+          </div>
+          <div slot="registration-fields">
+            <c-text-field
+              name="username"
+              label="Username"
+              required
+            ></c-text-field>
+            <c-text-field
+              name="firstName"
+              label="First name"
+              required
+            ></c-text-field>
+            <c-text-field
+              name="lastName"
+              label="Last name"
+              required
+            ></c-text-field>
+            <c-text-field name="email" label="Email" required></c-text-field>
+            <c-date-field name="dayOfBirth" label="Day of birth"></c-date-field>
           </div>
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>

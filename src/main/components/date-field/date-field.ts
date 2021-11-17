@@ -74,30 +74,33 @@ function dateFieldImpl(self: DateField) {
       datepicker = createDatepicker({
         getLocale,
         slInput: shadowRoot.querySelector('sl-input')!,
-        pickerContainer: shadowRoot.querySelector('.picker-container')!
+        pickerContainer: shadowRoot.querySelector('.picker-container')!,
+        namespace: self.localName
       })
     })
   })
 
   useBeforeRender(() => {
     const locale = getLocale()
-    const localization = getLocalization(locale)
+    const localization = getLocalization(locale, self.localName)
 
     if (datepicker) {
       datepicker.setOptions({
-        language: locale,
+        language: `${self.localName}::${locale}`,
         weekStart: localization.weekStart,
         format: localization.format
       })
     }
   })
 
+  /*
   useAfterMount(() => {
     setTimeout(() => {
       const value = new Date('2017-01-01')
       datepicker.setDate(value)
     }, 1000)
   })
+  */
 
   function render() {
     return html`

@@ -53,8 +53,8 @@ I18n.addTranslations('en', {
     'new-password': 'New passwort',
     'new-password-repeat': 'Repeat new password',
     'password': 'Password',
-    'register-intro-headline': 'Registration',
-    'register-intro-text': 'Please fill out the form and press the submit button to register',
+    'registration-intro-headline': 'Registration',
+    'registration-intro-text': 'Please fill out the form and press the submit button to register',
     'register-submit-text': 'Register',
     'remember-login': 'Remember login',
     'reset-password-intro-headline': 'Reset password',
@@ -164,21 +164,18 @@ function loginFormImpl(self: LoginForm) {
     animation.duration = 400
     animation.easing = 'ease'
     animation.iterations = 1
-    animation.name = 'fadeOutLeft'
+    animation.name = view === 'login' ? 'fadeOutRight' : 'fadeOutLeft'
     animation.play = true
 
-    // litte workaround due some rare display issues
     setTimeout(() => {
       animation.style.visibility = 'hidden'
-    }, animation.duration - 10)
+    }, animation.duration - 50)
 
     animation.addEventListener('sl-finish', function listener() {
-      // litte workaround due some rare display issues
-      setTimeout(() => (animation.style.visibility = 'visible'), 10)
-
       setState({ view })
+      setTimeout(() => (animation.style.visibility = 'visible'), 50)
       animation.removeEventListener('sl-finish', listener)
-      animation.name = 'fadeInRight'
+      animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight'
       animation.play = true
     })
   }
@@ -241,10 +238,10 @@ function loginFormImpl(self: LoginForm) {
         `
       case 'registration':
         return html`
-          <slot name="register-intro">
+          <slot name="registration-intro">
             <div class="default-intro">
-              <h3>${t('register-intro-headline')}</h3>
-              <p>${t('register-intro-text')}</p>
+              <h3>${t('registration-intro-headline')}</h3>
+              <p>${t('registration-intro-text')}</p>
             </div>
           </slot>
         `
@@ -303,7 +300,7 @@ function loginFormImpl(self: LoginForm) {
         `
 
       case 'registration':
-        return html`<slot name="register-fields">
+        return html`<slot name="registration-fields">
             <c-text-field
               name="username"
               label=${t('username')}

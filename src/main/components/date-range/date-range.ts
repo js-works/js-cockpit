@@ -68,7 +68,8 @@ function dateRangeImpl(self: DateRange) {
         range: shadowRoot.querySelector('.fields')!,
         slInput1: (shadowRoot.querySelector('.input1')! as any) as SlInput,
         slInput2: (shadowRoot.querySelector('.input2')! as any) as SlInput,
-        pickerContainer: shadowRoot.querySelector('.picker-container')!
+        pickerContainer: shadowRoot.querySelector('.picker-container')!,
+        namespace: self.localName
       })
     }, 0)
   })

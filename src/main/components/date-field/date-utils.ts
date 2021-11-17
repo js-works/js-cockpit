@@ -21,20 +21,19 @@ type DatepickerInstance = any
 type DateRangePickerInstance = any
 type Localization = ReturnType<typeof createLocalization>
 
-// === prepare date locales object ===============================
-
-Object.defineProperty(Datepicker, 'locales', {
-  value: {
-    en: createLocalization('en-US')
-  }
-})
+console.log(Datepicker.locales)
+setInterval(() => {
+  console.log(Datepicker.locales)
+}, 1000)
 
 // === functions =====================================================
 
-function getLocalization(locale: string): Localization {
+function getLocalization(locale: string, namespace: string): Localization {
+  const key = `${namespace}::${locale}`
+
   return (
-    Datepicker.locales[locale] ||
-    (Datepicker.locales[locale] = createLocalization(locale))
+    Datepicker.locales[key] ||
+    (Datepicker.locales[key] = createLocalization(locale))
   )
 }
 
@@ -42,13 +41,14 @@ function createDatepicker(params: {
   slInput: SlInput
   pickerContainer: Element
   getLocale: () => string
+  namespace: string
 }): DatepickerInstance {
   let datepicker: any
   let popper: PopperInstance
   const { slInput, pickerContainer: container, getLocale } = params
   const input = (slInput as any).shadowRoot!.querySelector('input')!
   const locale = getLocale()
-  const localization = getLocalization(getLocale())
+  const localization = getLocalization(getLocale(), params.namespace)
 
   container.addEventListener('mousedown', (ev) => ev.preventDefault())
 
@@ -72,7 +72,7 @@ function createDatepicker(params: {
     todayHighlight: true,
     container: container,
     weeknumbers: true,
-    language: locale,
+    language: `${params.namespace}::${locale}`,
     weekStart: localization.weekStart,
     format: localization.format,
 
@@ -92,6 +92,7 @@ function createDateRangePicker(params: {
   slInput2: SlInput
   pickerContainer: HTMLElement
   getLocale: () => string
+  namespace: string
 }): DatepickerInstance {
   const {
     range,
@@ -109,7 +110,7 @@ function createDateRangePicker(params: {
 
   setTimeout(() => {
     const locale = getLocale()
-    const localization = getLocalization(getLocale())
+    const localization = getLocalization(getLocale(), params.namespace)
 
     input1.addEventListener('hide', () => {
       slInput1.value = input1!.value
@@ -131,7 +132,7 @@ function createDateRangePicker(params: {
       todayHighlight: true,
       container: container,
       weeknumbers: true,
-      language: locale,
+      language: `${params.namespace}::${locale}`,
       weekStart: localization.weekStart,
       format: localization.format
     })
@@ -202,19 +203,11 @@ function createLocalization(locale: string) {
     weekStart: localizer.getFirstDayOfWeek(),
     weekendDays: localizer.getWeekendDays(),
     titleFormat: 'MM y',
+    getCalendarWeek: (date: Date) => localizer.getCalendarWeek(date),
 
     format: {
-      toValue(s: string) {
-        return localizer.parseDate(s)
-      },
-
-      toDisplay(date: Date) {
-        return localizer.formatDate(date)
-      }
-    },
-
-    getCalendarWeek(date: Date) {
-      return localizer.getCalendarWeek(date)
+      toValue: (s: string) => localizer.parseDate(s),
+      toDisplay: (date: Date) => localizer.formatDate(date)
     }
   }
 }

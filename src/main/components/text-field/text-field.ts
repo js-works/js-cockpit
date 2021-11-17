@@ -76,7 +76,7 @@ function textFieldImpl(self: TextField) {
 
   const update = () => {
     const value = slInputRef.value!.value
-    internals.setFormValue(value)
+    //internals.setFormValue(value)
 
     /*
     if (self.required && value === '') {
