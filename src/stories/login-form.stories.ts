@@ -5,6 +5,7 @@ import { html, lit } from 'js-element/lit'
 import {
   Brand,
   DateField,
+  EmailField,
   LoginForm,
   PasswordField,
   TextField,
@@ -17,7 +18,15 @@ export default {
 
 @elem({
   tag: 'login-form-demo',
-  uses: [Brand, DateField, LoginForm, TextField, PasswordField, ThemeProvider],
+  uses: [
+    Brand,
+    DateField,
+    EmailField,
+    LoginForm,
+    TextField,
+    PasswordField,
+    ThemeProvider
+  ],
   impl: lit(loginFormDemoImpl)
 })
 class LoginFormDemo extends component() {}
@@ -60,7 +69,7 @@ function loginFormDemoImpl() {
               label="Last name"
               required
             ></c-text-field>
-            <c-text-field name="email" label="Email" required></c-text-field>
+            <c-email-field name="email" label="Email" required></c-email-field>
             <c-date-field name="dayOfBirth" label="Day of birth"></c-date-field>
           </div>
           <div slot="footer">&copy; 2021, my-company</div>
