@@ -9,8 +9,9 @@ import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/anim
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
-import { TextField } from '../text-field/text-field'
+import { EmailField } from '../email-field/email-field'
 import { PasswordField } from '../password-field/password-field'
+import { TextField } from '../text-field/text-field'
 import { ThemeProvider } from '../theme-provider/theme-provider'
 
 // styles
@@ -284,7 +285,7 @@ function loginFormImpl(self: LoginForm) {
     switch (state.view) {
       case 'login':
         return html`
-          <slot name="login-fields">
+          <slot name="login-fields" class="fields-slot">
             <c-text-field
               name="username"
               label=${t('username')}
@@ -300,7 +301,7 @@ function loginFormImpl(self: LoginForm) {
         `
 
       case 'registration':
-        return html`<slot name="registration-fields">
+        return html`<slot name="registration-fields" class="fields-slot">
             <c-text-field
               name="username"
               label=${t('username')}
@@ -325,24 +326,23 @@ function loginFormImpl(self: LoginForm) {
         `
 
       case 'forgotPassword':
-        return html`<slot name="forgot-password-fields">
-            <c-text-field
-              name="username"
-              label=${t('username')}
-              required
-            ></c-text-field>
+        return html`<slot name="forgot-password-fields" class="fields-slot">
+          <c-text-field
+            name="username"
+            label=${t('username')}
+            required
+          ></c-text-field>
 
-            <c-text-field
-              name="email"
-              label=${t('email')}
-              required
-            ></c-password-field>
-          </slot>
-        `
+          <c-email-field
+            name="email"
+            label=${t('email')}
+            required
+          ></c-email-field>
+        </slot> `
 
       case 'resetPassword':
         return html`
-          <slot name="reset-password-fields">
+          <slot name="reset-password-fields" class="fields-slot">
             <c-text-field
               name="username"
               label=${t('username')}
