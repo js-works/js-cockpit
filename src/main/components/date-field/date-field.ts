@@ -108,7 +108,7 @@ function dateFieldImpl(self: DateField) {
         <div class="field-wrapper">
           <div class="label">${self.label}</div>
           <div class="control">
-            <sl-input size="small">
+            <sl-input>
               <sl-icon
                 slot="suffix"
                 class="calendar-icon"

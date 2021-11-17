@@ -121,7 +121,6 @@ function textFieldImpl(self: TextField) {
           <div class="control">
             <sl-input
               class="input"
-              size="small"
               ${ref(slInputRef)}
               @sl-input=${onInput}
               @sl-change=${onChange}

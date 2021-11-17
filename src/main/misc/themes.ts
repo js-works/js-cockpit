@@ -244,7 +244,12 @@ class Theme {
     tokens['font-size-2x-large'] = '2rem'
     tokens['font-size-3x-large'] = '3.5rem'
     tokens['font-size-4x-large'] = '4rem'
-    */
+*/
+    Object.assign(tokens, {
+      'input-height-small': '1.475rem',
+      'input-height-medium': '1.875rem',
+      'input-height-large': '2.75rem'
+    })
   }
 
   static #calcColorShades(

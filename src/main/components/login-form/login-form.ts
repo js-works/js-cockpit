@@ -207,6 +207,7 @@ function loginFormImpl(self: LoginForm) {
                       <sl-button
                         type="primary"
                         class="login-button"
+                        size="large"
                         @click=${onSubmitClick}
                       >
                         ${renderSubmitButtonText()}

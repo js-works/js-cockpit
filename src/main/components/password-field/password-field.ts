@@ -53,7 +53,6 @@ function passwordFieldImpl(self: PasswordField) {
             name=${self.name}
             toggle-password
             class="input"
-            size="small"
           ></sl-input>
         </div>
       </div>
