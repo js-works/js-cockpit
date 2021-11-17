@@ -19,7 +19,7 @@
   overflow: hidden;
 
   background-color: var(--sl-light, rgb(var(--sl-color-neutral-100)))
-    var(--sl-dark, rgb(var(--sl-color-neutral-100)));
+    var(--sl-dark, rgb(var(--sl-color-neutral-0)));
 }
 
 .container {
@@ -70,7 +70,7 @@
     var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
 
   background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 90%))
-    var(--sl-dark, rgb(var(--sl-color-gray-300) / 30%));
+    var(--sl-dark, rgb(var(--sl-color-gray-300) / 40%));
 
   border-radius: 6px 0 0 6px;
   text-align: center;
@@ -99,7 +99,7 @@
   border-radius: 0 6px 6px 0;
 
   background-color: var(--sl-light, rgb(var(--sl-color-neutral-0)))
-    var(--sl-dark, rgb(var(--sl-color-neutral-100)));
+    var(--sl-dark, rgb(var(--sl-color-gray-200) / 75%));
 }
 
 .column2-top {
