@@ -61,8 +61,34 @@ function useI18nFn(namespace?: string) {
 
 export const useI18n = hook('useI18n', useI18nFn)
 
-export const useValidation = hook(
-  'useValidation',
+export const useFormField = hook('useFormField', function <T>(initialValue: T) {
+  let value = initialValue
+  let error = ''
+
+  return {
+    setValue(newValue: T) {
+      value = newValue
+    },
+
+    getValue() {
+      return value
+    },
+
+    setError(newError: string) {
+      error = newError
+    },
+
+    getError() {
+      return error
+    },
+
+    hideError() {}
+  }
+})
+
+/*
+export const useFormField = hook(
+  'useFormField',
   (callback: (msg: string) => void) => {
     const host = useHost()
     const refresh = useRefresher()
@@ -101,3 +127,4 @@ export const useValidation = hook(
     return ret
   }
 )
+*/

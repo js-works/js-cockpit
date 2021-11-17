@@ -11,7 +11,7 @@ import {
   useStatus
 } from 'js-element/hooks'
 
-import { useValidation } from '../../utils/hooks'
+import { useFormField } from '../../utils/hooks'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -68,9 +68,7 @@ function textFieldImpl(self: TextField) {
     error: null as string | null
   })
 
-  const validation = useValidation((error) => {
-    setState('error', error)
-  }) // TODO!!!
+  const field = useFormField('') // TODO!!!
 
   setMethods(self, {
     reset() {}
@@ -92,7 +90,7 @@ function textFieldImpl(self: TextField) {
   }
 
   const onInput = () => {
-    validation.clearMessage()
+    field.hideError()
   }
 
   const onChange = () => update()
@@ -128,7 +126,7 @@ function textFieldImpl(self: TextField) {
               @sl-input=${onInput}
               @sl-change=${onChange}
             ></sl-input>
-            <div class="error">${validation.getMessage()}</div>
+            <div class="error">${field.getError()}</div>
           </div>
         </div>
       </div>

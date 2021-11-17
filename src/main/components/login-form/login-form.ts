@@ -161,12 +161,21 @@ function loginFormImpl(self: LoginForm) {
 
   function changeView(view: View) {
     const animation = animationRef.value!
-    animation.duration = 500
+    animation.duration = 400
+    animation.easing = 'ease'
     animation.iterations = 1
     animation.name = 'fadeOutLeft'
     animation.play = true
 
+    // litte workaround due some rare display issues
+    setTimeout(() => {
+      animation.style.visibility = 'hidden'
+    }, animation.duration - 10)
+
     animation.addEventListener('sl-finish', function listener() {
+      // litte workaround due some rare display issues
+      setTimeout(() => (animation.style.visibility = 'visible'), 10)
+
       setState({ view })
       animation.removeEventListener('sl-finish', listener)
       animation.name = 'fadeInRight'
@@ -178,42 +187,44 @@ function loginFormImpl(self: LoginForm) {
     return html`
       <c-theme-provider>
         <div class="base ${classMap({ 'full-size': self.fullSize })}">
-          <div class="container">
-            <div class="header">
-              <slot name="header"></slot>
-            </div>
-            <sl-animation class="animation" ${ref(animationRef)}>
-              <div class="main">
-                <div class="column1">
-                  <div class="column1-top">${renderIntro()}</div>
-                  <div class="column1-bottom">${renderIntroIcon()}</div>
-                </div>
-                <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
-                  <div class="column2-top">${renderFields()}</div>
-                  <div class="column2-bottom">
-                    ${state.view === 'login' && self.enableRememberLogin
-                      ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
-                      : ''}
-                    <sl-button
-                      type="primary"
-                      class="login-button"
-                      @click=${onSubmitClick}
-                    >
-                      ${renderSubmitButtonText()}
-                    </sl-button>
-                    ${renderLinks()}
-                  </div>
-                </form>
+          <sl-animation ${ref(animationRef)}>
+            <div class="container">
+              <div class="header">
+                <slot name="header"></slot>
               </div>
-            </sl-animation>
-            <!-- sl-animation -->
-            <div class="footer">
-              <slot name="footer"></slot>
+              <div class="center">
+                <div class="main">
+                  <div class="column1">
+                    <div class="column1-top">${renderIntro()}</div>
+                    <div class="column1-bottom">${renderIntroIcon()}</div>
+                  </div>
+                  <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
+                    <div class="column2-top">${renderFields()}</div>
+                    <div class="column2-bottom">
+                      ${state.view === 'login' && self.enableRememberLogin
+                        ? html`<sl-checkbox
+                            >${t('remember-login')}</sl-checkbox
+                          >`
+                        : ''}
+                      <sl-button
+                        type="primary"
+                        class="login-button"
+                        @click=${onSubmitClick}
+                      >
+                        ${renderSubmitButtonText()}
+                      </sl-button>
+                      ${renderLinks()}
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="footer">
+                <slot name="footer"></slot>
+              </div>
             </div>
-          </div>
+          </sl-animation>
         </div>
-        <c-theme-provider> </c-theme-provider
-      ></c-theme-provider>
+      </c-theme-provider>
     `
   }
 
