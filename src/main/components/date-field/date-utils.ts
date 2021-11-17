@@ -21,11 +21,6 @@ type DatepickerInstance = any
 type DateRangePickerInstance = any
 type Localization = ReturnType<typeof createLocalization>
 
-console.log(Datepicker.locales)
-setInterval(() => {
-  console.log(Datepicker.locales)
-}, 1000)
-
 // === functions =====================================================
 
 function getLocalization(locale: string, namespace: string): Localization {

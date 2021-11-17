@@ -119,9 +119,14 @@ function loginFormImpl(self: LoginForm) {
   }
 
   const onSubmit = (ev?: any) => {
+    console.log('onSubmit')
+    // TODO
     if (ev) {
       ev.preventDefault()
-    } else if (!formRef.value!.checkValidity()) {
+    }
+
+    console.log(formRef.value!.checkValidity())
+    if (!formRef.value!.checkValidity()) {
       return
     }
 

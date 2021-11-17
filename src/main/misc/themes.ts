@@ -247,8 +247,8 @@ class Theme {
 */
     Object.assign(tokens, {
       'input-height-small': '1.85rem',
-      'input-height-medium': '1.875rem',
-      'input-height-large': '2.75rem'
+      'input-height-medium': '1.95rem',
+      'input-height-large': '2.5rem'
     })
   }
 

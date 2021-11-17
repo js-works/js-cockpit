@@ -12,6 +12,14 @@ const localeByElem = new Map<HTMLElement, string | null>()
 const subscribers = new Set<() => void>()
 let initialized = false
 
+// === types =========================================================
+
+declare global {
+  interface DocumentEventMap {
+    [LANG_ATTRIBUTE_CHANGES]: CustomEvent<void>
+  }
+}
+
 // === detectLocale ==================================================
 
 function detectLocale(elem: HTMLElement) {

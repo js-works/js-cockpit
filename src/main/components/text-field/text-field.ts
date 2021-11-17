@@ -3,8 +3,7 @@ import { classMap, html, createRef, lit, ref } from 'js-element/lit'
 
 import {
   useAfterMount,
-  useOnFormAssociated,
-  useOnFormDisabled,
+  useAfterUpdate,
   useInternals,
   useRefresher,
   useState,
@@ -62,56 +61,36 @@ function textFieldImpl(self: TextField) {
   const refresh = useRefresher()
   const status = useStatus()
   const slInputRef = createRef<SlInput & Element>() // TODO
-  const internals: any = useInternals()
 
   const [state, setState] = useState({
     error: null as string | null
   })
 
-  const field = useFormField('') // TODO!!!
+  const field = useFormField(self.value) // TODO!!!
+
+  const onInput = () => {
+    self.value = slInputRef.value!.value // TODO: prevent refresh
+    field.signalInput()
+  }
+
+  const onChange = () => {
+    update()
+  }
 
   setMethods(self, {
     reset() {}
   })
 
   const update = () => {
-    const value = slInputRef.value!.value
-    //internals.setFormValue(value)
+    const value = self.value
+    field.setValue(value)
 
-    /*
     if (self.required && value === '') {
-      internals.setValidity({ valueMissing: true }, 'Field is mandatory')
-
-      if (status.isMounted()) {
-        refresh()
-      }
+      field.setError('Field is mandatory')
     }
-    */
   }
 
-  const onInput = () => {
-    field.hideError()
-  }
-
-  const onChange = () => update()
-
-  useAfterMount(() => {
-    update()
-  })
-
-  useOnFormAssociated((frm) => {
-    //console.log('----> form associated', frm)
-  })
-
-  useOnFormDisabled((disabled) => {
-    //console.log('----> form disabled', disabled)
-  })
-  ;(self as any).formAssociatedCallback = (frm: HTMLFormElement) => {
-    //console.log(33, 'associated', frm)
-  }
-  ;(self as any).formDisabledCallback = (disabled: boolean) => {
-    //console.log(33, 'disabled', disabled)
-  }
+  useAfterMount(update)
 
   function render() {
     return html`
@@ -125,7 +104,7 @@ function textFieldImpl(self: TextField) {
               @sl-input=${onInput}
               @sl-change=${onChange}
             ></sl-input>
-            <div class="error">${field.getError()}</div>
+            <div class="error">${field.getShownError()}</div>
           </div>
         </div>
       </div>
