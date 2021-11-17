@@ -2,6 +2,10 @@
 
 export { detectLocale, observeLocale }
 
+// === constants =====================================================
+
+const LANG_ATTRIBUTE_CHANGES = 'lang-attribute-changes'
+
 // === module data ===================================================
 
 const localeByElem = new Map<HTMLElement, string | null>()
@@ -60,7 +64,7 @@ function observeLocale(elem: HTMLElement, callback: () => void) {
 // === local functions ===============================================
 
 function notify() {
-  subscribers.forEach((it) => it())
+  document.dispatchEvent(new CustomEvent(LANG_ATTRIBUTE_CHANGES))
 }
 
 function subscribe(subscriber: () => void) {
@@ -69,6 +73,10 @@ function subscribe(subscriber: () => void) {
       attributes: true,
       attributeFilter: ['lang'],
       subtree: true
+    })
+
+    document.addEventListener(LANG_ATTRIBUTE_CHANGES, () => {
+      subscribers.forEach((it) => it())
     })
   }
 
