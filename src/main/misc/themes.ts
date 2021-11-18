@@ -289,6 +289,7 @@ function loadTheme(theme: Theme, selector?: string) {
 const Themes = predefineThemes({
   default: {
     primaryColor: '#2899e2'
+    //primaryColor: '#0077cB'
   },
 
   blue: {
@@ -303,8 +304,39 @@ const Themes = predefineThemes({
     primaryColor: '#008080'
   },
 
-  mint: {
-    primaryColor: '#3EB489'
+  // Error colors
+  // #FFA6C9
+  // #F77703
+  // #FF6B53
+
+  horizon: {
+    primaryColor: '#71d9f2'
+  },
+
+  bostonBlue: {
+    primaryColor: '#45B1E8',
+    dangerColor: '#E34234'
+  },
+
+  cerulean: {
+    primaryColor: '#02A4D3',
+    dangerColor: '#E34234'
+  },
+
+  carribeanGreen: {
+    primaryColor: '#00CC99'
+  },
+
+  cerise: {
+    primaryColor: '#DA3287'
+  },
+
+  turqoiseBlue: {
+    primaryColor: '#47E3EB'
+  },
+
+  oceanGreen: {
+    primaryColor: '#3AADAE'
   },
 
   orchid: {
@@ -322,6 +354,7 @@ const Themes = predefineThemes({
     //primaryColor: '#0078d4' // fluentui
     //primaryColor: '#6595c4' // industrial
 
+    //primaryColor: '#76D7EA' // +
     // primaryColor: '#6595c4' // bluish
     // primaryColor: '#c71d7c' // pink++
     //primaryColor: '#f2704e' // coral?
@@ -358,6 +391,10 @@ const Themes = predefineThemes({
     //primaryColor: '#00bfff' //
     //primaryColor: '#5f9ea0' //
     //primaryColor: '#ff8c00' //
+  },
+
+  skyBlue: {
+    primaryColor: '#0EA5E9'
   },
 
   aquamarine: {

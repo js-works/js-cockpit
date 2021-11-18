@@ -1,6 +1,6 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useOnInit, useState } from 'js-element/hooks'
+import { useOnInit, useRefresher, useState } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../misc/i18n'
 
@@ -70,6 +70,7 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
+
   uses: [
     PasswordField,
     SlAnimation,
@@ -102,6 +103,8 @@ function loginFormImpl(self: LoginForm) {
     view: 'login' as View
   })
 
+  const refresh = useRefresher()
+
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
   const { t } = useI18n('js-cockpit.login-form')
@@ -125,7 +128,6 @@ function loginFormImpl(self: LoginForm) {
       ev.preventDefault()
     }
 
-    console.log(formRef.value!.checkValidity())
     if (!formRef.value!.checkValidity()) {
       return
     }
@@ -353,11 +355,13 @@ function loginFormImpl(self: LoginForm) {
               label=${t('username')}
               required
             ></c-text-field>
+            <!--
             <c-password-field
               name="newPasswordRepeat"
               label=${t('new-password')}
               required
             ></c-password-field>
+    -->
             <c-password-field
               name="newPassword"
               label=${t('new-password-repeat')}

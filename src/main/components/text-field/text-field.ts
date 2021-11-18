@@ -35,8 +35,9 @@ export { TextField }
   uses: [SlInput]
 })
 class TextField extends component<{
+  blur(): void
+  focus(): void
   reset(): void
-  //focus(): void
 }>() {
   @prop({ attr: Attrs.string })
   name = ''
@@ -78,19 +79,24 @@ function textFieldImpl(self: TextField) {
   }
 
   setMethods(self, {
-    reset() {}
+    reset() {},
+    focus: () => slInputRef.value!.focus(),
+    blur: () => slInputRef.value!.blur()
   })
 
   const update = () => {
     const value = self.value
     field.setValue(value)
-
+    const anchor = slInputRef.value!
+    console.log('update', anchor)
     if (self.required && value === '') {
-      field.setError('Field is mandatory')
+      field.setError('Field is mandatory', anchor)
     }
   }
 
-  useAfterMount(update)
+  useAfterMount(() => {
+    setTimeout(update, 1000)
+  })
 
   function render() {
     return html`
@@ -99,12 +105,17 @@ function textFieldImpl(self: TextField) {
           <div class="label">${self.label}</div>
           <div class="control">
             <sl-input
+              tabindex="1"
               class="input"
               ${ref(slInputRef)}
               @sl-input=${onInput}
               @sl-change=${onChange}
             ></sl-input>
-            <div class="error">${field.getShownError()}</div>
+            <div class="error">:: ${field.getShownError()}</div>
+            ${new Date().toLocaleTimeString()} ${field.debug()}
+            <div class="error">
+              ${field.getError() + ' # ' + new Date().toLocaleTimeString()}
+            </div>
           </div>
         </div>
       </div>

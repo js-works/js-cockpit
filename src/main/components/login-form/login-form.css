@@ -69,7 +69,7 @@
   color: var(--sl-light, rgb(var(--sl-color-neutral-0)))
     var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
 
-  background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 90%))
+  background-color: var(--sl-light, rgb(var(--sl-color-primary-600) / 95%))
     var(--sl-dark, rgb(var(--sl-color-gray-300) / 40%));
 
   border-radius: 6px 0 0 6px;

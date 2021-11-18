@@ -64,6 +64,11 @@ export const useI18n = hook('useI18n', useI18nFn)
 export const useFormField = hook('useFormField', function <
   T extends string // TODO: File + FormData
 >(initialValue: T) {
+  setInterval(() => {
+    console.log('...')
+    refresh()
+  }, 1000)
+
   let value = initialValue
   let error = ''
   let showError = false
@@ -75,6 +80,7 @@ export const useFormField = hook('useFormField', function <
     ev.stopPropagation()
     console.log('invalid!!!')
     error = 'Please fill out this field properly'
+    showError = true
     refresh()
   })
 
@@ -90,22 +96,32 @@ export const useFormField = hook('useFormField', function <
       return value
     },
 
-    setError(newError: string) {
+    setError(newError: string, anchor: Element) {
       const needsRefresh = showError && error !== newError
       error = newError
 
       if (error) {
-        internals.setValidity({ valueMissing: true }, error)
+        console.log('set error', error)
+        internals.setValidity({ valueMissing: true }, error, anchor)
       } else {
+        console.log('set valid')
         internals.setValidity({ valid: true })
       }
 
+      refresh()
       needsRefresh && refresh()
       console.log('setError', newError)
     },
 
+    getError() {
+      return error + showError
+    },
     getShownError(): string {
-      return showError && error ? error : ''
+      const ret = showError && error ? error : ''
+      //return `[${error}|${showError}] ${new Date().toLocaleTimeString()}`
+      console.log('shownERror', showError, error, ' -> ', ret)
+
+      return ret
     },
 
     hideError() {
@@ -120,6 +136,10 @@ export const useFormField = hook('useFormField', function <
     signalInput() {
       console.log('input signaled')
       this.hideError()
+    },
+
+    debug() {
+      console.error(111, error, showError)
     }
   }
 })
