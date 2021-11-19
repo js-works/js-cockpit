@@ -13,8 +13,8 @@
   margin: 16px 1px 0 0;
   font-smooth: never;
 
-  color: var(--sl-light, rgb(var(--sl-color-primary-600)))
-    var(--sl-dark, rgb(var(--sl-color-primary-400)));
+  color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
 }
 
 .item {
@@ -32,23 +32,23 @@
 .item:not(.active):hover {
   position: relative;
 
-  background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
-    var(--sl-dark, rgb(var(--sl-color-primary-400)));
+  background-color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
 
   border-radius: 2px;
   box-sizing: border-box;
 }
 
 .item:not(.active) .title:active {
-  background-color: rgb(var(--sl-color-primary-500));
+  background-color: var(--sl-color-primary-500);
 }
 
 .item.active {
   font-weight: 600;
-  border: 0 solid rgb(var(--sl-color-primary-500));
+  border: 0 solid var(--sl-color-primary-500);
 
-  background-color: var(--sl-light, rgb(var(--sl-color-neutral-600) / 60%))
-    var(--sl-dark, rgb(var(--sl-color-neutral-300)));
+  background-color: var(--sl-light, var(--sl-color-neutral-600))
+    var(--sl-dark, var(--sl-color-neutral-300));
 
   padding: 0 8px;
   border-bottom-width: 3px;

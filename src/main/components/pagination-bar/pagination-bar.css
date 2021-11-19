@@ -5,8 +5,8 @@
   align-items: center;
   gap: 20px;
   width: 100%;
-  color: rgb(var(--sl-color-neutral-1000));
-  background-color: rgb(var(--sl-color-neutral-0));
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-0);
   font-size: var(--sl-font-size-medium);
   z-index: 1000;
   white-space: nowrap;
@@ -41,7 +41,7 @@
 }
 
 .nav-button:hover::part(base) {
-  border-color: rgb(var(--sl-color-primary-300));
+  border-color: var(--sl-color-primary-300);
 }
 
 .page-size-selector {

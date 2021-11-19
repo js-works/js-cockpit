@@ -16,6 +16,6 @@ sl-input {
 }
 
 .calendar-icon:hover {
-  color: rgb(var(--sl-color-primary-500));
+  color: var(--sl-color-primary-500);
   cursor: pointer;
 }

@@ -114,15 +114,15 @@ const styles = `
   }
 
   .icon._normal_ {
-    color: rgb(var(--sl-color-primary-500));
+    color: var(--sl-color-primary-500);
   }
   
   .icon._warning_ {
-    color: rgb(var(--sl-color-warning-500));
+    color: var(--sl-color-warning-500);
   }
   
   .icon._danger_ {
-    color: rgb(var(--sl-color-danger-500));
+    color: var(--sl-color-danger-500);
   }
   
   .header {

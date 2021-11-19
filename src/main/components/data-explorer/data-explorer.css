@@ -4,8 +4,8 @@
   flex-direction: column;
   padding: 0 6px;
   margin: 2px;
-  color: rgb(var(--sl-color-neutral-1000));
-  background-color: rgb(var(--sl-color-neutral-0));
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-0);
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
   font-weight: var(--sl-font-weight-normal);
@@ -26,9 +26,9 @@
   gap: 2.5rem;
   margin: 0 0 4px 0;
   padding: 12px 0 4px 0;
-  xxxborder: 0 solid rgb(var(--sl-color-neutral-300));
+  xxxborder: 0 solid var(--sl-color-neutral-300);
   xxxborder-width: 0 0 1px 0;
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
 }
 
 .title {
@@ -37,7 +37,7 @@
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-large);
   font-weight: var(--sl-font-weight-normal);
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
 }
 
 .actions {
@@ -53,7 +53,7 @@
 }
 
 .search-icon {
-  color: rgb(var(--sl-color-neutral-800));
+  color: var(--sl-color-neutral-800);
 }
 
 .filter-button::part(label) {
@@ -65,7 +65,7 @@
 }
 
 .footer {
-  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border: 0 solid var(--sl-color-neutral-300);
   border-width: 1px 0 0 0;
   padding: 1px 0 2px 0;
 }
@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background-color: rgb(var(--sl-color-neutral-600));
+  background-color: var(--sl-color-neutral-600);
   padding: 1rem 1.7rem;
   border-radius: 2px;
 }
@@ -102,13 +102,13 @@
 }
 
 .loading-message {
-  color: rgb(var(--sl-color-neutral-0));
+  color: var(--sl-color-neutral-0);
   font-size: var(--sl-font-size-medium);
 }
 
 .loading-spinner {
   font-size: 1.8rem;
-  --indicator-color: rgb(var(--sl-color-neutral-100));
+  --indicator-color: var(--sl-color-neutral-100);
 }
 
 .overlay-show {

@@ -44,24 +44,24 @@
 
 .separator {
   padding: 4px 10px 0 10px; /* TODO */
-  border: 0 solid rgb(var(--sl-color-neutral-400));
+  border: 0 solid var(--sl-color-neutral-400);
   border-width: 1px 0 1px 0;
-  color: rgb(var(--sl-color-primary-500));
+  color: var(--sl-color-primary-500);
   box-sizing: borrder-box;
 }
 
 .calendar-icon {
   padding: 0 12px;
-  border: 0 solid rgb(var(--sl-color-neutral-400));
+  border: 0 solid var(--sl-color-neutral-400);
   border-width: 1px 1px 1px 0;
   height: 28.5px; /* TODO */
   box-sizing: border-box;
-  color: rgb(var(--sl-input-icon-color));
+  color: var(--sl-input-icon-color);
   cursor: pointer;
 }
 
 .calendar-icon:hover {
-  color: rgb(var(--sl-color-primary-500));
+  color: var(--sl-color-primary-500);
 }
 
 .picker-container {

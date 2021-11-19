@@ -32,8 +32,8 @@ sl-button.filter-button::part(label) {
   gap: 8px;
   justify-content: right;
   padding: 4px 10px 5px 10px;
-  background-color: rgb(var(--sl-color-neutral-50));
-  border: 0 solid rgb(var(--sl-color-neutral-200));
+  background-color: var(--sl-color-neutral-50);
+  border: 0 solid var(--sl-color-neutral-200);
   border-width: 1px 0 0 0;
 }
 

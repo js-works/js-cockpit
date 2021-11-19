@@ -20,7 +20,7 @@
   padding: 3px 4px 3px 0;
   white-space: normal;
   font-size: var(--sl-font-size-medium);
-  color: rgb(var(--sl-input-label-color));
+  color: var(--sl-input-label-color);
 }
 
 .label:after {
@@ -30,7 +30,7 @@
 }
 
 .required .label:after {
-  color: rgb(var(--sl-color-danger-700));
+  color: var(--sl-color-danger-700);
   padding: 0 4px;
   font-size: 15px;
   content: '*';
@@ -38,6 +38,6 @@
 
 .error {
   margin: 2px 0;
-  color: rgb(var(--sl-color-danger-700));
+  color: var(--sl-color-danger-700);
   font-size: var(--sl-font-size-small);
 }

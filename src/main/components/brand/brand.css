@@ -17,8 +17,8 @@
 }
 
 .content.multi-color .logo {
-  color: var(--sl-light, rgb(var(--sl-color-primary-600)))
-    var(--sl-dark, rgb(var(--sl-color-primary-400)));
+  color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
 }
 
 .content.small .logo {
@@ -36,7 +36,7 @@
   height: 36px;
 }
 
-.headline-and-subheadline {
+.headline-and-text {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -62,20 +62,20 @@
   font-size: 20px;
 }
 
-.subheadline {
+.text {
   font-size: 18px;
   line-height: 100%;
   white-space: nowrap;
 }
 
-.content.small .subheadline {
+.content.small .text {
   font-size: 16px;
 }
 
-.content.large .subheadline {
+.content.large .text {
   font-size: 24px;
 }
 
-.content.huge .subheadline {
+.content.huge .text {
   font-size: 28px;
 }

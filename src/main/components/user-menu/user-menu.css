@@ -19,16 +19,16 @@
   max-height: 48px;
   cursor: pointer;
 
-  background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
-    var(--sl-dark, rgb(var(--sl-color-primary-400)));
+  background-color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
 }
 
 .logout-button:hover {
-  background-color: rgb(var(--sl-color-primary-500));
+  background-color: var(--sl-color-primary-500);
 }
 
 .logout-button:active {
-  background-color: rgb(var(--sl-color-primary-600));
+  background-color: var(--sl-color-primary-600);
 }
 
 .logout-icon {

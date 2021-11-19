@@ -16,7 +16,7 @@ sl-button::part(base) {
 }
 
 sl-icon {
-  color: rgb(var(--sl-color-primary-500));
+  color: var(--sl-color-primary-500);
   width: 16px;
   height: 16px;
 }

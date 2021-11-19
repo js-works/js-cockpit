@@ -1,7 +1,7 @@
 .base {
   padding: 8px 16px;
-  color: rgb(var(--sl-color-neutral-1000));
-  background-color: rgb(var(--sl-color-neutral-0));
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-0);
 }
 
 .header {
@@ -11,7 +11,7 @@
   justify-content: center;
   padding: 8px 0 8px 0;
   margin: 0 0 3px 0;
-  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 0 1px 0;
 }
 

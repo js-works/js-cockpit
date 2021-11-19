@@ -11,7 +11,7 @@
   max-height: 100%;
   font-family: var(--sl-font-sans);
   user-select: none;
-  background-color: rgb(var(--sl-color-neutral-0));
+  background-color: var(--sl-color-neutral-0);
 }
 
 .row1 {
@@ -21,11 +21,11 @@
   gap: 18px;
   z-index: 100;
 
-  color: var(--sl-light, rgb(var(--sl-color-neutral-0)))
-    var(--sl-dark, rgb(var(--sl-color-neutral-1000)));
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
 
-  background-color: var(--sl-light, rgb(var(--sl-color-neutral-700)))
-    var(--sl-dark, rgb(var(--sl-color-neutral-300) / 60%));
+  background-color: var(--sl-light, var(--sl-color-neutral-700))
+    var(--sl-dark, var(--sl-color-neutral-300));
 
   max-height: 48px;
 }

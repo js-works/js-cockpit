@@ -1,7 +1,7 @@
 .base {
-  color: rgb(var(--sl-color-neutral-1000));
-  background-color: rgb(var(--sl-color-neutral-50) / 0.75);
-  border: 0 solid rgb(var(--sl-color-neutral-300));
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-50);
+  border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 1px 0 0;
   min-width: 15rem;
   max-width: 15rem;
@@ -32,15 +32,15 @@
 
 .uncollapsible .item.active {
   padding: 0.25rem 2rem 0.25rem calc(2rem - 3px);
-  background-color: rgb(var(--sl-color-primary-200));
-  border: 0 solid rgb(var(--sl-color-primary-600));
+  background-color: var(--sl-color-primary-200);
+  border: 0 solid var(--sl-color-primary-600);
   border-left-width: 3px;
   box-sizing: border-box;
   cursor: default;
 }
 
 .uncollapsible .item:not(.active):hover {
-  background-color: rgb(var(--sl-color-primary-200));
+  background-color: var(--sl-color-primary-200);
 }
 
 /* === collapsible ================================================ */
@@ -48,7 +48,7 @@
 sl-details::part(base) {
   border-width: 0 0 1px 0;
   border-radius: 0;
-  border-color: rgb(var(--sl-color-neutral-300));
+  border-color: var(--sl-color-neutral-300);
 }
 
 sl-details::part(header) {
@@ -74,7 +74,7 @@ sl-details::part(content) {
 
 /*
 .collapsible .item > .mark:before {
-  color: rgb(var(--sl-color-primary-600));
+  color: var(--sl-color-primary-600);
   content: '\25aa';
   margin: 0.4rem;
 }
@@ -82,15 +82,15 @@ sl-details::part(content) {
 
 .collapsible .item.active {
   padding: 0.3rem 2rem 0.3rem calc(2rem - 3px);
-  background-color: rgb(var(--sl-color-primary-200) / 0.7);
-  border: 0 solid rgb(var(--sl-color-primary-500));
+  background-color: var(--sl-color-primary-200);
+  border: 0 solid var(--sl-color-primary-500);
   border-left-width: 3px;
   box-sizing: border-box;
   cursor: default;
 }
 
 .collapsible .item:not(.active):hover {
-  background-color: rgb(var(--sl-color-neutral-200) / 0.7);
+  background-color: var(--sl-color-neutral-200);
 }
 
 .menu-header {
@@ -99,9 +99,9 @@ sl-details::part(content) {
   text-align: center;
   font-size: var(--sl-font-size-medium);
   font-weight: var(--sl-font-weight-semibold);
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
   padding: 4px 4px;
-  border: 0 solid rgb(var(--sl-color-neutral-300));
+  border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 0 1px 0;
 }
 
@@ -117,5 +117,5 @@ sl-details::part(content) {
 .collapse-icon {
   height: 24px;
   width: 24px;
-  color: rgb(var(--sl-color-primary-600));
+  color: var(--sl-color-primary-600);
 }

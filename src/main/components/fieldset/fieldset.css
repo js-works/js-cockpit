@@ -1,12 +1,12 @@
 .base {
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
   user-select: none;
 }
 
 .caption {
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
   padding: 0.25rem 0.75rem;
 }
 

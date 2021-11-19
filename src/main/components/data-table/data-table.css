@@ -8,7 +8,7 @@
 }
 
 base.bordered {
-  border: 1px solid rgb(var(--sl-color-neutral-300));
+  border: 1px solid var(--sl-color-neutral-300);
 }
 
 .scroll-pane {
@@ -31,15 +31,15 @@ table {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
-  background-color: rgb(var(--sl-color-neutral-0));
+  background-color: var(--sl-color-neutral-0);
 }
 
 table > thead th {
   align-items: center;
-  border: 1px solid rgb(var(--sl-color-neutral-300));
+  border: 1px solid var(--sl-color-neutral-300);
   padding: 2px 10px;
   font-weight: var(--sl-font-weight-normal);
-  color: rgb(var(--sl-color-neutral-1000));
+  color: var(--sl-color-neutral-1000);
 }
 
 table > thead th.sortable:hover {
@@ -47,12 +47,12 @@ table > thead th.sortable:hover {
 }
 
 table > thead th.sortable:hover {
-  color: rgb(var(--sl-color-primary-950));
-  background-color: rgb(var(--sl-color-neutral-100));
+  color: var(--sl-color-primary-950);
+  background-color: var(--sl-color-neutral-100);
 }
 
 table > thead th.sortable:active {
-  background-color: rgb(var(--sl-color-primary-200));
+  background-color: var(--sl-color-primary-200);
 }
 
 table > thead th .content {
@@ -68,12 +68,12 @@ table > thead th .icon {
 
 table > tbody > tr > td {
   padding: 2px 6px;
-  background-color: rgb(var(--sl-color-neutral-0));
-  color: rgb(var(--sl-color-neutral-1000));
+  background-color: var(--sl-color-neutral-0);
+  color: var(--sl-color-neutral-1000);
 }
 
 table > tbody > tr:nth-child(even) td {
-  background-color: rgb(var(--sl-color-neutral-100));
+  background-color: var(--sl-color-neutral-100);
 }
 
 .selector-column {
@@ -91,11 +91,11 @@ table > tbody > tr:nth-child(even) td {
 }
 
 .row.selected-row {
-  border-color: rgb(var(--sl-color-primary-300));
+  border-color: var(--sl-color-primary-300);
   border-style: solid;
   border-width: 0.5px 0;
 }
 
 .row.selected-row > td {
-  background-color: rgb(var(--sl-color-primary-100));
+  background-color: var(--sl-color-primary-100);
 }
