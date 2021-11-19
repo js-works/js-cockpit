@@ -1,6 +1,6 @@
 import { I18n } from '../misc/i18n'
 
-const { formatNumber } = I18n.localizer('de')
+const { formatNumber } = I18n.localize('de')
 
 // prettier-ignore
 I18n.addTranslations('de', {
@@ -48,13 +48,23 @@ I18n.addTranslations('de', {
     },
 
     'pagination-bar': {
-      'items-x-to-y-of-z': (x: number, y: number, z: number) =>
-        `${formatNumber(x)} - ${formatNumber(y)} / ${formatNumber(z)}`,
+      'items-x-to-y-of-z': (params: {
+        firstItemNo: number,
+        lastItemNo: number, 
+        itemCount: number
+      }) =>
+        `${formatNumber(params.firstItemNo)} - ${formatNumber(params.lastItemNo)} / ${formatNumber(params.itemCount)}`,
 
-      'item-x-of-y': (x: number, y: number) =>
-        `${formatNumber(x)} - ${formatNumber(y)}`,
+      'item-x-of-y': (params: {
+        itemNo: number,
+        itemCount: number
+      }) =>
+        `${formatNumber(params.itemNo)} - ${formatNumber(params.itemCount)}`,
 
-      'of-x-pages': (x: number) => `von ${formatNumber(x)}`,
+      'of-x-pages': (params: {
+        pageCount: number
+      }) => `von ${formatNumber(params.pageCount)}`,
+
       'page': 'Seite',
       'page-size': 'Datensätze/Seite'
     }

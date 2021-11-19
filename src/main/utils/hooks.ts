@@ -14,15 +14,15 @@ import { I18n } from '../misc/i18n'
 
 function useI18nFn(): {
   i18n: I18n.Localizer
-  g(key: string, replacements?: any): string
+  g(key: string, params?: Record<string, any>): string
 }
 
 function useI18nFn(
   namespace: string
 ): {
   i18n: I18n.Localizer
-  t(key: string, replacements?: any): string
-  g(key: string, replacements?: any): string
+  t(key: string, params?: Record<string, any>): string
+  g(key: string, params?: Record<string, any>): string
 }
 
 function useI18nFn(namespace?: string) {
@@ -30,7 +30,7 @@ function useI18nFn(namespace?: string) {
   const refresh = useRefresher()
 
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
-  const localizer = I18n.localizer(getLocale)
+  const localizer = I18n.localize(getLocale)
 
   useBeforeMount(connect)
   useBeforeUnmount(disconnect)
@@ -38,15 +38,8 @@ function useI18nFn(namespace?: string) {
   let ret: any = {
     i18n: localizer,
 
-    g(key: string, replacements?: any) {
-      const repl =
-        arguments.length > 1
-          ? Array.isArray(replacements)
-            ? replacements
-            : [replacements]
-          : null
-
-      return localizer.translate(key as string, repl)
+    g(key: string, params?: Record<string, string | number>) {
+      return localizer.translate(key as string, params)
     }
   }
 

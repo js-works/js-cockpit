@@ -1,7 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import {} from 'js-element/hooks'
-import { useFormCtrl } from '../../ctrls/form-ctrl'
 
 // custom elements
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea'

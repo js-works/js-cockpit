@@ -182,7 +182,7 @@ function initPopper(slInput: SlInput, datepicker: DatepickerInstance) {
 }
 
 function createLocalization(locale: string) {
-  const localizer = I18n.localizer(locale)
+  const localizer = I18n.localize(locale)
   let daysShort = localizer.getDayNames('short')
 
   if (daysShort.some((it) => it.length > 4)) {

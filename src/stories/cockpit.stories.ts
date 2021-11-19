@@ -125,7 +125,7 @@ function cockpitDemo2Impl() {
   `
 }
 
-export const cockpit2 = () => h('cockpit-demo2')
+export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
 
 @elem({
   tag: 'cockpit-demo3',

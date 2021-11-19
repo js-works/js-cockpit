@@ -6,7 +6,7 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 import { detectLocale } from './locales'
 import { I18n } from './i18n'
-import { Themes } from './themes'
+import { Themes } from './__themes'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -458,7 +458,7 @@ function showDialog<T = void>(
     document.body
 
   const locale = detectLocale(target)
-  const localizer = I18n.localizer(locale)
+  const localizer = I18n.localize(locale)
 
   const translate: TranslateFn = (textId) =>
     localizer.translate('js-cockpit.dialogs.' + textId)

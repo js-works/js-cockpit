@@ -10,18 +10,15 @@ const EN_US = 'en-US'
 const DEFAULT_FIRST_DAY_OF_WEEK = 1
 const DEFAULT_WEEKEND_DAYS = Object.freeze([0, 6]) // Sunday and Saturday
 
-const DEFAULT_DATE_FORMAT = Object.freeze({
+const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = Object.freeze({
   day: '2-digit',
   month: '2-digit',
   year: 'numeric'
-} as const)
+})
 
 // === parsers by locale =============================================
 
-const numberParserByLocale = new Map<
-  string,
-  (number: string) => number | null
->()
+const numberParserByLocale = new Map<string, (s: string) => number | null>()
 const dateParserByLocale = new Map<string, (date: string) => Date | null>()
 
 // === data for first day of week per country (used locally) =========
@@ -57,10 +54,10 @@ const weekendData: Record<string, string> = {
   '5': 'IR'
 }
 
-// === public types ==================================================
+// === public types =================================================
 
 type I18n = Readonly<{
-  localizer(
+  localize(
     localeOrGetLocale: string | null | (() => string | null)
   ): I18n.Localizer
 
@@ -83,7 +80,7 @@ namespace I18n {
     translate(
       locale: string,
       key: string,
-      replacements?: string[] | null
+      params?: Record<string, any>
     ): string | null
 
     parseNumber(locale: string, numberString: string): number | null
@@ -106,7 +103,7 @@ namespace I18n {
 
   export type Localizer = {
     getLocale(): string
-    translate(key: string, replacements?: any): string
+    translate(key: string, params?: Record<string, any>): string
 
     parseNumber(numberString: string): number | null
     parseDate(dateString: string): Date | null
@@ -186,7 +183,11 @@ const dict = (() => {
       addTranslationsWithNamespace(locale, '', translations)
     },
 
-    translate(locale: string, key: string, replacements?: any): string | null {
+    translate(
+      locale: string,
+      key: string,
+      params?: Record<string, any>
+    ): string | null {
       let ret = translations.get(locale)?.get(key) || null
 
       if (ret === null && locale) {
@@ -205,7 +206,7 @@ const dict = (() => {
         }
       }
 
-      if (ret !== null && replacements) {
+      if (ret !== null && params) {
         if (typeof ret !== 'function') {
           console.log(ret) // TODO
 
@@ -214,11 +215,7 @@ const dict = (() => {
           )
         }
 
-        if (Array.isArray(replacements)) {
-          ret = ret(...replacements)
-        } else {
-          ret = ret(replacements)
-        }
+        ret = ret(params)
       }
 
       return ret as string
@@ -296,8 +293,8 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  translate(locale, key, replacements): string | null {
-    return dict.translate(locale, key, replacements)
+  translate(locale, key, params): string | null {
+    return dict.translate(locale, key, params)
   },
 
   parseNumber(locale: string, numberString: string): number | null {
@@ -516,7 +513,7 @@ const i18nCtrl = (() => {
 // === I18n singleton object =========================================
 
 const I18n: I18n = Object.freeze({
-  localizer(localeOrGetLocale) {
+  localize(localeOrGetLocale) {
     return createLocalizer(
       typeof localeOrGetLocale === 'function'
         ? () => localeOrGetLocale() || i18nCtrl.defaultLocale

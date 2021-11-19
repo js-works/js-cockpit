@@ -51,33 +51,44 @@ type AuxData = {
 
 // === Paginator =====================================================
 
-// prettier-ignore
-I18n.addTranslations('en', {
-  'js-cockpit.pagination-bar': {
-    'items-x-to-y-of-z'(x: number, y: number, z: number) {
-      const i18n = I18n.localizer('en-US')
+// add translations for en
+;(() => {
+  const i18n = I18n.localize('en')
 
-      return `${i18n.formatNumber(x)} - ${i18n.formatNumber(
-        y
-      )} / ${i18n.formatNumber(z)}`
-    },
+  // prettier-ignore
+  I18n.addTranslations('en', {
+    'js-cockpit.pagination-bar': {
+      'items-x-to-y-of-z'(params: {
+        firstItemNo: number,
+        lastItemNo: number, 
+        itemCount: number
+      }) {
 
-    'item-x-of-y'(x: number, y: number) {
-      const i18n = I18n.localizer('en-US')
+        return `${i18n.formatNumber(params.firstItemNo)} - ${i18n.formatNumber(
+          params.lastItemNo
+        )} / ${i18n.formatNumber(params.itemCount)}`
+      },
 
-      return `${i18n.formatNumber(x)} - ${i18n.formatNumber(y)}`
-    },
+      'item-x-of-y'(params: {
+        itemNo: number, 
+        itemCount: number
+      }) {
 
-    'of-x-pages'(x: number) {
-      const i18n = I18n.localizer('en-US')
+        return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(params.itemCount)}`
+      },
 
-      return `of ${i18n.formatNumber(x)}`
-    },
+      'of-x-pages'(params: {
+        pageCount: number
+      }) {
 
-    'page': 'Page',
-    'page-size': 'Items/Page'
-  }
-})
+        return `of ${i18n.formatNumber(params.pageCount)}`
+      },
+
+      'page': 'Page',
+      'page-size': 'Items/Page'
+    }
+  })
+})()
 
 @elem({
   tag: 'c-pagination-bar',
@@ -182,7 +193,9 @@ function paginationBarImpl(self: PaginationBar) {
     }
 
     const pageTransl = t('page')
-    const ofXPagesTransl = t('of-x-pages', aux.pageCount)
+    const ofXPagesTransl = t('of-x-pages', {
+      pageCount: aux.pageCount
+    })
 
     return html`
       <div class="pagination">
@@ -265,11 +278,11 @@ function paginationBarImpl(self: PaginationBar) {
 
     let info: String
 
-    info = t('items-x-to-y-of-z', [
-      aux.firstShownItemIndex,
-      aux.lastShownItemIndex,
-      aux.totalItemCount
-    ])
+    info = t('items-x-to-y-of-z', {
+      firstItemNo: aux.firstShownItemIndex,
+      lastItemNo: aux.lastShownItemIndex,
+      itemCount: aux.totalItemCount
+    })
 
     return html`<div class="pagination-info">${info}</div>`
   }
