@@ -45,7 +45,7 @@ function loginFormDemoImpl() {
           <div slot="header">
             <c-brand
               headline="my-company"
-              subheadline="Back Office"
+              text="Back Office"
               size="large"
             ></c-brand>
           </div>

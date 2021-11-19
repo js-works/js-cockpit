@@ -30,28 +30,28 @@ function brandDemoImpl() {
           <div>
             <c-brand
               headline="Size: small"
-              subheadline="Back Office"
+              text="Back Office"
               size="small"
             ></c-brand>
             <br />
             <br />
             <c-brand
               headline="Size: mediume"
-              subheadline="Back Office"
+              text="Back Office"
               size="medium"
             ></c-brand>
             <br />
             <br />
             <c-brand
               headline="Size: large"
-              subheadline="Back Office"
+              text="Back Office"
               size="large"
             ></c-brand>
             <br />
             <br />
             <c-brand
               headline="Size: huge"
-              subheadline="Back Office"
+              text="Back Office"
               size="huge"
             ></c-brand>
           </div>
@@ -59,7 +59,7 @@ function brandDemoImpl() {
           <div>
             <c-brand
               headline="Size: small"
-              subheadline="Back Office"
+              text="Back Office"
               size="small"
               multi-color
             ></c-brand>
@@ -67,7 +67,7 @@ function brandDemoImpl() {
             <br />
             <c-brand
               headline="Size: medium"
-              subheadline="Back Office"
+              text="Back Office"
               size="medium"
               multi-color
             ></c-brand>
@@ -75,7 +75,7 @@ function brandDemoImpl() {
             <br />
             <c-brand
               headline="Size: large"
-              subheadline="Back Office"
+              text="Back Office"
               size="large"
               multi-color
             ></c-brand>
@@ -83,7 +83,7 @@ function brandDemoImpl() {
             <br />
             <c-brand
               headline="Size: huge"
-              subheadline="Back Office"
+              text="Back Office"
               size="huge"
               multi-color
             ></c-brand>

@@ -119,7 +119,7 @@ function sharedCockpitImpl() {
           slot="header-start"
           class="orangered"
           headline="my-company"
-          subheadline="Back Office"
+          text="Back Office"
           multi-color
         ></c-brand>
         <c-nav-menu
