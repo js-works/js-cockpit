@@ -23,37 +23,6 @@ const dateParserByLocale = new Map<string, (date: string) => Date | null>()
 
 // === data for first day of week per country (used locally) =========
 
-// Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
-// Day of week is represented by number (0 = sunday, ..., 6 = saturday).
-const firstDayOfWeekData: Record<number, string> = {
-  0:
-    'AG,AS,AU,BD,BR,BS,BT,BW,BZ,CA,CN,CO,DM,DO,ET,GT,GU,HK,HN,ID,IL,IN,' +
-    'JM,JP,KE,KH,KR,LA,MH,MM,MO,MT,MX,MZ,NI,NP,PA,PE,PH,PK,PR,PT,PY,SA,' +
-    'SG,SV,TH,TT,TW,UM,US,VE,VI,WS,YE,ZA,ZW',
-  1:
-    'AD,AI,AL,AM,AN,AR,AT,AX,AZ,BA,BE,BG,BM,BN,BY,CH,CL,CM,CR,CY,CZ,DE,' +
-    'DK,EC,EE,ES,FI,FJ,FO,FR,GB,GE,GF,GP,GR,HR,HU,IE,IS,IT,KG,KZ,LB,LI,' +
-    'LK,LT,LU,LV,MC,MD,ME,MK,MN,MQ,MY,NL,NO,NZ,PL,RE,RO,RS,RU,SE,SI,SK,' +
-    'SM,TJ,TM,TR,UA,UY,UZ,VA,VN,XK',
-  5: 'MV',
-  6: 'AE,AF,BH,DJ,DZ,EG,IQ,IR,JO,KW,LY,OM,QA,SD,SY'
-}
-
-// Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
-const weekendData: Record<string, string> = {
-  // Friday and Saturday
-  '5+6': 'AE,BH,DZ,EG,IL,IQ,JO,KW,LY,OM,QA,SA,SD,SY,YE',
-
-  // Thursday and Friday
-  '4+5': 'AF',
-
-  // Sunday
-  '6': 'IN,UG',
-
-  // Friday
-  '5': 'IR'
-}
-
 // === public types =================================================
 
 type I18n = Readonly<{
@@ -191,17 +160,15 @@ const dict = (() => {
       let ret = translations.get(locale)?.get(key) || null
 
       if (ret === null && locale) {
-        const shortLocale = getShortLocale(locale)
+        const { baseName, language, region } = getLocaleInfo(locale)
 
-        if (shortLocale && shortLocale !== locale) {
-          ret = translations.get(shortLocale)?.get(key) || null
+        if (baseName !== locale) {
+          ret = translations.get(baseName)?.get(key) || null
         }
 
         if (ret === null) {
-          const langCode = getLanguageCode(locale)
-
-          if (langCode && langCode !== shortLocale) {
-            ret = translations.get(langCode)?.get(key) || null
+          if (language !== baseName) {
+            ret = translations.get(language)?.get(key) || null
           }
         }
       }
@@ -231,9 +198,8 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
   const localizer: I18n.Localizer = {
     getLocale,
 
-    translate(key: string, replacements?: any) {
-      return i18n.translate(getLocale(), key, replacements) || ''
-    },
+    translate: (key: string, replacements?: any) =>
+      i18n.translate(getLocale(), key, replacements) || '',
 
     parseNumber: (numberString) => i18n.parseNumber(getLocale(), numberString),
     parseDate: (dateString) => i18n.parseDate(getLocale(), dateString),
@@ -562,22 +528,39 @@ const I18n: I18n = Object.freeze({
 
 // === utils ==========================================================
 
-function getLanguageCode(locale: string): string {
-  const result = /^[a-z]+/.exec(locale)
-  return result ? result[0] : ''
-}
+// TODO -> any (3 times)
+const getLocaleInfo: (locale: string) => Readonly<any> = (() => {
+  const localeInfoMap = new Map<string, any>()
 
-function getCountryCode(locale: string): string {
-  const result = /^[a-z]+-([A-Z]+)/.exec(locale)
-  return result ? result[1] : ''
-}
+  return (locale: string) => {
+    let info = localeInfoMap.get(locale)
 
-function getShortLocale(locale: string): string {
-  const result = /^[a-z]+(-([A-Z]+))?/.exec(locale)
-  return result ? result[0] : ''
-}
+    if (!info) {
+      info = new (Intl as any).Locale(locale)
+      localeInfoMap.set(locale, info)
+    }
+
+    return info
+  }
+})()
 
 const getFirstDayOfWeek: (locale: string) => number = (() => {
+  // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+  // Day of week is represented by number (0 = sunday, ..., 6 = saturday).
+  const firstDayOfWeekData: Record<number, string> = {
+    0:
+      'AG,AS,AU,BD,BR,BS,BT,BW,BZ,CA,CN,CO,DM,DO,ET,GT,GU,HK,HN,ID,IL,IN,' +
+      'JM,JP,KE,KH,KR,LA,MH,MM,MO,MT,MX,MZ,NI,NP,PA,PE,PH,PK,PR,PT,PY,SA,' +
+      'SG,SV,TH,TT,TW,UM,US,VE,VI,WS,YE,ZA,ZW',
+    1:
+      'AD,AI,AL,AM,AN,AR,AT,AX,AZ,BA,BE,BG,BM,BN,BY,CH,CL,CM,CR,CY,CZ,DE,' +
+      'DK,EC,EE,ES,FI,FJ,FO,FR,GB,GE,GF,GP,GR,HR,HU,IE,IS,IT,KG,KZ,LB,LI,' +
+      'LK,LT,LU,LV,MC,MD,ME,MK,MN,MQ,MY,NL,NO,NZ,PL,RE,RO,RS,RU,SE,SI,SK,' +
+      'SM,TJ,TM,TR,UA,UY,UZ,VA,VN,XK',
+    5: 'MV',
+    6: 'AE,AF,BH,DJ,DZ,EG,IQ,IR,JO,KW,LY,OM,QA,SD,SY'
+  }
+
   const firstDayOfWeekByCountryCode = new Map<string, number>()
 
   for (const firstDayOfWeek of Object.keys(firstDayOfWeekData)) {
@@ -589,15 +572,27 @@ const getFirstDayOfWeek: (locale: string) => number = (() => {
     })
   }
 
-  return (locale: string): number => {
-    return (
-      firstDayOfWeekByCountryCode.get(getCountryCode(locale)) ||
-      DEFAULT_FIRST_DAY_OF_WEEK
-    )
-  }
+  return (locale: string): number =>
+    firstDayOfWeekByCountryCode.get(getLocaleInfo(locale).region) ||
+    DEFAULT_FIRST_DAY_OF_WEEK
 })()
 
-const getWeekendDays = ((): ((locale: string) => Readonly<number[]>) => {
+const getWeekendDays: (locale: string) => Readonly<number[]> = (() => {
+  // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+  const weekendData: Record<string, string> = {
+    // Friday and Saturday
+    '5+6': 'AE,BH,DZ,EG,IL,IQ,JO,KW,LY,OM,QA,SA,SD,SY,YE',
+
+    // Thursday and Friday
+    '4+5': 'AF',
+
+    // Sunday
+    '6': 'IN,UG',
+
+    // Friday
+    '5': 'IR'
+  }
+
   const weekendDaysByCountryCode = new Map<string, Readonly<number[]>>()
 
   for (const [key, value] of Object.entries(weekendData)) {
@@ -610,7 +605,8 @@ const getWeekendDays = ((): ((locale: string) => Readonly<number[]>) => {
   }
 
   return (locale: string) =>
-    weekendDaysByCountryCode.get(getCountryCode(locale)) || DEFAULT_WEEKEND_DAYS
+    weekendDaysByCountryCode.get(getLocaleInfo(locale).region) ||
+    DEFAULT_WEEKEND_DAYS
 })()
 
 function parseIsoDateString(s: string): Date | null {

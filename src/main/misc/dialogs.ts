@@ -6,7 +6,6 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 import { detectLocale } from './locales'
 import { I18n } from './i18n'
-import { Themes } from './__themes'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'

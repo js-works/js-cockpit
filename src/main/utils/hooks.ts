@@ -57,10 +57,12 @@ export const useI18n = hook('useI18n', useI18nFn)
 export const useFormField = hook('useFormField', function <
   T extends string // TODO: File + FormData
 >(initialValue: T) {
+  /* 
   setInterval(() => {
     console.log('...')
     refresh()
   }, 1000)
+  */
 
   let value = initialValue
   let error = ''
