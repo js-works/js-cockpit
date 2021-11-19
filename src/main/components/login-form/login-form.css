@@ -35,8 +35,15 @@
   align-items: flex-end;
   justify-content: center;
   font-size: var(--sl-font-size-large);
+}
 
-  color: var(--sl-light, var(--sl-color-primary-950))
+slot[name='header']::slotted(*) {
+  color: var(--sl-light, var(--sl-color-neutral-500))
+    var(--sl-dark, var(--sl-color-neutral-950));
+}
+
+slot[name='footer']::slotted(*) {
+  color: var(--sl-light, var(--sl-color-neutral-500))
     var(--sl-dark, var(--sl-color-neutral-950));
 }
 
@@ -70,9 +77,12 @@
     var(--sl-dark, var(--sl-color-neutral-1000));
 
   background-color: var(--sl-light, var(--sl-color-primary-600))
-    var(--sl-dark, var(--sl-color-gray-300));
+    var(--sl-dark, var(--sl-color-neutral-200));
 
+  border: 0 solid var(--sl-color-neutral-300);
+  border-right-width: var(--sl-light, 0) var(--sl-dark, 1px);
   border-radius: 6px 0 0 6px;
+
   text-align: center;
   background-repeat: no-repeat;
   background-position: bottom;
@@ -99,7 +109,7 @@
   border-radius: 0 6px 6px 0;
 
   background-color: var(--sl-light, var(--sl-color-neutral-0))
-    var(--sl-dark, var(--sl-color-gray-200) / 75%);
+    var(--sl-dark, var(--sl-color-neutral-200));
 }
 
 .column2-top {

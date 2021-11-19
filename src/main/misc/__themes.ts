@@ -216,7 +216,7 @@ class Theme {
     tokens['border-radius-large'] = '2px'
     tokens['border-radius-x-large'] = '3px'
 
-    tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
+    //tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
     tokens['focus-ring-width'] = '1px'
     tokens['focus-ring-alpha'] = '100%'
 
@@ -264,10 +264,8 @@ function calcColorShades(
       idx = 1000 - idx
     }
 
-    ret[`color-${colorName}-${COLOR_SHADES[idx]}`] = calcColor(
-      color,
-      luminance
-    ).join(' ')
+    ret[`color-${colorName}-${COLOR_SHADES[idx]}`] =
+      'rgb(' + calcColor(color, luminance).join(', ') + ')'
   })
 
   return ret
@@ -277,7 +275,6 @@ function loadTheme(theme: Theme, selector?: string) {
   const elem = document.createElement('style')
   elem.append(document.createTextNode(theme.asCss(selector)))
   document.head.append(elem)
-
   return () => elem.remove()
 }
 
@@ -422,86 +419,140 @@ const lightThemeTokens = {
 
   ...paletteColorTokens,
 
-  'color-neutral-0': '255 255 255',
-  'color-neutral-1000': '0 0 0',
-  'border-radius-small': '0.125rem',
-  'border-radius-medium': '0.25rem',
-  'border-radius-large': '0.5rem',
-  'border-radius-x-large': '1rem',
+  /* Neutral one-offs */
+  'color-neutral-0': 'hsl(0, 0%, 100%)',
+  'color-neutral-1000': 'hsl(0, 0%, 0%)',
+
+  /*
+   * Border radii
+   */
+
+  'border-radius-small': '0.1875rem' /* 3px */,
+  'border-radius-medium': '0.25rem' /* 4px */,
+  'border-radius-large': '0.5rem' /* 8px */,
+  'border-radius-x-large': '1rem' /* 16px */,
+
   'border-radius-circle': '50%',
   'border-radius-pill': '9999px',
-  'shadow-x-small': '0 1px 0 rgb(var(--sl-color-neutral-500) / 10%)',
-  'shadow-small': '0 1px 2px rgb(var(--sl-color-neutral-500) / 12%)',
-  'shadow-medium': '0 2px 4px rgb(var(--sl-color-neutral-500) / 12%)',
-  'shadow-large': '0 2px 8px rgb(var(--sl-color-neutral-500) / 12%)',
-  'shadow-x-large': '0 4px 16px rgb(var(--sl-color-neutral-500) / 12%)',
-  'spacing-3x-small': '0.125rem',
-  'spacing-2x-small': '0.25rem',
-  'spacing-x-small': '0.5rem',
-  'spacing-small': '0.75rem',
-  'spacing-medium': '1rem',
-  'spacing-large': '1.25rem',
-  'spacing-x-large': '1.75rem',
-  'spacing-2x-large': '2.25rem',
-  'spacing-3x-large': '3rem',
-  'spacing-4x-large': '4.5rem',
+
+  /*
+   * Elevations
+   */
+
+  'shadow-x-small': '0 1px 2px hsl(240 3.8% 46.1% / 6%)',
+  'shadow-small': '0 1px 2px hsl(240 3.8% 46.1% / 12%)',
+  'shadow-medium': '0 2px 4px hsl(240 3.8% 46.1% / 12%)',
+  'shadow-large': '0 2px 8px hsl(240 3.8% 46.1% / 12%)',
+  'shadow-x-large': '0 4px 16px hsl(240 3.8% 46.1% / 12%)',
+
+  /*
+   * Spacings
+   */
+
+  'spacing-3x-small': '0.125rem' /* 2px */,
+  'spacing-2x-small': '0.25rem' /* 4px */,
+  'spacing-x-small': '0.5rem' /* 8px */,
+  'spacing-small': '0.75rem' /* 12px */,
+  'spacing-medium': '1rem' /* 16px */,
+  'spacing-large': '1.25rem' /* 20px */,
+  'spacing-x-large': '1.75rem' /* 28px */,
+  'spacing-2x-large': '2.25rem' /* 36px */,
+  'spacing-3x-large': '3rem' /* 48px */,
+  'spacing-4x-large': '4.5rem' /* 72px */,
+
+  /*
+   * Transitions
+   */
+
   'transition-x-slow': '1000ms',
   'transition-slow': '500ms',
   'transition-medium': '250ms',
   'transition-fast': '150ms',
   'transition-x-fast': '50ms',
+
+  /*
+   * Typography
+   */
+
+  /* Fonts */
   'font-mono': "SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace",
   'font-sans':
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif," +
+    "Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   'font-serif': "Georgia, 'Times New Roman', serif",
-  'font-size-2x-small': '0.625rem',
-  'font-size-x-small': '0.75rem',
-  'font-size-small': '0.875rem',
-  'font-size-medium': '1rem',
-  'font-size-large': '1.25rem',
-  'font-size-x-large': '1.5rem',
-  'font-size-2x-large': '2.25rem',
-  'font-size-3x-large': '3rem',
-  'font-size-4x-large': '4.5rem',
+
+  /* Font sizes */
+  'font-size-2x-small': '0.625rem' /* 10px */,
+  'font-size-x-small': '0.75rem' /* 12px */,
+  'font-size-small': '0.875rem' /* 14px */,
+  'font-size-medium': '1rem' /* 16px */,
+  'font-size-large': '1.25rem' /* 20px */,
+  'font-size-x-large': '1.5rem' /* 24px */,
+  'font-size-2x-large': '2.25rem' /* 36px */,
+  'font-size-3x-large': '3rem' /* 48px */,
+  'font-size-4x-large': '4.5rem' /* 72px */,
+
+  /* Font weights */
   'font-weight-light': '300',
   'font-weight-normal': '400',
   'font-weight-semibold': '500',
   'font-weight-bold': '700',
+
+  /* Letter spacings */
+  'letter-spacing-denser': '-0.03em',
   'letter-spacing-dense': '-0.015em',
   'letter-spacing-normal': 'normal',
   'letter-spacing-loose': '0.075em',
+  'letter-spacing-looser': '0.15em',
+
+  /* Line heights */
+  'line-height-denser': '1',
   'line-height-dense': '1.4',
   'line-height-normal': '1.8',
   'line-height-loose': '2.2',
-  'focus-ring-color': 'var(--sl-color-primary-500)',
-  'focus-ring-width': '3px',
+  'line-height-looser': '2.6',
+
+  /*
+   * Forms
+   */
+
+  /* Focus rings */
   'focus-ring-alpha': '40%',
+  'focus-ring-width': '3px',
   'focus-ring':
-    '0 0 0 var(--sl-focus-ring-width) rgb(var(--sl-focus-ring-color) / var(--sl-focus-ring-alpha))',
+    '0 0 0 var(--sl-focus-ring-width) hsl(198.6 88.7% 48.4% / var(--sl-focus-ring-alpha))',
+
+  /* Buttons */
   'button-font-size-small': 'var(--sl-font-size-x-small)',
   'button-font-size-medium': 'var(--sl-font-size-small)',
   'button-font-size-large': 'var(--sl-font-size-medium)',
-  'input-height-small': '1.875rem',
-  'input-height-medium': '2.5rem',
-  'input-height-large': '3.125rem',
+
+  /* Inputs */
+  'input-height-small': '1.875rem' /* 30px */,
+  'input-height-medium': '2.5rem' /* 40px */,
+  'input-height-large': '3.125rem' /* 50px */,
+
   'input-background-color': 'var(--sl-color-neutral-0)',
-  'input-background-color-hover': 'var(--sl-color-neutral-0)',
-  'input-background-color-focus': 'var(--sl-color-neutral-0)',
+  'input-background-color-hover': 'var(--sl-input-background-color)',
+  'input-background-color-focus': 'var(--sl-input-background-color)',
   'input-background-color-disabled': 'var(--sl-color-neutral-100)',
   'input-border-color': 'var(--sl-color-neutral-300)',
   'input-border-color-hover': 'var(--sl-color-neutral-400)',
   'input-border-color-focus': 'var(--sl-color-primary-500)',
   'input-border-color-disabled': 'var(--sl-color-neutral-300)',
   'input-border-width': '1px',
+
   'input-border-radius-small': 'var(--sl-border-radius-medium)',
   'input-border-radius-medium': 'var(--sl-border-radius-medium)',
   'input-border-radius-large': 'var(--sl-border-radius-medium)',
+
   'input-font-family': 'var(--sl-font-sans)',
   'input-font-weight': 'var(--sl-font-weight-normal)',
   'input-font-size-small': 'var(--sl-font-size-small)',
   'input-font-size-medium': 'var(--sl-font-size-medium)',
   'input-font-size-large': 'var(--sl-font-size-large)',
   'input-letter-spacing': 'var(--sl-letter-spacing-normal)',
+
   'input-color': 'var(--sl-color-neutral-700)',
   'input-color-hover': 'var(--sl-color-neutral-700)',
   'input-color-focus': 'var(--sl-color-neutral-700)',
@@ -514,6 +565,7 @@ const lightThemeTokens = {
   'input-spacing-small': 'var(--sl-spacing-small)',
   'input-spacing-medium': 'var(--sl-spacing-medium)',
   'input-spacing-large': 'var(--sl-spacing-large)',
+
   'input-filled-background-color': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-hover': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-focus': 'var(--sl-color-neutral-0)',
@@ -522,19 +574,42 @@ const lightThemeTokens = {
   'input-filled-color-hover': 'var(--sl-color-neutral-800)',
   'input-filled-color-focus': 'var(--sl-color-neutral-700)',
   'input-filled-color-disabled': 'var(--sl-color-neutral-800)',
+
+  /* Labels */
   'input-label-font-size-small': 'var(--sl-font-size-small)',
   'input-label-font-size-medium': 'var(--sl-font-size-medium)',
   'input-label-font-size-large': 'var(--sl-font-size-large)',
+
   'input-label-color': 'inherit',
+
+  /* Help text */
   'input-help-text-font-size-small': 'var(--sl-font-size-x-small)',
   'input-help-text-font-size-medium': 'var(--sl-font-size-small)',
   'input-help-text-font-size-large': 'var(--sl-font-size-medium)',
+
   'input-help-text-color': 'var(--sl-color-neutral-500)',
+
+  /* Toggles (checkboxes, radios, switches) */
   'toggle-size': '1rem',
-  'overlay-background-color': 'var(--sl-color-blue-gray-500)',
-  'overlay-opacity': '33%',
+
+  /*
+   * Overlays
+   */
+
+  'overlay-background-color': 'hsl(240 3.8% 46.1% / 33%)',
+
+  /*
+   * Panels
+   */
+
   'panel-background-color': 'var(--sl-color-neutral-0)',
   'panel-border-color': 'var(--sl-color-neutral-200)',
+  'panel-border-width': '1px',
+
+  /*
+   * Tooltips
+   */
+
   'tooltip-border-radius': 'var(--sl-border-radius-medium)',
   'tooltip-background-color': 'var(--sl-color-neutral-800)',
   'tooltip-color': 'var(--sl-color-neutral-0)',
@@ -545,6 +620,11 @@ const lightThemeTokens = {
   'tooltip-padding': 'var(--sl-spacing-2x-small) var(--sl-spacing-x-small)',
   'tooltip-arrow-size': '5px',
   'tooltip-arrow-start-end-offset': '8px',
+
+  /*
+   * Z-indexes
+   */
+
   'z-index-drawer': '700',
   'z-index-dialog': '800',
   'z-index-dropdown': '900',
