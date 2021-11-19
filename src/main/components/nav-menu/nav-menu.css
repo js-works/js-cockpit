@@ -3,41 +3,47 @@
   gap: 4px;
   font-family: var(--sl-font-sans);
   user-select: none;
-  height: 46px;
+  height: 50px;
   padding: 1px;
   box-sizing: border-box;
+  border: 2px solid transparent;
 }
 
 .icon {
-  margin: 16px 0 0 0;
+  margin: 16px 1px 0 0;
   font-smooth: never;
+
   color: var(--sl-light, rgb(var(--sl-color-primary-600)))
     var(--sl-dark, rgb(var(--sl-color-primary-400)));
 }
 
-.section {
+.item {
+  position: relative;
   font-size: var(--sl-font-size-small);
   box-sizing: border-box;
   cursor: pointer;
 }
 
-.section .title {
-  padding: 13px 14px;
+.item .title {
+  padding: 12px 16px;
   white-space: nowrap;
 }
 
-.section:not(.active) .title:hover {
+.item:not(.active):hover {
+  position: relative;
+
   background-color: var(--sl-light, rgb(var(--sl-color-primary-600)))
     var(--sl-dark, rgb(var(--sl-color-primary-400)));
 
-  border-radius: 1px;
+  border-radius: 2px;
+  box-sizing: border-box;
 }
 
-.section:not(.active) .title:active {
+.item:not(.active) .title:active {
   background-color: rgb(var(--sl-color-primary-500));
 }
 
-.section.active {
+.item.active {
   font-weight: 600;
   border: 0 solid rgb(var(--sl-color-primary-500));
 

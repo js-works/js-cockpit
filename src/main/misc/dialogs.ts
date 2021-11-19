@@ -482,7 +482,6 @@ function showDialog<T = void>(
   containerShadow.innerHTML = `
     <style>
     </style>
-    <c-theme-provider>
     <sl-form class="form">
       <focus-trap>
         <sl-dialog open class="dialog">
@@ -496,7 +495,6 @@ function showDialog<T = void>(
         </sl-dialog>
       </focus-trap>
     </sl-form>
-    </c-theme-provider>
   `
 
   setText(params.title, '.title')

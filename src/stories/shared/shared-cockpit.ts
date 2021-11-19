@@ -125,7 +125,7 @@ function sharedCockpitImpl() {
         <c-nav-menu
           slot="header"
           class="orange"
-          .sections=${[
+          .items=${[
             {
               id: 1,
               title: 'Dashboard'
@@ -143,7 +143,7 @@ function sharedCockpitImpl() {
               title: 'CMS'
             }
           ]}
-          .activeSection=${2}
+          .activeItem=${2}
         ></c-nav-menu>
         <c-user-menu slot="header-end"></c-user-menu>
         <div slot="sidebar" class="lightgreen full-height">

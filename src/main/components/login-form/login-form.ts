@@ -9,10 +9,8 @@ import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/anim
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
-import { EmailField } from '../email-field/email-field'
 import { PasswordField } from '../password-field/password-field'
 import { TextField } from '../text-field/text-field'
-import { ThemeProvider } from '../theme-provider/theme-provider'
 
 // styles
 import loginFormStyles from './login-form.css'
@@ -70,16 +68,7 @@ I18n.addTranslations('en', {
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-
-  uses: [
-    PasswordField,
-    SlAnimation,
-    SlButton,
-    SlCheckbox,
-    SlIcon,
-    TextField,
-    ThemeProvider
-  ]
+  uses: [PasswordField, SlAnimation, SlButton, SlCheckbox, SlIcon, TextField]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })
@@ -104,7 +93,6 @@ function loginFormImpl(self: LoginForm) {
   })
 
   const refresh = useRefresher()
-
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
   const { t } = useI18n('js-cockpit.login-form')
@@ -190,46 +178,42 @@ function loginFormImpl(self: LoginForm) {
 
   function render() {
     return html`
-      <c-theme-provider>
-        <div class="base ${classMap({ 'full-size': self.fullSize })}">
-          <sl-animation ${ref(animationRef)}>
-            <div class="container">
-              <div class="header">
-                <slot name="header"></slot>
-              </div>
-              <div class="center">
-                <div class="main">
-                  <div class="column1">
-                    <div class="column1-top">${renderIntro()}</div>
-                    <div class="column1-bottom">${renderIntroIcon()}</div>
-                  </div>
-                  <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
-                    <div class="column2-top">${renderFields()}</div>
-                    <div class="column2-bottom">
-                      ${state.view === 'login' && self.enableRememberLogin
-                        ? html`<sl-checkbox
-                            >${t('remember-login')}</sl-checkbox
-                          >`
-                        : ''}
-                      <sl-button
-                        type="primary"
-                        size="large"
-                        @click=${onSubmitClick}
-                      >
-                        ${renderSubmitButtonText()}
-                      </sl-button>
-                      ${renderLinks()}
-                    </div>
-                  </form>
+      <div class="base ${classMap({ 'full-size': self.fullSize })}">
+        <sl-animation ${ref(animationRef)}>
+          <div class="container">
+            <div class="header">
+              <slot name="header"></slot>
+            </div>
+            <div class="center">
+              <div class="main">
+                <div class="column1">
+                  <div class="column1-top">${renderIntro()}</div>
+                  <div class="column1-bottom">${renderIntroIcon()}</div>
                 </div>
-              </div>
-              <div class="footer">
-                <slot name="footer"></slot>
+                <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
+                  <div class="column2-top">${renderFields()}</div>
+                  <div class="column2-bottom">
+                    ${state.view === 'login' && self.enableRememberLogin
+                      ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
+                      : ''}
+                    <sl-button
+                      type="primary"
+                      size="large"
+                      @click=${onSubmitClick}
+                    >
+                      ${renderSubmitButtonText()}
+                    </sl-button>
+                    ${renderLinks()}
+                  </div>
+                </form>
               </div>
             </div>
-          </sl-animation>
-        </div>
-      </c-theme-provider>
+            <div class="footer">
+              <slot name="footer"></slot>
+            </div>
+          </div>
+        </sl-animation>
+      </div>
     `
   }
 

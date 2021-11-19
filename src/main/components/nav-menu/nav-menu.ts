@@ -17,7 +17,7 @@ export { NavMenu }
 // === types =========================================================
 
 namespace NavMenu {
-  export type Section = {
+  export type Item = {
     id: number | string
     title: string
     disabled?: boolean
@@ -34,10 +34,10 @@ namespace NavMenu {
 })
 class NavMenu extends component() {
   @prop
-  sections?: NavMenu.Section[]
+  items?: NavMenu.Item[]
 
   @prop
-  activeSection?: number | string
+  activeItem?: number | string
 }
 
 function navMenuImpl(self: NavMenu) {
@@ -46,16 +46,16 @@ function navMenuImpl(self: NavMenu) {
       <div class="base">
         <sl-icon src=${menuSvg} class="icon"></sl-icon>
         ${repeat(
-          self.sections || [],
+          self.items || [],
           (_, idx) => idx,
-          (section) => {
+          (item) => {
             return html`
               <div
-                class="section ${classMap({
-                  active: section.id === self.activeSection
+                class="item ${classMap({
+                  active: item.id === self.activeItem
                 })}"
               >
-                <div class="title">${section.title}</div>
+                <div class="title">${item.title}</div>
               </div>
             `
           }
