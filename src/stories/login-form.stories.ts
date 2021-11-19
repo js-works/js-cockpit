@@ -42,13 +42,12 @@ function loginFormDemoImpl() {
           enable-registration
           initial-view="login"
         >
-          <div slot="header">
-            <c-brand
-              headline="my-company"
-              text="Back Office"
-              size="large"
-            ></c-brand>
-          </div>
+          <c-brand
+            slot="header"
+            headline="my-company"
+            text="Back Office"
+            size="large"
+          ></c-brand>
           <div slot="login-fields">
             <c-text-field label="Username" required></c-text-field>
             <c-password-field label="Password" required></c-password-field>
