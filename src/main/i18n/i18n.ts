@@ -4,11 +4,12 @@ import {
   formatRelativeTime,
   getCalendarWeek,
   getFirstDayOfWeek,
-  getLocaleInfo,
   getWeekendDays,
   parseDate,
   parseNumber
 } from './i18n-utils'
+
+import { Dictionary } from './dictionary'
 
 // === exports =======================================================
 
@@ -19,6 +20,10 @@ export { I18n }
 // === constants (used locally) ======================================
 
 const EN_US = 'en-US'
+
+// === global dictionary =============================================
+
+const dict = new Dictionary()
 
 // === public types =================================================
 
@@ -103,90 +108,6 @@ namespace I18n {
   }
 }
 
-// === dictionary for translations ===================================
-
-const dict = (() => {
-  const translations = new Map<
-    string,
-    Map<string, string | ((...args: any[]) => string)>
-  >()
-
-  const addTranslationsWithNamespace = (
-    locale: string,
-    namespace: string,
-    translations: I18n.Translations
-  ) => {
-    Object.entries(translations).forEach(([key, value]) => {
-      if (typeof value === 'string' || typeof value === 'function') {
-        const newKey = namespace === '' ? key : `${namespace}.${key}`
-
-        dict.addTranslation(locale, newKey, value)
-      } else {
-        const newNamespace = namespace === '' ? key : `${namespace}.${key}`
-
-        addTranslationsWithNamespace(locale, newNamespace, value)
-      }
-    })
-  }
-
-  return {
-    addTranslation(
-      locale: string,
-      key: string,
-      translation: string | ((...args: any[]) => string)
-    ): void {
-      let map = translations.get(locale)
-
-      if (!map) {
-        map = new Map()
-        translations.set(locale, map)
-      }
-
-      map.set(key, translation)
-    },
-
-    addTranslations(locale: string, translations: I18n.Translations) {
-      addTranslationsWithNamespace(locale, '', translations)
-    },
-
-    translate(
-      locale: string,
-      key: string,
-      params?: Record<string, any>
-    ): string | null {
-      let ret = translations.get(locale)?.get(key) || null
-
-      if (ret === null && locale) {
-        const { baseName, language, region } = getLocaleInfo(locale)
-
-        if (baseName !== locale) {
-          ret = translations.get(baseName)?.get(key) || null
-        }
-
-        if (ret === null) {
-          if (language !== baseName) {
-            ret = translations.get(language)?.get(key) || null
-          }
-        }
-      }
-
-      if (ret !== null && params) {
-        if (typeof ret !== 'function') {
-          console.log(ret) // TODO
-
-          throw new Error(
-            `Invalid translation parameters for key "${key}" in locale "${locale}"`
-          )
-        }
-
-        ret = ret(params)
-      }
-
-      return ret as string
-    }
-  }
-})()
-
 // === localizer impl ===================================================
 
 function createLocalizer(getLocale: () => string): I18n.Localizer {
@@ -256,7 +177,7 @@ function createLocalizer(getLocale: () => string): I18n.Localizer {
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  translate: dict.translate,
+  translate: dict.translate.bind(dict),
   formatNumber,
   formatDate,
   parseNumber,
