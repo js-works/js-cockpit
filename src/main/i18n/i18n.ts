@@ -47,7 +47,7 @@ type I18n = Readonly<{
 
 // eslint-disable-next-line
 namespace I18n {
-  export type Behavior = {
+  export type Behavior = Readonly<{
     translate(
       locale: string,
       key: string,
@@ -70,15 +70,13 @@ namespace I18n {
     getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
     getCalendarWeek(locale: string, date: Date): number // 1 to 53
     getWeekendDays(locale: string): Readonly<number[]> // array of integers between 0 and 6
-  }
+  }>
 
-  export type Localizer = {
+  export type Localizer = Readonly<{
     getLocale(): string
     translate(key: string, params?: Record<string, any>): string
-
     parseNumber(numberString: string): number | null
     parseDate(dateString: string): Date | null
-
     formatNumber(value: number, format?: NumberFormat): string
     formatDate(value: Date, format?: DateFormat | null): string
 
@@ -95,7 +93,7 @@ namespace I18n {
     getDayNames(format?: 'long' | 'short' | 'narrow'): string[]
     getMonthName(index: number, format?: 'long' | 'short' | 'narrow'): string
     getMonthNames(format?: 'long' | 'short' | 'narrow'): string[]
-  }
+  }>
 
   // type aliases
   export type NumberFormat = Intl.NumberFormatOptions
@@ -106,11 +104,10 @@ namespace I18n {
   export type Translations = dictionary.Translations
 }
 
-// === localizer impl ===================================================
-
-function createLocalizer(getLocale: () => string): I18n.Localizer {
-  const i18n = i18nCtrl.behavior
-
+function createLocalizer(
+  getLocale: () => string,
+  i18n: I18n.Behavior
+): I18n.Localizer {
   const localizer: I18n.Localizer = {
     getLocale,
 
@@ -186,69 +183,34 @@ const baseBehavior: I18n.Behavior = {
   getWeekendDays
 }
 
-// === i18n controller ===============================================
-
-const i18nCtrl = (() => {
-  let isFinal = false
-  let defaultLocale = EN_US
-
-  let behavior: I18n.Behavior = {
-    ...baseBehavior,
-
-    translate(locale, key, replacements?) {
-      let translation = baseBehavior.translate(locale, key, replacements)
-
-      if (translation === null) {
-        if (defaultLocale !== locale) {
-          translation = baseBehavior.translate(defaultLocale, key, replacements)
-        }
-      }
-
-      return translation
-    }
-  }
-
-  return {
-    get isFinal() {
-      return isFinal
-    },
-
-    get defaultLocale() {
-      isFinal = true
-      return defaultLocale
-    },
-
-    set defaultLocale(locale: string) {
-      isFinal = true
-      defaultLocale = locale
-    },
-
-    get behavior() {
-      isFinal = true
-      return behavior
-    },
-
-    set behavior(behavior: I18n.Behavior) {
-      isFinal = true
-      behavior = behavior
-    },
-
-    addTranslations(locale: string, translations: I18n.Translations): void {
-      isFinal = true
-      return dict.addTranslations(locale, translations)
-    }
-  }
-})()
-
 // === I18n singleton object =========================================
+
+let isFinal = false
+let defaultLocale = EN_US
+
+let behavior: I18n.Behavior = {
+  ...baseBehavior,
+
+  translate(locale, key, replacements?) {
+    let translation = baseBehavior.translate(locale, key, replacements)
+
+    if (translation === null && defaultLocale !== locale) {
+      translation = baseBehavior.translate(defaultLocale, key, replacements)
+    }
+
+    return translation
+  }
+}
 
 const I18n: I18n = Object.freeze({
   localize(localeOrGetLocale) {
-    return createLocalizer(
+    const getLocale =
       typeof localeOrGetLocale === 'function'
-        ? () => localeOrGetLocale() || i18nCtrl.defaultLocale
-        : () => localeOrGetLocale || i18nCtrl.defaultLocale
-    )
+        ? () => localeOrGetLocale() || defaultLocale
+        : () => localeOrGetLocale || defaultLocale
+
+    isFinal = true
+    return createLocalizer(getLocale, behavior)
   },
 
   init(params: {
@@ -260,7 +222,7 @@ const I18n: I18n = Object.freeze({
       defaultLocale: string
     ) => Partial<I18n.Behavior>
   }): void {
-    if (i18nCtrl.isFinal) {
+    if (isFinal) {
       throw (
         'Illegal invocation of `i18n.init(...)`' +
         '- must only be used at start of the app' +
@@ -268,8 +230,10 @@ const I18n: I18n = Object.freeze({
       )
     }
 
+    isFinal = true
+
     if (params.defaultLocale) {
-      i18nCtrl.defaultLocale = params.defaultLocale
+      defaultLocale = params.defaultLocale
     }
 
     if (params.customize) {
@@ -277,15 +241,14 @@ const I18n: I18n = Object.freeze({
 
       if (params.customize) {
         const self = { ...baseBehavior }
-        newBehavior = Object.assign(
-          self,
-          params.customize(self, baseBehavior, i18nCtrl.defaultLocale)
-        )
 
-        i18nCtrl.behavior = newBehavior
+        behavior = Object.assign(
+          self,
+          params.customize(self, baseBehavior, defaultLocale)
+        )
       }
     }
   },
 
-  addTranslations: i18nCtrl.addTranslations
+  addTranslations: dict.addTranslations.bind(dict)
 })
