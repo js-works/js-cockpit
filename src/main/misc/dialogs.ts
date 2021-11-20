@@ -4,8 +4,8 @@ import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
-import { detectLocale } from './locales'
-import { I18n } from './i18n'
+import { detectLocale } from '../i18n/locale-detection'
+import { I18n } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'

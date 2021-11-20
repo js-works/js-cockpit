@@ -32,8 +32,11 @@ export { UserMenu } from './components/user-menu/user-menu'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
+// i18n
+export { I18n } from './i18n/i18n'
+export { detectLocale, observeLocale } from './i18n/locale-detection'
+
 // misc
-export { I18n } from './misc/i18n'
 export { Dialogs } from './misc/dialogs'
 export { loadTheme, Theme, Themes } from './misc/themes'
 

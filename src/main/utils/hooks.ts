@@ -7,8 +7,8 @@ import {
   useRefresher
 } from 'js-element/hooks'
 
-import { observeLocale } from '../misc/locales'
-import { I18n } from '../misc/i18n'
+import { observeLocale } from '../i18n/locale-detection'
+import { I18n } from '../i18n/i18n'
 
 // === useI18n =======================================================
 

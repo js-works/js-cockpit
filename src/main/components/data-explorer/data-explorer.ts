@@ -6,7 +6,7 @@ import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { useI18n } from '../../utils/hooks'
 import { Dialogs } from '../../misc/dialogs'
-import { I18n } from '../../misc/i18n'
+import { I18n } from '../../i18n/i18n'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'

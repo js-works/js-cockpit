@@ -2,7 +2,7 @@ import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useOnInit, useRefresher, useState } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
-import { I18n } from '../../misc/i18n'
+import { I18n } from '../../i18n/i18n'
 
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'

@@ -1,5 +1,5 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { I18n } from '../../misc/i18n'
+import { I18n } from '../../i18n/i18n'
 import { createPopper, Instance as PopperInstance } from '@popperjs/core'
 
 // @ts-ignore

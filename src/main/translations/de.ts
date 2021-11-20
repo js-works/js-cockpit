@@ -1,4 +1,4 @@
-import { I18n } from '../misc/i18n'
+import { I18n } from '../i18n/i18n'
 
 const { formatNumber } = I18n.localize('de')
 

@@ -37,8 +37,7 @@
   font-size: var(--sl-font-size-large);
 }
 
-/* slot[name='header']::slotted(*) { */
-
+slot[name='header']::slotted(c-brand),
 slot[name='header']::slotted(c-brand) {
   color: var(--sl-light, var(--sl-color-neutral-500))
     var(--sl-dark, var(--sl-color-neutral-950));

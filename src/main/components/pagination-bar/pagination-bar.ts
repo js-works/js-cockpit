@@ -1,7 +1,7 @@
 import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
 import { html, createRef, repeat, lit, ref } from 'js-element/lit'
 import { useEmitter } from 'js-element/hooks'
-import { I18n } from '../../misc/i18n'
+import { I18n } from '../../i18n/i18n'
 import { useI18n } from '../../utils/hooks'
 
 // events
