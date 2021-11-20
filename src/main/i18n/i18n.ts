@@ -9,7 +9,7 @@ import {
   parseNumber
 } from './i18n-utils'
 
-import { Dictionary } from './dictionary'
+import * as dictionary from './dictionary'
 
 // === exports =======================================================
 
@@ -23,7 +23,7 @@ const EN_US = 'en-US'
 
 // === global dictionary =============================================
 
-const dict = new Dictionary()
+const dict = new dictionary.Dictionary()
 
 // === public types =================================================
 
@@ -102,10 +102,8 @@ namespace I18n {
   export type DateFormat = Intl.DateTimeFormatOptions
   export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
   export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
-
-  export type Translations = {
-    [key: string]: string | ((...args: any[]) => string) | Translations
-  }
+  export type Translation = dictionary.Translation
+  export type Translations = dictionary.Translations
 }
 
 // === localizer impl ===================================================

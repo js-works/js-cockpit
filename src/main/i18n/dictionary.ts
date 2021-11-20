@@ -1,16 +1,20 @@
 import { getLocaleInfo } from './i18n-utils'
 
-export { Dictionary }
+// === exports =======================================================
 
-type Translations = {
-  [key: string]: string | ((...args: any[]) => string) | Translations
-}
+export { Dictionary, Translation, Translations }
+
+// === types =========================================================
+
+type Translation = string | ((params: Record<string, any>) => string)
+type Translations = Record<string, Translation>
+
+// === Dictionary ====================================================
 
 class Dictionary {
-  #translations = new Map<
-    string,
-    Map<string, string | ((params: Record<string, any>) => string)>
-  >()
+  // --- private -----------------------------------------------------
+
+  #translations = new Map<string, Map<string, Translation>>()
 
   #addTranslationsWithNamespace = (
     locale: string,
@@ -30,11 +34,9 @@ class Dictionary {
     })
   }
 
-  addTranslation(
-    locale: string,
-    key: string,
-    translation: string | ((...args: any[]) => string)
-  ): void {
+  // --- public ------------------------------------------------------
+
+  addTranslation(locale: string, key: string, translation: Translation): void {
     let map = this.#translations.get(locale)
 
     if (!map) {
