@@ -56,6 +56,17 @@ type I18n = Readonly<{
   >(
     translations: I18n.Translations<C & string, T & I18n.Terms>
   ): void
+
+  // TODO: Illegal keys in `terms` object are not detected
+  // as eror :-(
+  registerTranslations<C extends keyof I18nTranslationsMap>(
+    translations: I18n.Translations<
+      C & string,
+      Partial<I18nTranslationsMap[C]> & I18n.Terms
+    > & {
+      partial: true
+    }
+  ): void
 }>
 
 // eslint-disable-next-line
@@ -71,10 +82,7 @@ namespace I18n {
     terms: T
   }
 
-  //export interface TranslationsMap extends Record<string, I18n.Terms> {}
-
   export type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
-
   export type TermsOf<T> = T extends Translations<string, infer A> ? A : never
 
   export type Behavior = Readonly<{
@@ -304,7 +312,7 @@ const I18n: I18n = Object.freeze({
     return translations
   },
 
-  registerTranslations(translations): void {
+  registerTranslations(translations: any): void {
     Object.entries(translations.terms).forEach(([key, value]) => {
       dict.addTranslation(
         translations.language,
