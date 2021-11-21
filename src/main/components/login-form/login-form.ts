@@ -32,37 +32,52 @@ export { LoginForm }
 
 type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
 
-// === LoginForm ===================================================
+// === translations ==================================================
 
-// prettier-ignore
-I18n.addTranslations('en', {
-  'js-cockpit.login-form': {
-    'email': 'Email',
-    'first-name': 'First name',
-    'last-name': 'Last name',
-    'forgot-password': 'Forgot password?',
-    'forgot-password-intro-headline': 'Forgot password?',
-    'forgot-password-intro-text': "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
-    'forgot-password-submit-text': 'Request password reset',
-    'go-to-login': 'Go to login form',
-    'go-to-registration': 'Need account?',
-    'login-intro-headline': 'Login',
-    'login-intro-text': 'Please enter your credentials in the form to log in',
-    'login-submit-text': 'Log in',
-    'new-password': 'New passwort',
-    'new-password-repeat': 'Repeat new password',
-    'password': 'Password',
-    'registration-intro-headline': 'Registration',
-    'registration-intro-text': 'Please fill out the form and press the submit button to register',
-    'register-submit-text': 'Register',
-    'remember-login': 'Remember login',
-    'reset-password-intro-headline': 'Reset password',
-    'reset-password-intro-text': 'Please fill out and submit the form to reset your password',
-    'reset-password-submit-text': 'Reset password',
-    'security-code': 'Security code',
-    'username': 'Username',
+declare global {
+  interface I18nTranslationsMap {
+    'jsCockpit.loginForm': I18n.TermsOf<typeof translations>
+  }
+}
+
+const translations = I18n.defineTranslations({
+  category: 'jsCockpit.loginForm',
+  language: 'en',
+
+  terms: {
+    email: 'Email',
+    firstName: 'First name',
+    lastName: 'Last name',
+    forgotPassword: 'Forgot password?',
+    forgotPasswordIntroHeadline: 'Forgot password?',
+    forgotPasswordIntroText:
+      "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
+    forgotPasswordSubmitText: 'Request password reset',
+    goToLogin: 'Go to login form',
+    goToRegistration: 'Need account?',
+    loginIntroHeadline: 'Login',
+    loginIntroText: 'Please enter your credentials in the form to log in',
+    loginSubmitText: 'Log in',
+    newPassword: 'New passwort',
+    newPasswordRepeat: 'Repeat new password',
+    password: 'Password',
+    registrationIntroHeadline: 'Registration',
+    registrationIntroText:
+      'Please fill out the form and press the submit button to register',
+    registerSubmitText: 'Register',
+    rememberLogin: 'Remember login',
+    resetPasswordIntroHeadline: 'Reset password',
+    resetPasswordIntroText:
+      'Please fill out and submit the form to reset your password',
+    resetPasswordSubmitText: 'Reset password',
+    securityCode: 'Security code',
+    username: 'Username'
   }
 })
+
+I18n.registerTranslations(translations)
+
+// === Login form ====================================================
 
 @elem({
   tag: 'c-login-form',
@@ -95,7 +110,7 @@ function loginFormImpl(self: LoginForm) {
   const refresh = useRefresher()
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
-  const { t } = useI18n('js-cockpit.login-form')
+  const { t } = useI18n('jsCockpit.loginForm')
 
   const onForgotPasswordClick = () => {
     changeView('forgotPassword')
@@ -194,7 +209,7 @@ function loginFormImpl(self: LoginForm) {
                   <div class="column2-top">${renderFields()}</div>
                   <div class="column2-bottom">
                     ${state.view === 'login' && self.enableRememberLogin
-                      ? html`<sl-checkbox>${t('remember-login')}</sl-checkbox>`
+                      ? html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`
                       : ''}
                     <sl-button
                       type="primary"
@@ -223,8 +238,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="login-intro">
             <div class="default-intro">
-              <h3>${t('login-intro-headline')}</h3>
-              <p>${t('login-intro-text')}</p>
+              <h3>${t('loginIntroHeadline')}</h3>
+              <p>${t('loginIntroText')}</p>
             </div>
           </slot>
         `
@@ -232,8 +247,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="registration-intro">
             <div class="default-intro">
-              <h3>${t('registration-intro-headline')}</h3>
-              <p>${t('registration-intro-text')}</p>
+              <h3>${t('registrationIntroHeadline')}</h3>
+              <p>${t('registrationIntroText')}</p>
             </div>
           </slot>
         `
@@ -242,8 +257,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="forgot-password-intro">
             <div class="default-intro">
-              <h3>${t('forgot-password-intro-headline')}</h3>
-              <p>${t('forgot-password-intro-text')}</p>
+              <h3>${t('forgotPasswordIntroHeadline')}</h3>
+              <p>${t('forgotPasswordIntroText')}</p>
             </div>
           </slot>
         `
@@ -251,8 +266,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="reset-password-intro">
             <div class="default-intro">
-              <h3>${t('reset-password-intro-headline')}</h3>
-              <p>${t('reset-password-intro-text')}</p>
+              <h3>${t('resetPasswordIntroHeadline')}</h3>
+              <p>${t('resetPasswordIntroText')}</p>
             </div>
           </slot>
         `
@@ -300,12 +315,12 @@ function loginFormImpl(self: LoginForm) {
             ></c-text-field>
             <c-text-field
               name="firstName"
-              label=${t('first-name')}
+              label=${t('firstName')}
               required
             ></c-text-field>
             <c-text-field
               name="lastName"
-              label=${t('last-name')}
+              label=${t('lastName')}
               required
             ></c-text-field>
             <c-text-field
@@ -339,21 +354,14 @@ function loginFormImpl(self: LoginForm) {
               label=${t('username')}
               required
             ></c-text-field>
-            <!--
             <c-password-field
               name="newPasswordRepeat"
-              label=${t('new-password')}
-              required
-            ></c-password-field>
-    -->
-            <c-password-field
-              name="newPassword"
-              label=${t('new-password-repeat')}
+              label=${t('newPasswordRepeat')}
               required
             ></c-password-field>
             <c-text-field
               name="securityCode"
-              label=${t('security-code')}
+              label=${t('securityCode')}
               required
             ></c-text-field>
           </slot>
@@ -389,7 +397,7 @@ function loginFormImpl(self: LoginForm) {
             class="forgot-password-link"
             @click=${onForgotPasswordClick}
           >
-            ${t('forgot-password')}
+            ${t('forgotPassword')}
           </sl-button>
         `
       : ''
@@ -402,7 +410,7 @@ function loginFormImpl(self: LoginForm) {
         class="go-to-login-link"
         @click=${onGoToLoginClick}
       >
-        ${t('go-to-login')}
+        ${t('goToLogin')}
       </sl-button>
     `
   }
@@ -415,7 +423,7 @@ function loginFormImpl(self: LoginForm) {
             class="go-to-registration-link"
             @click=${onGoToRegistrationClick}
           >
-            ${t('go-to-registration')}
+            ${t('goToRegistration')}
           </sl-button>
         `
       : ''
@@ -424,16 +432,16 @@ function loginFormImpl(self: LoginForm) {
   function renderSubmitButtonText() {
     switch (state.view) {
       case 'login':
-        return t('login-submit-text')
+        return t('loginSubmitText')
 
       case 'registration':
-        return t('register-submit-text')
+        return t('registerSubmitText')
 
       case 'forgotPassword':
-        return t('forgot-password-submit-text')
+        return t('forgotPasswordSubmitText')
 
       case 'resetPassword':
-        return t('reset-password-submit-text')
+        return t('resetPasswordSubmitText')
     }
   }
 

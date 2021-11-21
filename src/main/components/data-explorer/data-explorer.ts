@@ -71,13 +71,26 @@ namespace DataExplorer {
   }>
 }
 
-// === DataExplorer ==================================================
+// === translations ==================================================
 
-I18n.addTranslations('en', {
-  'js-cockpit.data-explorer': {
-    'loading-message': 'Loading...'
+declare global {
+  interface I18nTranslationsMap {
+    'jsCockpit.dateExplorer': I18n.TermsOf<typeof translations>
+  }
+}
+
+const translations = I18n.defineTranslations({
+  category: 'jsCockpit.dataExplorer',
+  language: 'en',
+
+  terms: {
+    loadingMessage: 'Loading...'
   }
 })
+
+I18n.registerTranslations(translations)
+
+// === DataExplorer ==================================================
 
 @elem({
   tag: 'c-data-explorer',
@@ -112,7 +125,7 @@ class DataExplorer extends component() {
 }
 
 function dataExplorerImpl(self: DataExplorer) {
-  const { i18n, t } = useI18n('js-cockpit.data-explorer')
+  const { i18n, t } = useI18n('jsCockpit.dataExplorer')
   const actionBarRef = createRef<ActionBar>()
   const dataTableRef = createRef<DataTable>()
   const paginationBarRef = createRef<PaginationBar>()

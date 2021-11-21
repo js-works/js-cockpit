@@ -49,46 +49,53 @@ type AuxData = {
   shownItemsCount: number
 }
 
-// === Paginator =====================================================
+// === translations ==================================================
 
-// add translations for en
-;(() => {
+declare global {
+  interface I18nTranslationsMap {
+    'jsCockpit.paginationBar': I18n.TermsOf<typeof translations>
+  }
+}
+
+const translations = (() => {
   const i18n = I18n.localize('en')
 
-  // prettier-ignore
-  I18n.addTranslations('en', {
-    'js-cockpit.pagination-bar': {
-      'items-x-to-y-of-z'(params: {
-        firstItemNo: number,
-        lastItemNo: number, 
+  const translations = I18n.defineTranslations({
+    category: 'jsCockpit.paginationBar',
+    language: 'en',
+
+    terms: {
+      itemsXToYOfZ(params: {
+        firstItemNo: number
+        lastItemNo: number
         itemCount: number
       }) {
-
         return `${i18n.formatNumber(params.firstItemNo)} - ${i18n.formatNumber(
           params.lastItemNo
         )} / ${i18n.formatNumber(params.itemCount)}`
       },
 
-      'item-x-of-y'(params: {
-        itemNo: number, 
-        itemCount: number
-      }) {
-
-        return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(params.itemCount)}`
+      itemXOfY(params: { itemNo: number; itemCount: number }) {
+        return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(
+          params.itemCount
+        )}`
       },
 
-      'of-x-pages'(params: {
-        pageCount: number
-      }) {
-
+      ofXPages(params: { pageCount: number }) {
         return `of ${i18n.formatNumber(params.pageCount)}`
       },
 
-      'page': 'Page',
-      'page-size': 'Items/Page'
+      page: 'Page',
+      pageSize: 'Items/Page'
     }
   })
+
+  return translations
 })()
+
+I18n.registerTranslations(translations)
+
+// === Paginator =====================================================
 
 @elem({
   tag: 'c-pagination-bar',
@@ -120,7 +127,7 @@ class PaginationBar extends component<{
 
 function paginationBarImpl(self: PaginationBar) {
   let aux: AuxData
-  const { i18n, t } = useI18n('js-cockpit.pagination-bar')
+  const { i18n, t } = useI18n('jsCockpit.paginationBar')
   const pageInputRef = createRef<SlInput>()
   const pageSizeSelectRef = createRef<SlSelect>()
   const emitPageChange = useEmitter('c-page-change', () => self.onPageChange)
@@ -193,7 +200,7 @@ function paginationBarImpl(self: PaginationBar) {
     }
 
     const pageTransl = t('page')
-    const ofXPagesTransl = t('of-x-pages', {
+    const ofXPagesTransl = t('ofXPages', {
       pageCount: aux.pageCount
     })
 
@@ -254,7 +261,7 @@ function paginationBarImpl(self: PaginationBar) {
 
     return html`
       <div class="page-size-selector">
-        ${t('page-size')}
+        ${t('pageSize')}
         <sl-select
           size="small"
           value=${aux.pageSize}
@@ -278,7 +285,7 @@ function paginationBarImpl(self: PaginationBar) {
 
     let info: String
 
-    info = t('items-x-to-y-of-z', {
+    info = t('itemsXToYOfZ', {
       firstItemNo: aux.firstShownItemIndex,
       lastItemNo: aux.lastShownItemIndex,
       itemCount: aux.totalItemCount

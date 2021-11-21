@@ -17,8 +17,17 @@ import promptIcon from '../icons/keyboard.svg'
 
 // === texts =========================================================
 
-I18n.addTranslations('en-US', {
-  'js-cockpit.dialogs': {
+declare global {
+  interface I18nTranslationsMap {
+    'jsCockpit.dialogs': I18n.TermsOf<typeof translations>
+  }
+}
+
+const translations = I18n.defineTranslations({
+  language: 'en-US',
+  category: 'js-cockpit.dialogs',
+
+  terms: {
     ok: 'OK',
     cancel: 'Cancel',
     information: 'Information',
@@ -29,6 +38,8 @@ I18n.addTranslations('en-US', {
     approval: 'Approval'
   }
 })
+
+I18n.registerTranslations(translations)
 
 // === types =========================================================
 
@@ -460,7 +471,7 @@ function showDialog<T = void>(
   const localizer = I18n.localize(locale)
 
   const translate: TranslateFn = (textId) =>
-    localizer.translate('js-cockpit.dialogs.' + textId)
+    localizer.translate('js-cockpit.dialogs', textId)
 
   const params = init(translate)
   const container = document.createElement('div')

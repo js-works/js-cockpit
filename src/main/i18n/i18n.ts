@@ -27,6 +27,10 @@ const dict = new dictionary.Dictionary()
 
 // === public types =================================================
 
+declare global {
+  interface I18nTranslationsMap {}
+}
+
 type I18n = Readonly<{
   localize(
     localeOrGetLocale: string | null | (() => string | null)
@@ -42,14 +46,41 @@ type I18n = Readonly<{
     ): Partial<I18n.Behavior>
   }): void
 
-  addTranslations(locale: string, translations: I18n.Translations): void
+  defineTranslations<C extends string, T extends I18n.Terms>(
+    translations: I18n.Translations<C, T>
+  ): I18n.Translations<C, T>
+
+  registerTranslations<
+    C extends keyof I18nTranslationsMap,
+    T extends I18nTranslationsMap[C]
+  >(
+    ...translations: I18n.Translations<C, T & I18n.Terms>[]
+  ): void
 }>
 
 // eslint-disable-next-line
 namespace I18n {
+  export type Terms = Record<string, string | ((...args: any[]) => string)>
+
+  export interface Translations<
+    C extends string = any,
+    T extends I18n.Terms = any
+  > {
+    category: C
+    language: string
+    terms: T
+  }
+
+  //export interface TranslationsMap extends Record<string, I18n.Terms> {}
+
+  export type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
+
+  export type TermsOf<T> = T extends Translations<string, infer A> ? A : never
+
   export type Behavior = Readonly<{
     translate(
       locale: string,
+      category: string,
       key: string,
       params?: Record<string, any>
     ): string | null
@@ -74,7 +105,11 @@ namespace I18n {
 
   export type Localizer = Readonly<{
     getLocale(): string
-    translate(key: string, params?: Record<string, any>): string
+    translate(
+      category: string,
+      key: string,
+      params?: Record<string, any>
+    ): string
     parseNumber(numberString: string): number | null
     parseDate(dateString: string): Date | null
     formatNumber(value: number, format?: NumberFormat): string
@@ -100,9 +135,13 @@ namespace I18n {
   export type DateFormat = Intl.DateTimeFormatOptions
   export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
   export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
-  export type Translation = dictionary.Translation
-  export type Translations = dictionary.Translations
 }
+
+// === local types ===================================================
+
+type Exact<T, A> = T extends A ? (A extends T ? T : never) : never
+
+// === functions =====================================================
 
 function createLocalizer(
   getLocale: () => string,
@@ -111,8 +150,11 @@ function createLocalizer(
   const localizer: I18n.Localizer = {
     getLocale,
 
-    translate: (key: string, replacements?: any) =>
-      i18n.translate(getLocale(), key, replacements) || '',
+    translate: (
+      category: string,
+      key: string,
+      replacements?: Record<string, any>
+    ) => i18n.translate(getLocale(), category, key, replacements) || '',
 
     parseNumber: (numberString) => i18n.parseNumber(getLocale(), numberString),
     parseDate: (dateString) => i18n.parseDate(getLocale(), dateString),
@@ -191,11 +233,21 @@ let defaultLocale = EN_US
 let behavior: I18n.Behavior = {
   ...baseBehavior,
 
-  translate(locale, key, replacements?) {
-    let translation = baseBehavior.translate(locale, key, replacements)
+  translate(locale, category, key, replacements?) {
+    let translation = baseBehavior.translate(
+      locale,
+      category,
+      key,
+      replacements
+    )
 
     if (translation === null && defaultLocale !== locale) {
-      translation = baseBehavior.translate(defaultLocale, key, replacements)
+      translation = baseBehavior.translate(
+        defaultLocale,
+        category,
+        key,
+        replacements
+      )
     }
 
     return translation
@@ -237,18 +289,34 @@ const I18n: I18n = Object.freeze({
     }
 
     if (params.customize) {
-      let newBehavior: I18n.Behavior
+      const self = { ...baseBehavior }
 
-      if (params.customize) {
-        const self = { ...baseBehavior }
-
-        behavior = Object.assign(
-          self,
-          params.customize(self, baseBehavior, defaultLocale)
-        )
-      }
+      behavior = Object.assign(
+        self,
+        params.customize(self, baseBehavior, defaultLocale)
+      )
     }
   },
 
-  addTranslations: dict.addTranslations.bind(dict)
+  defineTranslations<C extends string, T extends I18n.Terms>(
+    translations: I18n.Translations<C, T>
+  ) {
+    return translations
+  },
+
+  registerTranslations<
+    C extends keyof I18nTranslationsMap,
+    T extends I18nTranslationsMap[C]
+  >(...translationsVarArg: I18n.Translations<C, T & I18n.Terms>[]): void {
+    for (const translations of translationsVarArg) {
+      Object.entries(translations.terms).forEach(([key, value]) => {
+        dict.addTranslation(
+          translations.language,
+          translations.category,
+          key,
+          value
+        )
+      })
+    }
+  }
 })

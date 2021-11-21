@@ -10,22 +10,20 @@ import {
 import { observeLocale } from '../i18n/locale-detection'
 import { I18n } from '../i18n/i18n'
 
+// === types =========================================================
+
+declare global {
+  interface I18nTranslationsMap {}
+}
+
 // === useI18n =======================================================
 
-function useI18nFn(): {
-  i18n: I18n.Localizer
-  g(key: string, params?: Record<string, any>): string
-}
-
-function useI18nFn(
-  namespace: string
+function useI18nFn<C extends keyof I18nTranslationsMap>(
+  category: C
 ): {
   i18n: I18n.Localizer
-  t(key: string, params?: Record<string, any>): string
-  g(key: string, params?: Record<string, any>): string
-}
-
-function useI18nFn(namespace?: string) {
+  t(key: keyof I18nTranslationsMap[C], params?: Record<string, any>): string
+} {
   const element = useHost()
   const refresh = useRefresher()
 
@@ -37,16 +35,7 @@ function useI18nFn(namespace?: string) {
 
   let ret: any = {
     i18n: localizer,
-
-    g(key: string, params?: Record<string, string | number>) {
-      return localizer.translate(key as string, params)
-    }
-  }
-
-  if (arguments.length > 0) {
-    ret.t = function (key: string, replacements?: any) {
-      return localizer.translate(`${namespace}.${key}`, replacements)
-    }
+    t: localizer.translate.bind(null, category)
   }
 
   return ret
@@ -83,6 +72,7 @@ export const useFormField = hook('useFormField', function <
     // TODO: File + FormData
     setValue(newValue: T) {
       value = newValue
+      // @ts-ignore // TODO!!!!!!!!!!!!
       internals.setFormValue(value)
       console.log('setValue', value)
     },
@@ -97,9 +87,11 @@ export const useFormField = hook('useFormField', function <
 
       if (error) {
         console.log('set error', error)
+        // @ts-ignore // TODO!!!!!!!!!!!!
         internals.setValidity({ valueMissing: true }, error, anchor)
       } else {
         console.log('set valid')
+        // @ts-ignore // TODO!!!!!!!!!!!!
         internals.setValidity({ valid: true })
       }
 
