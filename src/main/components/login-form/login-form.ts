@@ -1,6 +1,6 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useOnInit, useRefresher, useState } from 'js-element/hooks'
+import { useOnInit, useState } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 import { I18n } from '../../i18n/i18n'
 
@@ -107,7 +107,6 @@ function loginFormImpl(self: LoginForm) {
     view: 'login' as View
   })
 
-  const refresh = useRefresher()
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
   const { t } = useI18n('jsCockpit.loginForm')

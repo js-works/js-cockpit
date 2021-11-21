@@ -15,7 +15,7 @@ import confirmationIcon from '../icons/question-circle.svg'
 import approvalIcon from '../icons/question-diamond.svg'
 import promptIcon from '../icons/keyboard.svg'
 
-// === texts =========================================================
+// === translations ===================================================
 
 declare global {
   interface I18nTranslationsMap {
@@ -124,15 +124,15 @@ const styles = `
     font-size: var(--sl-font-size-x-large);
   }
 
-  .icon._normal_ {
+  .icon.normal {
     color: var(--sl-color-primary-500);
   }
   
-  .icon._warning_ {
+  .icon.warning {
     color: var(--sl-color-warning-500);
   }
   
-  .icon._danger_ {
+  .icon.danger {
     color: var(--sl-color-danger-500);
   }
   
