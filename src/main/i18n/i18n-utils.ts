@@ -14,10 +14,10 @@ export {
 
 // === constants =====================================================
 
-const DEFAULT_FIRST_DAY_OF_WEEK = 1
-const DEFAULT_WEEKEND_DAYS = Object.freeze([0, 6]) // Sunday and Saturday
+const defaultFirstDayOfWeek = 1
+const defaultWeekendDays = Object.freeze([0, 6]) // Sunday and Saturday
 
-const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = Object.freeze({
+const DefaultDateFormat: Intl.DateTimeFormatOptions = Object.freeze({
   day: '2-digit',
   month: '2-digit',
   year: 'numeric'
@@ -81,8 +81,8 @@ function getFirstDayOfWeek(locale: string): number {
   const region = getLocaleInfo(locale).region
 
   return region
-    ? firstDayOfWeekByCountryCode.get(region) || DEFAULT_FIRST_DAY_OF_WEEK
-    : DEFAULT_FIRST_DAY_OF_WEEK
+    ? firstDayOfWeekByCountryCode.get(region) || defaultFirstDayOfWeek
+    : defaultFirstDayOfWeek
 }
 
 // --- getWeekendDays ------------------------------------------------
@@ -121,8 +121,8 @@ function getWeekendDays(locale: string): Readonly<number[]> {
   const region = getLocaleInfo(locale).region
 
   return region
-    ? weekendDaysByCountryCode.get(region) || DEFAULT_WEEKEND_DAYS
-    : DEFAULT_WEEKEND_DAYS
+    ? weekendDaysByCountryCode.get(region) || defaultWeekendDays
+    : defaultWeekendDays
 }
 
 // --- parseNumber ---------------------------------------------------
@@ -263,7 +263,7 @@ function formatDate(
       return value.toISOString().substr(0, 10)
     }
 
-    format = DEFAULT_DATE_FORMAT
+    format = DefaultDateFormat
   }
 
   return new Intl.DateTimeFormat(locale, format).format(value)

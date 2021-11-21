@@ -31,23 +31,8 @@ export { PaginationBar }
 
 // === constants =====================================================
 
-const PAGE_SIZES = new Set([25, 50, 100, 250, 500])
-const DEFAULT_PAGE_SIZE = 50
-
-// === types =========================================================
-
-type AuxData = {
-  isValid: boolean
-  pageIndex: number
-  pageSize: number
-  totalItemCount: number
-  pageCount: number
-  isFirstPage: boolean
-  isLastPage: boolean
-  firstShownItemIndex: number
-  lastShownItemIndex: number
-  shownItemsCount: number
-}
+const pageSizes = new Set([25, 50, 100, 250, 500])
+const defaultPageSize = 50
 
 // === translations ==================================================
 
@@ -62,7 +47,7 @@ declare global {
 const translations = (() => {
   const i18n = I18n.localize('en')
 
-  const translations = I18n.defineTranslations({
+  return I18n.defineTranslations({
     category: 'jsCockpit.paginationBar',
     language: 'en',
 
@@ -91,11 +76,24 @@ const translations = (() => {
       pageSize: 'Items/Page'
     }
   })
-
-  return translations
 })()
 
 I18n.registerTranslations(translations)
+
+// === types =========================================================
+
+type AuxData = {
+  isValid: boolean
+  pageIndex: number
+  pageSize: number
+  totalItemCount: number
+  pageCount: number
+  isFirstPage: boolean
+  isLastPage: boolean
+  firstShownItemIndex: number
+  lastShownItemIndex: number
+  shownItemsCount: number
+}
 
 // === Paginator =====================================================
 
@@ -176,7 +174,7 @@ function paginationBarImpl(self: PaginationBar) {
       pageInputRef.value!.value = aux.isValid ? String(aux.pageIndex) : ''
 
       pageSizeSelectRef.value!.value = String(
-        aux.isValid ? aux.pageSize : DEFAULT_PAGE_SIZE
+        aux.isValid ? aux.pageSize : defaultPageSize
       )
     }
   })
@@ -270,7 +268,7 @@ function paginationBarImpl(self: PaginationBar) {
           @sl-select=${onPageSizeSelect}
         >
           ${repeat(
-            PAGE_SIZES,
+            pageSizes,
             (idx) => idx,
             (pageSize) =>
               html`<sl-menu-item value=${pageSize}>${pageSize}</sl-menu-item>`
@@ -321,7 +319,7 @@ function getAuxData(
     Math.floor(totalItemCount) === totalItemCount &&
     totalItemCount >= 0 &&
     pageIndex <= Math.ceil(totalItemCount / pageSize) - 1 &&
-    PAGE_SIZES.has(pageSize)
+    pageSizes.has(pageSize)
 
   const pageCount = !isValid ? -1 : Math.ceil(totalItemCount! / pageSize!)
 

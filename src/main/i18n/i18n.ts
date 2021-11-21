@@ -17,10 +17,6 @@ import * as dictionary from './dictionary'
 // and a namespace for other I18n related types.
 export { I18n }
 
-// === constants (used locally) ======================================
-
-const EN_US = 'en-US'
-
 // === global dictionary =============================================
 
 const dict = new dictionary.Dictionary()
@@ -241,7 +237,7 @@ const baseBehavior: I18n.Behavior = {
 // === I18n singleton object =========================================
 
 let isFinal = false
-let defaultLocale = EN_US
+let defaultLocale = 'en-US'
 
 let behavior: I18n.Behavior = {
   ...baseBehavior,

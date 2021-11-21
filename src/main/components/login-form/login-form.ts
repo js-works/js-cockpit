@@ -26,8 +26,6 @@ import resetPasswordIntroIcon from './assets/reset-password.svg'
 
 export { LoginForm }
 
-// === constants =====================================================
-
 // === types =========================================================
 
 type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
