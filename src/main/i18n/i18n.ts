@@ -17,7 +17,7 @@ import * as dictionary from './dictionary'
 // and a namespace for other I18n related types.
 export { I18n }
 
-// === global dictionary =============================================
+// === singleton dictionary ==========================================
 
 const dict = new dictionary.Dictionary()
 
@@ -47,6 +47,12 @@ type I18n = Readonly<{
     T extends I18n.TranslationsMap[C]
   >(
     translations: I18n.Translations<C & string, T & I18n.Terms>
+  ): typeof I18n.registerTranslations
+
+  registerTranslations<B extends string, C extends keyof I18n.TranslationsMap>(
+    language: string,
+    baseName: B,
+    termsPerCategory: Record<StartsWith<C, `${B}.`>, I18n.TranslationsMap[C]>
   ): void
 
   // TODO: Illegal keys in `terms` object are not detected
@@ -151,7 +157,9 @@ declare global {
 
 // === local types ===================================================
 
-type Exact<T, A> = T extends A ? (A extends T ? T : never) : never
+type StartsWith<A extends string, B extends string> = A extends `${B}${string}`
+  ? A
+  : never
 
 // === functions =====================================================
 
@@ -313,7 +321,7 @@ const I18n: I18n = Object.freeze({
     return translations
   },
 
-  registerTranslations(translations: any): void {
+  registerTranslations(translations: any) {
     Object.entries(translations.terms).forEach(([key, value]) => {
       dict.addTranslation(
         translations.language,
@@ -322,5 +330,7 @@ const I18n: I18n = Object.freeze({
         value as any // TODO
       )
     })
+
+    return I18n.registerTranslations
   }
 })

@@ -2,11 +2,8 @@ import { I18n } from '../i18n/i18n'
 
 const { formatNumber } = I18n.localize('de')
 
-I18n.registerTranslations({
-  category: 'jsCockpit.dialogs',
-  language: 'de',
-
-  terms: {
+I18n.registerTranslations('de', 'jsCockpit', {
+  'jsCockpit.dialogs': {
     ok: 'OK',
     cancel: 'Abbrechen',
     information: 'Information',
@@ -15,14 +12,9 @@ I18n.registerTranslations({
     input: 'Eingabe',
     confirmation: 'Bestätigung',
     approval: 'Zustimmung'
-  }
-})
+  },
 
-I18n.registerTranslations({
-  category: 'jsCockpit.loginForm',
-  language: 'de',
-
-  terms: {
+  'jsCockpit.loginForm': {
     email: 'E-mail',
     firstName: 'Vorname',
     lastName: 'Nachname',
@@ -50,23 +42,13 @@ I18n.registerTranslations({
     resetPasswordSubmitText: 'Passwort zurücksetzen',
     securityCode: 'Sicherheitscode',
     username: 'Benutzername'
-  }
-})
+  },
 
-I18n.registerTranslations({
-  category: 'jsCockpit.dataExplorer',
-  language: 'de',
-
-  terms: {
+  'jsCockpit.dataExplorer': {
     loadingMessage: 'Lade Daten...'
-  }
-})
+  },
 
-I18n.registerTranslations({
-  category: 'jsCockpit.paginationBar',
-  language: 'de',
-
-  terms: {
+  'jsCockpit.paginationBar': {
     itemsXToYOfZ: (params: {
       firstItemNo: number
       lastItemNo: number
