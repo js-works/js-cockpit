@@ -64,7 +64,7 @@ const translations = I18n.defineTranslations({
     registrationIntroHeadline: 'Registration',
     registrationIntroText:
       'Please fill out the form and press the submit button to register',
-    registerSubmitText: 'Register',
+    registrationSubmitText: 'Register',
     rememberLogin: 'Remember login',
     resetPasswordIntroHeadline: 'Reset password',
     resetPasswordIntroText:
@@ -435,7 +435,7 @@ function loginFormImpl(self: LoginForm) {
         return t('loginSubmitText')
 
       case 'registration':
-        return t('registerSubmitText')
+        return t('registrationSubmitText')
 
       case 'forgotPassword':
         return t('forgotPasswordSubmitText')
