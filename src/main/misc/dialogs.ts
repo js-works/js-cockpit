@@ -43,9 +43,7 @@ I18n.registerTranslations(translations)
 
 // === types =========================================================
 
-type TranslateFn = (
-  textId: string & keyof I18nTranslationsMap['jsCockpit.dialogs']
-) => string
+type TranslateFn = (textId: I18n.TermKeysOf<'jsCockpit.dialogs'>) => string
 
 type DialogConfig<T> = {
   type: 'normal' | 'warning' | 'danger'

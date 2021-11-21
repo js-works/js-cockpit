@@ -85,6 +85,10 @@ namespace I18n {
   export type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
   export type TermsOf<T> = T extends Translations<string, infer A> ? A : never
 
+  export type TermKeysOf<
+    K extends keyof I18nTranslationsMap & string
+  > = keyof I18nTranslationsMap[K]
+
   export type Behavior = Readonly<{
     translate(
       locale: string,
