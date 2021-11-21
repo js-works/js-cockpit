@@ -114,7 +114,7 @@ namespace I18n {
   export type Localizer = Readonly<{
     getLocale(): string
     translate(
-      category: string,
+      category: keyof I18nTranslationsMap,
       key: string,
       params?: Record<string, any>
     ): string

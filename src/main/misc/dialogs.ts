@@ -25,7 +25,7 @@ declare global {
 
 const translations = I18n.defineTranslations({
   language: 'en-US',
-  category: 'js-cockpit.dialogs',
+  category: 'jsCockpit.dialogs',
 
   terms: {
     ok: 'OK',
@@ -43,7 +43,9 @@ I18n.registerTranslations(translations)
 
 // === types =========================================================
 
-type TranslateFn = (textId: string) => string
+type TranslateFn = (
+  textId: string & keyof I18nTranslationsMap['jsCockpit.dialogs']
+) => string
 
 type DialogConfig<T> = {
   type: 'normal' | 'warning' | 'danger'
@@ -471,7 +473,7 @@ function showDialog<T = void>(
   const localizer = I18n.localize(locale)
 
   const translate: TranslateFn = (textId) =>
-    localizer.translate('js-cockpit.dialogs', textId)
+    localizer.translate('jsCockpit.dialogs', textId)
 
   const params = init(translate)
   const container = document.createElement('div')
