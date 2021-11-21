@@ -109,7 +109,7 @@ function loginFormImpl(self: LoginForm) {
 
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
-  const { t } = useI18n('jsCockpit.loginForm')
+  const { i18n, t } = useI18n('jsCockpit.loginForm')
 
   const onForgotPasswordClick = () => {
     changeView('forgotPassword')

@@ -90,10 +90,10 @@ namespace I18n {
   > = keyof I18nTranslationsMap[K]
 
   export type Behavior = Readonly<{
-    translate(
+    translate<C extends keyof I18nTranslationsMap>(
       locale: string,
-      category: string,
-      key: string,
+      category: C & string,
+      key: keyof I18nTranslationsMap[C] & string,
       params?: Record<string, any>
     ): string | null
 
@@ -117,9 +117,9 @@ namespace I18n {
 
   export type Localizer = Readonly<{
     getLocale(): string
-    translate(
-      category: keyof I18nTranslationsMap,
-      key: string,
+    translate<C extends keyof I18nTranslationsMap>(
+      category: C & string,
+      key: keyof I18nTranslationsMap[C] & string,
       params?: Record<string, any>
     ): string
     parseNumber(numberString: string): number | null
@@ -162,11 +162,8 @@ function createLocalizer(
   const localizer: I18n.Localizer = {
     getLocale,
 
-    translate: (
-      category: string,
-      key: string,
-      replacements?: Record<string, any>
-    ) => i18n.translate(getLocale(), category, key, replacements) || '',
+    translate: (category, key, replacements?) =>
+      i18n.translate(getLocale(), category, key, replacements) || '',
 
     parseNumber: (numberString) => i18n.parseNumber(getLocale(), numberString),
     parseDate: (dateString) => i18n.parseDate(getLocale(), dateString),
