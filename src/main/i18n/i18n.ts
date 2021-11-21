@@ -54,7 +54,7 @@ type I18n = Readonly<{
     C extends keyof I18nTranslationsMap,
     T extends I18nTranslationsMap[C]
   >(
-    ...translations: I18n.Translations<C, T & I18n.Terms>[]
+    translations: I18n.Translations<C & string, T & I18n.Terms>
   ): void
 }>
 
@@ -304,19 +304,14 @@ const I18n: I18n = Object.freeze({
     return translations
   },
 
-  registerTranslations<
-    C extends keyof I18nTranslationsMap,
-    T extends I18nTranslationsMap[C]
-  >(...translationsVarArg: I18n.Translations<C, T & I18n.Terms>[]): void {
-    for (const translations of translationsVarArg) {
-      Object.entries(translations.terms).forEach(([key, value]) => {
-        dict.addTranslation(
-          translations.language,
-          translations.category,
-          key,
-          value
-        )
-      })
-    }
+  registerTranslations(translations): void {
+    Object.entries(translations.terms).forEach(([key, value]) => {
+      dict.addTranslation(
+        translations.language,
+        translations.category,
+        key,
+        value as any // TODO
+      )
+    })
   }
 })

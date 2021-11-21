@@ -75,7 +75,7 @@ namespace DataExplorer {
 
 declare global {
   interface I18nTranslationsMap {
-    'jsCockpit.dateExplorer': I18n.TermsOf<typeof translations>
+    'jsCockpit.dataExplorer': I18n.TermsOf<typeof translations>
   }
 }
 
@@ -314,7 +314,7 @@ function dataExplorerImpl(self: DataExplorer) {
         >
           <div class="overlay-top"></div>
           <div class="overlay-center">
-            <div class="loading-message">${t('loading-message')}</div>
+            <div class="loading-message">${t('loadingMessage')}</div>
             <sl-spinner class="loading-spinner"></sl-spinner>
           </div>
           <div class="overlay-bottom"></div>

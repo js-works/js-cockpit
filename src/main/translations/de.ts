@@ -17,8 +17,10 @@ I18n.registerTranslations(
       confirmation: 'Bestätigung',
       approval: 'Zustimmung'
     }
-  }) as any,
+  })
+)
 
+I18n.registerTranslations(
   I18n.defineTranslations({
     category: 'jsCockpit.loginForm',
     language: 'de',
@@ -52,17 +54,21 @@ I18n.registerTranslations(
       securityCode: 'Sicherheitscode',
       username: 'Benutzername'
     }
-  }) as any,
+  })
+)
 
+I18n.registerTranslations(
   I18n.defineTranslations({
     category: 'jsCockpit.dataExplorer',
     language: 'de',
 
     terms: {
-      'loading-message': 'Lade Daten...'
+      loadingMessage: 'Lade Daten...'
     }
-  }) as any,
+  })
+)
 
+I18n.registerTranslations(
   I18n.defineTranslations({
     category: 'jsCockpit.paginationBar',
     language: 'de',
@@ -86,5 +92,5 @@ I18n.registerTranslations(
       page: 'Seite',
       pageSize: 'Datensätze/Seite'
     }
-  }) as any
+  })
 )
