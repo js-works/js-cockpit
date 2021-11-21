@@ -24,7 +24,7 @@ declare global {
 }
 
 const translations = I18n.defineTranslations({
-  language: 'en-US',
+  language: 'en',
   category: 'jsCockpit.dialogs',
 
   terms: {
@@ -78,7 +78,7 @@ type PromptDialogParams = ConfirmDialogParams & { value?: string }
 // === styles ========================================================
 
 const styles = `
-  ._base_ {
+  .base {
     position: absolute;
     width: 0;
     max-width: 0;
@@ -540,7 +540,7 @@ function showDialog<T = void>(
   })
 
   const icon: SlIcon = containerShadow.querySelector('sl-icon.icon')!
-  icon.classList.add(`_${params.type}_`)
+  icon.classList.add(`${params.type}`)
   icon.src = params.icon
 
   setText(styles, 'style')
