@@ -74,8 +74,10 @@ namespace DataExplorer {
 // === translations ==================================================
 
 declare global {
-  interface I18nTranslationsMap {
-    'jsCockpit.dataExplorer': I18n.TermsOf<typeof translations>
+  namespace I18n {
+    interface TranslationsMap {
+      'jsCockpit.dataExplorer': I18n.TermsOf<typeof translations>
+    }
   }
 }
 

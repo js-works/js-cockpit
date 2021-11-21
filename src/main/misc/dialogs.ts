@@ -18,8 +18,10 @@ import promptIcon from '../icons/keyboard.svg'
 // === translations ===================================================
 
 declare global {
-  interface I18nTranslationsMap {
-    'jsCockpit.dialogs': I18n.TermsOf<typeof translations>
+  namespace I18n {
+    interface TranslationsMap {
+      'jsCockpit.dialogs': I18n.TermsOf<typeof translations>
+    }
   }
 }
 

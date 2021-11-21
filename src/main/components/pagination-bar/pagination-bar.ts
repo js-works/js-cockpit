@@ -52,8 +52,10 @@ type AuxData = {
 // === translations ==================================================
 
 declare global {
-  interface I18nTranslationsMap {
-    'jsCockpit.paginationBar': I18n.TermsOf<typeof translations>
+  namespace I18n {
+    interface TranslationsMap {
+      'jsCockpit.paginationBar': I18n.TermsOf<typeof translations>
+    }
   }
 }
 

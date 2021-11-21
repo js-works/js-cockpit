@@ -13,16 +13,18 @@ import { I18n } from '../i18n/i18n'
 // === types =========================================================
 
 declare global {
-  interface I18nTranslationsMap {}
+  namespace I18n {
+    interface TranslationsMap {}
+  }
 }
 
 // === useI18n =======================================================
 
-function useI18nFn<C extends keyof I18nTranslationsMap>(
+function useI18nFn<C extends keyof I18n.TranslationsMap>(
   category: C
 ): {
   i18n: I18n.Localizer
-  t(key: keyof I18nTranslationsMap[C], params?: Record<string, any>): string
+  t(key: keyof I18n.TranslationsMap[C], params?: Record<string, any>): string
 } {
   const element = useHost()
   const refresh = useRefresher()

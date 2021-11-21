@@ -35,8 +35,10 @@ type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
 // === translations ==================================================
 
 declare global {
-  interface I18nTranslationsMap {
-    'jsCockpit.loginForm': I18n.TermsOf<typeof translations>
+  namespace I18n {
+    interface TranslationsMap {
+      'jsCockpit.loginForm': I18n.TermsOf<typeof translations>
+    }
   }
 }
 
@@ -109,7 +111,7 @@ function loginFormImpl(self: LoginForm) {
 
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
-  const { i18n, t } = useI18n('jsCockpit.loginForm')
+  const { t } = useI18n('jsCockpit.loginForm')
 
   const onForgotPasswordClick = () => {
     changeView('forgotPassword')

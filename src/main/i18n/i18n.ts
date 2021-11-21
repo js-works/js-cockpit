@@ -27,10 +27,6 @@ const dict = new dictionary.Dictionary()
 
 // === public types =================================================
 
-declare global {
-  interface I18nTranslationsMap {}
-}
-
 type I18n = Readonly<{
   localize(
     localeOrGetLocale: string | null | (() => string | null)
@@ -51,18 +47,18 @@ type I18n = Readonly<{
   ): I18n.Translations<C, T>
 
   registerTranslations<
-    C extends keyof I18nTranslationsMap,
-    T extends I18nTranslationsMap[C]
+    C extends keyof I18n.TranslationsMap,
+    T extends I18n.TranslationsMap[C]
   >(
     translations: I18n.Translations<C & string, T & I18n.Terms>
   ): void
 
   // TODO: Illegal keys in `terms` object are not detected
   // as eror :-(
-  registerTranslations<C extends keyof I18nTranslationsMap>(
+  registerTranslations<C extends keyof I18n.TranslationsMap>(
     translations: I18n.Translations<
       C & string,
-      Partial<I18nTranslationsMap[C]> & I18n.Terms
+      Partial<I18n.TranslationsMap[C]> & I18n.Terms
     > & {
       partial: true
     }
@@ -70,83 +66,91 @@ type I18n = Readonly<{
 }>
 
 // eslint-disable-next-line
-namespace I18n {
-  export type Terms = Record<string, string | ((...args: any[]) => string)>
+declare global {
+  namespace I18n {
+    interface TranslationsMap {}
+    type Terms = Record<string, string | ((...args: any[]) => string)>
 
-  export interface Translations<
-    C extends string = any,
-    T extends I18n.Terms = any
-  > {
-    category: C
-    language: string
-    terms: T
+    export interface Translations<
+      C extends string = any,
+      T extends I18n.Terms = any
+    > {
+      category: C
+      language: string
+      terms: T
+    }
+
+    type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
+    type TermsOf<T> = T extends Translations<string, infer A> ? A : never
+
+    type TermKeysOf<
+      K extends keyof TranslationsMap & string
+    > = keyof TranslationsMap[K]
+
+    type Behavior = Readonly<{
+      translate<C extends keyof TranslationsMap>(
+        locale: string,
+        category: C & string,
+        key: keyof TranslationsMap[C] & string,
+        params?: Record<string, any>
+      ): string | null
+
+      parseNumber(locale: string, numberString: string): number | null
+      parseDate(locale: string, dateString: string): Date | null
+
+      formatNumber(locale: string, value: number, format?: NumberFormat): string
+      formatDate(
+        locale: string,
+        value: Date,
+        format?: DateFormat | null
+      ): string
+
+      formatRelativeTime(
+        locale: string,
+        value: number,
+        unit: RelativeTimeUnit,
+        format?: RelativeTimeFormat
+      ): string
+
+      getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
+      getCalendarWeek(locale: string, date: Date): number // 1 to 53
+      getWeekendDays(locale: string): Readonly<number[]> // array of integers between 0 and 6
+    }>
+
+    type Localizer = Readonly<{
+      getLocale(): string
+
+      translate<C extends keyof TranslationsMap>(
+        category: C & string,
+        key: keyof TranslationsMap[C] & string,
+        params?: Record<string, any>
+      ): string
+
+      parseNumber(numberString: string): number | null
+      parseDate(dateString: string): Date | null
+      formatNumber(value: number, format?: NumberFormat): string
+      formatDate(value: Date, format?: DateFormat | null): string
+
+      formatRelativeTime(
+        value: number,
+        unit: RelativeTimeUnit,
+        format?: RelativeTimeFormat
+      ): string
+
+      getFirstDayOfWeek(): number // 0 to 6, 0 means Sunday
+      getWeekendDays(): Readonly<number[]> // array of integer form 0 to 6
+      getCalendarWeek(date: Date): number // 1 to 53
+      getDayName(index: number, format?: 'long' | 'short' | 'narrow'): string
+      getDayNames(format?: 'long' | 'short' | 'narrow'): string[]
+      getMonthName(index: number, format?: 'long' | 'short' | 'narrow'): string
+      getMonthNames(format?: 'long' | 'short' | 'narrow'): string[]
+    }>
+
+    interface NumberFormat extends Intl.NumberFormatOptions {}
+    interface DateFormat extends Intl.DateTimeFormatOptions {}
+    type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
+    type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
   }
-
-  export type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
-  export type TermsOf<T> = T extends Translations<string, infer A> ? A : never
-
-  export type TermKeysOf<
-    K extends keyof I18nTranslationsMap & string
-  > = keyof I18nTranslationsMap[K]
-
-  export type Behavior = Readonly<{
-    translate<C extends keyof I18nTranslationsMap>(
-      locale: string,
-      category: C & string,
-      key: keyof I18nTranslationsMap[C] & string,
-      params?: Record<string, any>
-    ): string | null
-
-    parseNumber(locale: string, numberString: string): number | null
-    parseDate(locale: string, dateString: string): Date | null
-
-    formatNumber(locale: string, value: number, format?: NumberFormat): string
-    formatDate(locale: string, value: Date, format?: DateFormat | null): string
-
-    formatRelativeTime(
-      locale: string,
-      value: number,
-      unit: RelativeTimeUnit,
-      format?: RelativeTimeFormat
-    ): string
-
-    getFirstDayOfWeek(locale: string): number // 0 to 6, 0 means Sunday
-    getCalendarWeek(locale: string, date: Date): number // 1 to 53
-    getWeekendDays(locale: string): Readonly<number[]> // array of integers between 0 and 6
-  }>
-
-  export type Localizer = Readonly<{
-    getLocale(): string
-    translate<C extends keyof I18nTranslationsMap>(
-      category: C & string,
-      key: keyof I18nTranslationsMap[C] & string,
-      params?: Record<string, any>
-    ): string
-    parseNumber(numberString: string): number | null
-    parseDate(dateString: string): Date | null
-    formatNumber(value: number, format?: NumberFormat): string
-    formatDate(value: Date, format?: DateFormat | null): string
-
-    formatRelativeTime(
-      value: number,
-      unit: RelativeTimeUnit,
-      format?: RelativeTimeFormat
-    ): string
-
-    getFirstDayOfWeek(): number // 0 to 6, 0 means Sunday
-    getWeekendDays(): Readonly<number[]> // array of integer form 0 to 6
-    getCalendarWeek(date: Date): number // 1 to 53
-    getDayName(index: number, format?: 'long' | 'short' | 'narrow'): string
-    getDayNames(format?: 'long' | 'short' | 'narrow'): string[]
-    getMonthName(index: number, format?: 'long' | 'short' | 'narrow'): string
-    getMonthNames(format?: 'long' | 'short' | 'narrow'): string[]
-  }>
-
-  // type aliases
-  export type NumberFormat = Intl.NumberFormatOptions
-  export type DateFormat = Intl.DateTimeFormatOptions
-  export type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
-  export type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 }
 
 // === local types ===================================================
