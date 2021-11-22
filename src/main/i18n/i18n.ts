@@ -38,7 +38,7 @@ type I18n = Readonly<{
     ): Partial<I18n.Behavior>
   }): void
 
-  defineTranslations<C extends Category, T extends I18n.Terms>(
+  defineTranslations<C extends I18n.Category, T extends I18n.Terms>(
     translations: I18n.Translations<C, T>
   ): I18n.Translations<C, T>
 
@@ -46,14 +46,14 @@ type I18n = Readonly<{
     C extends keyof I18n.TranslationsMap,
     T extends I18n.TranslationsMap[C]
   >(
-    translations: I18n.Translations<C & Category, T & I18n.Terms>
+    translations: I18n.Translations<C & I18n.Category, T & I18n.Terms>
   ): typeof I18n.registerTranslations
 
   registerTranslations<B extends string, C extends keyof I18n.TranslationsMap>(
-    baseName: B,
+    baseName: `${B}*`,
     termsPerLanguagePerCategory: Record<
       string,
-      Record<StartsWith<C, `${B}.`>, I18n.TranslationsMap[C]>
+      Record<StartsWith<C, `${B}`>, I18n.TranslationsMap[C]>
     >
   ): void
 
@@ -61,7 +61,7 @@ type I18n = Readonly<{
   // as eror :-(
   registerTranslations<C extends keyof I18n.TranslationsMap>(
     translations: I18n.Translations<
-      C & Category,
+      C & I18n.Category,
       Partial<I18n.TranslationsMap[C]> & I18n.Terms
     > & {
       partial: true
@@ -73,7 +73,14 @@ type I18n = Readonly<{
 declare global {
   namespace I18n {
     interface TranslationsMap {}
-    type Terms = Record<string, string | ((...args: any[]) => string)>
+    type Category = `${string}.${string}`
+
+    type Terms<
+      T extends Record<
+        string,
+        string | ((params: Record<string, any>) => string)
+      > = any
+    > = T
 
     export interface Translations<
       C extends Category = any,
@@ -92,11 +99,14 @@ declare global {
     > = keyof TranslationsMap[K]
 
     type Behavior = Readonly<{
-      translate<C extends keyof TranslationsMap>(
+      translate<
+        C extends keyof TranslationsMap,
+        K extends keyof TranslationsMap[C]
+      >(
         locale: string,
         category: C & Category,
-        key: keyof TranslationsMap[C] & string,
-        params?: Record<string, any>
+        key: K & string,
+        params?: FirstArg<TranslationsMap[C][K]>
       ): string | null
 
       parseNumber(locale: string, numberString: string): number | null
@@ -124,10 +134,13 @@ declare global {
     type Localizer = Readonly<{
       getLocale(): string
 
-      translate<C extends keyof TranslationsMap>(
+      translate<
+        C extends keyof TranslationsMap,
+        K extends keyof TranslationsMap[C]
+      >(
         category: C & Category,
-        key: keyof TranslationsMap[C] & string,
-        params?: Record<string, any>
+        key: K & string,
+        params?: FirstArg<TranslationsMap[C][K]>
       ): string
 
       parseNumber(numberString: string): number | null
@@ -159,7 +172,7 @@ declare global {
 
 // === local types ===================================================
 
-type Category = `${string}.${string}`
+type FirstArg<T> = T extends (arg: infer A) => any ? A : never
 
 type StartsWith<A extends string, B extends string> = A extends `${B}${string}`
   ? A
@@ -235,7 +248,7 @@ function createLocalizer(
 // === base i18n behavior =========================================
 
 const baseBehavior: I18n.Behavior = {
-  translate: dict.translate.bind(dict),
+  translate: dict.translate.bind(dict) as any, // TODO
   formatNumber,
   formatDate,
   parseNumber,
@@ -319,7 +332,7 @@ const I18n: I18n = Object.freeze({
     }
   },
 
-  defineTranslations<C extends Category, T extends I18n.Terms>(
+  defineTranslations<C extends I18n.Category, T extends I18n.Terms>(
     translations: I18n.Translations<C, T>
   ) {
     return translations
@@ -338,15 +351,18 @@ const I18n: I18n = Object.freeze({
         )
       })
     } else {
-      const baseName = arg1 as string
+      const pattern = arg1 as string
+
+      if (typeof pattern !== 'string' || !pattern.endsWith('*')) {
+        throw Error(`Illegal category pattern used: ` + pattern)
+      }
+
+      const base = pattern.substr(0, -1)
       const data = arg2
 
       for (const [language, data2] of Object.entries(data)) {
         for (const [category, terms] of Object.entries(data2 as any)) {
-          if (
-            typeof category !== 'string' ||
-            !category.startsWith(baseName + '.')
-          ) {
+          if (typeof category !== 'string' || !category.startsWith(base)) {
             throw Error(`Illegal category used as index: ` + category)
           }
           for (const [key, value] of Object.entries(terms as any)) {
@@ -355,6 +371,10 @@ const I18n: I18n = Object.freeze({
         }
       }
     }
+
+    behavior.translate('en', 'jsCockpit.paginationBar', 'ofXPages', {
+      pageCount: 3
+    })
 
     return I18n.registerTranslations
   }

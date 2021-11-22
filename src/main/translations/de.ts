@@ -2,7 +2,7 @@ import { I18n } from '../i18n/i18n'
 
 const { formatNumber } = I18n.localize('de')
 
-I18n.registerTranslations('jsCockpit', {
+I18n.registerTranslations('jsCockpit.*', {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',

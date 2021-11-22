@@ -21,7 +21,7 @@ class Dictionary {
     locale: string,
     category: string,
     key: string,
-    translation: string | Function
+    translation: string | ((params: Record<string, any>) => string)
   ): void {
     this.#translations.set(
       `${locale}${SEP}${category}${SEP}${key}`,
