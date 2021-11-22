@@ -38,7 +38,7 @@ type I18n = Readonly<{
     ): Partial<I18n.Behavior>
   }): void
 
-  defineTranslations<C extends string, T extends I18n.Terms>(
+  defineTranslations<C extends Category, T extends I18n.Terms>(
     translations: I18n.Translations<C, T>
   ): I18n.Translations<C, T>
 
@@ -46,20 +46,22 @@ type I18n = Readonly<{
     C extends keyof I18n.TranslationsMap,
     T extends I18n.TranslationsMap[C]
   >(
-    translations: I18n.Translations<C & string, T & I18n.Terms>
+    translations: I18n.Translations<C & Category, T & I18n.Terms>
   ): typeof I18n.registerTranslations
 
   registerTranslations<B extends string, C extends keyof I18n.TranslationsMap>(
-    language: string,
     baseName: B,
-    termsPerCategory: Record<StartsWith<C, `${B}.`>, I18n.TranslationsMap[C]>
+    termsPerLanguagePerCategory: Record<
+      string,
+      Record<StartsWith<C, `${B}.`>, I18n.TranslationsMap[C]>
+    >
   ): void
 
   // TODO: Illegal keys in `terms` object are not detected
   // as eror :-(
   registerTranslations<C extends keyof I18n.TranslationsMap>(
     translations: I18n.Translations<
-      C & string,
+      C & Category,
       Partial<I18n.TranslationsMap[C]> & I18n.Terms
     > & {
       partial: true
@@ -74,7 +76,7 @@ declare global {
     type Terms = Record<string, string | ((...args: any[]) => string)>
 
     export interface Translations<
-      C extends string = any,
+      C extends Category = any,
       T extends I18n.Terms = any
     > {
       category: C
@@ -83,7 +85,7 @@ declare global {
     }
 
     type CategoryOf<T> = T extends Translations<infer A, Terms> ? A : never
-    type TermsOf<T> = T extends Translations<string, infer A> ? A : never
+    type TermsOf<T> = T extends Translations<Category, infer A> ? A : never
 
     type TermKeysOf<
       K extends keyof TranslationsMap & string
@@ -92,7 +94,7 @@ declare global {
     type Behavior = Readonly<{
       translate<C extends keyof TranslationsMap>(
         locale: string,
-        category: C & string,
+        category: C & Category,
         key: keyof TranslationsMap[C] & string,
         params?: Record<string, any>
       ): string | null
@@ -123,7 +125,7 @@ declare global {
       getLocale(): string
 
       translate<C extends keyof TranslationsMap>(
-        category: C & string,
+        category: C & Category,
         key: keyof TranslationsMap[C] & string,
         params?: Record<string, any>
       ): string
@@ -156,6 +158,8 @@ declare global {
 }
 
 // === local types ===================================================
+
+type Category = `${string}.${string}`
 
 type StartsWith<A extends string, B extends string> = A extends `${B}${string}`
   ? A
@@ -315,21 +319,42 @@ const I18n: I18n = Object.freeze({
     }
   },
 
-  defineTranslations<C extends string, T extends I18n.Terms>(
+  defineTranslations<C extends Category, T extends I18n.Terms>(
     translations: I18n.Translations<C, T>
   ) {
     return translations
   },
 
-  registerTranslations(translations: any) {
-    Object.entries(translations.terms).forEach(([key, value]) => {
-      dict.addTranslation(
-        translations.language,
-        translations.category,
-        key,
-        value as any // TODO
-      )
-    })
+  registerTranslations(arg1: any, arg2?: any) {
+    if (typeof arg1 !== 'string') {
+      const translations = arg1 as I18n.Translations
+
+      Object.entries(translations.terms).forEach(([key, value]) => {
+        dict.addTranslation(
+          translations.language,
+          translations.category,
+          key,
+          value as any
+        )
+      })
+    } else {
+      const baseName = arg1 as string
+      const data = arg2
+
+      for (const [language, data2] of Object.entries(data)) {
+        for (const [category, terms] of Object.entries(data2 as any)) {
+          if (
+            typeof category !== 'string' ||
+            !category.startsWith(baseName + '.')
+          ) {
+            throw Error(`Illegal category used as index: ` + category)
+          }
+          for (const [key, value] of Object.entries(terms as any)) {
+            dict.addTranslation(language, category, key, value as any)
+          }
+        }
+      }
+    }
 
     return I18n.registerTranslations
   }
