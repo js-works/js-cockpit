@@ -1,5 +1,5 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { I18n } from '../../i18n/i18n'
+import { localize } from 'js-localize'
 import { createPopper, Instance as PopperInstance } from '@popperjs/core'
 
 // @ts-ignore
@@ -182,7 +182,7 @@ function initPopper(slInput: SlInput, datepicker: DatepickerInstance) {
 }
 
 function createLocalization(locale: string) {
-  const localizer = I18n.localize(locale)
+  const localizer = localize(locale)
   let daysShort = localizer.getDayNames('short')
 
   if (daysShort.some((it) => it.length > 4)) {

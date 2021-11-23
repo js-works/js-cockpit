@@ -1,7 +1,7 @@
 import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
 import { html, createRef, repeat, lit, ref } from 'js-element/lit'
 import { useEmitter } from 'js-element/hooks'
-import { I18n } from '../../i18n/i18n'
+import { addToDict, localize, TermsOf } from 'js-localize'
 import { useI18n } from '../../utils/hooks'
 
 // events
@@ -37,48 +37,49 @@ const defaultPageSize = 50
 // === translations ==================================================
 
 declare global {
-  namespace I18n {
+  namespace Localize {
     interface TranslationsMap {
-      'jsCockpit.paginationBar': I18n.TermsOf<typeof translations>
+      'jsCockpit.paginationBar': TermsOf<typeof translations>
     }
   }
 }
 
 const translations = (() => {
-  const i18n = I18n.localize('en')
+  const i18n = localize('en')
 
-  return I18n.defineTranslations({
-    category: 'jsCockpit.paginationBar',
-    language: 'en',
+  return {
+    en: {
+      'jsCockpit.paginationBar': {
+        itemsXToYOfZ(params: {
+          firstItemNo: number
+          lastItemNo: number
+          itemCount: number
+        }) {
+          return `${i18n.formatNumber(
+            params.firstItemNo
+          )} - ${i18n.formatNumber(params.lastItemNo)} / ${i18n.formatNumber(
+            params.itemCount
+          )}`
+        },
 
-    terms: {
-      itemsXToYOfZ(params: {
-        firstItemNo: number
-        lastItemNo: number
-        itemCount: number
-      }) {
-        return `${i18n.formatNumber(params.firstItemNo)} - ${i18n.formatNumber(
-          params.lastItemNo
-        )} / ${i18n.formatNumber(params.itemCount)}`
-      },
+        itemXOfY(params: { itemNo: number; itemCount: number }) {
+          return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(
+            params.itemCount
+          )}`
+        },
 
-      itemXOfY(params: { itemNo: number; itemCount: number }) {
-        return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(
-          params.itemCount
-        )}`
-      },
+        ofXPages(params: { pageCount: number }) {
+          return `of ${i18n.formatNumber(params.pageCount)}`
+        },
 
-      ofXPages(params: { pageCount: number }) {
-        return `of ${i18n.formatNumber(params.pageCount)}`
-      },
-
-      page: 'Page',
-      pageSize: 'Items/Page'
+        page: 'Page',
+        pageSize: 'Items/Page'
+      }
     }
-  })
+  }
 })()
 
-I18n.registerTranslations(translations)
+addToDict(translations)
 
 // === types =========================================================
 

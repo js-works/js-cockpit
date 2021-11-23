@@ -33,7 +33,6 @@ export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
 // i18n
-export { I18n } from './i18n/i18n'
 export { detectLocale, observeLocale } from './i18n/locale-detection'
 
 // misc

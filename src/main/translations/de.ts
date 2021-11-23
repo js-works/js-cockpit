@@ -1,8 +1,8 @@
-import { I18n } from '../i18n/i18n'
+import { addToDict, check, localize } from 'js-localize'
 
-const { formatNumber } = I18n.localize('de')
+const { formatNumber } = localize('de')
 
-I18n.registerTranslations('jsCockpit.*', {
+const translations = check('jsCockpit.*', {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
@@ -70,3 +70,5 @@ I18n.registerTranslations('jsCockpit.*', {
     }
   }
 })
+
+addToDict(translations)

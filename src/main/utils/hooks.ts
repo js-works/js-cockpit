@@ -8,29 +8,32 @@ import {
 } from 'js-element/hooks'
 
 import { observeLocale } from '../i18n/locale-detection'
-import { I18n } from '../i18n/i18n'
+import { localize, Localizer } from 'js-localize'
 
 // === types =========================================================
 
 declare global {
-  namespace I18n {
+  namespace Localize {
     interface TranslationsMap {}
   }
 }
 
 // === useI18n =======================================================
 
-function useI18nFn<C extends keyof I18n.TranslationsMap>(
+function useI18nFn<C extends keyof Localize.TranslationsMap>(
   category: C
 ): {
-  i18n: I18n.Localizer
-  t(key: keyof I18n.TranslationsMap[C], params?: Record<string, any>): string
+  i18n: Localizer
+  t(
+    key: keyof Localize.TranslationsMap[C],
+    params?: Record<string, any>
+  ): string
 } {
   const element = useHost()
   const refresh = useRefresher()
 
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
-  const localizer = I18n.localize(getLocale)
+  const localizer = localize(getLocale)
 
   useBeforeMount(connect)
   useBeforeUnmount(disconnect)

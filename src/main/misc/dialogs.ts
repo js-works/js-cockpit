@@ -5,7 +5,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 import { detectLocale } from '../i18n/locale-detection'
-import { I18n } from '../i18n/i18n'
+import { addToDict, localize, TermsOf } from 'js-localize'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -18,34 +18,35 @@ import promptIcon from '../icons/keyboard.svg'
 // === translations ===================================================
 
 declare global {
-  namespace I18n {
+  namespace Localize {
     interface TranslationsMap {
-      'jsCockpit.dialogs': I18n.TermsOf<typeof translations>
+      'jsCockpit.dialogs': TermsOf<typeof translations>
     }
   }
 }
 
-const translations = I18n.defineTranslations({
-  language: 'en',
-  category: 'jsCockpit.dialogs',
-
-  terms: {
-    ok: 'OK',
-    cancel: 'Cancel',
-    information: 'Information',
-    warning: 'Warning',
-    error: 'Error',
-    input: 'Input',
-    confirmation: 'Confirmation',
-    approval: 'Approval'
+const translations = {
+  en: {
+    'jsCockpit.dialogs': {
+      ok: 'OK',
+      cancel: 'Cancel',
+      information: 'Information',
+      warning: 'Warning',
+      error: 'Error',
+      input: 'Input',
+      confirmation: 'Confirmation',
+      approval: 'Approval'
+    }
   }
-})
+}
 
-I18n.registerTranslations(translations)
+addToDict(translations)
 
 // === types =========================================================
 
-type TranslateFn = (textId: I18n.TermKeysOf<'jsCockpit.dialogs'>) => string
+type Lang = string
+type Category = string
+type TranslateFn = (textId: keyof TermsOf<'jsCockpit.dialogs'>) => string
 
 type DialogConfig<T> = {
   type: 'normal' | 'warning' | 'danger'
@@ -470,7 +471,7 @@ function showDialog<T = void>(
     document.body
 
   const locale = detectLocale(target)
-  const localizer = I18n.localize(locale)
+  const localizer = localize(locale)
 
   const translate: TranslateFn = (textId) =>
     localizer.translate('jsCockpit.dialogs', textId)

@@ -6,7 +6,7 @@ import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { useI18n } from '../../utils/hooks'
 import { Dialogs } from '../../misc/dialogs'
-import { I18n } from '../../i18n/i18n'
+import { addToDict, TermsOf } from 'js-localize'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -74,23 +74,22 @@ namespace DataExplorer {
 // === translations ==================================================
 
 declare global {
-  namespace I18n {
+  namespace Localize {
     interface TranslationsMap {
-      'jsCockpit.dataExplorer': I18n.TermsOf<typeof translations>
+      'jsCockpit.dataExplorer': TermsOf<typeof translations>
     }
   }
 }
 
-const translations = I18n.defineTranslations({
-  category: 'jsCockpit.dataExplorer',
-  language: 'en',
-
-  terms: {
-    loadingMessage: 'Loading...'
+const translations = {
+  en: {
+    'jsCockpit.dataExplorer': {
+      loadingMessage: 'Loading...'
+    }
   }
-})
+}
 
-I18n.registerTranslations(translations)
+addToDict(translations)
 
 // === DataExplorer ==================================================
 

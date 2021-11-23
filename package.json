@@ -54,6 +54,7 @@
     "@shoelace-style/shoelace": "^2.0.0-beta.61",
     "element-internals-polyfill": "^0.1.46",
     "js-element": "^0.0.236",
+    "js-localize": "file:../js-localize",
     "lit": "^2.0.2",
     "lit-html": "^2.0.2"
   }

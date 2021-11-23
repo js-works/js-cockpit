@@ -2,7 +2,7 @@ import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useOnInit, useState } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
-import { I18n } from '../../i18n/i18n'
+import { addToDict, TermsOf } from 'js-localize'
 
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
@@ -33,49 +33,48 @@ type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
 // === translations ==================================================
 
 declare global {
-  namespace I18n {
+  namespace Localize {
     interface TranslationsMap {
-      'jsCockpit.loginForm': I18n.TermsOf<typeof translations>
+      'jsCockpit.loginForm': TermsOf<typeof translations>
     }
   }
 }
 
-const translations = I18n.defineTranslations({
-  category: 'jsCockpit.loginForm',
-  language: 'en',
-
-  terms: {
-    email: 'Email',
-    firstName: 'First name',
-    lastName: 'Last name',
-    forgotPassword: 'Forgot password?',
-    forgotPasswordIntroHeadline: 'Forgot password?',
-    forgotPasswordIntroText:
-      "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
-    forgotPasswordSubmitText: 'Request password reset',
-    goToLogin: 'Go to login form',
-    goToRegistration: 'Need account?',
-    loginIntroHeadline: 'Login',
-    loginIntroText: 'Please enter your credentials in the form to log in',
-    loginSubmitText: 'Log in',
-    newPassword: 'New passwort',
-    newPasswordRepeat: 'Repeat new password',
-    password: 'Password',
-    registrationIntroHeadline: 'Registration',
-    registrationIntroText:
-      'Please fill out the form and press the submit button to register',
-    registrationSubmitText: 'Register',
-    rememberLogin: 'Remember login',
-    resetPasswordIntroHeadline: 'Reset password',
-    resetPasswordIntroText:
-      'Please fill out and submit the form to reset your password',
-    resetPasswordSubmitText: 'Reset password',
-    securityCode: 'Security code',
-    username: 'Username'
+const translations = {
+  en: {
+    'jsCockpit.loginForm': {
+      email: 'Email',
+      firstName: 'First name',
+      lastName: 'Last name',
+      forgotPassword: 'Forgot password?',
+      forgotPasswordIntroHeadline: 'Forgot password?',
+      forgotPasswordIntroText:
+        "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
+      forgotPasswordSubmitText: 'Request password reset',
+      goToLogin: 'Go to login form',
+      goToRegistration: 'Need account?',
+      loginIntroHeadline: 'Login',
+      loginIntroText: 'Please enter your credentials in the form to log in',
+      loginSubmitText: 'Log in',
+      newPassword: 'New passwort',
+      newPasswordRepeat: 'Repeat new password',
+      password: 'Password',
+      registrationIntroHeadline: 'Registration',
+      registrationIntroText:
+        'Please fill out the form and press the submit button to register',
+      registrationSubmitText: 'Register',
+      rememberLogin: 'Remember login',
+      resetPasswordIntroHeadline: 'Reset password',
+      resetPasswordIntroText:
+        'Please fill out and submit the form to reset your password',
+      resetPasswordSubmitText: 'Reset password',
+      securityCode: 'Security code',
+      username: 'Username'
+    }
   }
-})
+}
 
-I18n.registerTranslations(translations)
+addToDict(translations)
 
 // === Login form ====================================================
 
