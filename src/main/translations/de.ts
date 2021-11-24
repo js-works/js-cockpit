@@ -50,16 +50,12 @@ const translations: CompleteTranslations<'jsCockpit.*'> = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ: (params: {
-        firstItemNo: number
-        lastItemNo: number
-        itemCount: number
-      }) =>
+      itemsXToYOfZ: (params) =>
         `${formatNumber(params.firstItemNo)} - ${formatNumber(
           params.lastItemNo
         )} / ${formatNumber(params.itemCount)}`,
 
-      itemXOfY: (params: { itemNo: number; itemCount: number }) =>
+      itemXOfY: (params) =>
         `${formatNumber(params.itemNo)} - ${formatNumber(params.itemCount)}`,
 
       ofXPages: (params: { pageCount: number }) =>
