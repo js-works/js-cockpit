@@ -1,8 +1,8 @@
-import { addToDict, check, localize } from 'js-localize'
+import { addToDict, localize, CompleteTranslations } from 'js-localize'
 
 const { formatNumber } = localize('de')
 
-const translations = check('jsCockpit.*', {
+const translations: CompleteTranslations<'jsCockpit.*'> = {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
@@ -69,6 +69,6 @@ const translations = check('jsCockpit.*', {
       pageSize: 'Datensätze/Seite'
     }
   }
-})
+}
 
 addToDict(translations)
