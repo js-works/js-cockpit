@@ -1,8 +1,8 @@
-import { addToDict, localize, CompleteTranslations } from 'js-localize'
+import { addToDict, localize, FullTranslations } from 'js-localize'
 
 const { formatNumber } = localize('de')
 
-const translations: CompleteTranslations<'jsCockpit.*'> = {
+const translations: FullTranslations<'jsCockpit.*'> = {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
@@ -50,16 +50,26 @@ const translations: CompleteTranslations<'jsCockpit.*'> = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ: (params) =>
-        `${formatNumber(params.firstItemNo)} - ${formatNumber(
-          params.lastItemNo
-        )} / ${formatNumber(params.itemCount)}`,
+      itemsXToYOfZ(params) {
+        const firstItemNo = formatNumber(params.firstItemNo)
+        const lastItemNo = formatNumber(params.lastItemNo)
+        const itemCount = formatNumber(params.itemCount)
 
-      itemXOfY: (params) =>
-        `${formatNumber(params.itemNo)} - ${formatNumber(params.itemCount)}`,
+        return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
+      },
 
-      ofXPages: (params: { pageCount: number }) =>
-        `von ${formatNumber(params.pageCount)}`,
+      itemXOfY(params) {
+        const itemNo = formatNumber(params.itemNo)
+        const itemCount = formatNumber(params.itemCount)
+
+        return `${itemNo} - ${itemCount}`
+      },
+
+      ofXPages(params) {
+        const pageCount = formatNumber(params.pageCount)
+
+        return `von ${pageCount}`
+      },
 
       page: 'Seite',
       pageSize: 'Datensätze/Seite'

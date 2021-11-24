@@ -24,9 +24,11 @@ function useI18nFn<C extends keyof Localize.TranslationsMap>(
   category: C
 ): {
   i18n: Localizer
-  t(
-    key: keyof Localize.TranslationsMap[C],
-    params?: Record<string, any>
+  t<K extends keyof Localize.TranslationsMap[C]>(
+    key: K,
+    params?: Localize.TranslationsMap[C][K] extends (a: infer A) => string
+      ? A
+      : 'y'
   ): string
 } {
   const element = useHost()

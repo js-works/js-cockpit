@@ -45,7 +45,7 @@ declare global {
 }
 
 const translations = (() => {
-  const i18n = localize('en')
+  const { formatNumber } = localize('en')
 
   return {
     en: {
@@ -55,21 +55,24 @@ const translations = (() => {
           lastItemNo: number
           itemCount: number
         }) {
-          return `${i18n.formatNumber(
-            params.firstItemNo
-          )} - ${i18n.formatNumber(params.lastItemNo)} / ${i18n.formatNumber(
-            params.itemCount
-          )}`
+          const firstItemNo = formatNumber(params.firstItemNo)
+          const lastItemNo = formatNumber(params.lastItemNo)
+          const itemCount = formatNumber(params.itemCount)
+
+          return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
         },
 
         itemXOfY(params: { itemNo: number; itemCount: number }) {
-          return `${i18n.formatNumber(params.itemNo)} - ${i18n.formatNumber(
-            params.itemCount
-          )}`
+          const itemNo = formatNumber(params.itemNo)
+          const itemCount = formatNumber(params.itemCount)
+
+          return `${itemNo} - ${itemCount}`
         },
 
         ofXPages(params: { pageCount: number }) {
-          return `of ${i18n.formatNumber(params.pageCount)}`
+          const pageCount = formatNumber(params.pageCount)
+
+          return `of ${pageCount}`
         },
 
         page: 'Page',
