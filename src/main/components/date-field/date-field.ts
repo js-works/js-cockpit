@@ -1,19 +1,16 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
-
-import {
-  useAfterMount,
-  useBeforeRender,
-  useAfterUpdate
-} from 'js-element/hooks'
-
+import { useAfterMount, useBeforeRender } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 
 import {
-  createDatepicker,
   getLocalization,
+  initPopper,
   DatepickerInstance
-} from './date-utils'
+} from './date-picker-utils'
+
+// @ts-ignore
+import { Datepicker } from 'vanillajs-datepicker'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -29,11 +26,11 @@ import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/
 import datePickerCustomStyles from './date-picker-custom.css'
 import controlStyles from '../../shared/css/control.css'
 
-// === exports =======================================================
+// === exports ====================================================
 
 export { DateField }
 
-// === Cockpit ===================================================
+// === DateField ==================================================
 
 @elem({
   tag: 'c-date-field',
@@ -93,15 +90,6 @@ function dateFieldImpl(self: DateField) {
     }
   })
 
-  /*
-  useAfterMount(() => {
-    setTimeout(() => {
-      const value = new Date('2017-01-01')
-      datepicker.setDate(value)
-    }, 1000)
-  })
-  */
-
   function render() {
     return html`
       <div class="base ${classMap({ required: self.required })}">
@@ -124,4 +112,54 @@ function dateFieldImpl(self: DateField) {
   }
 
   return render
+}
+
+// === locals ========================================================
+
+function createDatepicker(params: {
+  slInput: SlInput
+  pickerContainer: Element
+  getLocale: () => string
+  namespace: string
+}): DatepickerInstance {
+  let datepicker: any
+  const { slInput, pickerContainer: container, getLocale } = params
+  const input = (slInput as any).shadowRoot!.querySelector('input')!
+  const locale = getLocale()
+  const localization = getLocalization(getLocale(), params.namespace)
+
+  container.addEventListener('mousedown', (ev) => ev.preventDefault())
+
+  input.addEventListener('hide', () => {
+    slInput.readonly = false
+    slInput.value = input!.value
+  })
+
+  input.addEventListener('show', () => {
+    slInput.readonly = true
+  })
+
+  datepicker = new Datepicker(input, {
+    calendarWeeks: true,
+    daysOfWeekHighlighted: localization.weekendDays,
+    prevArrow: '&#x1F860;',
+    nextArrow: '&#x1F862;',
+    autohide: true,
+    showOnFocus: false,
+    updateOnBlur: false,
+    todayHighlight: true,
+    container: container,
+    weeknumbers: true,
+    language: `${params.namespace}::${locale}`,
+    weekStart: localization.weekStart,
+    format: localization.format,
+
+    getCalendarWeek(date: Date, weekStart: number) {
+      return localization.getCalendarWeek(date)
+    }
+  })
+
+  initPopper(slInput, datepicker)
+
+  return datepicker
 }

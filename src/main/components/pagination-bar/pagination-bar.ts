@@ -203,8 +203,8 @@ function paginationBarImpl(self: PaginationBar) {
       return null
     }
 
-    const pageTransl = t('page')
-    const ofXPagesTransl = t('ofXPages', {
+    const pageTxt = t('page')
+    const ofXPagesTxt = t('ofXPages', {
       pageCount: aux.pageCount
     })
 
@@ -227,7 +227,7 @@ function paginationBarImpl(self: PaginationBar) {
           <sl-icon src=${chevronLeftSvg}></sl-icon>
         </sl-button>
         <div class="page-control">
-          ${pageTransl}
+          ${pageTxt}
           <sl-input
             size="small"
             value=${aux.pageIndex + 1}
@@ -236,7 +236,7 @@ function paginationBarImpl(self: PaginationBar) {
             @keypress=${onPageFieldKey}
             ${ref(pageInputRef)}
           ></sl-input>
-          ${ofXPagesTransl}
+          ${ofXPagesTxt}
         </div>
         <sl-button
           type="default"

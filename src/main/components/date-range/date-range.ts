@@ -3,10 +3,14 @@ import { classMap, html, lit } from 'js-element/lit'
 import { useAfterMount } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
 
+// @ts-ignore
+import { DateRangePicker } from 'vanillajs-datepicker'
+
 import {
-  createDateRangePicker,
+  getLocalization,
+  initPopper,
   DatepickerInstance
-} from '../date-field/date-utils'
+} from '../date-field/date-picker-utils'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -101,4 +105,60 @@ function dateRangeImpl(self: DateRange) {
   }
 
   return render
+}
+
+function createDateRangePicker(params: {
+  range: HTMLElement
+  slInput1: SlInput
+  slInput2: SlInput
+  pickerContainer: HTMLElement
+  getLocale: () => string
+  namespace: string
+}): DatepickerInstance {
+  const {
+    range,
+    slInput1,
+    slInput2,
+    pickerContainer: container,
+    getLocale
+  } = params
+
+  const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!
+  const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!
+  let dateRangePicker: any
+
+  container.addEventListener('mousedown', (ev) => ev.preventDefault())
+
+  setTimeout(() => {
+    const locale = getLocale()
+    const localization = getLocalization(getLocale(), params.namespace)
+
+    input1.addEventListener('hide', () => {
+      slInput1.value = input1!.value
+    })
+
+    input2.addEventListener('hide', () => {
+      slInput2.value = input2.value
+    })
+
+    dateRangePicker = new DateRangePicker(range, {
+      inputs: [input1, input2],
+      calendarWeeks: true,
+      daysOfWeekHighlighted: localization.weekendDays,
+      prevArrow: '&#x1F860;',
+      nextArrow: '&#x1F862;',
+      autohide: true,
+      showOnFocus: false,
+      updateOnBlur: false,
+      todayHighlight: true,
+      container: container,
+      weeknumbers: true,
+      language: `${params.namespace}::${locale}`,
+      weekStart: localization.weekStart,
+      format: localization.format
+    })
+
+    initPopper(slInput1, dateRangePicker.datepickers[0])
+    initPopper(slInput2, dateRangePicker.datepickers[1])
+  }, 0)
 }
