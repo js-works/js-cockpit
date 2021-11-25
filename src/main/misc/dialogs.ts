@@ -482,7 +482,7 @@ function showDialog<T = void>(
   const containerShadow = container.shadowRoot!
 
   const setText = (text: string | undefined, selector: string) => {
-    const target: HTMLElement = containerShadow.querySelector(selector)!
+    const target = containerShadow.querySelector<HTMLElement>(selector)!
 
     if (text) {
       target.innerText = text
@@ -513,9 +513,11 @@ function showDialog<T = void>(
   setText(params.title, '.title')
   setText(params.message, '.message')
 
-  const form: SlForm = containerShadow.querySelector('sl-form.form')!
-  const dialog: SlDialog = containerShadow.querySelector('sl-dialog.dialog')!
-  const contentBox: HTMLElement = containerShadow.querySelector('div.content')!
+  const form = containerShadow.querySelector<SlForm>('sl-form.form')!
+  const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!
+  const contentBox = containerShadow.querySelector<HTMLDivElement>(
+    'div.content'
+  )!
 
   if (params.content) {
     contentBox.append(params.content)
@@ -542,7 +544,7 @@ function showDialog<T = void>(
     ev.preventDefault()
   })
 
-  const icon: SlIcon = containerShadow.querySelector('sl-icon.icon')!
+  const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!
   icon.classList.add(`${params.type}`)
   icon.src = params.icon
 
@@ -590,7 +592,7 @@ function showDialog<T = void>(
   })
   ;(target.shadowRoot || target).appendChild(container)
 
-  const elem: any = dialog.querySelector('[autofocus]')
+  const elem = dialog.querySelector<HTMLElement>('[autofocus]')
 
   if (elem && typeof elem.focus === 'function') {
     setTimeout(() => elem.focus())

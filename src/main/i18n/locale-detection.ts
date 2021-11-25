@@ -22,7 +22,7 @@ declare global {
 
 // === detectLocale ==================================================
 
-function detectLocale(elem: HTMLElement) {
+function detectLocale(elem: HTMLElement): string | null {
   const locale = localeByElem.get(elem)
   return locale !== undefined ? locale : getLocale(elem)
 }

@@ -21,14 +21,14 @@ declare global {
 // === useI18n =======================================================
 
 function useI18nFn<C extends keyof Localize.TranslationsMap>(
-  category: C
+  category?: C
 ): {
   i18n: Localizer
   t<K extends keyof Localize.TranslationsMap[C]>(
     key: K,
     params?: Localize.TranslationsMap[C][K] extends (a: infer A) => string
       ? A
-      : 'y'
+      : void
   ): string
 } {
   const element = useHost()
@@ -40,12 +40,10 @@ function useI18nFn<C extends keyof Localize.TranslationsMap>(
   useBeforeMount(connect)
   useBeforeUnmount(disconnect)
 
-  let ret: any = {
+  return {
     i18n: localizer,
-    t: localizer.translate.bind(null, category)
+    t: (localizer.translate as any).bind(null, category)
   }
-
-  return ret
 }
 
 export const useI18n = hook('useI18n', useI18nFn)
