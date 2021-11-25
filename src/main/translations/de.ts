@@ -2,7 +2,7 @@ import { addToDict, localize, FullTranslations } from 'js-localize'
 
 const { formatNumber } = localize('de')
 
-const translations: FullTranslations<'jsCockpit.*'> = {
+const translations: FullTranslations<'jsCockpit'> = {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
