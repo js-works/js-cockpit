@@ -73,7 +73,7 @@ function dateFieldImpl(self: DateField) {
     setTimeout(() => {
       datepicker = createDatepicker({
         getLocale,
-        slInput: shadowRoot.querySelector('sl-input')!,
+        slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
         pickerContainer: shadowRoot.querySelector('.picker-container')!,
         namespace: self.localName
       })

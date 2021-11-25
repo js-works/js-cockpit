@@ -1,4 +1,4 @@
-import 'element-internals-polyfill'
+// import 'element-internals-polyfill'
 
 // components
 export { ActionBar } from './components/action-bar/action-bar'

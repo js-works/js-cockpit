@@ -42,7 +42,7 @@
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
-    "esbuild": "^0.13.14",
+    "esbuild": "^0.13.15",
     "faker": "^5.5.3",
     "focus-trap": "^6.7.1",
     "remixicon": "^2.5.0",
@@ -53,8 +53,7 @@
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.61",
-    "element-internals-polyfill": "^0.1.46",
-    "js-element": "^0.0.236",
+    "js-element": "file:../js-element",
     "js-localize": "file:../js-localize"
   }
 }
