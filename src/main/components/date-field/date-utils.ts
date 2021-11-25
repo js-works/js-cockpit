@@ -71,8 +71,8 @@ function createDatepicker(params: {
     weekStart: localization.weekStart,
     format: localization.format,
 
-    getCalendarWeek(timestamp: number, weekStart: number) {
-      return localization.getCalendarWeek(new Date(timestamp))
+    getCalendarWeek(date: Date, weekStart: number) {
+      return localization.getCalendarWeek(date)
     }
   })
 
@@ -198,11 +198,11 @@ function createLocalization(locale: string) {
     weekStart: localizer.getFirstDayOfWeek(),
     weekendDays: localizer.getWeekendDays(),
     titleFormat: 'MM y',
-    getCalendarWeek: (date: Date) => localizer.getCalendarWeek(date),
+    getCalendarWeek: localizer.getCalendarWeek,
 
     format: {
-      toValue: (s: string) => localizer.parseDate(s),
-      toDisplay: (date: Date) => localizer.formatDate(date)
+      toValue: localizer.parseDate,
+      toDisplay: localizer.formatDate
     }
   }
 }

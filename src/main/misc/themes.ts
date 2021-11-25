@@ -336,7 +336,8 @@ const Themes = predefineThemes({
   },
 
   temp: {
-    primaryColor: '#2889e2' // baseui based
+    primaryColor: '#00586B'
+    //primaryColor: '#2889e2' // baseui based
     //primaryColor: '#3366e2' // baseui based
     //primaryColor: '#3366cc' // baseui
     //primaryColor: '#0078d4' // fluentui
