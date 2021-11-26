@@ -153,10 +153,7 @@ function createDatepicker(params: {
     language: `${params.namespace}::${locale}`,
     weekStart: localization.weekStart,
     format: localization.format,
-
-    getCalendarWeek(date: Date, weekStart: number) {
-      return localization.getCalendarWeek(date)
-    }
+    getCalendarWeek: localization.getCalendarWeek
   })
 
   initPopper(slInput, datepicker)
