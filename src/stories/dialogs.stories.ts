@@ -23,15 +23,7 @@ const styles = `
 class DialogsDemo extends component() {}
 
 function dialogDemoImpl(self: DialogsDemo) {
-  const onInfo1Click = () => {
-    Dialogs.info(
-      self,
-      'Your question has been submitted successfully',
-      'Submit'
-    )
-  }
-
-  const onInfo2Click = () => {
+  const onInfoClick = () => {
     Dialogs.info(self, {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
@@ -39,11 +31,7 @@ function dialogDemoImpl(self: DialogsDemo) {
     })
   }
 
-  const onWarn1Click = () => {
-    Dialogs.warn(self, 'This is your last warning')
-  }
-
-  const onWarn2Click = () => {
+  const onWarnClick = () => {
     Dialogs.warn(self, {
       message: 'This is your last warning',
       title: 'Important!!!',
@@ -51,11 +39,7 @@ function dialogDemoImpl(self: DialogsDemo) {
     })
   }
 
-  const onError1Click = () => {
-    Dialogs.error(self, 'The form could not be submitted')
-  }
-
-  const onError2Click = () => {
+  const onErrorClick = () => {
     Dialogs.error(self, {
       message: 'The form could not be submitted',
       title: 'Form error',
@@ -63,60 +47,51 @@ function dialogDemoImpl(self: DialogsDemo) {
     })
   }
 
-  const onConfirm1Click = () => {
-    Dialogs.confirm(self, 'Do you really want to log out?', 'Logout').then(
-      (confirmed) =>
-        void (confirmed && Dialogs.info(self, "You've been logged out"))
-    )
-  }
-
-  const onConfirm2Click = () => {
+  const onConfirmClick = () => {
     Dialogs.confirm(self, {
       message: 'Do you really want to log out?',
       okText: 'Log out'
-    }).then(
-      (confirmed) =>
-        void (confirmed && Dialogs.info(self, "You've been logged out"))
-    )
+    }).then((confirmed) => {
+      if (confirmed) {
+        Dialogs.info(self, {
+          message: "You've been logged out"
+        })
+      }
+    })
   }
 
-  const onApprove1Click = () => {
-    Dialogs.approve(self, 'Do you really want to delete the project?').then(
-      (approved) =>
-        void (approved && Dialogs.info(self, 'Project has been deleted'))
-    )
-  }
-
-  const onApprove2Click = () => {
+  const onApproveClick = () => {
     Dialogs.approve(self, {
       message: 'Do you really want to delete the project?',
       title: 'Are you sure?',
       okText: 'Delete project'
-    }).then(
-      (approved) =>
-        void (approved && Dialogs.info(self, 'Project has been deleted'))
-    )
+    }).then((approved) => {
+      if (approved) {
+        Dialogs.info(self, {
+          message: 'Project has been deleted'
+        })
+      }
+    })
   }
 
-  const onPrompt1Click = () => {
-    Dialogs.prompt(self, 'Please enter your name').then(
-      (name) => void (name && Dialogs.info(self, `Hello, ${name}!`))
-    )
-  }
-
-  const onPrompt2Click = () => {
+  const onPromptClick = () => {
     Dialogs.prompt(self, {
       message: 'Please enter your name',
       title: 'Input required',
       cancelText: 'No way!'
-    }).then((name) => void (name && Dialogs.info(self, `Hello, ${name}!`)))
+    }).then((name) => {
+      if (name !== null) {
+        Dialogs.info(self, {
+          message: `Hello, ${name || 'stranger'}!`
+        })
+      }
+    })
   }
 
   const onDestroyPlanet = async () => {
-    const confirmed = await Dialogs.confirm(
-      self,
-      'Are you really sure that the planet shall be destroyed?'
-    )
+    const confirmed = await Dialogs.confirm(self, {
+      message: 'Are you really sure that the planet shall be destroyed?'
+    })
 
     if (confirmed) {
       const approved = await Dialogs.approve(self, {
@@ -129,11 +104,11 @@ function dialogDemoImpl(self: DialogsDemo) {
       })
 
       if (approved) {
-        Dialogs.error(
-          self,
-          'You are not allowed to destroy planets. ' +
+        Dialogs.error(self, {
+          message:
+            'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
-        )
+        })
       }
     }
   }
@@ -141,28 +116,22 @@ function dialogDemoImpl(self: DialogsDemo) {
   return () => html`
     <div class="demo">
       <div>
-        <sl-button @click=${onInfo1Click}>Info 1</sl-button>
-        <sl-button @click=${onInfo2Click}>Info 2</sl-button>
+        <sl-button @click=${onInfoClick}>Info</sl-button>
       </div>
       <div>
-        <sl-button @click=${onWarn1Click}>Warn 1</sl-button>
-        <sl-button @click=${onWarn2Click}>Warn 2</sl-button>
+        <sl-button @click=${onWarnClick}>Warn</sl-button>
       </div>
       <div>
-        <sl-button @click=${onError1Click}>Error 1</sl-button>
-        <sl-button @click=${onError2Click}>Error 2</sl-button>
+        <sl-button @click=${onErrorClick}>Error</sl-button>
       </div>
       <div>
-        <sl-button @click=${onConfirm1Click}>Confirm 1</sl-button>
-        <sl-button @click=${onConfirm2Click}>Confirm 2</sl-button>
+        <sl-button @click=${onConfirmClick}>Confirm</sl-button>
       </div>
       <div>
-        <sl-button @click=${onApprove1Click}>Approve 1</sl-button>
-        <sl-button @click=${onApprove2Click}>Approve 2</sl-button>
+        <sl-button @click=${onApproveClick}>Approve</sl-button>
       </div>
       <div>
-        <sl-button @click=${onPrompt1Click}>Prompt 1</sl-button>
-        <sl-button @click=${onPrompt2Click}>Prompt 2</sl-button>
+        <sl-button @click=${onPromptClick}>Prompt</sl-button>
       </div>
       <br />
       <sl-button @click=${onDestroyPlanet}>Destroy planet</sl-button>

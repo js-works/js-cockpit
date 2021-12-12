@@ -15,6 +15,10 @@ import confirmationIcon from '../icons/question-circle.svg'
 import approvalIcon from '../icons/question-diamond.svg'
 import promptIcon from '../icons/keyboard.svg'
 
+// === exports =======================================================
+
+export { Dialogs }
+
 // === translations ===================================================
 
 declare global {
@@ -44,10 +48,6 @@ addToDict(translations)
 
 // === types =========================================================
 
-type Lang = string
-type Category = string
-type TranslateFn = (textId: keyof TermsOf<'jsCockpit.dialogs'>) => string
-
 type DialogConfig<T> = {
   type: 'normal' | 'warning' | 'danger'
   icon: string
@@ -63,20 +63,6 @@ type DialogConfig<T> = {
   content?: HTMLElement | null
   mapResult?: (data: Record<string, string>) => T
 }
-
-type DialogInit<T> = (translate: TranslateFn) => DialogConfig<T>
-
-type InfoDialogParams = {
-  message: string
-  title?: string
-  okText?: string
-}
-
-type WarningDialogParams = InfoDialogParams
-type ErrorDialogParams = InfoDialogParams
-type ConfirmDialogParams = InfoDialogParams & { cancelText?: string }
-type ApproveDialogParams = ConfirmDialogParams
-type PromptDialogParams = ConfirmDialogParams & { value?: string }
 
 // === styles ========================================================
 
@@ -151,318 +137,175 @@ const styles = `
   }
 `
 
-function info(params: InfoDialogParams): Promise<void>
-
-function info(
-  parent: HTMLElement | null,
-  params: InfoDialogParams
-): Promise<void>
-
-function info(message: string, title?: string): Promise<void>
-
-function info(
-  parent: HTMLElement | null,
-  message: string,
-  title?: string
-): Promise<void>
-
-function info(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return info(null, arg1, arg2)
-  }
-
-  if (typeof arg2 === 'string') {
-    return info(arg1, {
-      message: arg2,
-      title: arg3
-    })
-  }
-
-  const parent: HTMLElement | null = arg1
-  const params: InfoDialogParams = arg2
-
-  return showDialog(parent, (translate) => ({
-    type: 'normal',
-    icon: infoIcon,
-    title: params.title || translate('information'),
-    message: params.message || '',
-
-    buttons: [
-      {
-        type: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
+function createDialogFn<P extends Record<string, any>, R = void>(
+  logic: (parent: HTMLElement | null, params: P) => Promise<R>
+): {
+  (params: P): Promise<R>
+  (parent: HTMLElement | null, params: P): Promise<R>
+} {
+  return (arg1: any, arg2?: any) =>
+    arg2 && typeof arg2 === 'object' ? logic(arg1, arg2) : logic(null, arg1)
 }
 
-function warn(params: WarningDialogParams): Promise<void>
+const Dialogs = {
+  info: createDialogFn<{
+    message: string
+    title?: string
+    okText?: string
+  }>((parent, params) => {
+    return showDialog(parent, (translate) => ({
+      type: 'normal',
+      icon: infoIcon,
+      title: params.title || translate('information'),
+      message: params.message || '',
 
-function warn(
-  parent: HTMLElement | null,
-  params: WarningDialogParams
-): Promise<void>
+      buttons: [
+        {
+          type: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  }),
 
-function warn(message: string, title?: string): Promise<void>
+  warn: createDialogFn<{
+    message: string
+    title?: string
+    okText?: string
+  }>((parent, params) => {
+    return showDialog(parent, (translate) => ({
+      type: 'warning',
+      icon: warningIcon,
+      title: params.title || translate('warning'),
+      message: params.message || '',
 
-function warn(
-  parent: HTMLElement | null,
-  message: string,
-  title?: string
-): Promise<void>
+      buttons: [
+        {
+          type: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  }),
 
-function warn(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return warn(null, arg1, arg2)
-  }
+  error: createDialogFn<{
+    message: string
+    title?: string
+    okText?: string
+  }>((parent, params) => {
+    return showDialog(parent, (translate) => ({
+      type: 'danger',
+      icon: errorIcon,
+      title: params.title || translate('error'),
+      message: params.message || '',
 
-  if (typeof arg2 === 'string') {
-    return warn(arg1, {
-      message: arg2,
-      title: arg3
-    })
-  }
+      buttons: [
+        {
+          type: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  }),
 
-  const parent: HTMLElement | null = arg1
-  const params: WarningDialogParams = arg2
+  confirm: createDialogFn<
+    {
+      message: string
+      title?: string
+      okText?: string
+      cancelText?: string
+    },
+    boolean
+  >((parent, params) => {
+    return showDialog(parent, (translate) => ({
+      type: 'normal',
+      icon: confirmationIcon,
+      title: params.title || translate('confirmation'),
+      message: params.message || '',
+      mapResult: ({ button }) => button === '1',
 
-  return showDialog(parent, (translate) => ({
-    type: 'warning',
-    icon: warningIcon,
-    title: params.title || translate('warning'),
-    message: params.message || '',
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          type: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  }),
 
-    buttons: [
-      {
-        type: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
+  approve: createDialogFn<
+    {
+      message: string
+      title?: string
+      okText?: string
+      cancelText?: string
+    },
+    boolean
+  >((parent, params) => {
+    return showDialog(parent, (translate) => ({
+      type: 'danger',
+      icon: approvalIcon,
+      title: params.title || translate('approval'),
+      message: params.message || '',
+      mapResult: ({ button }) => button === '1',
+
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          type: 'danger',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  }),
+
+  prompt: createDialogFn<
+    {
+      message: string
+      title?: string
+      okText?: string
+      cancelText?: string
+      value?: string
+    },
+    string | null
+  >((parent, params) => {
+    const inputField = document.createElement('sl-input')
+    inputField.name = 'input'
+    inputField.value = params.value || ''
+    inputField.size = 'small'
+    inputField.setAttribute('autofocus', '')
+
+    return showDialog(parent, (translate) => ({
+      type: 'normal',
+      icon: promptIcon,
+      title: params.title || translate('input'),
+      message: params.message || '',
+      content: inputField,
+      mapResult: ({ button, input }) => (button === '0' ? null : input),
+
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          type: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }))
+  })
 }
-
-function error(params: ErrorDialogParams): Promise<void>
-
-function error(
-  parent: HTMLElement | null,
-  params: ErrorDialogParams
-): Promise<void>
-
-function error(message: string, title?: string): Promise<void>
-
-function error(
-  parent: HTMLElement | null,
-  message: string,
-  title?: string
-): Promise<void>
-
-function error(arg1: any, arg2?: any, arg3?: any): Promise<void> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return error(null, arg1, arg2)
-  }
-
-  if (typeof arg2 === 'string') {
-    return error(arg1, {
-      message: arg2,
-      title: arg3
-    })
-  }
-
-  const parent: HTMLElement | null = arg1
-  const params: ErrorDialogParams = arg2
-
-  return showDialog(parent, (translate) => ({
-    type: 'danger',
-    icon: errorIcon,
-    title: params.title || translate('error'),
-    message: params.message || '',
-
-    buttons: [
-      {
-        type: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
-}
-
-function confirm(params: ConfirmDialogParams): Promise<boolean>
-
-function confirm(
-  parent: HTMLElement | null,
-  params: ConfirmDialogParams
-): Promise<boolean>
-
-function confirm(message: string, title?: string): Promise<boolean>
-
-function confirm(
-  parent: HTMLElement | null,
-  message: string,
-  title?: string
-): Promise<boolean>
-
-function confirm(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return confirm(null, arg1, arg2)
-  }
-
-  if (typeof arg2 === 'string') {
-    return confirm(arg1, {
-      message: arg2,
-      title: arg3
-    })
-  }
-
-  const parent: HTMLElement | null = arg1
-  const params: ConfirmDialogParams = arg2
-
-  return showDialog(parent, (translate) => ({
-    type: 'normal',
-    icon: confirmationIcon,
-    title: params.title || translate('confirmation'),
-    message: params.message || '',
-    mapResult: ({ button }) => button === '1',
-
-    buttons: [
-      {
-        text: params.cancelText || translate('cancel')
-      },
-      {
-        type: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
-}
-
-function approve(params: ApproveDialogParams): Promise<boolean>
-
-function approve(
-  parent: HTMLElement | null,
-  params: ApproveDialogParams
-): Promise<boolean>
-
-function approve(message: string, title?: string): Promise<boolean>
-
-function approve(
-  parent: HTMLElement | null,
-  message: string,
-  title?: string
-): Promise<boolean>
-
-function approve(arg1: any, arg2?: any, arg3?: any): Promise<boolean> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return approve(null, arg1, arg2)
-  }
-
-  if (typeof arg2 === 'string') {
-    return approve(arg1, {
-      message: arg2,
-      title: arg3
-    })
-  }
-
-  const parent: HTMLElement | null = arg1
-  const params: ApproveDialogParams = arg2
-
-  return showDialog(parent, (translate) => ({
-    type: 'danger',
-    icon: approvalIcon,
-    title: params.title || translate('approval'),
-    message: params.message || '',
-    mapResult: ({ button }) => button === '1',
-
-    buttons: [
-      {
-        text: params.cancelText || translate('cancel')
-      },
-      {
-        type: 'danger',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
-}
-
-function prompt(params: PromptDialogParams): Promise<string | null>
-
-function prompt(
-  parent: HTMLElement | null,
-  params: PromptDialogParams
-): Promise<string | null>
-
-function prompt(
-  message: string,
-  value?: string,
-  title?: string
-): Promise<string | null>
-
-function prompt(
-  parent: HTMLElement | null,
-  message: string,
-  value?: string,
-  title?: string
-): Promise<string | null>
-
-function prompt(
-  arg1: any,
-  arg2?: any,
-  arg3?: any,
-  arg4?: any
-): Promise<string | null> {
-  if (arg1 !== null && !(arg1 instanceof HTMLElement)) {
-    return prompt(null, arg1, arg2, arg3)
-  }
-
-  if (typeof arg2 === 'string') {
-    return prompt(arg1, {
-      message: arg2,
-      value: arg3,
-      title: arg4
-    })
-  }
-
-  const parent: HTMLElement | null = arg1
-  const params: PromptDialogParams = arg2
-
-  const inputField = document.createElement('sl-input')
-  inputField.name = 'input'
-  inputField.value = params.value || ''
-  inputField.size = 'small'
-  inputField.setAttribute('autofocus', '')
-
-  return showDialog(parent, (translate) => ({
-    type: 'normal',
-    icon: promptIcon,
-    title: params.title || translate('input'),
-    message: params.message || '',
-    content: inputField,
-    mapResult: ({ button, input }) => (button === '0' ? null : input),
-
-    buttons: [
-      {
-        text: params.cancelText || translate('cancel')
-      },
-      {
-        type: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }))
-}
-
-export const Dialogs = Object.freeze({
-  info,
-  warn,
-  error,
-  confirm,
-  approve,
-  prompt
-})
 
 function showDialog<T = void>(
   parent: HTMLElement | null,
-  init: DialogInit<T>
+  init: (
+    translate: (textId: keyof TermsOf<'jsCockpit.dialogs'>) => string
+  ) => DialogConfig<T>
 ): Promise<T> {
   const target =
     parent ||
@@ -473,7 +316,7 @@ function showDialog<T = void>(
   const locale = detectLocale(target)
   const localizer = localize(locale)
 
-  const translate: TranslateFn = (textId) =>
+  const translate = (textId: keyof TermsOf<'jsCockpit.dialogs'>) =>
     localizer.translate('jsCockpit.dialogs', textId)
 
   const params = init(translate)
