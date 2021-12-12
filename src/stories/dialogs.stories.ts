@@ -1,7 +1,16 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Dialogs, ThemeProvider } from 'js-cockpit'
+
+import {
+  showApproveDialog,
+  showConfirmDialog,
+  showErrorDialog,
+  showInfoDialog,
+  showInputDialog,
+  showWarnDialog,
+  ThemeProvider
+} from 'js-cockpit'
 
 export default {
   title: 'dialogs'
@@ -24,7 +33,7 @@ class DialogsDemo extends component() {}
 
 function dialogDemoImpl(self: DialogsDemo) {
   const onInfoClick = () => {
-    Dialogs.info(self, {
+    showInfoDialog(self, {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Thanks :-)'
@@ -32,7 +41,7 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onWarnClick = () => {
-    Dialogs.warn(self, {
+    showWarnDialog(self, {
       message: 'This is your last warning',
       title: 'Important!!!',
       okText: 'OK - I understand'
@@ -40,7 +49,7 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onErrorClick = () => {
-    Dialogs.error(self, {
+    showErrorDialog(self, {
       message: 'The form could not be submitted',
       title: 'Form error',
       okText: 'OK - I understand'
@@ -48,12 +57,12 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onConfirmClick = () => {
-    Dialogs.confirm(self, {
+    showConfirmDialog(self, {
       message: 'Do you really want to log out?',
       okText: 'Log out'
     }).then((confirmed) => {
       if (confirmed) {
-        Dialogs.info(self, {
+        showInfoDialog(self, {
           message: "You've been logged out"
         })
       }
@@ -61,13 +70,13 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onApproveClick = () => {
-    Dialogs.approve(self, {
+    showApproveDialog(self, {
       message: 'Do you really want to delete the project?',
       title: 'Are you sure?',
       okText: 'Delete project'
     }).then((approved) => {
       if (approved) {
-        Dialogs.info(self, {
+        showInfoDialog(self, {
           message: 'Project has been deleted'
         })
       }
@@ -75,13 +84,13 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onPromptClick = () => {
-    Dialogs.prompt(self, {
+    showInputDialog(self, {
       message: 'Please enter your name',
       title: 'Input required',
       cancelText: 'No way!'
     }).then((name) => {
       if (name !== null) {
-        Dialogs.info(self, {
+        showInfoDialog(self, {
           message: `Hello, ${name || 'stranger'}!`
         })
       }
@@ -89,12 +98,12 @@ function dialogDemoImpl(self: DialogsDemo) {
   }
 
   const onDestroyPlanet = async () => {
-    const confirmed = await Dialogs.confirm(self, {
+    const confirmed = await showConfirmDialog(self, {
       message: 'Are you really sure that the planet shall be destroyed?'
     })
 
     if (confirmed) {
-      const approved = await Dialogs.approve(self, {
+      const approved = await showApproveDialog(self, {
         message:
           'But this is such a lovely planet. ' +
           'Are you really, really sure it shall be destroyed?',
@@ -104,7 +113,7 @@ function dialogDemoImpl(self: DialogsDemo) {
       })
 
       if (approved) {
-        Dialogs.error(self, {
+        showErrorDialog(self, {
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'

@@ -36,7 +36,7 @@ export { PageSizeChangeEvent } from './events/page-size-change-event'
 export { detectLocale, observeLocale } from './i18n/locale-detection'
 
 // misc
-export { Dialogs } from './misc/dialogs'
+export * from './misc/dialogs'
 export { loadTheme, Theme, Themes } from './misc/themes'
 
 // translations
