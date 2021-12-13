@@ -241,6 +241,7 @@ function loginFormImpl(self: LoginForm) {
             </div>
           </slot>
         `
+
       case 'registration':
         return html`
           <slot name="registration-intro">

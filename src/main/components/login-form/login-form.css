@@ -63,6 +63,9 @@ slot[name='footer']::slotted(div) {
 
   box-shadow: var(--sl-light, 5px 5px 25px var(--sl-color-neutral-300))
     var(--sl-dark, none);
+
+  border: var(--sl-light, none)
+    var(--sl-dark, 1px solid var(--sl-color-neutral-300));
 }
 
 .column1 {
@@ -78,9 +81,11 @@ slot[name='footer']::slotted(div) {
     var(--sl-dark, var(--sl-color-neutral-1000));
 
   background-color: var(--sl-light, var(--sl-color-primary-600))
-    var(--sl-dark, var(--sl-color-neutral-200));
+    var(--sl-dark, var(--sl-color-neutral-0));
 
-  border: 0 solid var(--sl-color-neutral-300);
+  border: var(--sl-light, none)
+    var(--sl-dark, 0 solid var(--sl-color-neutral-300));
+
   border-right-width: var(--sl-light, 0) var(--sl-dark, 1px);
   border-radius: 6px 0 0 6px;
 
@@ -110,7 +115,13 @@ slot[name='footer']::slotted(div) {
   border-radius: 0 6px 6px 0;
 
   background-color: var(--sl-light, var(--sl-color-neutral-0))
-    var(--sl-dark, var(--sl-color-neutral-200));
+    var(--sl-dark, var(--sl-color-neutral-0));
+
+  border: var(--sl-light, none)
+    var(--sl-dark, 1px solid var(--sl-color-neutral-200));
+
+  border-width: var(--sl-light, 0) var(--sl-dark, 1px 1px 1px 0);
+  border-radius: var(--sl-light, none) var(--sl-dark, 0 4px 4px 0);
 }
 
 .column2-top {
@@ -151,8 +162,8 @@ slot[name='footer']::slotted(div) {
 }
 
 .intro-icon {
-  color: var(--sl-light, var(--sl-color-neutral))
-    var(--sl-dark, var(--sl-color-gray-500));
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-500));
 
   width: 64px;
   height: 64px;

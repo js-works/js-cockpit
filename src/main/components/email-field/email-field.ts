@@ -54,7 +54,7 @@ function emailFieldImpl(self: EmailField) {
         <div class="control">
           <sl-input type="email" name=${self.name} toggle-email class="input">
             <div slot="suffix">
-              <sl-icon src=${emailIcon}></sl-icon>
+              <sl-icon src=${emailIcon} class="icon"></sl-icon>
             </div>
           </sl-input>
         </div>

@@ -67,7 +67,7 @@ export const useFormField = hook('useFormField', function <
 
   host.addEventListener('invalid', (ev) => {
     ev.stopPropagation()
-    console.log('invalid!!!')
+    //console.log('invalid!!!')
     error = 'Please fill out this field properly'
     showError = true
     refresh()
@@ -79,7 +79,7 @@ export const useFormField = hook('useFormField', function <
       value = newValue
       // @ts-ignore // TODO!!!!!!!!!!!!
       internals.setFormValue(value)
-      console.log('setValue', value)
+      //console.log('setValue', value)
     },
 
     getValue() {
@@ -91,27 +91,28 @@ export const useFormField = hook('useFormField', function <
       error = newError
 
       if (error) {
-        console.log('set error', error)
+        //console.log('set error', error)
         // @ts-ignore // TODO!!!!!!!!!!!!
         internals.setValidity({ valueMissing: true }, error, anchor)
       } else {
-        console.log('set valid')
+        //console.log('set valid')
         // @ts-ignore // TODO!!!!!!!!!!!!
         internals.setValidity({ valid: true })
       }
 
       refresh()
       needsRefresh && refresh()
-      console.log('setError', newError)
+      //console.log('setError', newError)
     },
 
     getError() {
       return error + showError
     },
+
     getShownError(): string {
       const ret = showError && error ? error : ''
       //return `[${error}|${showError}] ${new Date().toLocaleTimeString()}`
-      console.log('shownERror', showError, error, ' -> ', ret)
+      //console.log('shownERror', showError, error, ' -> ', ret)
 
       return ret
     },
@@ -131,7 +132,7 @@ export const useFormField = hook('useFormField', function <
     },
 
     debug() {
-      console.error(111, error, showError)
+      // console.error(111, error, showError)
     }
   }
 })

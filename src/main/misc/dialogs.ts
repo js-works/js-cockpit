@@ -13,7 +13,7 @@ import warningIcon from '../icons/exclamation-circle.svg'
 import errorIcon from '../icons/exclamation-triangle.svg'
 import confirmationIcon from '../icons/question-circle.svg'
 import approvalIcon from '../icons/question-diamond.svg'
-import promptIcon from '../icons/keyboard.svg'
+import inputIcon from '../icons/keyboard.svg'
 
 // === exports =======================================================
 
@@ -288,7 +288,7 @@ const showInputDialog = createDialogFn<
 
   return showDialog(parent, (translate) => ({
     type: 'normal',
-    icon: promptIcon,
+    icon: inputIcon,
     title: params.title || translate('input'),
     message: params.message || '',
     content: inputField,

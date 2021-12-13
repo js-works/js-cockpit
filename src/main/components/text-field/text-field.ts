@@ -67,11 +67,11 @@ function textFieldImpl(self: TextField) {
     error: null as string | null
   })
 
-  const field = useFormField(self.value) // TODO!!!
+  const formField = useFormField(self.value) // TODO!!!
 
   const onInput = () => {
     self.value = slInputRef.value!.value // TODO: prevent refresh
-    field.signalInput()
+    formField.signalInput()
   }
 
   const onChange = () => {
@@ -86,11 +86,11 @@ function textFieldImpl(self: TextField) {
 
   const update = () => {
     const value = self.value
-    field.setValue(value)
+    formField.setValue(value)
     const anchor = slInputRef.value!
     console.log('update', anchor)
     if (self.required && value === '') {
-      field.setError('Field is mandatory', anchor)
+      formField.setError('Field is mandatory', anchor)
     }
   }
 
@@ -111,11 +111,7 @@ function textFieldImpl(self: TextField) {
               @sl-input=${onInput}
               @sl-change=${onChange}
             ></sl-input>
-            <div class="error">:: ${field.getShownError()}</div>
-            ${new Date().toLocaleTimeString()} ${field.debug()}
-            <div class="error">
-              ${field.getError() + ' # ' + new Date().toLocaleTimeString()}
-            </div>
+            <div class="error">${formField.getShownError()}</div>
           </div>
         </div>
       </div>

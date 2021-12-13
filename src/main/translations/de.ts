@@ -21,8 +21,10 @@ const translations: FullTranslations<'jsCockpit'> = {
       lastName: 'Nachname',
       forgotPassword: 'Passwort vergessen?',
       forgotPasswordIntroHeadline: 'Passwort vergessen?',
+
       forgotPasswordIntroText:
         'Sie werden per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können',
+
       forgotPasswordSubmitText: 'Passwort zurücksetzen',
       goToLogin: 'Gehe zur Anmeldung',
       goToRegistration: 'Nicht registriert?',
@@ -35,6 +37,7 @@ const translations: FullTranslations<'jsCockpit'> = {
       registrationIntroHeadline: 'Registrierung',
       registrationIntroText:
         'Bitte füllen Sie zur Registrierung das Formular aus',
+
       registrationSubmitText: 'Registrieren',
       rememberLogin: 'Angemeldet bleiben',
       resetPasswordIntroHeadline: 'Passwort zurücksetzen',
