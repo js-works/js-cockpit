@@ -67,7 +67,21 @@ function textFieldImpl(self: TextField) {
     error: null as string | null
   })
 
-  const formField = useFormField(self.value) // TODO!!!
+  const formField = useFormField({
+    getValue: () => self.value,
+    getAnchor: () => slInputRef.value!,
+
+    validate() {
+      if (self.required && !self.value) {
+        return {
+          message: 'Field is required',
+          anchor: slInputRef.value!
+        }
+      }
+
+      return null
+    }
+  }) // TODO!!!
 
   const onInput = () => {
     self.value = slInputRef.value!.value // TODO: prevent refresh
@@ -75,7 +89,7 @@ function textFieldImpl(self: TextField) {
   }
 
   const onChange = () => {
-    update()
+    formField.signalUpdate()
   }
 
   setMethods(self, {
@@ -84,18 +98,8 @@ function textFieldImpl(self: TextField) {
     blur: () => slInputRef.value!.blur()
   })
 
-  const update = () => {
-    const value = self.value
-    formField.setValue(value)
-    const anchor = slInputRef.value!
-    console.log('update', anchor)
-    if (self.required && value === '') {
-      formField.setError('Field is mandatory', anchor)
-    }
-  }
-
   useAfterMount(() => {
-    setTimeout(update, 1000)
+    //setInterval(refresh, 10000)
   })
 
   function render() {
@@ -111,7 +115,7 @@ function textFieldImpl(self: TextField) {
               @sl-input=${onInput}
               @sl-change=${onChange}
             ></sl-input>
-            <div class="error">${formField.getShownError()}</div>
+            <div class="error">${formField.getErrorMsg()}</div>
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ class LoginFormDemo extends component() {}
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider theme="default/dark">
+      <c-theme-provider theme="default">
         <c-login-form
           full-size
           enable-remember-login
@@ -48,29 +48,44 @@ function loginFormDemoImpl() {
             text="Back Office"
             size="large"
           ></c-brand>
+          <!--
           <div slot="login-fields">
-            <c-text-field label="Username" required></c-text-field>
+            <c-text-field
+              label="Username"
+              name="usernamelll"
+              required
+            ></c-text-field>
             <c-password-field label="Password" required></c-password-field>
           </div>
+-->
+          <!--
           <div slot="registration-fields">
             <c-text-field
-              name="username"
+              name="usernamerrr"
               label="Username"
               required
             ></c-text-field>
             <c-text-field
-              name="firstName"
+              name="firstNamerrr"
               label="First name"
               required
             ></c-text-field>
             <c-text-field
-              name="lastName"
+              name="lastNamerrr"
               label="Last name"
               required
             ></c-text-field>
-            <c-email-field name="email" label="Email" required></c-email-field>
-            <c-date-field name="dayOfBirth" label="Day of birth"></c-date-field>
+            <c-email-field
+              name="emailrrr"
+              label="Email"
+              required
+            ></c-email-field>
+            <c-date-field
+              name="dayOfBirthrrr"
+              label="Day of birth"
+            ></c-date-field>
           </div>
+-->
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>
       </c-theme-provider>

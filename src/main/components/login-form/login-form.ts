@@ -1,8 +1,9 @@
 import { component, elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useOnInit, useState } from 'js-element/hooks'
-import { useI18n } from '../../utils/hooks'
 import { addToDict, TermsOf } from 'js-localize'
+import { useI18n } from '../../utils/hooks'
+import { hasSlot } from '../../utils/slots'
 
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
@@ -124,16 +125,21 @@ function loginFormImpl(self: LoginForm) {
 
   const onSubmit = (ev?: any) => {
     console.log('onSubmit')
+    const form = formRef.value!
+
     // TODO
     if (ev) {
       ev.preventDefault()
     }
 
-    if (!formRef.value!.checkValidity()) {
+    if (!form.checkValidity()) {
+      console.log('check NOT okay')
       return
     }
 
-    const formData = new FormData(formRef.value!)
+    console.log('check okay')
+
+    const formData = new FormData(form)
     let text = ''
 
     formData.forEach((value, key) => {
@@ -144,10 +150,12 @@ function loginFormImpl(self: LoginForm) {
       text += key + ': ' + value
     })
 
-    alert(text)
+    console.log('form data:', text)
   }
 
-  const onSubmitClick = () => {
+  // TODO
+  const onSubmitClick = (ev: any) => {
+    const form = ev.target.closest('form') // TODO
     onSubmit()
   }
 
@@ -203,7 +211,7 @@ function loginFormImpl(self: LoginForm) {
                   <div class="column1-top">${renderIntro()}</div>
                   <div class="column1-bottom">${renderIntroIcon()}</div>
                 </div>
-                <form ${ref(formRef)} class="column2" @submit=${onSubmit}>
+                <form class="column2" @submit=${onSubmit} ${ref(formRef)}>
                   <div class="column2-top">${renderFields()}</div>
                   <div class="column2-bottom">
                     ${state.view === 'login' && self.enableRememberLogin
@@ -289,82 +297,94 @@ function loginFormImpl(self: LoginForm) {
   function renderFields() {
     switch (state.view) {
       case 'login':
-        return html`
-          <slot name="login-fields" class="fields-slot">
-            <c-text-field
-              name="username"
-              label=${t('username')}
-              required
-            ></c-text-field>
-
-            <c-password-field
-              name="password"
-              label=${t('password')}
-              required
-            ></c-password-field>
-          </slot>
-        `
+        return html` <slot name="login-fields" class="fields-slot"> </slot>
+          ${hasSlot(self, 'login-fields')
+            ? null
+            : html`
+                <c-text-field
+                  name="username"
+                  label=${t('username')}
+                  required
+                ></c-text-field>
+                <c-password-field
+                  name="password"
+                  label=${t('password')}
+                  required
+                ></c-password-field>
+              `}`
 
       case 'registration':
-        return html`<slot name="registration-fields" class="fields-slot">
-            <c-text-field
-              name="username"
-              label=${t('username')}
-              required
-            ></c-text-field>
-            <c-text-field
-              name="firstName"
-              label=${t('firstName')}
-              required
-            ></c-text-field>
-            <c-text-field
-              name="lastName"
-              label=${t('lastName')}
-              required
-            ></c-text-field>
-            <c-text-field
-              name="email"
-              label=${t('email')}
-              required
-            ></c-password-field>
-          </slot>
-        `
+        return html`<slot name="registration-fields" class="fields-slot"></slot>
+          ${hasSlot(self, 'registration-fields')
+            ? null
+            : html`
+                <c-text-field
+                  name="username-reg"
+                  label=${t('username')}
+                  required
+                ></c-text-field>
+                <c-text-field
+                  name="firstName-reg"
+                  label=${t('firstName')}
+                  required
+                ></c-text-field>
+                <c-text-field
+                  name="lastName-reg"
+                  label=${t('lastName')}
+                  required
+                ></c-text-field>
+                <c-email-field
+                  name="email-reg"
+                  label=${t('email')}
+                  required
+                ></c-email-field>
+              `}`
 
       case 'forgotPassword':
-        return html`<slot name="forgot-password-fields" class="fields-slot">
-          <c-text-field
-            name="username"
-            label=${t('username')}
-            required
-          ></c-text-field>
+        return html`<slot
+            name="forgot-password-fields"
+            class="fields-slot"
+          ></slot>
+          ${hasSlot(self, 'forgot-password-fields')
+            ? null
+            : html`
+                <c-text-field
+                  name="username-fp"
+                  label=${t('username')}
+                  required
+                ></c-text-field>
 
-          <c-email-field
-            name="email"
-            label=${t('email')}
-            required
-          ></c-email-field>
-        </slot> `
+                <c-email-field
+                  name="email-fp"
+                  label=${t('email')}
+                  required
+                ></c-email-field>
+              `}`
 
       case 'resetPassword':
-        return html`
-          <slot name="reset-password-fields" class="fields-slot">
-            <c-text-field
-              name="username"
-              label=${t('username')}
-              required
-            ></c-text-field>
-            <c-password-field
-              name="newPasswordRepeat"
-              label=${t('newPasswordRepeat')}
-              required
-            ></c-password-field>
-            <c-text-field
-              name="securityCode"
-              label=${t('securityCode')}
-              required
-            ></c-text-field>
-          </slot>
-        `
+        return html`<slot
+            name="reset-password-fields"
+            class="fields-slot"
+          ></slot>
+          ${hasSlot(self, 'forgot-password-fields')
+            ? null
+            : html`
+                <c-text-field
+                  name="username-rp"
+                  label=${t('username')}
+                  required
+                ></c-text-field>
+                <c-password-field
+                  name="newPasswordRepeat-rp"
+                  label=${t('newPasswordRepeat')}
+                  required
+                ></c-password-field>
+                <c-text-field
+                  name="securityCode-rp"
+                  label=${t('securityCode')}
+                  required
+                ></c-text-field>
+              `}`
     }
   }
 

@@ -1,6 +1,6 @@
-// external imports
 import { component, elem, prop, Attrs } from 'js-element'
-import { classMap, html, lit } from 'js-element/lit'
+import { classMap, createRef, html, lit, ref } from 'js-element/lit'
+import { useFormField } from '../../utils/hooks'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -23,6 +23,7 @@ export { EmailField }
 
 @elem({
   tag: 'c-email-field',
+  formAssoc: true,
   styles: [controlStyles, emailFieldStyles],
   uses: [SlIcon, SlInput],
   impl: lit(emailFieldImpl)
@@ -47,16 +48,50 @@ class EmailField extends component<{
 }
 
 function emailFieldImpl(self: EmailField) {
+  const slInputRef = createRef<SlInput>()
+
+  const formField = useFormField({
+    getValue: () => self.value,
+    getAnchor: () => slInputRef.value!,
+
+    validate() {
+      if (self.required && !self.value) {
+        return {
+          message: 'Field is required',
+          anchor: slInputRef.value!
+        }
+      }
+
+      return null
+    }
+  }) // TODO!!!
+
+  const onInput = () => {
+    formField.signalInput()
+  }
+
+  const onChange = () => {
+    formField.signalUpdate()
+  }
+
   return () => html`
     <div class="base ${classMap({ required: self.required })}">
       <div class="field-wrapper">
         <div class="label">${self.label}</div>
         <div class="control">
-          <sl-input type="email" name=${self.name} toggle-email class="input">
+          <sl-input
+            type="email"
+            name=${self.name}
+            toggle-email
+            class="input"
+            @sl-input=${onInput}
+            @sl-change=${onChange}
+          >
             <div slot="suffix">
               <sl-icon src=${emailIcon} class="icon"></sl-icon>
             </div>
           </sl-input>
+          <div class="error">${formField.getErrorMsg()}</div>
         </div>
       </div>
     </div>

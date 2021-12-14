@@ -1,5 +1,6 @@
 import {
   hook,
+  useAfterMount,
   useBeforeMount,
   useBeforeUnmount,
   useHost,
@@ -50,85 +51,75 @@ export const useI18n = hook('useI18n', useI18nFn)
 
 export const useFormField = hook('useFormField', function <
   T extends string // TODO: File + FormData
->(initialValue: T) {
-  /* 
-  setInterval(() => {
-    console.log('...')
-    refresh()
-  }, 1000)
-  */
-
-  let value = initialValue
-  let error = ''
+>(params: { getValue(): T; getAnchor(): HTMLElement; validate(): { message: string; anchor: HTMLElement } | null }) {
+  let errorMsg: string | null = null
+  let anchor: HTMLElement | null = null
   let showError = false
   const host = useHost()
-  const internals = useInternals()
+  const internals = useInternals() as any // TODO
   const refresh = useRefresher()
+
+  const setFormValue = (value: T, silently = false) => {
+    internals.setFormValue(value)
+    const result = params.validate()
+
+    if (!result) {
+      errorMsg = ''
+      anchor = null
+      internals.setValidity({})
+    } else {
+      errorMsg = result.message
+      anchor = result.anchor
+
+      internals.setValidity(
+        {
+          customError: true
+        },
+        errorMsg,
+        anchor
+      )
+    }
+
+    if (!silently) {
+      showError = true
+      refresh()
+    }
+  }
+
+  useAfterMount(() => {
+    setFormValue(params.getValue(), true)
+  })
 
   host.addEventListener('invalid', (ev) => {
     ev.stopPropagation()
-    //console.log('invalid!!!')
-    error = 'Please fill out this field properly'
+    console.log('invalid!!!')
     showError = true
+    const h = host as any
+    console.log(h.label)
+    console.log('refreshing', host.localName, h.label)
     refresh()
+    //alert('refreshing')
   })
 
   return {
     // TODO: File + FormData
-    setValue(newValue: T) {
-      value = newValue
-      // @ts-ignore // TODO!!!!!!!!!!!!
-      internals.setFormValue(value)
-      //console.log('setValue', value)
+    signalUpdate: () => setFormValue(params.getValue()),
+
+    hasError(): boolean {
+      return showError && errorMsg !== null
     },
 
-    getValue() {
-      return value
+    getErrorMsg(): string | null {
+      return showError && errorMsg !== null ? errorMsg : null
     },
 
-    setError(newError: string, anchor: Element) {
-      const needsRefresh = showError && error !== newError
-      error = newError
-
-      if (error) {
-        //console.log('set error', error)
-        // @ts-ignore // TODO!!!!!!!!!!!!
-        internals.setValidity({ valueMissing: true }, error, anchor)
-      } else {
-        //console.log('set valid')
-        // @ts-ignore // TODO!!!!!!!!!!!!
-        internals.setValidity({ valid: true })
-      }
-
-      refresh()
-      needsRefresh && refresh()
-      //console.log('setError', newError)
-    },
-
-    getError() {
-      return error + showError
-    },
-
-    getShownError(): string {
-      const ret = showError && error ? error : ''
-      //return `[${error}|${showError}] ${new Date().toLocaleTimeString()}`
-      //console.log('shownERror', showError, error, ' -> ', ret)
-
-      return ret
-    },
-
-    hideError() {
-      if (!showError) {
+    signalInput() {
+      if (!showError || errorMsg === null) {
         return
       }
 
       showError = false
-      error && refresh()
-    },
-
-    signalInput() {
-      console.log('input signaled')
-      this.hideError()
+      refresh()
     },
 
     debug() {
