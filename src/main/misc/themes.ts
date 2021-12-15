@@ -219,7 +219,9 @@ class Theme {
     tokens['border-radius-large'] = '2px'
     tokens['border-radius-x-large'] = '3px'
 
-    //tokens['focus-ring-color'] = 'var(--sl-color-primary-700)'
+    tokens['focus-ring'] =
+      '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)'
+
     tokens['focus-ring-width'] = '1px'
     tokens['focus-ring-alpha'] = '100%'
 

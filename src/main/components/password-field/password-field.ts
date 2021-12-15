@@ -1,6 +1,6 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
 import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
-import { useFormField } from '../../utils/hooks'
+import { useFormField, useI18n } from '../../utils/hooks'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -45,15 +45,15 @@ class PasswordField extends component<{
 
 function passwordFieldImpl(self: PasswordField) {
   const slInputRef = createRef<SlInput>()
+  const { i18n } = useI18n()
 
   const formField = useFormField({
     getValue: () => self.value,
-    getAnchor: () => slInputRef.value!,
 
     validate() {
       if (self.required && !self.value) {
         return {
-          message: 'Field is required',
+          message: i18n.translate('jsCockpit.validation', 'fieldRequired'),
           anchor: slInputRef.value!
         }
       }
@@ -71,7 +71,12 @@ function passwordFieldImpl(self: PasswordField) {
   }
 
   return () => html`
-    <div class="base ${classMap({ required: self.required })}">
+    <div
+      class="base ${classMap({
+        required: self.required,
+        'has-error': formField.hasError()
+      })}"
+    >
       <div class="field-wrapper">
         <div class="label">${self.label}</div>
         <div class="control">

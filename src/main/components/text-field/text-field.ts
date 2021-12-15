@@ -10,7 +10,7 @@ import {
   useStatus
 } from 'js-element/hooks'
 
-import { useFormField } from '../../utils/hooks'
+import { useFormField, useI18n } from '../../utils/hooks'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -62,6 +62,7 @@ function textFieldImpl(self: TextField) {
   const refresh = useRefresher()
   const status = useStatus()
   const slInputRef = createRef<SlInput & Element>() // TODO
+  const { i18n } = useI18n()
 
   const [state, setState] = useState({
     error: null as string | null
@@ -69,12 +70,11 @@ function textFieldImpl(self: TextField) {
 
   const formField = useFormField({
     getValue: () => self.value,
-    getAnchor: () => slInputRef.value!,
 
     validate() {
       if (self.required && !self.value) {
         return {
-          message: 'Field is required',
+          message: i18n.translate('jsCockpit.validation', 'fieldRequired'),
           anchor: slInputRef.value!
         }
       }
@@ -104,7 +104,12 @@ function textFieldImpl(self: TextField) {
 
   function render() {
     return html`
-      <div class="base ${classMap({ required: self.required })}">
+      <div
+        class="base ${classMap({
+          required: self.required,
+          'has-error': formField.hasError()
+        })}"
+      >
         <div class="field-wrapper">
           <div class="label">${self.label}</div>
           <div class="control">

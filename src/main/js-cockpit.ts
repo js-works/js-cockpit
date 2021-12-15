@@ -40,4 +40,5 @@ export * from './misc/dialogs'
 export { loadTheme, Theme, Themes } from './misc/themes'
 
 // translations
+import './misc/validation'
 import './translations/de'

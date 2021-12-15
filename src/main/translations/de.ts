@@ -4,6 +4,10 @@ const { formatNumber } = localize('de')
 
 const translations: FullTranslations<'jsCockpit'> = {
   de: {
+    'jsCockpit.validation': {
+      fieldRequired: 'Erforderliches Feld'
+    },
+
     'jsCockpit.dialogs': {
       ok: 'OK',
       cancel: 'Abbrechen',

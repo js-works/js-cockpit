@@ -39,5 +39,5 @@
 .error {
   margin: 2px 0;
   color: var(--sl-color-danger-700);
-  font-size: var(--sl-font-size-small);
+  font-size: var(--sl-font-size-x-small);
 }

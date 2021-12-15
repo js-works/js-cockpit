@@ -51,7 +51,7 @@ export const useI18n = hook('useI18n', useI18nFn)
 
 export const useFormField = hook('useFormField', function <
   T extends string // TODO: File + FormData
->(params: { getValue(): T; getAnchor(): HTMLElement; validate(): { message: string; anchor: HTMLElement } | null }) {
+>(params: { getValue(): T; validate(): { message: string; anchor: HTMLElement } | null }) {
   let errorMsg: string | null = null
   let anchor: HTMLElement | null = null
   let showError = false
