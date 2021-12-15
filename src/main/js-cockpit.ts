@@ -37,7 +37,7 @@ export { detectLocale, observeLocale } from './i18n/locale-detection'
 
 // misc
 export * from './misc/dialogs'
-export { loadTheme, Theme, Themes } from './misc/themes'
+export * from './misc/theming'
 
 // translations
 import './misc/validation'

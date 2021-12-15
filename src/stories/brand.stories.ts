@@ -1,7 +1,14 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Brand, ThemeProvider, Themes } from 'js-cockpit'
+
+import {
+  Brand,
+  ColorSchemes,
+  Theme,
+  ThemeProvider,
+  ThemeVariants
+} from 'js-cockpit'
 
 export default {
   title: 'brand'
@@ -22,10 +29,12 @@ const brandDemoStyles = `
 })
 class BrandDemo extends component() {}
 
+const theme = new Theme(ColorSchemes.cranberry, ThemeVariants.modernCompact)
+
 function brandDemoImpl() {
   return () =>
     html`
-      <c-theme-provider .theme=${Themes.apricot}>
+      <c-theme-provider .theme=${theme}>
         <div class="brand-demo">
           <div>
             <c-brand

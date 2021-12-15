@@ -114,7 +114,6 @@ function textFieldImpl(self: TextField) {
           <div class="label">${self.label}</div>
           <div class="control">
             <sl-input
-              tabindex="1"
               class="input"
               ${ref(slInputRef)}
               @sl-input=${onInput}

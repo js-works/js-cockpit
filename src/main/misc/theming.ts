@@ -4,7 +4,14 @@
 
 // === exports =======================================================
 
-export { loadTheme, Theme, Themes }
+export {
+  loadTheme,
+  ColorScheme,
+  ColorSchemes,
+  Theme,
+  ThemeTokens,
+  ThemeVariants
+}
 
 // === constants =====================================================
 
@@ -66,13 +73,12 @@ const ALL_COLORS = new Set([...SEMANTIC_COLORS, ...PALETTE_COLORS])
 
 type ThemeTokens = typeof lightThemeTokens
 
-type ThemeCustomizing = {
+type ColorScheme = {
   primaryColor?: string
   successColor?: string
   infoColor?: string
   warningColor?: string
   dangerColor?: string
-  dark?: boolean
 }
 
 // === Theme ==========================================================
@@ -84,8 +90,13 @@ class Theme {
 
   static #colorNames: Set<string> | null = null
 
-  constructor(customizing: ThemeCustomizing) {
-    if (Object.keys(customizing).length === 0) {
+  static readonly default = new Theme({})
+
+  constructor(
+    colorScheme: ColorScheme,
+    modification?: (tokens: ThemeTokens) => Partial<ThemeTokens>
+  ) {
+    if (Object.keys(colorScheme).length === 0) {
       this.#themeTokens = lightThemeTokens
       return
     }
@@ -93,7 +104,7 @@ class Theme {
     const tokens = { ...lightThemeTokens }
 
     for (const semanticColor of SEMANTIC_COLORS) {
-      const colorHex = customizing[`${semanticColor}Color`]
+      const colorHex = colorScheme[`${semanticColor}Color`]
 
       if (colorHex) {
         Object.assign(tokens, {
@@ -102,8 +113,11 @@ class Theme {
       }
     }
 
+    if (modification) {
+      Object.assign(tokens, modification(tokens))
+    }
+
     this.#themeTokens = tokens
-    this.#adjustThemeTokens()
   }
 
   asCss(selector = ':root, :host'): string {
@@ -207,53 +221,6 @@ class Theme {
     return invertedTheme
   }
 
-  #adjustThemeTokens() {
-    if (this.#themeTokens === lightThemeTokens) {
-      this.#themeTokens = { ...this.#themeTokens }
-    }
-
-    const tokens = this.#themeTokens
-
-    tokens['border-radius-small'] = '0px'
-    tokens['border-radius-medium'] = '1px'
-    tokens['border-radius-large'] = '2px'
-    tokens['border-radius-x-large'] = '3px'
-
-    tokens['focus-ring'] =
-      '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)'
-
-    tokens['focus-ring-width'] = '1px'
-    tokens['focus-ring-alpha'] = '100%'
-
-    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
-    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
-    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
-
-    tokens['font-size-medium'] = '0.92rem'
-    tokens['font-weight-semibold'] = '600'
-
-    tokens['font-sans'] =
-      "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
-
-    // TODO!!!!
-    //tokens['input-placeholder-color'] = 'red'
-    //tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
-
-    /*
-    tokens['font-size-medium'] = '1rem'
-    tokens['font-size-large'] = '1.3rem'
-    tokens['font-size-x-large'] = '1.6rem'
-    tokens['font-size-2x-large'] = '2rem'
-    tokens['font-size-3x-large'] = '3.5rem'
-    tokens['font-size-4x-large'] = '4rem'
-*/
-    Object.assign(tokens, {
-      'input-height-small': '1.85rem',
-      'input-height-medium': '1.95rem',
-      'input-height-large': '2.5rem'
-    })
-  }
-
   static #calcColorShades(
     colorName: string,
     colorHex: string,
@@ -284,11 +251,11 @@ function loadTheme(theme: Theme, selector?: string) {
   return () => elem.remove()
 }
 
-// === themes ========================================================
+// === predefined color schemes ======================================
 
 // For color naming see: https://chir.ag/projects/name-that-color/#DD5A8C
 
-const Themes = predefineThemes({
+const ColorSchemes = Object.freeze({
   default: {
     primaryColor: '#2899e2'
     //primaryColor: '#0077cB'
@@ -405,26 +372,56 @@ const Themes = predefineThemes({
   }
 })
 
-// === theme helpers =================================================
+// === predefined theme variants =====================================
 
-function predefineThemes(
-  config: Record<string, ThemeCustomizing>
-): Record<string, Theme> {
-  const ret: Record<string, Theme> = {}
+const ThemeVariants = {
+  default: () => ({}),
 
-  Object.entries(config).forEach(([name, customizing]) => {
-    Object.defineProperty(ret, name, {
-      configurable: true,
+  modernCompact: () => {
+    const tokens: Partial<ThemeTokens> = {}
 
-      get() {
-        const theme = new Theme(customizing)
-        Object.defineProperty(ret, name, { value: theme })
-        return theme
-      }
+    tokens['border-radius-small'] = '0px'
+    tokens['border-radius-medium'] = '1px'
+    tokens['border-radius-large'] = '2px'
+    tokens['border-radius-x-large'] = '3px'
+
+    tokens['focus-ring'] =
+      '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)'
+
+    tokens['focus-ring-width'] = '1px'
+    tokens['focus-ring-alpha'] = '100%'
+
+    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
+    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
+    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
+
+    tokens['font-size-medium'] = '0.92rem'
+    tokens['font-weight-semibold'] = '600'
+
+    tokens['font-sans'] =
+      "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+
+    // TODO!!!!
+    //tokens['input-placeholder-color'] = 'red'
+    //tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
+
+    /*
+    tokens['font-size-medium'] = '1rem'
+    tokens['font-size-large'] = '1.3rem'
+    tokens['font-size-x-large'] = '1.6rem'
+    tokens['font-size-2x-large'] = '2rem'
+    tokens['font-size-3x-large'] = '3.5rem'
+    tokens['font-size-4x-large'] = '4rem'
+    */
+
+    Object.assign(tokens, {
+      'input-height-small': '1.85rem',
+      'input-height-medium': '1.95rem',
+      'input-height-large': '2.5rem'
     })
-  })
 
-  return ret
+    return tokens
+  }
 }
 
 // === color utility functions =======================================

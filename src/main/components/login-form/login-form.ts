@@ -6,6 +6,7 @@ import { useI18n } from '../../utils/hooks'
 import { hasSlot } from '../../utils/slots'
 
 // custom elements
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert'
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -83,7 +84,15 @@ addToDict(translations)
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
-  uses: [PasswordField, SlAnimation, SlButton, SlCheckbox, SlIcon, TextField]
+  uses: [
+    PasswordField,
+    SlAlert,
+    SlAnimation,
+    SlButton,
+    SlCheckbox,
+    SlIcon,
+    TextField
+  ]
 })
 class LoginForm extends component() {
   @prop({ attr: Attrs.string })

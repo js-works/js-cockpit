@@ -1,6 +1,6 @@
 import { component, elem, prop } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { Theme, Themes } from '../../misc/themes'
+import { Theme } from '../../misc/theming'
 
 // styles
 import themeProviderStyles from './theme-provider.css'
@@ -8,37 +8,6 @@ import themeProviderStyles from './theme-provider.css'
 // === exports =======================================================
 
 export { ThemeProvider }
-
-// === types =========================================================
-
-type ThemeProp =
-  | Theme
-  | 'default'
-  | 'default/dark'
-  | 'blue'
-  | 'blue/dark'
-  | 'pink'
-  | 'pink/dark'
-
-// === Theme prop converter ==========================================
-
-const themePropConverter = {
-  mapPropToAttr(value: ThemeProp | null): string | null {
-    if (typeof value === 'string' && getThemeByName(value)) {
-      return value
-    }
-
-    return null
-  },
-
-  mapAttrToProp(value: string | null): ThemeProp | null {
-    if (value && getThemeByName(value)) {
-      return value as any
-    }
-
-    return null
-  }
-}
 
 // === ThemeProvider =================================================
 
@@ -48,11 +17,8 @@ const themePropConverter = {
   styles: [themeProviderStyles]
 })
 class ThemeProvider extends component() {
-  @prop({ attr: themePropConverter })
-  theme?:
-    | Theme
-    | keyof typeof Themes
-    | { [K in keyof typeof Themes]: `${K}/dark` }[keyof typeof Themes]
+  @prop()
+  theme?: Theme
 }
 
 function themeProviderImpl(self: ThemeProvider) {
@@ -63,12 +29,7 @@ function themeProviderImpl(self: ThemeProvider) {
       self.theme ||
       !window.getComputedStyle(self).getPropertyValue('--sl-color-primary-500')
     ) {
-      theme =
-        self.theme instanceof Theme
-          ? self.theme
-          : !self.theme
-          ? Themes.default
-          : getThemeByName(self.theme) || Themes.default
+      theme = self.theme instanceof Theme ? self.theme : Theme.default
     }
 
     return html`
@@ -80,28 +41,4 @@ function themeProviderImpl(self: ThemeProvider) {
       </div>
     `
   }
-}
-
-// === utils =========================================================
-
-function getThemeByName(name: string): Theme | null {
-  let themeName = name
-  let dark = false
-
-  if (name.endsWith('/dark')) {
-    dark = true
-    themeName = name.slice(0, -5)
-  }
-
-  if (Themes.hasOwnProperty(themeName)) {
-    let theme = (Themes as any)[themeName]
-
-    if (dark) {
-      theme = theme.invert()
-    }
-
-    return theme
-  }
-
-  return null
 }

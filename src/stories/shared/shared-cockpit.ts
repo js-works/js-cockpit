@@ -5,6 +5,7 @@ import { html, lit } from 'js-element/lit'
 import {
   Brand,
   Cockpit,
+  ColorSchemes,
   DataForm,
   RadioGroup,
   Section,
@@ -14,6 +15,8 @@ import {
   Tabs,
   TextArea,
   TextField,
+  Theme,
+  ThemeVariants,
   UserMenu
 } from 'js-cockpit'
 
@@ -112,8 +115,10 @@ function sharedCockpitImpl() {
     ]
   }
 
+  const theme = new Theme(ColorSchemes.default, ThemeVariants.modernCompact)
+
   return () => html`
-    <c-theme-provider theme="default">
+    <c-theme-provider .theme=${theme}>
       <c-cockpit>
         <c-brand
           slot="header-start"

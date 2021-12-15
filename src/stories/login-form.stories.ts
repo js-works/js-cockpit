@@ -4,11 +4,14 @@ import { html, lit } from 'js-element/lit'
 
 import {
   Brand,
+  ColorSchemes,
   DateField,
   EmailField,
   LoginForm,
   PasswordField,
   TextField,
+  Theme,
+  ThemeVariants,
   ThemeProvider
 } from 'js-cockpit'
 
@@ -31,10 +34,12 @@ export default {
 })
 class LoginFormDemo extends component() {}
 
+const theme = new Theme(ColorSchemes.default, ThemeVariants.modernCompact)
+
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider theme="default">
+      <c-theme-provider .theme=${theme}>
         <c-login-form
           full-size
           enable-remember-login
