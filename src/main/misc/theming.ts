@@ -4,14 +4,7 @@
 
 // === exports =======================================================
 
-export {
-  loadTheme,
-  ColorScheme,
-  ColorSchemes,
-  Theme,
-  ThemeTokens,
-  ThemeVariants
-}
+export { loadTheme, ColorScheme, ColorSchemes, Theme, ThemeTokens, ThemeMods }
 
 // === constants =====================================================
 
@@ -86,41 +79,38 @@ type ColorScheme = {
 class Theme {
   #themeTokens: ThemeTokens
   #css: string | null = null
-  #invertedTheme: Theme | null = null
 
-  static #colorNames: Set<string> | null = null
+  static #default: Theme | null = null
 
-  static readonly default = new Theme({})
-
-  constructor(
-    colorScheme: ColorScheme,
-    modification?: (tokens: ThemeTokens) => Partial<ThemeTokens>
-  ) {
-    if (Object.keys(colorScheme).length === 0) {
-      this.#themeTokens = lightThemeTokens
-      return
+  static get default() {
+    if (!this.#default) {
+      this.#default = new Theme({})
     }
 
-    const tokens = { ...lightThemeTokens }
-
-    for (const semanticColor of SEMANTIC_COLORS) {
-      const colorHex = colorScheme[`${semanticColor}Color`]
-
-      if (colorHex) {
-        Object.assign(tokens, {
-          ...Theme.#calcColorShades(semanticColor, colorHex)
-        })
-      }
-    }
-
-    if (modification) {
-      Object.assign(tokens, modification(tokens))
-    }
-
-    this.#themeTokens = tokens
+    return this.#default
   }
 
-  asCss(selector = ':root, :host'): string {
+  constructor(tokens: Partial<ThemeTokens>)
+  constructor(modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>)
+  constructor(modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[])
+
+  constructor(arg: any) {
+    this.#themeTokens = { ...lightThemeTokens }
+
+    if (typeof arg === 'function') {
+      Object.assign(this.#themeTokens, arg(this.#themeTokens))
+    } else if (Array.isArray(arg)) {
+      arg.forEach((modifier: Function) => {
+        Object.assign(this.#themeTokens, modifier(this.#themeTokens))
+      })
+    } else if (arg && typeof arg === 'object') {
+      Object.assign(this.#themeTokens, arg)
+    } else {
+      throw new TypeError('Illegal argument for Theme constructor')
+    }
+  }
+
+  toCss(selector = ':root, :host'): string {
     let css = this.#css
 
     if (css) {
@@ -147,21 +137,57 @@ class Theme {
   isDark() {
     return this.#themeTokens['dark'] === 'var(--on)'
   }
+}
 
-  invert(): Theme {
-    let ret = this.#invertedTheme
+function calcColorShades(
+  colorName: string,
+  colorHex: string,
+  dark = false
+): Record<`color-${string}-${string}`, string> {
+  const ret: any = {}
 
-    if (ret) {
-      return ret
+  COLOR_LUMINANCES.forEach((luminance, idx) => {
+    if (dark) {
+      idx = 1000 - idx
     }
 
-    const tokens: Record<string, string> = this.#themeTokens
-    const invertedTokens = Object.assign({}, tokens)
+    ret[`color-${colorName}-${COLOR_SHADES[idx]}`] =
+      'rgb(' + calcColor(colorHex, luminance).join(' ') + ')'
+  })
 
-    invertedTokens['light'] =
+  return ret
+}
+
+const ThemeMods = {
+  colors(colorScheme: ColorScheme) {
+    return (tokens: ThemeTokens): Partial<ThemeTokens> => {
+      const ret: Partial<ThemeTokens> = {}
+
+      for (const semanticColor of SEMANTIC_COLORS) {
+        const colorHex = colorScheme[`${semanticColor}Color`]
+
+        if (colorHex) {
+          Object.assign(ret, {
+            ...calcColorShades(semanticColor, colorHex)
+          })
+        }
+      }
+
+      return ret
+    }
+  },
+
+  dark(tokens: ThemeTokens): Partial<ThemeTokens> {
+    if (tokens['dark'] === 'var(--on)') {
+      return {}
+    }
+
+    const darkTokens: Record<string, string> = Object.assign({}, tokens)
+
+    darkTokens['light'] =
       tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
 
-    invertedTokens['dark'] =
+    darkTokens['dark'] =
       tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
 
     // TODO
@@ -173,71 +199,64 @@ class Theme {
         const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
         const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
 
-        invertedTokens[key1] = tokens[key2]
-        invertedTokens[key2] = tokens[key1]
+        darkTokens[key1] = (tokens as any)[key2]
+        darkTokens[key2] = (tokens as any)[key1]
       }
     })
 
-    // TODO!!!!!
-    if (this.isDark()) {
-      COLOR_SHADES.forEach((shade) => {
-        invertedTokens[`color-neutral-${shade}`] = (lightThemeTokens as any)[
-          `color-neutral-${shade}`
-        ]
-      })
+    Object.assign(darkTokens, {
+      'color-neutral-0': 'rgb(30 30 33)',
+      'color-neutral-50': 'rgb(32 32 36)',
+      'color-neutral-100': 'rgb(33 33 37)',
+      'color-neutral-200': 'rgb(43 43 46)',
+      'color-neutral-300': 'rgb(67 67 74)',
+      'color-neutral-400': 'rgb(86 86 95)',
+      'color-neutral-500': 'rgb(118 118 127)',
+      'color-neutral-600': 'rgb(166 166 175)',
+      'color-neutral-700': 'rgb(217 217 221)',
+      'color-neutral-800': 'rgb(233 233 236)',
+      'color-neutral-900': 'rgb(249 249 250)',
+      'color-neutral-950': 'rgb(252 252 253)',
+      'color-neutral-1000': 'rgb(255 255 255)'
 
-      Object.assign(invertedTokens, {
-        'color-neutral-0': lightThemeTokens['color-neutral-0'],
-        'color-neutral-1000': lightThemeTokens['color-neutral-1000']
+      //'input-background-color': '42 42 46',
+      //'input-border-color': 'var(--sl-color-neutral-200)'
+    })
 
-        //'input-background-color': lightThemeTokens['input-background-color'],
-        //'input-border-color': lightThemeTokens['input-border-color']
-      })
-    } else {
-      Object.assign(invertedTokens, {
-        'color-neutral-0': 'rgb(30 30 33)',
-        'color-neutral-50': 'rgb(32 32 36)',
-        'color-neutral-100': 'rgb(33 33 37)',
-        'color-neutral-200': 'rgb(43 43 46)',
-        'color-neutral-300': 'rgb(67 67 74)',
-        'color-neutral-400': 'rgb(86 86 95)',
-        'color-neutral-500': 'rgb(118 118 127)',
-        'color-neutral-600': 'rgb(166 166 175)',
-        'color-neutral-700': 'rgb(217 217 221)',
-        'color-neutral-800': 'rgb(233 233 236)',
-        'color-neutral-900': 'rgb(249 249 250)',
-        'color-neutral-950': 'rgb(252 252 253)',
-        'color-neutral-1000': 'rgb(255 255 255)'
+    return darkTokens
+  },
 
-        //'input-background-color': '42 42 46',
-        //'input-border-color': 'var(--sl-color-neutral-200)'
-      })
+  modern(tokens: ThemeTokens): Partial<ThemeTokens> {
+    return {
+      'font-sans':
+        "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+
+      'font-weight-semibold': '600',
+      'label-font-weight': 'var(--sl-font-weight-semibold)',
+      'border-radius-small': '0px',
+      'border-radius-medium': '1px',
+      'border-radius-large': '2px',
+      'border-radius-x-large': '3px',
+
+      'focus-ring':
+        '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)',
+
+      'focus-ring-width': '1px',
+      'focus-ring-alpha': '100%',
+
+      'input-border-color': 'var(--sl-color-neutral-400)',
+      'input-border-color-hover': 'var(--sl-color-neutral-600)',
+      'input-border-color-focus': 'var(--sl-color-primary-700)'
     }
+  },
 
-    const invertedTheme = new Theme({})
-    invertedTheme.#themeTokens = invertedTokens as ThemeTokens
-
-    this.#invertedTheme = invertedTheme
-    return invertedTheme
-  }
-
-  static #calcColorShades(
-    colorName: string,
-    colorHex: string,
-    dark = false
-  ): Record<`color-${string}-${string}`, string> {
-    const ret: any = {}
-
-    COLOR_LUMINANCES.forEach((luminance, idx) => {
-      if (dark) {
-        idx = 1000 - idx
-      }
-
-      ret[`color-${colorName}-${COLOR_SHADES[idx]}`] =
-        'rgb(' + calcColor(colorHex, luminance).join(' ') + ')'
-    })
-
-    return ret
+  compact(tokens: ThemeTokens): Partial<ThemeTokens> {
+    return {
+      'font-size-medium': '0.92rem',
+      'input-height-small': '1.85rem',
+      'input-height-medium': '1.95rem',
+      'input-height-large': '2.5rem'
+    }
   }
 }
 
@@ -245,7 +264,7 @@ class Theme {
 
 function loadTheme(theme: Theme, selector?: string) {
   const elem = document.createElement('style')
-  elem.append(document.createTextNode(theme.asCss(selector)))
+  elem.append(document.createTextNode(theme.toCss(selector)))
   document.head.append(elem)
 
   return () => elem.remove()
@@ -372,58 +391,6 @@ const ColorSchemes = Object.freeze({
   }
 })
 
-// === predefined theme variants =====================================
-
-const ThemeVariants = {
-  default: () => ({}),
-
-  modernCompact: () => {
-    const tokens: Partial<ThemeTokens> = {}
-
-    tokens['border-radius-small'] = '0px'
-    tokens['border-radius-medium'] = '1px'
-    tokens['border-radius-large'] = '2px'
-    tokens['border-radius-x-large'] = '3px'
-
-    tokens['focus-ring'] =
-      '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)'
-
-    tokens['focus-ring-width'] = '1px'
-    tokens['focus-ring-alpha'] = '100%'
-
-    tokens['input-border-color'] = 'var(--sl-color-neutral-400)'
-    tokens['input-border-color-hover'] = 'var(--sl-color-neutral-600)'
-    tokens['input-border-color-focus'] = 'var(--sl-color-primary-700)'
-
-    tokens['font-size-medium'] = '0.92rem'
-    tokens['font-weight-semibold'] = '600'
-
-    tokens['font-sans'] =
-      "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
-
-    // TODO!!!!
-    //tokens['input-placeholder-color'] = 'red'
-    //tokens['input-placeholder-color-disabled'] = 'var(--sl-color-neutral-700)'
-
-    /*
-    tokens['font-size-medium'] = '1rem'
-    tokens['font-size-large'] = '1.3rem'
-    tokens['font-size-x-large'] = '1.6rem'
-    tokens['font-size-2x-large'] = '2rem'
-    tokens['font-size-3x-large'] = '3.5rem'
-    tokens['font-size-4x-large'] = '4rem'
-    */
-
-    Object.assign(tokens, {
-      'input-height-small': '1.85rem',
-      'input-height-medium': '1.95rem',
-      'input-height-large': '2.5rem'
-    })
-
-    return tokens
-  }
-}
-
 // === color utility functions =======================================
 
 function calcColor(hex: string, lum: number): [number, number, number] {
@@ -505,6 +472,9 @@ const lightThemeTokens = {
   'label-alignment-above': 'var(--on)',
   'label-alignment-aside': 'var(--off)',
   'label-alignment-aside-width': '8rem',
+
+  // other new tokens
+  'label-font-weight': 'var(--sl-font-weight-normal)',
 
   /*
    * Color Primitives
@@ -870,9 +840,11 @@ const lightThemeTokens = {
 
   /* Fonts */
   'font-mono': "SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace",
+
   'font-sans':
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif," +
-    "Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+
   'font-serif': "Georgia, 'Times New Roman', serif",
 
   /* Font sizes */

@@ -1,11 +1,11 @@
 import { h } from '../../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
+import { sharedTheme } from '../shared/shared-theme'
 
 import {
   Brand,
   Cockpit,
-  ColorSchemes,
   DataForm,
   RadioGroup,
   Section,
@@ -15,8 +15,6 @@ import {
   Tabs,
   TextArea,
   TextField,
-  Theme,
-  ThemeVariants,
   UserMenu
 } from 'js-cockpit'
 
@@ -115,10 +113,8 @@ function sharedCockpitImpl() {
     ]
   }
 
-  const theme = new Theme(ColorSchemes.default, ThemeVariants.modernCompact)
-
   return () => html`
-    <c-theme-provider .theme=${theme}>
+    <c-theme-provider .theme=${sharedTheme}>
       <c-cockpit>
         <c-brand
           slot="header-start"

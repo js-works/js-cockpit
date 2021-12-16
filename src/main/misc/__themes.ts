@@ -103,7 +103,7 @@ class Theme {
     this.#adjustThemeTokens()
   }
 
-  asCss(selector = ':root, :host'): string {
+  toCss(selector = ':root, :host'): string {
     let css = this.#css
 
     if (css) {
@@ -273,7 +273,7 @@ function calcColorShades(
 
 function loadTheme(theme: Theme, selector?: string) {
   const elem = document.createElement('style')
-  elem.append(document.createTextNode(theme.asCss(selector)))
+  elem.append(document.createTextNode(theme.toCss(selector)))
   document.head.append(elem)
   return () => elem.remove()
 }

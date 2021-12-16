@@ -1,14 +1,8 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-
-import {
-  Brand,
-  ColorSchemes,
-  Theme,
-  ThemeProvider,
-  ThemeVariants
-} from 'js-cockpit'
+import { Brand, ThemeProvider } from 'js-cockpit'
+import { sharedTheme } from './shared/shared-theme'
 
 export default {
   title: 'brand'
@@ -29,12 +23,10 @@ const brandDemoStyles = `
 })
 class BrandDemo extends component() {}
 
-const theme = new Theme(ColorSchemes.cranberry, ThemeVariants.modernCompact)
-
 function brandDemoImpl() {
   return () =>
     html`
-      <c-theme-provider .theme=${theme}>
+      <c-theme-provider .theme=${sharedTheme}>
         <div class="brand-demo">
           <div>
             <c-brand

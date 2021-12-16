@@ -34,7 +34,7 @@ function themeProviderImpl(self: ThemeProvider) {
 
     return html`
       <style>
-        ${theme?.asCss()}
+        ${theme?.toCss()}
       </style>
       <div class="base">
         <slot></slot>

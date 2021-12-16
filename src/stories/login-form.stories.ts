@@ -1,17 +1,15 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
+import { sharedTheme } from './shared/shared-theme'
 
 import {
   Brand,
-  ColorSchemes,
   DateField,
   EmailField,
   LoginForm,
   PasswordField,
   TextField,
-  Theme,
-  ThemeVariants,
   ThemeProvider
 } from 'js-cockpit'
 
@@ -34,12 +32,10 @@ export default {
 })
 class LoginFormDemo extends component() {}
 
-const theme = new Theme(ColorSchemes.default, ThemeVariants.modernCompact)
-
 function loginFormDemoImpl() {
   return () =>
     html`
-      <c-theme-provider .theme=${theme}>
+      <c-theme-provider .theme=${sharedTheme}>
         <c-login-form
           full-size
           enable-remember-login
