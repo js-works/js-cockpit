@@ -200,3 +200,15 @@ sl-button.go-to-registration-link::part(label) {
     )
     var(--sl-dark, none);
 }
+
+.message {
+  transition: opacity 500ms;
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+.message.fade-out {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scaleY(0);
+}

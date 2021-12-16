@@ -116,7 +116,8 @@ function loginFormImpl(self: LoginForm) {
     view: 'login' as View,
     showInvalidFormError: false,
     successMessage: '',
-    errorMessage: ''
+    errorMessage: '',
+    messageFading: 'none' as 'none' | 'fadeOut'
   })
 
   const animationRef = createRef<SlAnimation>()
@@ -203,11 +204,13 @@ function loginFormImpl(self: LoginForm) {
         setState({
           showInvalidFormError: false,
           successMessage: '',
-          errorMessage: ''
+          errorMessage: '',
+          messageFading: 'none'
         })
+      } else {
+        setState({ messageFading: 'fadeOut' })
+        setTimeout(clearMessages, 500)
       }
-
-      setTimeout(clearMessages, 750)
     }
   }
 
@@ -255,7 +258,13 @@ function loginFormImpl(self: LoginForm) {
                       : html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`}
                     ${!state.showInvalidFormError
                       ? null
-                      : html`<c-message-bar variant="danger">
+                      : html`<c-message-bar
+                          variant="danger"
+                          class=${classMap({
+                            message: true,
+                            'fade-out': state.messageFading === 'fadeOut'
+                          })}
+                        >
                           ${i18n.translate(
                             'jsCockpit.validation',
                             'formInvalid'
@@ -263,12 +272,24 @@ function loginFormImpl(self: LoginForm) {
                         </c-message-bar>`}
                     ${!state.successMessage
                       ? null
-                      : html`<c-message-bar variant="success">
+                      : html`<c-message-bar
+                          variant="success"
+                          class=${classMap({
+                            message: true,
+                            'fade-out': state.messageFading === 'fadeOut'
+                          })}
+                        >
                           ${state.successMessage}
                         </c-message-bar>`}
                     ${!state.errorMessage
                       ? null
-                      : html`<c-message-bar variant="danger">
+                      : html`<c-message-bar
+                          variant="danger"
+                          class=${classMap({
+                            message: true,
+                            'fade-out': state.messageFading === 'fadeOut'
+                          })}
+                        >
                           ${state.errorMessage}
                         </c-message-bar>`}
                     <sl-button
