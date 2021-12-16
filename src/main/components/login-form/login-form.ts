@@ -113,12 +113,15 @@ class LoginForm extends component() {
 
 function loginFormImpl(self: LoginForm) {
   const [state, setState] = useState({
-    view: 'login' as View
+    view: 'login' as View,
+    showInvalidFormError: false,
+    successMessage: '',
+    errorMessage: ''
   })
 
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
-  const { t } = useI18n('jsCockpit.loginForm')
+  const { i18n, t } = useI18n('jsCockpit.loginForm')
 
   const onForgotPasswordClick = () => {
     changeView('forgotPassword')
@@ -142,6 +145,7 @@ function loginFormImpl(self: LoginForm) {
     }
 
     if (!form.checkValidity()) {
+      setState('showInvalidFormError', true)
       console.log('check NOT okay')
       return
     }
@@ -183,7 +187,29 @@ function loginFormImpl(self: LoginForm) {
     }
 
     setState('view', view)
+
+    self.addEventListener('input', () => {
+      clearMessages(true)
+    })
   })
+
+  function clearMessages(delayed = false) {
+    if (
+      state.showInvalidFormError ||
+      state.successMessage ||
+      state.errorMessage
+    ) {
+      if (!delayed) {
+        setState({
+          showInvalidFormError: false,
+          successMessage: '',
+          errorMessage: ''
+        })
+      }
+
+      setTimeout(clearMessages, 750)
+    }
+  }
 
   function changeView(view: View) {
     const animation = animationRef.value!
@@ -199,6 +225,7 @@ function loginFormImpl(self: LoginForm) {
 
     animation.addEventListener('sl-finish', function listener() {
       setState({ view })
+      clearMessages()
       setTimeout(() => (animation.style.visibility = 'visible'), 50)
       animation.removeEventListener('sl-finish', listener)
       animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight'
@@ -223,12 +250,27 @@ function loginFormImpl(self: LoginForm) {
                 <form class="column2" @submit=${onSubmit} ${ref(formRef)}>
                   <div class="column2-top">${renderFields()}</div>
                   <div class="column2-bottom">
-                    ${state.view === 'login' && self.enableRememberLogin
-                      ? html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`
-                      : ''}
-                    <c-message-bar variant="danger">
-                      Form entries are not valid.
-                    </c-message-bar>
+                    ${state.view !== 'login' || !self.enableRememberLogin
+                      ? null
+                      : html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`}
+                    ${!state.showInvalidFormError
+                      ? null
+                      : html`<c-message-bar variant="danger">
+                          ${i18n.translate(
+                            'jsCockpit.validation',
+                            'formInvalid'
+                          )}
+                        </c-message-bar>`}
+                    ${!state.successMessage
+                      ? null
+                      : html`<c-message-bar variant="success">
+                          ${state.successMessage}
+                        </c-message-bar>`}
+                    ${!state.errorMessage
+                      ? null
+                      : html`<c-message-bar variant="danger">
+                          ${state.errorMessage}
+                        </c-message-bar>`}
                     <sl-button
                       type="primary"
                       size="large"

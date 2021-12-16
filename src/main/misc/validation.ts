@@ -13,7 +13,8 @@ declare global {
 const translations = {
   en: {
     'jsCockpit.validation': {
-      fieldRequired: 'The field is required'
+      fieldRequired: 'The field is required',
+      formInvalid: 'Form contains invalid entries'
     }
   }
 }
