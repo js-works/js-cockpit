@@ -363,9 +363,8 @@ function showDialog<T = void>(
 
   const form = containerShadow.querySelector<SlForm>('sl-form.form')!
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!
-  const contentBox = containerShadow.querySelector<HTMLDivElement>(
-    'div.content'
-  )!
+  const contentBox =
+    containerShadow.querySelector<HTMLDivElement>('div.content')!
 
   if (params.content) {
     contentBox.append(params.content)

@@ -6,11 +6,11 @@ import { useI18n } from '../../utils/hooks'
 import { hasSlot } from '../../utils/slots'
 
 // custom elements
-import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert'
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
+import { MessageBar } from '../message-bar/message-bar'
 import { PasswordField } from '../password-field/password-field'
 import { TextField } from '../text-field/text-field'
 
@@ -85,8 +85,8 @@ addToDict(translations)
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
   uses: [
+    MessageBar,
     PasswordField,
-    SlAlert,
     SlAnimation,
     SlButton,
     SlCheckbox,
@@ -223,6 +223,10 @@ function loginFormImpl(self: LoginForm) {
                 <form class="column2" @submit=${onSubmit} ${ref(formRef)}>
                   <div class="column2-top">${renderFields()}</div>
                   <div class="column2-bottom">
+                    <c-message-bar variant="danger">
+                      Form entries are not valid.
+                    </c-message-bar>
+
                     ${state.view === 'login' && self.enableRememberLogin
                       ? html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`
                       : ''}

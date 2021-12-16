@@ -28,7 +28,7 @@
   "homepage": "https://github.com/js-works/js-cockpit#readme",
   "devDependencies": {
     "@a11y/focus-trap": "^1.0.5",
-    "@babel/core": "^7.16.0",
+    "@babel/core": "^7.16.5",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-links": "^6.4.9",
@@ -42,13 +42,13 @@
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
-    "esbuild": "^0.14.3",
+    "esbuild": "^0.14.5",
     "faker": "^5.5.3",
     "focus-trap": "^6.7.1",
     "remixicon": "^2.5.0",
     "svg-url-loader": "^7.1.1",
     "terser": "^5.10.0",
-    "typescript": "^4.5.3",
+    "typescript": "^4.5.4",
     "vanillajs-datepicker": "github:xdev1/vanillajs-datepicker"
   },
   "dependencies": {

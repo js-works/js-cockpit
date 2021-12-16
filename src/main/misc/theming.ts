@@ -10,7 +10,7 @@ export { loadTheme, ColorScheme, ColorSchemes, Theme, ThemeTokens, ThemeMods }
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
-const COLOR_LUMINANCES = [
+const colorLuminances = [
   0.95, // 50
   0.84, // 100
   0.73, // 200
@@ -24,7 +24,7 @@ const COLOR_LUMINANCES = [
   0.02 // 950
 ]
 
-const SEMANTIC_COLORS = [
+const semanticColors = [
   'primary',
   'success',
   'info',
@@ -32,7 +32,7 @@ const SEMANTIC_COLORS = [
   'danger'
 ] as const
 
-const PALETTE_COLORS = [
+const paletteColors = [
   'amber',
   'blue',
   'blue-gray',
@@ -60,7 +60,7 @@ const PALETTE_COLORS = [
   'yellow'
 ] as const
 
-const ALL_COLORS = new Set([...SEMANTIC_COLORS, ...PALETTE_COLORS])
+const allColors = new Set([...semanticColors, ...paletteColors])
 
 // === types =========================================================
 
@@ -146,7 +146,7 @@ function calcColorShades(
 ): Record<`color-${string}-${string}`, string> {
   const ret: any = {}
 
-  COLOR_LUMINANCES.forEach((luminance, idx) => {
+  colorLuminances.forEach((luminance, idx) => {
     if (dark) {
       idx = 1000 - idx
     }
@@ -163,7 +163,7 @@ const ThemeMods = {
     return (tokens: ThemeTokens): Partial<ThemeTokens> => {
       const ret: Partial<ThemeTokens> = {}
 
-      for (const semanticColor of SEMANTIC_COLORS) {
+      for (const semanticColor of semanticColors) {
         const colorHex = colorScheme[`${semanticColor}Color`]
 
         if (colorHex) {
@@ -194,7 +194,7 @@ const ThemeMods = {
     //invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
     //invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
 
-    ALL_COLORS.forEach((color) => {
+    allColors.forEach((color) => {
       for (let i = 0; i < 5; ++i) {
         const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
         const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
@@ -371,7 +371,8 @@ const ColorSchemes = Object.freeze({
   },
 
   skyBlue: {
-    primaryColor: '#0EA5E9'
+    primaryColor: '#0ea5e9',
+    dangerColor: '#e95420'
   },
 
   aquamarine: {
