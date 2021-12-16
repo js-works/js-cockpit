@@ -8,7 +8,7 @@
 }
 
 .base.variant-info {
-  color: var(--sl-color-neutral-1000);
+  color: var(--sl-color-primary-950);
   background-color: var(--sl-color-primary-100);
 }
 
@@ -17,8 +17,18 @@
   border-color: var(--sl-color-primary-200);
 }
 
+.base.variant-success {
+  color: var(--sl-color-success-950);
+  background-color: var(--sl-color-success-100);
+}
+
+.base.variant-success,
+.base.variant-success .column1 {
+  border-color: var(--sl-color-success-300);
+}
+
 .base.variant-warning {
-  color: var(--sl-color-warning-800);
+  color: var(--sl-color-warning-950);
   background-color: var(--sl-color-warning-200);
 }
 

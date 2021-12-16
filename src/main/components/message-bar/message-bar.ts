@@ -6,9 +6,9 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 
 // icons
 import infoIcon from '../../icons/info-circle.svg'
-import successIcon from '../../icons/info-circle.svg' // TODO
+import successIcon from '../../icons/check-circle.svg' // TODO
 import warningIcon from '../../icons/exclamation-circle.svg'
-import dangerIcon from '../../icons/exclamation-triangle.svg'
+import dangerIcon from '../../icons/exclamation-diamond.svg'
 
 // styles
 import messageBarStyles from './message-bar.css'

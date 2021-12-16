@@ -223,13 +223,12 @@ function loginFormImpl(self: LoginForm) {
                 <form class="column2" @submit=${onSubmit} ${ref(formRef)}>
                   <div class="column2-top">${renderFields()}</div>
                   <div class="column2-bottom">
-                    <c-message-bar variant="danger">
-                      Form entries are not valid.
-                    </c-message-bar>
-
                     ${state.view === 'login' && self.enableRememberLogin
                       ? html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`
                       : ''}
+                    <c-message-bar variant="danger">
+                      Form entries are not valid.
+                    </c-message-bar>
                     <sl-button
                       type="primary"
                       size="large"
