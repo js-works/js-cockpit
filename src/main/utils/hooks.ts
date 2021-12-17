@@ -3,6 +3,7 @@ import {
   useAfterMount,
   useBeforeMount,
   useBeforeUnmount,
+  useOnFormAssociated,
   useHost,
   useInternals,
   useRefresher
@@ -53,15 +54,15 @@ export const useFormField = hook('useFormField', function <
 >(params: { getValue(): T; validate(): { message: string; anchor: HTMLElement } | null }) {
   let errorMsg: string | null = null
   let anchor: HTMLElement | null = null
-  let showError = false
-  let hasValidated = false
+  let hasFocus = false
+  let suppressErrors = false
+  let showErrors = false
   const host = useHost()
   const internals = useInternals() as any // TODO
   const refresh = useRefresher()
 
   const setFormValue = (value: T, silently = false) => {
     internals.setFormValue(value)
-    showError = hasValidated
     const result = params.validate()
 
     if (!result) {
@@ -91,10 +92,9 @@ export const useFormField = hook('useFormField', function <
   })
 
   host.addEventListener('invalid', (ev) => {
+    showErrors = true
     ev.stopPropagation()
     console.log('invalid!!!')
-    hasValidated = true
-    showError = true
     const h = host as any
     console.log(h.label)
     console.log('refreshing', host.localName, h.label)
@@ -104,27 +104,38 @@ export const useFormField = hook('useFormField', function <
 
   return {
     // TODO: File + FormData
-    signalUpdate: () => setFormValue(params.getValue()),
+    signalUpdate: () => {
+      showErrors = true
+      setFormValue(params.getValue())
+    },
 
     hasError(): boolean {
-      return showError && errorMsg !== null
+      return showErrors && !suppressErrors && errorMsg !== null
     },
 
     getErrorMsg(): string | null {
-      return showError && errorMsg !== null ? errorMsg : null
+      return this.hasError() ? errorMsg : null
     },
 
     signalInput() {
-      if (!showError || errorMsg === null) {
+      if (!showErrors || errorMsg === null) {
         return
       }
 
-      showError = false
+      if (hasFocus) {
+        suppressErrors = true
+      }
+
       refresh()
     },
 
-    debug() {
-      // console.error(111, error, showError)
+    signalFocus() {
+      hasFocus = true
+    },
+
+    signalBlur() {
+      hasFocus = false
+      refresh()
     }
   }
 })
