@@ -92,14 +92,14 @@ function textFieldImpl(self: TextField) {
     formField.signalUpdate()
   }
 
+  const onBlur = () => {
+    formField.signalUpdate()
+  }
+
   setMethods(self, {
     reset() {},
     focus: () => slInputRef.value!.focus(),
     blur: () => slInputRef.value!.blur()
-  })
-
-  useAfterMount(() => {
-    //setInterval(refresh, 10000)
   })
 
   function render() {
@@ -118,6 +118,7 @@ function textFieldImpl(self: TextField) {
               ${ref(slInputRef)}
               @sl-input=${onInput}
               @sl-change=${onChange}
+              @blur=${onBlur}
             ></sl-input>
             <div class="error">${formField.getErrorMsg()}</div>
           </div>

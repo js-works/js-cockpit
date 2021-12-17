@@ -1,5 +1,5 @@
 import { component, elem, prop, setMethods, Attrs } from 'js-element'
-import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
+import { classMap, html, createRef, lit, ref } from 'js-element/lit'
 import { useFormField, useI18n } from '../../utils/hooks'
 
 // custom elements
@@ -63,10 +63,15 @@ function passwordFieldImpl(self: PasswordField) {
   }) // TODO!!!
 
   const onInput = () => {
+    self.value = slInputRef.value!.value
     formField.signalInput()
   }
 
   const onChange = () => {
+    formField.signalUpdate()
+  }
+
+  const onBlur = () => {
     formField.signalUpdate()
   }
 
@@ -87,6 +92,8 @@ function passwordFieldImpl(self: PasswordField) {
             class="input"
             @sl-input=${onInput}
             @sl-change=${onChange}
+            @blur=${onBlur}
+            ${ref(slInputRef)}
           ></sl-input>
           <div class="error">${formField.getErrorMsg()}</div>
         </div>

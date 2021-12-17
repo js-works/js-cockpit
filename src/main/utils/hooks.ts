@@ -34,16 +34,15 @@ function useI18nFn<C extends keyof Localize.TranslationsMap>(
 } {
   const element = useHost()
   const refresh = useRefresher()
-
   const { connect, disconnect, getLocale } = observeLocale(element, refresh)
-  const localizer = localize(getLocale)
+  const i18n = localize(getLocale)
 
   useBeforeMount(connect)
   useBeforeUnmount(disconnect)
 
   return {
-    i18n: localizer,
-    t: (localizer.translate as any).bind(null, category)
+    i18n,
+    t: (i18n.translate as any).bind(null, category)
   }
 }
 
@@ -55,16 +54,18 @@ export const useFormField = hook('useFormField', function <
   let errorMsg: string | null = null
   let anchor: HTMLElement | null = null
   let showError = false
+  let hasValidated = false
   const host = useHost()
   const internals = useInternals() as any // TODO
   const refresh = useRefresher()
 
   const setFormValue = (value: T, silently = false) => {
     internals.setFormValue(value)
+    showError = hasValidated
     const result = params.validate()
 
     if (!result) {
-      errorMsg = ''
+      errorMsg = null
       anchor = null
       internals.setValidity({})
     } else {
@@ -81,7 +82,6 @@ export const useFormField = hook('useFormField', function <
     }
 
     if (!silently) {
-      showError = true
       refresh()
     }
   }
@@ -93,6 +93,7 @@ export const useFormField = hook('useFormField', function <
   host.addEventListener('invalid', (ev) => {
     ev.stopPropagation()
     console.log('invalid!!!')
+    hasValidated = true
     showError = true
     const h = host as any
     console.log(h.label)
