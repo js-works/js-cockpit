@@ -137,7 +137,6 @@ function loginFormImpl(self: LoginForm) {
   }
 
   const onSubmit = (ev?: any) => {
-    console.log('onSubmit')
     const form = formRef.value!
 
     // TODO
@@ -147,11 +146,8 @@ function loginFormImpl(self: LoginForm) {
 
     if (!form.checkValidity()) {
       setState('showInvalidFormError', true)
-      console.log('check NOT okay')
       return
     }
-
-    console.log('check okay')
 
     const formData = new FormData(form)
     let text = ''

@@ -55,15 +55,17 @@ export const useFormField = hook('useFormField', function <
   let errorMsg: string | null = null
   let anchor: HTMLElement | null = null
   let hasFocus = false
-  let suppressErrors = false
+  let hadInput = false
   let showErrors = false
   const host = useHost()
   const internals = useInternals() as any // TODO
   const refresh = useRefresher()
 
-  const setFormValue = (value: T, silently = false) => {
+  const setFormValue = (value: T) => {
     internals.setFormValue(value)
     const result = params.validate()
+    const oldErrorMsg = errorMsg
+    const oldAnchor = anchor
 
     if (!result) {
       errorMsg = null
@@ -82,51 +84,42 @@ export const useFormField = hook('useFormField', function <
       )
     }
 
-    if (!silently) {
+    if (errorMsg !== oldErrorMsg || anchor !== oldAnchor) {
       refresh()
     }
   }
 
   useAfterMount(() => {
-    setFormValue(params.getValue(), true)
+    hadInput = false
+    setFormValue(params.getValue())
   })
 
   host.addEventListener('invalid', (ev) => {
+    const oldShowErrors = showErrors
     showErrors = true
     ev.stopPropagation()
-    console.log('invalid!!!')
-    const h = host as any
-    console.log(h.label)
-    console.log('refreshing', host.localName, h.label)
-    refresh()
-    //alert('refreshing')
+
+    if (oldShowErrors !== showErrors) {
+      refresh()
+    }
   })
 
-  return {
-    // TODO: File + FormData
-    signalUpdate: () => {
-      showErrors = true
-      setFormValue(params.getValue())
-    },
-
-    hasError(): boolean {
-      return showErrors && !suppressErrors && errorMsg !== null
-    },
-
-    getErrorMsg(): string | null {
-      return this.hasError() ? errorMsg : null
-    },
-
+  const ret = {
     signalInput() {
+      hadInput = true
+      showErrors = !hasFocus
+
       if (!showErrors || errorMsg === null) {
         return
       }
 
-      if (hasFocus) {
-        suppressErrors = true
-      }
-
       refresh()
+    },
+
+    // TODO: File + FormData
+    signalUpdate: () => {
+      showErrors = true
+      setFormValue(params.getValue())
     },
 
     signalFocus() {
@@ -135,9 +128,20 @@ export const useFormField = hook('useFormField', function <
 
     signalBlur() {
       hasFocus = false
+      showErrors = hadInput
       refresh()
+    },
+
+    hasError(): boolean {
+      return showErrors && errorMsg !== null
+    },
+
+    getErrorMsg(): string | null {
+      return this.hasError() ? errorMsg : null
     }
   }
+
+  return ret
 })
 
 /*

@@ -74,6 +74,14 @@ function emailFieldImpl(self: EmailField) {
     formField.signalUpdate()
   }
 
+  const onFocus = () => {
+    formField.signalFocus()
+  }
+
+  const onBlur = () => {
+    formField.signalBlur()
+  }
+
   return () => html`
     <div
       class="base ${classMap({
@@ -91,6 +99,8 @@ function emailFieldImpl(self: EmailField) {
             class="input"
             @sl-input=${onInput}
             @sl-change=${onChange}
+            @focus=${onFocus}
+            @blur=${onBlur}
           >
             <div slot="suffix">
               <sl-icon src=${emailIcon} class="icon"></sl-icon>

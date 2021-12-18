@@ -71,8 +71,12 @@ function passwordFieldImpl(self: PasswordField) {
     formField.signalUpdate()
   }
 
+  const onFocus = () => {
+    formField.signalFocus()
+  }
+
   const onBlur = () => {
-    formField.signalUpdate()
+    formField.signalBlur()
   }
 
   return () => html`
@@ -92,6 +96,7 @@ function passwordFieldImpl(self: PasswordField) {
             class="input"
             @sl-input=${onInput}
             @sl-change=${onChange}
+            @focus=${onFocus}
             @blur=${onBlur}
             ${ref(slInputRef)}
           ></sl-input>
