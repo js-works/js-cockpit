@@ -34,6 +34,21 @@ export { LoginForm }
 
 type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
 
+namespace LoginForm {
+  export type SubmitData =
+    | {
+        view: 'login'
+        locale: string
+        rememberLogin: boolean
+        params: Record<string, any>
+      }
+    | {
+        view: 'forgotPassword' | 'resetPassword' | 'registration'
+        locale: string
+        params: Record<string, any>
+      }
+}
+
 // === translations ==================================================
 
 declare global {
@@ -64,6 +79,9 @@ const translations = {
       newPasswordRepeat: 'Repeat new password',
       password: 'Password',
       processingLoginSubmit: 'Logging in...',
+      processingForgotPasswordSubmit: 'Submitting...',
+      processingResetPasswordSubmit: 'Submitting...',
+      processingRegistrationSubmit: 'Submitting...',
       registrationIntroHeadline: 'Registration',
       registrationIntroText:
         'Please fill out the form and press the submit button to register',
@@ -114,6 +132,9 @@ class LoginForm extends component() {
 
   @prop({ attr: Attrs.boolean })
   fullSize = false
+
+  @prop()
+  processSubmit?: (data: LoginForm.SubmitData) => Promise<void>
 }
 
 function loginFormImpl(self: LoginForm) {
@@ -156,25 +177,46 @@ function loginFormImpl(self: LoginForm) {
       return
     }
 
+    if (typeof self.processSubmit !== 'function') {
+      setState({ errorMessage: '', successMessage: '' })
+      return
+    }
+
     const formData = new FormData(form)
-    let text = ''
-    const data: Record<string, any> = {}
+
+    const data: LoginForm.SubmitData = {
+      view: state.view as any,
+      locale: i18n.getLocale(),
+      params: {}
+    }
 
     formData.forEach((value, key) => {
-      data[key] = value
-
-      if (text) {
-        text += ', '
-      }
-
-      text += key + ': ' + value
+      data.params[key] = value
     })
 
-    console.log('form data:', text)
-    console.log('form data object:', data)
+    if (state.view === 'login') {
+      ;(data as any).remeberLogin = self.enableRememberLogin // TODO!!!!
+    }
 
-    setState({ isLoading: true })
+    setState({ isLoading: true, successMessage: '', errorMessage: '' })
     submitButtonRef.value!.focus()
+
+    self
+      .processSubmit(data)
+      .then((message) => {
+        setState({
+          isLoading: false,
+          successMessage: 'Success',
+          errorMessage: ''
+        })
+      })
+      .catch((error) => {
+        setState({
+          isLoading: false,
+          successMessage: '',
+          errorMessage: String(error) // TODO!!!!
+        })
+      })
   }
 
   // TODO
@@ -182,6 +224,12 @@ function loginFormImpl(self: LoginForm) {
     const form = ev.target.closest('form') // TODO
     onSubmit()
   }
+
+  self.addEventListener('mousedown', (ev) => {
+    if (state.isLoading) {
+      ev.preventDefault()
+    }
+  })
 
   useOnInit(() => {
     let view: View = 'login'
@@ -566,6 +614,15 @@ function loginFormImpl(self: LoginForm) {
       switch (state.view) {
         case 'login':
           return t('processingLoginSubmit')
+
+        case 'forgotPassword':
+          return t('processingForgotPasswordSubmit')
+
+        case 'resetPassword':
+          return t('processingResetPasswordSubmit')
+
+        case 'registration':
+          return t('processingRegistrationSubmit')
       }
     }
   }

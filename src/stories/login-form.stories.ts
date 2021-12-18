@@ -42,6 +42,16 @@ function loginFormDemoImpl() {
           enable-forgot-password
           enable-registration
           initial-view="login"
+          .processSubmit=${(data: LoginForm.SubmitData) => {
+            console.log(data)
+
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                //reject('This is just a demo. Forms cannot really be submitted')
+                resolve('xxx')
+              }, 2000)
+            })
+          }}
         >
           <c-brand
             slot="header"

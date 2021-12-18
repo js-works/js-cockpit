@@ -40,6 +40,9 @@ const translations: FullTranslations<'jsCockpit'> = {
       newPasswordRepeat: 'Wiederhole Passwort',
       password: 'Passwort',
       processingLoginSubmit: 'Anmeldung läuft...',
+      processingForgotPasswordSubmit: 'Sende Daten...',
+      processingResetPasswordSubmit: 'Sede Daten...',
+      processingRegistrationSubmit: 'Sende Daten...',
       registrationIntroHeadline: 'Registrierung',
       registrationIntroText:
         'Bitte füllen Sie zur Registrierung das Formular aus',
