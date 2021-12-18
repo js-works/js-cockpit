@@ -67,6 +67,7 @@ function emailFieldImpl(self: EmailField) {
   }) // TODO!!!
 
   const onInput = () => {
+    self.value = slInputRef.value!.value
     formField.signalInput()
   }
 
@@ -101,6 +102,7 @@ function emailFieldImpl(self: EmailField) {
             @sl-change=${onChange}
             @focus=${onFocus}
             @blur=${onBlur}
+            ${ref(slInputRef)}
           >
             <div slot="suffix">
               <sl-icon src=${emailIcon} class="icon"></sl-icon>

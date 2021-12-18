@@ -184,6 +184,36 @@ sl-button.go-to-registration-link::part(label) {
   padding: 4px !important;
 }
 
+.message {
+  transition: opacity 500ms;
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+.message.fade-out {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scaleY(0);
+}
+
+.submit-button-content {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button-text {
+  flex-grow: 1;
+}
+
+.submit-button-spinner {
+  flex-grow: 0;
+  font-size: 1.25rem;
+  --indicator-color: white;
+  --track-width: 2px;
+}
+
 .column1 {
   background-image: var(
       --sl-light,
@@ -199,16 +229,4 @@ sl-button.go-to-registration-link::part(label) {
     </svg>')
     )
     var(--sl-dark, none);
-}
-
-.message {
-  transition: opacity 500ms;
-  transform: scaleY(1);
-  opacity: 1;
-}
-
-.message.fade-out {
-  transition: all 500ms;
-  opacity: 0;
-  transform: scaleY(0);
 }

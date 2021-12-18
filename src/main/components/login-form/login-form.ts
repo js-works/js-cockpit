@@ -8,8 +8,10 @@ import { hasSlot } from '../../utils/slots'
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner'
+import { FocusTrap } from '@a11y/focus-trap'
 import { MessageBar } from '../message-bar/message-bar'
 import { PasswordField } from '../password-field/password-field'
 import { TextField } from '../text-field/text-field'
@@ -61,6 +63,7 @@ const translations = {
       newPassword: 'New passwort',
       newPasswordRepeat: 'Repeat new password',
       password: 'Password',
+      processingLoginSubmit: 'Logging in...',
       registrationIntroHeadline: 'Registration',
       registrationIntroText:
         'Please fill out the form and press the submit button to register',
@@ -85,12 +88,14 @@ addToDict(translations)
   styles: [loginFormStyles, topAlignedLabelsStyles],
   impl: lit(loginFormImpl),
   uses: [
+    FocusTrap,
     MessageBar,
     PasswordField,
     SlAnimation,
     SlButton,
     SlCheckbox,
     SlIcon,
+    SlSpinner,
     TextField
   ]
 })
@@ -117,9 +122,11 @@ function loginFormImpl(self: LoginForm) {
     showInvalidFormError: false,
     successMessage: '',
     errorMessage: '',
-    messageFading: 'none' as 'none' | 'fadeOut'
+    messageFading: 'none' as 'none' | 'fadeOut',
+    isLoading: false
   })
 
+  const submitButtonRef = createRef<SlButton>()
   const animationRef = createRef<SlAnimation>()
   const formRef = createRef<HTMLFormElement>()
   const { i18n, t } = useI18n('jsCockpit.loginForm')
@@ -151,8 +158,11 @@ function loginFormImpl(self: LoginForm) {
 
     const formData = new FormData(form)
     let text = ''
+    const data: Record<string, any> = {}
 
     formData.forEach((value, key) => {
+      data[key] = value
+
       if (text) {
         text += ', '
       }
@@ -161,6 +171,10 @@ function loginFormImpl(self: LoginForm) {
     })
 
     console.log('form data:', text)
+    console.log('form data object:', data)
+
+    setState({ isLoading: true })
+    submitButtonRef.value!.focus()
   }
 
   // TODO
@@ -288,13 +302,25 @@ function loginFormImpl(self: LoginForm) {
                         >
                           ${state.errorMessage}
                         </c-message-bar>`}
-                    <sl-button
-                      type="primary"
-                      size="large"
-                      @click=${onSubmitClick}
-                    >
-                      ${renderSubmitButtonText()}
-                    </sl-button>
+                    <focus-trap .inactive=${!state.isLoading}>
+                      <sl-button
+                        type="primary"
+                        size="large"
+                        @click=${onSubmitClick}
+                        ${ref(submitButtonRef)}
+                      >
+                        <div class="submit-button-content">
+                          <span class="submit-button-text">
+                            ${renderSubmitButtonText()}
+                          </span>
+                          ${!state.isLoading
+                            ? null
+                            : html`<sl-spinner
+                                class="submit-button-spinner"
+                              ></sl-spinner>`}
+                        </div>
+                      </sl-button>
+                    </focus-trap>
                     ${renderLinks()}
                   </div>
                 </form>
@@ -520,18 +546,25 @@ function loginFormImpl(self: LoginForm) {
   }
 
   function renderSubmitButtonText() {
-    switch (state.view) {
-      case 'login':
-        return t('loginSubmitText')
+    if (!state.isLoading) {
+      switch (state.view) {
+        case 'login':
+          return t('loginSubmitText')
 
-      case 'registration':
-        return t('registrationSubmitText')
+        case 'registration':
+          return t('registrationSubmitText')
 
-      case 'forgotPassword':
-        return t('forgotPasswordSubmitText')
+        case 'forgotPassword':
+          return t('forgotPasswordSubmitText')
 
-      case 'resetPassword':
-        return t('resetPasswordSubmitText')
+        case 'resetPassword':
+          return t('resetPasswordSubmitText')
+      }
+    } else {
+      switch (state.view) {
+        case 'login':
+          return t('processingLoginSubmit')
+      }
     }
   }
 
