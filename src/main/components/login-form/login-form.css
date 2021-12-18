@@ -1,4 +1,5 @@
 .base {
+  position: relative;
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
   user-select: none;
@@ -196,6 +197,10 @@ sl-button.go-to-registration-link::part(label) {
   transform: scaleY(0);
 }
 
+.submit-button {
+  width: 100%;
+}
+
 .submit-button-content {
   display: flex;
   gap: 0.7rem;
@@ -209,9 +214,20 @@ sl-button.go-to-registration-link::part(label) {
 
 .submit-button-spinner {
   flex-grow: 0;
-  font-size: 1.25rem;
-  --indicator-color: white;
+  font-size: 1.125rem;
+  --indicator-color: var(--sl-color-neutral-0);
   --track-width: 2px;
+}
+
+.overlay {
+  position: absolute;
+  background-color: transparent;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 32768;
+  cursor: wait;
 }
 
 .column1 {

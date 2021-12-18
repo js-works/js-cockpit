@@ -237,7 +237,7 @@ function loginFormImpl(self: LoginForm) {
     }, animation.duration - 50)
 
     animation.addEventListener('sl-finish', function listener() {
-      setState({ view })
+      setState({ view, isLoading: false })
       clearMessages()
       setTimeout(() => (animation.style.visibility = 'visible'), 50)
       animation.removeEventListener('sl-finish', listener)
@@ -249,6 +249,7 @@ function loginFormImpl(self: LoginForm) {
   function render() {
     return html`
       <div class="base ${classMap({ 'full-size': self.fullSize })}">
+        ${!state.isLoading ? null : html`<div class="overlay"></div>`}
         <sl-animation ${ref(animationRef)}>
           <div class="container">
             <div class="header">
@@ -306,6 +307,7 @@ function loginFormImpl(self: LoginForm) {
                       <sl-button
                         type="primary"
                         size="large"
+                        class="submit-button"
                         @click=${onSubmitClick}
                         ${ref(submitButtonRef)}
                       >
