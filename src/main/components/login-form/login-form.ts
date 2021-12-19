@@ -65,6 +65,10 @@ const translations = {
       email: 'Email',
       firstName: 'First name',
       lastName: 'Last name',
+      failedLoginSubmit: 'You could not be logged in',
+      failedForgotPasswordSubmit: 'Data could not be submitted',
+      failedResetPasswordSubmit: 'Data could not be submitted',
+      failedRegistrationSubmit: 'Data could not be submitted',
       forgotPassword: 'Forgot password?',
       forgotPasswordIntroHeadline: 'Forgot password?',
       forgotPasswordIntroText:
@@ -92,6 +96,10 @@ const translations = {
         'Please fill out and submit the form to reset your password',
       resetPasswordSubmitText: 'Reset password',
       securityCode: 'Security code',
+      successfulLoginSubmit: 'You have ben successfuly logged in',
+      successfulForgotPasswordSubmit: 'Data have been submitted succesfully',
+      successfulResetPasswordSubmit: 'Data have been submitted successfully',
+      successfulRegistrationSubmit: 'Data have been submitted successfuly',
       username: 'Username'
     }
   }
@@ -134,7 +142,9 @@ class LoginForm extends component() {
   fullSize = false
 
   @prop()
-  processSubmit?: (data: LoginForm.SubmitData) => Promise<void>
+  processSubmit?: (
+    data: LoginForm.SubmitData
+  ) => Promise<string | undefined | null>
 }
 
 function loginFormImpl(self: LoginForm) {

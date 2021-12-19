@@ -43,7 +43,7 @@ function loginFormDemoImpl() {
           enable-registration
           initial-view="login"
           .processSubmit=${(data: LoginForm.SubmitData) => {
-            console.log(data)
+            console.log(JSON.stringify(data, null, 2))
 
             return new Promise((resolve, reject) => {
               setTimeout(() => {

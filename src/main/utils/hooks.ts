@@ -3,10 +3,10 @@ import {
   useAfterMount,
   useBeforeMount,
   useBeforeUnmount,
-  useOnFormAssociated,
   useHost,
   useInternals,
-  useRefresher
+  useRefresher,
+  useStatus
 } from 'js-element/hooks'
 
 import { observeLocale } from '../i18n/locale-detection'
@@ -60,6 +60,7 @@ export const useFormField = hook('useFormField', function <
   const host = useHost()
   const internals = useInternals() as any // TODO
   const refresh = useRefresher()
+  const status = useStatus()
 
   const setFormValue = (value: T) => {
     internals.setFormValue(value)
@@ -92,16 +93,19 @@ export const useFormField = hook('useFormField', function <
   useAfterMount(() => {
     hadInput = false
     setFormValue(params.getValue())
-  })
 
-  host.addEventListener('invalid', (ev) => {
-    const oldShowErrors = showErrors
-    showErrors = true
-    ev.stopPropagation()
+    setTimeout(() => {
+      host.addEventListener('invalid', (ev) => {
+        const oldShowErrors = showErrors
+        console.log('invalid', status.isMounted())
+        showErrors = true
+        ev.stopPropagation()
 
-    if (oldShowErrors !== showErrors) {
-      refresh()
-    }
+        if (oldShowErrors !== showErrors) {
+          refresh()
+        }
+      })
+    }, 0)
   })
 
   const ret = {

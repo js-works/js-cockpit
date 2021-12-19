@@ -42,6 +42,7 @@
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
+    "element-internals-polyfill": "^0.1.49",
     "esbuild": "^0.14.5",
     "faker": "^5.5.3",
     "focus-trap": "^6.7.1",

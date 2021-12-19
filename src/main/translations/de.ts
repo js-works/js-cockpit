@@ -24,6 +24,10 @@ const translations: FullTranslations<'jsCockpit'> = {
       email: 'E-mail',
       firstName: 'Vorname',
       lastName: 'Nachname',
+      failedLoginSubmit: 'Sie konnten nicht angemeldet werden',
+      failedForgotPasswordSubmit: 'Die Daten konnten nicht übermittelt werden',
+      failedResetPasswordSubmit: 'Die Daten konnten nicht übermittelt werden',
+      failedRegistrationSubmit: 'Die Daten konnten nicht übermittelt werden',
       forgotPassword: 'Passwort vergessen?',
       forgotPasswordIntroHeadline: 'Passwort vergessen?',
 
@@ -54,6 +58,11 @@ const translations: FullTranslations<'jsCockpit'> = {
         'Bitte füllen Sie für die Rücksetzung des Passworts das Formular aus',
       resetPasswordSubmitText: 'Passwort zurücksetzen',
       securityCode: 'Sicherheitscode',
+      successfulLoginSubmit: 'Sie wurden erfolgreich angemeldet',
+      successfulForgotPasswordSubmit:
+        'Die Daten wurden erfolgreich übermittelt',
+      successfulResetPasswordSubmit: 'Die Daten wurden erfolgreich übermittelt',
+      successfulRegistrationSubmit: 'Die Date wurden erfolgreich übermittelt',
       username: 'Benutzername'
     },
 
