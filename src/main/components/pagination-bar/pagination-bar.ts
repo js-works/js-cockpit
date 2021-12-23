@@ -211,7 +211,7 @@ function paginationBarImpl(self: PaginationBar) {
     return html`
       <div class="pagination">
         <sl-button
-          type="default"
+          variant="default"
           class="nav-button"
           ?disabled=${aux.isFirstPage}
           @click=${onFirstPage}
@@ -219,7 +219,7 @@ function paginationBarImpl(self: PaginationBar) {
           <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
         </sl-button>
         <sl-button
-          type="default"
+          variant="default"
           class="nav-button"
           ?disabled=${aux.isFirstPage}
           @click=${onPrevPage}
@@ -239,7 +239,7 @@ function paginationBarImpl(self: PaginationBar) {
           ${ofXPagesTxt}
         </div>
         <sl-button
-          type="default"
+          variant="default"
           class="nav-button"
           ?disabled=${aux.isLastPage}
           @click=${onNextPage}
@@ -247,7 +247,7 @@ function paginationBarImpl(self: PaginationBar) {
           <sl-icon src=${chevronRightSvg}></sl-icon>
         </sl-button>
         <sl-button
-          type="default"
+          variant="default"
           class="nav-button"
           ?disabled=${aux.isLastPage}
           @click=${onLastPage}

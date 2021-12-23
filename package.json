@@ -42,8 +42,8 @@
     "base64-raw-loader": "^1.0.1",
     "chroma-js": "^2.1.2",
     "del": "^6.0.0",
-    "element-internals-polyfill": "^0.1.49",
-    "esbuild": "^0.14.5",
+    "element-internals-polyfill": "^0.1.51",
+    "esbuild": "^0.14.8",
     "faker": "^5.5.3",
     "focus-trap": "^6.7.1",
     "remixicon": "^2.5.0",
@@ -53,7 +53,7 @@
     "vanillajs-datepicker": "github:xdev1/vanillajs-datepicker"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.0.0-beta.62",
+    "@shoelace-style/shoelace": "^2.0.0-beta.63",
     "js-element": "file:../js-element",
     "js-localize": "file:../js-localize"
   }

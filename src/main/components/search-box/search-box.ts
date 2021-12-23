@@ -61,7 +61,12 @@ function searchBoxImpl(self: SearchBox) {
         </sl-input>
         <sl-dropdown @keydown=${onKeyDown} ${ref(dropdownRef)}>
           <div slot="trigger">
-            <sl-button type="default" size="small" class="filter-button" caret>
+            <sl-button
+              variant="default"
+              size="small"
+              class="filter-button"
+              caret
+            >
               <sl-icon src=${filterIcon} slot="prefix"></sl-icon>
               Filter
             </sl-button>
@@ -77,7 +82,7 @@ function searchBoxImpl(self: SearchBox) {
                   >Cancel</sl-button
                 >
                 <sl-button
-                  type="primary"
+                  variant="primary"
                   size="small"
                   class="button"
                   @clck=${onApplyClick}

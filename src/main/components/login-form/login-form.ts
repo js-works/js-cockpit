@@ -363,7 +363,7 @@ function loginFormImpl(self: LoginForm) {
                         </c-message-bar>`}
                     <focus-trap .inactive=${!state.isLoading}>
                       <sl-button
-                        type="primary"
+                        variant="primary"
                         size="large"
                         class="submit-button"
                         @click=${onSubmitClick}
@@ -569,7 +569,7 @@ function loginFormImpl(self: LoginForm) {
     return self.enableForgotPassword
       ? html`
           <sl-button
-            type="text"
+            variant="text"
             class="forgot-password-link"
             @click=${onForgotPasswordClick}
           >
@@ -582,7 +582,7 @@ function loginFormImpl(self: LoginForm) {
   function renderGoToLoginLink() {
     return html`
       <sl-button
-        type="text"
+        variant="text"
         class="go-to-login-link"
         @click=${onGoToLoginClick}
       >
@@ -595,7 +595,7 @@ function loginFormImpl(self: LoginForm) {
     return self.enableRegistration
       ? html`
           <sl-button
-            type="text"
+            variant="text"
             class="go-to-registration-link"
             @click=${onGoToRegistrationClick}
           >
