@@ -308,7 +308,7 @@ const ColorSchemes = Object.freeze({
 
   pacificBlue: {
     primaryColor: '#0E94BB',
-    dangerColor: '#E34234'
+    dangerColor: '#ff5000'
   },
 
   cranberry: {

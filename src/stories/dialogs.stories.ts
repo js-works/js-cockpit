@@ -1,6 +1,7 @@
 import { h } from '../main/utils/dom'
 import { component, elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
+import { sharedTheme } from './shared/shared-theme'
 
 import {
   showApproveDialog,
@@ -148,4 +149,5 @@ function dialogDemoImpl(self: DialogsDemo) {
   `
 }
 
-export const dialogs = () => h('c-theme-provider', null, h('dialogs-demo'))
+export const dialogs = () =>
+  h('c-theme-provider', { theme: sharedTheme }, h('dialogs-demo'))

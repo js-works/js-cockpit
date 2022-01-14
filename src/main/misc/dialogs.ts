@@ -1,6 +1,5 @@
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
-import SlForm from '@shoelace-style/shoelace/dist/components/form/form'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
@@ -63,7 +62,7 @@ type DialogConfig<T> = {
 
   buttons: {
     text: string
-    type?: 'default' | 'primary' | 'danger'
+    variant?: 'default' | 'primary' | 'danger'
   }[]
 
   defaultResult?: T
@@ -114,6 +113,10 @@ const styles = `
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+  }
+
+  sl-button.button::part(base) {
+    font-weight: var(--sl-label-font-weight);
   }
 
   .icon {
@@ -167,7 +170,7 @@ const showInfoDialog = createDialogFn<{
 
     buttons: [
       {
-        type: 'primary',
+        variant: 'primary',
         text: params.okText || translate('ok')
       }
     ]
@@ -187,7 +190,7 @@ const showWarnDialog = createDialogFn<{
 
     buttons: [
       {
-        type: 'primary',
+        variant: 'primary',
         text: params.okText || translate('ok')
       }
     ]
@@ -207,7 +210,7 @@ const showErrorDialog = createDialogFn<{
 
     buttons: [
       {
-        type: 'primary',
+        variant: 'primary',
         text: params.okText || translate('ok')
       }
     ]
@@ -235,7 +238,7 @@ const showConfirmDialog = createDialogFn<
         text: params.cancelText || translate('cancel')
       },
       {
-        type: 'primary',
+        variant: 'primary',
         text: params.okText || translate('ok')
       }
     ]
@@ -263,7 +266,7 @@ const showApproveDialog = createDialogFn<
         text: params.cancelText || translate('cancel')
       },
       {
-        type: 'danger',
+        variant: 'danger',
         text: params.okText || translate('ok')
       }
     ]
@@ -299,7 +302,7 @@ const showInputDialog = createDialogFn<
         text: params.cancelText || translate('cancel')
       },
       {
-        type: 'primary',
+        variant: 'primary',
         text: params.okText || translate('ok')
       }
     ]
@@ -338,12 +341,12 @@ function showDialog<T = void>(
   }
 
   // required custom elements
-  void (FocusTrap || SlButton || SlForm || SlIcon || SlInput || SlDialog)
+  void (FocusTrap || SlButton || SlIcon || SlInput || SlDialog)
 
   containerShadow.innerHTML = `
     <style>
     </style>
-    <sl-form class="form">
+    <form class="form">
       <focus-trap>
         <sl-dialog open class="dialog">
           <div slot="label" class="header">
@@ -355,13 +358,13 @@ function showDialog<T = void>(
           <div slot="footer" class="buttons"></div>
         </sl-dialog>
       </focus-trap>
-    </sl-form>
+    </form>
   `
 
   setText(params.title, '.title')
   setText(params.message, '.message')
 
-  const form = containerShadow.querySelector<SlForm>('sl-form.form')!
+  const form = containerShadow.querySelector<HTMLFormElement>('form.form')!
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!
   const contentBox =
     containerShadow.querySelector<HTMLDivElement>('div.content')!
@@ -370,21 +373,27 @@ function showDialog<T = void>(
     contentBox.append(params.content)
   }
 
-  form.addEventListener('sl-submit', (ev: any) => {
+  form.addEventListener('submit', (ev: any) => {
     ev.preventDefault()
-    const formData = ev.detail.formData
-    const data: Record<string, string> = {}
 
-    formData.forEach((value: string, key: string) => {
-      data[key] = value
-    })
+    // This will be run before the button submit event is dispatched.
+    // That's why the logic logic here will be deferred.
 
-    contentBox.removeEventListener('keydown', onKeyDown)
-    buttonBox.removeEventListener('keydown', onKeyDown)
-    container.remove()
-    containerShadow.innerHTML = ''
+    setTimeout(() => {
+      const formData = new FormData(form)
+      const data: Record<string, string> = {}
 
-    emitResult(params.mapResult?.(data))
+      formData.forEach((value: FormDataEntryValue, key: string) => {
+        data[key] = value.toString()
+      })
+
+      contentBox.removeEventListener('keydown', onKeyDown)
+      buttonBox.removeEventListener('keydown', onKeyDown)
+      container.remove()
+      containerShadow.innerHTML = ''
+
+      emitResult(params.mapResult?.(data))
+    }, 0)
   })
 
   dialog.addEventListener('sl-request-close', (ev: Event) => {
@@ -414,25 +423,25 @@ function showDialog<T = void>(
   hiddenField.name = 'button'
   buttonBox.append(hiddenField)
 
-  const hasPrimaryButton = params.buttons.some((it) => it.type === 'primary')
+  const hasPrimaryButton = params.buttons.some((it) => it.variant === 'primary')
 
-  params.buttons.forEach(({ text, type = 'default' }, idx) => {
+  params.buttons.forEach(({ text, variant = 'default' }, idx) => {
     const button: SlButton = document.createElement('sl-button')
-    button.type = type
+    button.type = 'submit'
+    button.className = 'button'
+    button.variant = variant
     button.innerText = text
 
-    if (type === 'primary' || (!hasPrimaryButton && idx === 0)) {
+    if (variant === 'primary' || (!hasPrimaryButton && idx === 0)) {
       button.setAttribute('autofocus', '')
     }
 
     button.onclick = () => {
+      // This will be run after an submit event will be
+      // dispatched for the corresponding form element.
+      // That's why the form submit event handler logic
+      // will be deferred.
       hiddenField.value = String(idx)
-
-      try {
-        form.submit()
-      } finally {
-        hiddenField.value = ''
-      }
     }
 
     buttonBox.append(button)
