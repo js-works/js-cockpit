@@ -69,7 +69,6 @@ function loginFormDemoImpl() {
             <c-password-field label="Password" required></c-password-field>
           </div>
 -->
-          <!--
           <div slot="registration-fields">
             <c-text-field
               name="usernamerrr"
@@ -96,7 +95,6 @@ function loginFormDemoImpl() {
               label="Day of birth"
             ></c-date-field>
           </div>
--->
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>
       </c-theme-provider>

@@ -9767,8 +9767,8 @@ validate-npm-package-license@^3.0.1:
     spdx-expression-parse "^3.0.0"
 
 "vanillajs-datepicker@github:xdev1/vanillajs-datepicker":
-  version "1.1.4"
-  resolved "https://codeload.github.com/xdev1/vanillajs-datepicker/tar.gz/833b05b4ef377e1c77467298aa7772048aabe652"
+  version "1.2.0"
+  resolved "https://codeload.github.com/xdev1/vanillajs-datepicker/tar.gz/4f34bc8b730091795f9d8325f9fa6bc40139678e"
 
 vary@~1.1.2:
   version "1.1.2"

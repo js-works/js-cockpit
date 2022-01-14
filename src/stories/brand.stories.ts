@@ -37,7 +37,7 @@ function brandDemoImpl() {
             <br />
             <br />
             <c-brand
-              headline="Size: mediume"
+              headline="Size: medium"
               text="Back Office"
               size="medium"
             ></c-brand>
