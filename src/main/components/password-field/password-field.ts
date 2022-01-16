@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, method, prop, override, Attrs } from 'js-element'
 import { classMap, html, createRef, lit, ref } from 'js-element/lit'
 import { useFormField, useI18n } from '../../utils/hooks'
 
@@ -24,9 +24,7 @@ export { PasswordField }
   uses: [SlInput],
   impl: lit(passwordFieldImpl)
 })
-class PasswordField extends component<{
-  reset(): void
-}>() {
+class PasswordField extends HTMLElement {
   @prop({ attr: Attrs.string })
   name = ''
 
@@ -41,6 +39,9 @@ class PasswordField extends component<{
 
   @prop({ attr: Attrs.boolean })
   required = false
+
+  @method
+  reset!: () => void
 }
 
 function passwordFieldImpl(self: PasswordField) {

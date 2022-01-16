@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
 
 // styles
@@ -15,7 +15,7 @@ export { Tab }
   styles: tabStyles,
   impl: lit(tabImpl)
 })
-class Tab extends component() {
+class Tab extends HTMLElement {
   @prop({ attr: Attrs.string })
   caption = ''
 }

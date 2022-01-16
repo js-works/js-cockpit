@@ -1,5 +1,5 @@
 import { h } from '../../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { sharedTheme } from '../shared/shared-theme'
 
@@ -42,7 +42,7 @@ export default {
   ],
   impl: lit(sharedCockpitImpl)
 })
-export class SharedCockpit extends component() {}
+export class SharedCockpit extends HTMLElement {}
 
 function sharedCockpitImpl() {
   const menu: SideMenu.Menu = {

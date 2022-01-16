@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 
 import {
@@ -70,7 +70,7 @@ const demo1Styles = `
   impl: lit(cockpitDemo1Impl),
   uses: [Cockpit, DateField, NavMenu, SharedCockpit, ThemeProvider]
 })
-class CockpitDemo1 extends component() {}
+class CockpitDemo1 extends HTMLElement {}
 
 function cockpitDemo1Impl() {
   return () => html`
@@ -115,7 +115,7 @@ export const cockpit1 = () => h('cockpit-demo1')
   ],
   impl: lit(cockpitDemo2Impl)
 })
-class CockpitDemo2 extends component() {}
+class CockpitDemo2 extends HTMLElement {}
 
 function cockpitDemo2Impl() {
   return () => html`
@@ -147,7 +147,7 @@ export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
   ],
   impl: lit(cockpitDemo3Impl)
 })
-class CockpitDemo3 extends component() {}
+class CockpitDemo3 extends HTMLElement {}
 
 function cockpitDemo3Impl() {
   return () => html` <shared-cockpit>${createDataForm()}</shared-cockpit> `

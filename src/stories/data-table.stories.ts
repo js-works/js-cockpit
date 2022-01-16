@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { DataTable } from 'js-cockpit'
 
@@ -108,7 +108,7 @@ const data = [
   styles: themeStyles,
   impl: lit(dataTableDemoImpl)
 })
-class DataTableDemo extends component() {}
+class DataTableDemo extends HTMLElement {}
 
 function dataTableDemoImpl() {
   return () => html`

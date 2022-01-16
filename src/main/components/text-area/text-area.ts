@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, method, prop, override, Attrs } from 'js-element'
 import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import {} from 'js-element/hooks'
 
@@ -23,9 +23,7 @@ export { TextArea }
   uses: [SlTextarea],
   impl: lit(textAreaImpl)
 })
-class TextArea extends component<{
-  reset(): void
-}>() {
+class TextArea extends HTMLElement {
   @prop({ attr: Attrs.string })
   value = ''
 
@@ -43,6 +41,9 @@ class TextArea extends component<{
 
   @prop({ attr: Attrs.string })
   error = ''
+
+  @method
+  reset!: () => void
 }
 
 function textAreaImpl(self: TextArea) {

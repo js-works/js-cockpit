@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit, repeat } from 'js-element/lit'
 
 // custom elements
@@ -32,7 +32,7 @@ namespace NavMenu {
   uses: [SlIcon],
   impl: lit(navMenuImpl)
 })
-class NavMenu extends component() {
+class NavMenu extends HTMLElement {
   @prop
   items?: NavMenu.Item[]
 

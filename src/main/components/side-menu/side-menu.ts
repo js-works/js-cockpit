@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit, repeat, TemplateResult } from 'js-element/lit'
 
 // custom elements
@@ -50,7 +50,7 @@ namespace SideMenu {
   impl: lit(sideMenuImpl),
   uses: [SlDetails, SlMenu, SlMenuItem]
 })
-class SideMenu extends component() {
+class SideMenu extends HTMLElement {
   @prop
   menu: SideMenu.Menu = null
 

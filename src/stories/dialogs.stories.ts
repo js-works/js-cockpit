@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { sharedTheme } from './shared/shared-theme'
 
@@ -30,7 +30,7 @@ const styles = `
   impl: lit(dialogDemoImpl),
   uses: [ThemeProvider]
 })
-class DialogsDemo extends component() {}
+class DialogsDemo extends HTMLElement {}
 
 function dialogDemoImpl(self: DialogsDemo) {
   const onInfoClick = () => {

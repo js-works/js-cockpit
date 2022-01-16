@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit, repeat } from 'js-element/lit'
 
 // custom elements
@@ -43,7 +43,7 @@ namespace ActionBar {
   impl: lit(actionBarImpl),
   uses: [SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem]
 })
-class ActionBar extends component() {
+class ActionBar extends HTMLElement {
   @prop
   actions: ActionBar.Actions | null = null
 
@@ -81,9 +81,11 @@ function actionBarImpl(self: ActionBar) {
                       slot="trigger"
                       size="small"
                       caret
-                      ?disabled=${!it.actions ||
-                      it.actions.length === 0 ||
-                      it.actions.every((it) => it.disabled)}
+                      ?disabled=${
+                        !it.actions ||
+                        it.actions.length === 0 ||
+                        it.actions.every((it) => it.disabled)
+                      }
                       ?pill=${self.pill}
                     >
                       ${it.text}</sl-button

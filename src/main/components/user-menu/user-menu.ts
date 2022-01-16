@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
@@ -23,7 +23,7 @@ export { UserMenu }
   uses: [SlIcon],
   impl: lit(userMenuImpl)
 })
-class UserMenu extends component() {
+class UserMenu extends HTMLElement {
   @prop({ attr: Attrs.string })
   displayName: string = ''
 }

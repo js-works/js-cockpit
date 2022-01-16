@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // styles
@@ -15,7 +15,7 @@ export { Fieldset }
   styles: fieldsetStyles,
   impl: lit(fieldsetImpl)
 })
-class Fieldset extends component() {
+class Fieldset extends HTMLElement {
   @prop({ attr: Attrs.string })
   caption = ''
 

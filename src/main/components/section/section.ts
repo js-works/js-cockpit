@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // styles
@@ -15,7 +15,7 @@ export { Section }
   styles: sectionStyles,
   impl: lit(sectionImpl)
 })
-class Section extends component() {
+class Section extends HTMLElement {
   @prop({ attr: Attrs.string })
   caption = ''
 }

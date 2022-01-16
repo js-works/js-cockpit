@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, method, prop, override, Attrs } from 'js-element'
 import { classMap, html, createRef, lit, ref } from 'js-element/lit'
 
 import {
@@ -34,11 +34,7 @@ export { TextField }
   impl: lit(textFieldImpl),
   uses: [SlInput]
 })
-class TextField extends component<{
-  blur(): void
-  focus(): void
-  reset(): void
-}>() {
+class TextField extends HTMLElement {
   @prop({ attr: Attrs.string })
   name = ''
 
@@ -56,6 +52,15 @@ class TextField extends component<{
 
   @prop({ attr: Attrs.string })
   error = ''
+
+  @method
+  blur!: () => void
+
+  @method
+  focus!: () => void
+
+  @method
+  reset!: () => void
 }
 
 function textFieldImpl(self: TextField) {
@@ -100,7 +105,7 @@ function textFieldImpl(self: TextField) {
     formField.signalBlur()
   }
 
-  setMethods(self, {
+  override(self, {
     reset() {},
     focus: () => slInputRef.value!.focus(),
     blur: () => slInputRef.value!.blur()

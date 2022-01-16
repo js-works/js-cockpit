@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, method, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useFormField, useI18n } from '../../utils/hooks'
 
@@ -28,9 +28,7 @@ export { EmailField }
   uses: [SlIcon, SlInput],
   impl: lit(emailFieldImpl)
 })
-class EmailField extends component<{
-  reset(): void
-}>() {
+class EmailField extends HTMLElement {
   @prop({ attr: Attrs.string })
   name = ''
 
@@ -45,6 +43,9 @@ class EmailField extends component<{
 
   @prop({ attr: Attrs.boolean })
   required = false
+
+  @method
+  reset!: () => void
 }
 
 function emailFieldImpl(self: EmailField) {

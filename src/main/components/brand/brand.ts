@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
@@ -22,7 +22,7 @@ export { Brand }
   uses: [SlIcon],
   impl: lit(brandImpl)
 })
-class Brand extends component() {
+class Brand extends HTMLElement {
   @prop({ attr: Attrs.string })
   logo = ''
 

@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, createRef, lit, ref, repeat } from 'js-element/lit'
 
 // custom elements
@@ -30,7 +30,7 @@ export { SearchBox }
   impl: lit(searchBoxImpl),
   uses: [FocusTrap, SlButton, SlDropdown, SlIcon, SlInput]
 })
-class SearchBox extends component() {}
+class SearchBox extends HTMLElement {}
 
 function searchBoxImpl(self: SearchBox) {
   const dropdownRef = createRef<SlDropdown>()

@@ -1,4 +1,4 @@
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import {
   AppLayout,
@@ -57,7 +57,7 @@ const columns: DataExplorer.Column[] = [
   uses: [AppLayout, DataExplorer, SearchBox],
   impl: lit(sharedDataExplorerDemoImpl)
 })
-export class SharedDataExplorer extends component() {}
+export class SharedDataExplorer extends HTMLElement {}
 
 function sharedDataExplorerDemoImpl() {
   return () => html`

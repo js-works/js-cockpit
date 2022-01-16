@@ -1,5 +1,5 @@
 // external imports
-import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
+import { elem, prop, override, Attrs, Listener } from 'js-element'
 
 import {
   classMap,
@@ -71,7 +71,7 @@ type HeaderCell = {
   impl: lit(dataTableImpl),
   uses: [SlCheckbox]
 })
-class DataTable extends component() {
+class DataTable extends HTMLElement {
   @prop
   columns: DataTable.Column[] | null = null
 
@@ -367,9 +367,7 @@ function dataTableImpl(self: DataTable) {
   return render
 }
 
-const getTableHeadInfo: (
-  columns: DataTable.Column[]
-) => {
+const getTableHeadInfo: (columns: DataTable.Column[]) => {
   headerCells: HeaderCell[][]
   columns: HeaderCell[]
 } = (() => {

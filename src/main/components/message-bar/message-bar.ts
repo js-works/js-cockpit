@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
 
 // components
@@ -37,7 +37,7 @@ const appearanceByVariant = new Map([
   impl: lit(messageBarImpl),
   uses: [SlIcon]
 })
-class MessageBar extends component() {
+class MessageBar extends HTMLElement {
   @prop({ attr: Attrs.string })
   variant: 'info' | 'success' | 'warning' | 'danger' = 'info'
 }

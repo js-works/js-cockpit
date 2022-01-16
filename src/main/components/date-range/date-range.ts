@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
 import { useAfterMount } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
@@ -45,7 +45,7 @@ export { DateRange }
   impl: lit(dateRangeImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
-class DateRange extends component() {
+class DateRange extends HTMLElement {
   @prop({ attr: Attrs.string })
   label = ''
 
@@ -70,8 +70,8 @@ function dateRangeImpl(self: DateRange) {
       datepicker = createDateRangePicker({
         getLocale,
         range: shadowRoot.querySelector('.fields')!,
-        slInput1: (shadowRoot.querySelector('.input1')! as any) as SlInput,
-        slInput2: (shadowRoot.querySelector('.input2')! as any) as SlInput,
+        slInput1: shadowRoot.querySelector('.input1')! as any as SlInput,
+        slInput2: shadowRoot.querySelector('.input2')! as any as SlInput,
         pickerContainer: shadowRoot.querySelector('.picker-container')!,
         namespace: self.localName
       })

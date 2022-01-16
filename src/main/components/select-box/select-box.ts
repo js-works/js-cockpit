@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, method, prop, override, Attrs } from 'js-element'
 import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
 import {} from 'js-element/hooks'
 
@@ -25,9 +25,7 @@ export { SelectBox }
   uses: [SlDivider, SlMenuItem, SlSelect],
   impl: lit(selectBoxImpl)
 })
-class SelectBox extends component<{
-  reset(): void
-}>() {
+class SelectBox extends HTMLElement {
   @prop({ attr: Attrs.string })
   value = ''
 
@@ -42,6 +40,9 @@ class SelectBox extends component<{
 
   @prop({ attr: Attrs.string })
   error = ''
+
+  @method
+  reset!: () => void
 }
 
 function selectBoxImpl(self: SelectBox) {

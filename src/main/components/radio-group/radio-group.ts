@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
@@ -21,7 +21,7 @@ export { RadioGroup }
   uses: [SlRadio, SlRadioGroup],
   impl: lit(radioGroupImpl)
 })
-class RadioGroup extends component() {
+class RadioGroup extends HTMLElement {
   @prop({ attr: Attrs.string })
   label = ''
 }

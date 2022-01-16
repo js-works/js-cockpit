@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, createRef, lit, repeat, ref } from 'js-element/lit'
 import {
   useAfterUpdate,
@@ -28,7 +28,7 @@ export { Tabs }
   uses: [SlIcon, SlTabGroup, SlTabPanel, SlTab],
   impl: lit(tabsImpl)
 })
-class Tabs extends component() {}
+class Tabs extends HTMLElement {}
 
 function tabsImpl(self: Tabs) {
   const status = useStatus()

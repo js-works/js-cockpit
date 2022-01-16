@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { AppLayout, DataExplorer, ThemeProvider, Theme } from 'js-cockpit'
 import { SharedDataExplorer } from './shared/shared-data-explorer'

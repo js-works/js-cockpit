@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs, Listener } from 'js-element'
+import { elem, method, prop, override, Attrs, Listener } from 'js-element'
 import { html, createRef, repeat, lit, ref } from 'js-element/lit'
 import { useEmitter } from 'js-element/hooks'
 import { addToDict, localize, TermsOf } from 'js-localize'
@@ -107,9 +107,7 @@ type AuxData = {
   impl: lit(paginationBarImpl),
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect]
 })
-class PaginationBar extends component<{
-  reset(): void
-}>() {
+class PaginationBar extends HTMLElement {
   @prop({ attr: Attrs.number })
   pageIndex?: number
 
@@ -127,6 +125,9 @@ class PaginationBar extends component<{
 
   @prop
   onPageSizeChange?: Listener<PageSizeChangeEvent>
+
+  @method
+  reset!: () => void
 }
 
 function paginationBarImpl(self: PaginationBar) {
@@ -173,7 +174,7 @@ function paginationBarImpl(self: PaginationBar) {
     }
   }
 
-  setMethods(self, {
+  override(self, {
     reset() {
       pageInputRef.value!.value = aux.isValid ? String(aux.pageIndex) : ''
 

@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { useAfterMount } from 'js-element/hooks'
 import { createRef, html, lit, ref } from 'js-element/lit'
 
@@ -25,7 +25,7 @@ export { FocusTrap }
   tag: 'c-focus-trap',
   impl: lit(focusTrapImpl)
 })
-class FocusTrap extends component() {}
+class FocusTrap extends HTMLElement {}
 
 function focusTrapImpl(self: FocusTrap) {
   const containerRef = createRef<HTMLElement>()

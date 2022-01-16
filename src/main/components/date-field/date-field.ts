@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { classMap, html, lit } from 'js-element/lit'
 import { useAfterMount, useBeforeRender } from 'js-element/hooks'
 import { useI18n } from '../../utils/hooks'
@@ -43,7 +43,7 @@ export { DateField }
   impl: lit(dateFieldImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
-class DateField extends component() {
+class DateField extends HTMLElement {
   @prop({ attr: Attrs.string })
   label = ''
 

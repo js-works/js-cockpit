@@ -1,4 +1,4 @@
-import { component, elem, prop, setMethods, Attrs } from 'js-element'
+import { elem, prop, override, Attrs } from 'js-element'
 import { html, classMap, lit } from 'js-element/lit'
 
 // custom elements
@@ -26,7 +26,7 @@ export { DataForm }
   impl: lit(dataFormImpl),
   uses: [ActionBar, SlIcon, SlIconButton]
 })
-class DataForm extends component() {
+class DataForm extends HTMLElement {
   @prop({ attr: Attrs.string })
   headline = ''
 }

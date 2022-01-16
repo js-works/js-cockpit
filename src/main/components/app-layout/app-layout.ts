@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { html, lit } from 'js-element/lit'
 
 // styles
@@ -15,7 +15,7 @@ export { AppLayout }
   styles: appLayoutStyles,
   impl: lit(appLayoutImpl)
 })
-class AppLayout extends component() {}
+class AppLayout extends HTMLElement {}
 
 function appLayoutImpl() {
   return () => html`

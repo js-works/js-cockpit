@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Brand, ThemeProvider } from 'js-cockpit'
 import { sharedTheme } from './shared/shared-theme'
@@ -21,7 +21,7 @@ const brandDemoStyles = `
   styles: [brandDemoStyles],
   impl: lit(brandDemoImpl)
 })
-class BrandDemo extends component() {}
+class BrandDemo extends HTMLElement {}
 
 function brandDemoImpl() {
   return () =>

@@ -1,4 +1,4 @@
-import { component, elem, prop } from 'js-element'
+import { elem, prop } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { Theme } from '../../misc/theming'
 
@@ -16,7 +16,7 @@ export { ThemeProvider }
   impl: lit(themeProviderImpl),
   styles: [themeProviderStyles]
 })
-class ThemeProvider extends component() {
+class ThemeProvider extends HTMLElement {
   @prop()
   theme?: Theme
 }

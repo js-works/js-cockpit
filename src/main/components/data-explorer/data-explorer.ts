@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useAfterMount, useOnInit, useRefresher } from 'js-element/hooks'
 import { ActionBar } from '../action-bar/action-bar'
@@ -98,7 +98,7 @@ addToDict(translations)
   impl: lit(dataExplorerImpl),
   uses: [ActionBar, DataTable, PaginationBar]
 })
-class DataExplorer extends component() {
+class DataExplorer extends HTMLElement {
   @prop({ attr: Attrs.string })
   title: string = ''
 

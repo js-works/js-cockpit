@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useOnInit, useState } from 'js-element/hooks'
 import { addToDict, TermsOf } from 'js-localize'
@@ -125,7 +125,7 @@ addToDict(translations)
     TextField
   ]
 })
-class LoginForm extends component() {
+class LoginForm extends HTMLElement {
   @prop({ attr: Attrs.string })
   initialView?: View
 

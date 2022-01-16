@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { AppLayout } from 'js-cockpit'
 
@@ -50,7 +50,7 @@ const styles = `
   uses: [AppLayout],
   impl: lit(appLayoutDemoImpl)
 })
-class AppLayoutDemo extends component() {}
+class AppLayoutDemo extends HTMLElement {}
 
 function appLayoutDemoImpl() {
   return () => html`

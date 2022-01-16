@@ -1,5 +1,5 @@
 import { h } from '../main/utils/dom'
-import { component, elem } from 'js-element'
+import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
 import { sharedTheme } from './shared/shared-theme'
 
@@ -30,7 +30,7 @@ export default {
   ],
   impl: lit(loginFormDemoImpl)
 })
-class LoginFormDemo extends component() {}
+class LoginFormDemo extends HTMLElement {}
 
 function loginFormDemoImpl() {
   return () =>

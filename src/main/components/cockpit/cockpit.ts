@@ -1,4 +1,4 @@
-import { component, elem, prop, Attrs } from 'js-element'
+import { elem, prop, Attrs } from 'js-element'
 import { html, lit as lit } from 'js-element/lit'
 
 // styles
@@ -16,7 +16,7 @@ export { Cockpit }
   uses: [],
   impl: lit(cockpitImpl)
 })
-class Cockpit extends component() {}
+class Cockpit extends HTMLElement {}
 
 function cockpitImpl(self: Cockpit) {
   return () => html`
