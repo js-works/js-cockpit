@@ -3,7 +3,7 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
-import { detectLocale } from '../i18n/locale-detection'
+import { detectLocale } from '../utils/locale-detection'
 import { addToDict, localize, TermsOf } from 'js-localize'
 
 // icons

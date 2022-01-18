@@ -1,5 +1,14 @@
-import { elem, prop, Attrs } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import {
+  bind,
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { html } from '../../utils/lit'
 
 // components
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -34,17 +43,14 @@ const appearanceByVariant = new Map([
 @elem({
   tag: 'c-message-bar',
   styles: messageBarStyles,
-  impl: lit(messageBarImpl),
   uses: [SlIcon]
 })
-class MessageBar extends HTMLElement {
+class MessageBar extends Component {
   @prop({ attr: Attrs.string })
   variant: 'info' | 'success' | 'warning' | 'danger' = 'info'
-}
 
-function messageBarImpl(self: MessageBar) {
-  function render() {
-    const appearance = appearanceByVariant.get(self.variant)
+  render() {
+    const appearance = appearanceByVariant.get(this.variant)
 
     if (!appearance) {
       return null
@@ -63,6 +69,4 @@ function messageBarImpl(self: MessageBar) {
       </div>
     `
   }
-
-  return render
 }

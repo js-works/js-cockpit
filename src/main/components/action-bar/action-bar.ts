@@ -1,5 +1,5 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit, repeat } from 'js-element/lit'
+import { elem, prop, Attrs, Component } from '../../utils/components'
+import { html, repeat } from '../../utils/lit'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -40,20 +40,17 @@ namespace ActionBar {
 @elem({
   tag: 'c-action-bar',
   styles: actionBarStyles,
-  impl: lit(actionBarImpl),
   uses: [SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem]
 })
-class ActionBar extends HTMLElement {
+class ActionBar extends Component {
   @prop
   actions: ActionBar.Actions | null = null
 
   @prop({ attr: Attrs.string })
   pill = false
-}
 
-function actionBarImpl(self: ActionBar) {
-  function render() {
-    if (!self.actions) {
+  render() {
+    if (!this.actions) {
       return null
     }
 
@@ -61,7 +58,7 @@ function actionBarImpl(self: ActionBar) {
       <div class="base">
         <sl-button-group>
           ${repeat(
-            self.actions,
+            this.actions,
             (_, idx) => idx,
             (it, idx) => {
               if (it.kind === 'action') {
@@ -69,7 +66,7 @@ function actionBarImpl(self: ActionBar) {
                   <sl-button
                     size="small"
                     ?disabled=${it.disabled}
-                    ?pill=${self.pill}
+                    ?pill=${this.pill}
                   >
                     ${it.text}
                   </sl-button>
@@ -81,12 +78,10 @@ function actionBarImpl(self: ActionBar) {
                       slot="trigger"
                       size="small"
                       caret
-                      ?disabled=${
-                        !it.actions ||
-                        it.actions.length === 0 ||
-                        it.actions.every((it) => it.disabled)
-                      }
-                      ?pill=${self.pill}
+                      ?disabled=${!it.actions ||
+                      it.actions.length === 0 ||
+                      it.actions.every((it) => it.disabled)}
+                      ?pill=${this.pill}
                     >
                       ${it.text}</sl-button
                     >
@@ -112,6 +107,4 @@ function actionBarImpl(self: ActionBar) {
       </div>
     `
   }
-
-  return render
 }

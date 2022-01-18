@@ -1,5 +1,14 @@
-import { elem, prop, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
+import {
+  bind,
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref } from '../../utils/lit'
 
 // styles
 import fieldsetStyles from './fieldset.css'
@@ -12,25 +21,22 @@ export { Fieldset }
 
 @elem({
   tag: 'c-fieldset',
-  styles: fieldsetStyles,
-  impl: lit(fieldsetImpl)
+  styles: fieldsetStyles
 })
-class Fieldset extends HTMLElement {
+class Fieldset extends Component {
   @prop({ attr: Attrs.string })
   caption = ''
 
   @prop({ attr: Attrs.string })
   orient: 'horizontal' | 'vertical' = 'vertical'
-}
 
-function fieldsetImpl(self: Fieldset) {
-  return () => {
+  render() {
     return html`
       <div
-        class="base ${classMap({ horizontal: self.orient === 'horizontal' })}"
+        class="base ${classMap({ horizontal: this.orient === 'horizontal' })}"
       >
-        ${self.caption //
-          ? html`<div class="caption">${self.caption}</div>`
+        ${this.caption //
+          ? html`<div class="caption">${this.caption}</div>`
           : ''}
         <div class="content">
           <slot></slot>

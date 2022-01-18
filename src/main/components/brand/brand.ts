@@ -1,5 +1,5 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
+import { elem, prop, Attrs, Component } from '../../utils/components'
+import { html, classMap } from '../../utils/lit'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -19,10 +19,9 @@ export { Brand }
 @elem({
   tag: 'c-brand',
   styles: brandStyles,
-  uses: [SlIcon],
-  impl: lit(brandImpl)
+  uses: [SlIcon]
 })
-class Brand extends HTMLElement {
+class Brand extends Component {
   @prop({ attr: Attrs.string })
   logo = ''
 
@@ -37,12 +36,10 @@ class Brand extends HTMLElement {
 
   @prop({ attr: Attrs.boolean })
   multiColor = false
-}
 
-function brandImpl(self: Brand) {
-  return () => {
-    const logo = self.logo?.trim() || defaultLogoSvg
-    const size = self.size || 'medium'
+  render() {
+    const logo = this.logo?.trim() || defaultLogoSvg
+    const size = this.size || 'medium'
 
     return html`
       <div class="base">
@@ -50,13 +47,13 @@ function brandImpl(self: Brand) {
           class=${classMap({
             content: true,
             [size]: true,
-            'multi-color': self.multiColor
+            'multi-color': this.multiColor
           })}
         >
           <sl-icon src=${logo} class="logo"></sl-icon>
           <div class="headline-and-text">
-            <div class="headline">${self.headline}</div>
-            <div class="text">${self.text}</div>
+            <div class="headline">${this.headline}</div>
+            <div class="text">${this.text}</div>
           </div>
         </div>
       </div>

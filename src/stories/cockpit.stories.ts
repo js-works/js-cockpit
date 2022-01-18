@@ -1,6 +1,6 @@
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import { elem, Component } from '../main/utils/components'
+import { html } from '../main/utils/lit'
 
 import {
   Brand,
@@ -67,28 +67,27 @@ const demo1Styles = `
 @elem({
   tag: 'cockpit-demo1',
   styles: demo1Styles,
-  impl: lit(cockpitDemo1Impl),
   uses: [Cockpit, DateField, NavMenu, SharedCockpit, ThemeProvider]
 })
-class CockpitDemo1 extends HTMLElement {}
-
-function cockpitDemo1Impl() {
-  return () => html`
-    <c-cockpit>
-      <div slot="header-start" class="orangered">header-start</div>
-      <div slot="header" class="orange">header</div>
-      <div slot="header-end" class="orangered">header-end</div>
-      <div slot="subheader-start" class="orange">subheader-start</div>
-      <div slot="subheader" class="orangered">subheader</div>
-      <div slot="subheader-end" class="orange">subheader-end</div>
-      <div slot="sidebar-start" class="green">sidebar-start</div>
-      <div slot="sidebar" class="lightgreen full-height">sidebar</div>
-      <div slot="sidebar-end" class="green">sidebar-end</div>
-      <div slot="main-start" class="gold">main-start</div>
-      <div slot="main" class="yellow full-height">main</div>
-      <div slot="main-end" class="gold">main-end</div>
-    </c-cockpit>
-  `
+class CockpitDemo1 extends Component {
+  render() {
+    return html`
+      <c-cockpit>
+        <div slot="header-start" class="orangered">header-start</div>
+        <div slot="header" class="orange">header</div>
+        <div slot="header-end" class="orangered">header-end</div>
+        <div slot="subheader-start" class="orange">subheader-start</div>
+        <div slot="subheader" class="orangered">subheader</div>
+        <div slot="subheader-end" class="orange">subheader-end</div>
+        <div slot="sidebar-start" class="green">sidebar-start</div>
+        <div slot="sidebar" class="lightgreen full-height">sidebar</div>
+        <div slot="sidebar-end" class="green">sidebar-end</div>
+        <div slot="main-start" class="gold">main-start</div>
+        <div slot="main" class="yellow full-height">main</div>
+        <div slot="main-end" class="gold">main-end</div>
+      </c-cockpit>
+    `
+  }
 }
 
 export const cockpit1 = () => h('cockpit-demo1')
@@ -112,17 +111,16 @@ export const cockpit1 = () => h('cockpit-demo1')
     TextArea,
     TextField,
     UserMenu
-  ],
-  impl: lit(cockpitDemo2Impl)
+  ]
 })
-class CockpitDemo2 extends HTMLElement {}
-
-function cockpitDemo2Impl() {
-  return () => html`
-    <shared-cockpit>
-      <shared-data-explorer></shared-data-explorer>
-    </shared-cockpit>
-  `
+class CockpitDemo2 extends Component {
+  render() {
+    return html`
+      <shared-cockpit>
+        <shared-data-explorer></shared-data-explorer>
+      </shared-cockpit>
+    `
+  }
 }
 
 export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
@@ -144,13 +142,12 @@ export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
     TextArea,
     TextField,
     UserMenu
-  ],
-  impl: lit(cockpitDemo3Impl)
+  ]
 })
-class CockpitDemo3 extends HTMLElement {}
-
-function cockpitDemo3Impl() {
-  return () => html` <shared-cockpit>${createDataForm()}</shared-cockpit> `
+class CockpitDemo3 extends Component {
+  render() {
+    return html`<shared-cockpit>${createDataForm()}</shared-cockpit>`
+  }
 }
 
 export const cockpit3 = () => h('cockpit-demo3')

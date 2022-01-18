@@ -50,11 +50,12 @@
     "svg-url-loader": "^7.1.1",
     "terser": "^5.10.0",
     "typescript": "^4.5.4",
-    "vanillajs-datepicker": "github:xdev1/vanillajs-datepicker"
+    "vanillajs-datepicker": "github:mymth/vanillajs-datepicker"
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.64",
     "js-element": "file:../js-element",
-    "js-localize": "file:../js-localize"
+    "js-localize": "file:../js-localize",
+    "lit": "^2.1.1"
   }
 }

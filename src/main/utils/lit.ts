@@ -1,0 +1,6 @@
+export { html, LitElement } from 'lit'
+export type { ReactiveController } from 'lit'
+export { createRef, ref } from 'lit/directives/ref'
+export { classMap } from 'lit/directives/class-map'
+export { styleMap } from 'lit/directives/style-map'
+export { repeat } from 'lit/directives/repeat'

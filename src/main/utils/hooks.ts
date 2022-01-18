@@ -9,7 +9,7 @@ import {
   useStatus
 } from 'js-element/hooks'
 
-import { observeLocale } from '../i18n/locale-detection'
+import { observeLocale } from './locale-detection'
 import { localize, Localizer } from 'js-localize'
 
 // === types =========================================================

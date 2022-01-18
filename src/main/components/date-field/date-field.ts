@@ -1,7 +1,14 @@
-import { elem, prop, Attrs } from 'js-element'
-import { classMap, html, lit } from 'js-element/lit'
-import { useAfterMount, useBeforeRender } from 'js-element/hooks'
-import { useI18n } from '../../utils/hooks'
+import {
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { html, classMap } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 import {
   getLocalization,
@@ -40,10 +47,9 @@ export { DateField }
     dateFieldStyles,
     controlStyles
   ],
-  impl: lit(dateFieldImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
-class DateField extends HTMLElement {
+class DateField extends Component {
   @prop({ attr: Attrs.string })
   label = ''
 
@@ -58,43 +64,45 @@ class DateField extends HTMLElement {
 
   @prop({ attr: Attrs.boolean })
   required = false
-}
 
-function dateFieldImpl(self: DateField) {
-  const { i18n } = useI18n()
-  const getLocale = () => i18n.getLocale()
-  const shadowRoot = self.shadowRoot!
-  let datepicker: DatepickerInstance
+  private _loc = createLocalizer(this)
+  private _datepicker: DatepickerInstance | null = null
 
-  useAfterMount(() => {
-    setTimeout(() => {
-      datepicker = createDatepicker({
-        getLocale,
-        slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
-        pickerContainer: shadowRoot.querySelector('.picker-container')!,
-        namespace: self.localName
+  constructor() {
+    super()
+
+    afterInit(this, () => {
+      const shadowRoot = this.shadowRoot!
+
+      setTimeout(() => {
+        this._datepicker = createDatepicker({
+          getLocale: this._loc.getLocale,
+          slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
+          pickerContainer: shadowRoot.querySelector('.picker-container')!,
+          namespace: this.localName
+        })
       })
     })
-  })
 
-  useBeforeRender(() => {
-    const locale = getLocale()
-    const localization = getLocalization(locale, self.localName)
+    afterUpdate(this, () => {
+      const locale = this._loc.getLocale()
+      const localization = getLocalization(locale, this.localName)
 
-    if (datepicker) {
-      datepicker.setOptions({
-        language: `${self.localName}::${locale}`,
-        weekStart: localization.weekStart,
-        format: localization.format
-      })
-    }
-  })
+      if (this._datepicker) {
+        this._datepicker.setOptions({
+          language: `${this.localName}::${locale}`,
+          weekStart: localization.weekStart,
+          format: localization.format
+        })
+      }
+    })
+  }
 
-  function render() {
+  render() {
     return html`
-      <div class="base ${classMap({ required: self.required })}">
+      <div class="base ${classMap({ required: this.required })}">
         <div class="field-wrapper">
-          <div class="label">${self.label}</div>
+          <div class="label">${this.label}</div>
           <div class="control">
             <sl-input>
               <sl-icon
@@ -103,15 +111,13 @@ function dateFieldImpl(self: DateField) {
                 src=${calendarIcon}
               ></sl-icon>
             </sl-input>
-            <div class="error">${self.error}</div>
+            <div class="error">${this.error}</div>
             <div class="picker-container"></div>
           </div>
         </div>
       </div>
     `
   }
-
-  return render
 }
 
 // === locals ========================================================

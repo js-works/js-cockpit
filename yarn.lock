@@ -6556,7 +6556,7 @@ lit-html@^2.1.0, lit-html@^2.1.1:
   dependencies:
     "@types/trusted-types" "^2.0.2"
 
-lit@^2.1.0:
+lit@^2.1.0, lit@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/lit/-/lit-2.1.1.tgz#65f43abca945988f696391f762c645ba51966b0b"
   integrity sha512-yqDqf36IhXwOxIQSFqCMgpfvDCRdxLCLZl7m/+tO5C9W/OBHUj17qZpiMBT35v97QMVKcKEi1KZ3hZRyTwBNsQ==
@@ -9588,9 +9588,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-"vanillajs-datepicker@github:xdev1/vanillajs-datepicker":
+"vanillajs-datepicker@github:mymth/vanillajs-datepicker":
   version "1.2.0"
-  resolved "https://codeload.github.com/xdev1/vanillajs-datepicker/tar.gz/4f34bc8b730091795f9d8325f9fa6bc40139678e"
+  resolved "https://codeload.github.com/mymth/vanillajs-datepicker/tar.gz/1c50bfcc70f016bf5373aa8f8ab08b9a1f8aed5b"
 
 vary@~1.1.2:
   version "1.1.2"

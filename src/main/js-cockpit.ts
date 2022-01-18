@@ -34,7 +34,7 @@ export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
 // i18n
-export { detectLocale, observeLocale } from './i18n/locale-detection'
+export { detectLocale, observeLocale } from './utils/locale-detection'
 
 // misc
 export * from './misc/dialogs'

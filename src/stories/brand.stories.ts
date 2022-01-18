@@ -1,13 +1,40 @@
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
-import { Brand, ThemeProvider } from 'js-cockpit'
+//import { elem } from 'js-element'
+//import { html, lit } from 'js-element/lit'
+//import { Brand, ThemeProvider } from 'js-cockpit'
 import { sharedTheme } from './shared/shared-theme'
+
+import { LitElement, html } from 'lit'
+import { customElement, property } from 'lit/decorators'
+
+@customElement('my-text')
+class MyText extends LitElement {
+  @property({ type: String, reflect: true })
+  text = ''
+
+  render() {
+    return html`<div>${this.text}</div>`
+  }
+}
+
+void MyText
+
+if (false) {
+  setTimeout(() => {
+    setInterval(() => {
+      document.querySelector<MyText>('my-text')!.text =
+        new Date().toLocaleTimeString()
+      document.querySelector<MyText>('my-text')!.requestUpdate()
+      //self.shadowRoot!.querySelector<Brand>('c-brand')!.size = 'huge'
+      //self.shadowRoot!.querySelector<Brand>('c-brand')!.requestUpdate()
+    }, 1000)
+  }, 3000)
+}
 
 export default {
   title: 'brand'
 }
-
+/*
 const brandDemoStyles = `
   .brand-demo {
     display: flex;
@@ -23,9 +50,10 @@ const brandDemoStyles = `
 })
 class BrandDemo extends HTMLElement {}
 
-function brandDemoImpl() {
+function brandDemoImpl(self: BrandDemo) {
   return () =>
     html`
+      <my-text text="start"></my-text>
       <c-theme-provider .theme=${sharedTheme}>
         <div class="brand-demo">
           <div>
@@ -93,8 +121,8 @@ function brandDemoImpl() {
       </c-theme-provider>
     `
 }
-
-export const brand = () => h('brand-demo')
+*/
+export const brand = () => h('my-text')
 
 /*
 document.documentElement.lang = 'de'

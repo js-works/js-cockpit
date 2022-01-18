@@ -1,7 +1,14 @@
-import { elem, prop, Attrs } from 'js-element'
-import { classMap, html, lit } from 'js-element/lit'
-import { useAfterMount } from 'js-element/hooks'
-import { useI18n } from '../../utils/hooks'
+import {
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { html, classMap } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // @ts-ignore
 import { DateRangePicker } from 'vanillajs-datepicker'
@@ -9,7 +16,8 @@ import { DateRangePicker } from 'vanillajs-datepicker'
 import {
   getLocalization,
   initPopper,
-  DatepickerInstance
+  DatepickerInstance,
+  DateRangePickerInstance
 } from '../date-field/date-picker-utils'
 
 // custom elements
@@ -42,10 +50,9 @@ export { DateRange }
     dateRangeStyles,
     controlStyles
   ],
-  impl: lit(dateRangeImpl),
   uses: [SlIcon, SlIconButton, SlInput]
 })
-class DateRange extends HTMLElement {
+class DateRange extends Component {
   @prop({ attr: Attrs.string })
   label = ''
 
@@ -57,32 +64,35 @@ class DateRange extends HTMLElement {
 
   @prop({ attr: Attrs.boolean })
   required = false
-}
 
-function dateRangeImpl(self: DateRange) {
-  const { i18n } = useI18n()
-  const getLocale = () => i18n.getLocale()
-  const shadowRoot = self.shadowRoot!
-  let datepicker: DatepickerInstance
+  private _loc = createLocalizer(this)
+  private _datepicker: DateRangePickerInstance | null = null
 
-  useAfterMount(() => {
-    setTimeout(() => {
-      datepicker = createDateRangePicker({
-        getLocale,
-        range: shadowRoot.querySelector('.fields')!,
-        slInput1: shadowRoot.querySelector('.input1')! as any as SlInput,
-        slInput2: shadowRoot.querySelector('.input2')! as any as SlInput,
-        pickerContainer: shadowRoot.querySelector('.picker-container')!,
-        namespace: self.localName
-      })
-    }, 0)
-  })
+  constructor() {
+    super()
 
-  function render() {
+    afterInit(this, () => {
+      const getLocale = () => this._loc.getLocale()
+      const shadowRoot = this.shadowRoot!
+
+      setTimeout(() => {
+        this._datepicker = createDateRangePicker({
+          getLocale,
+          range: shadowRoot.querySelector('.fields')!,
+          slInput1: shadowRoot.querySelector('.input1')! as any as SlInput,
+          slInput2: shadowRoot.querySelector('.input2')! as any as SlInput,
+          pickerContainer: shadowRoot.querySelector('.picker-container')!,
+          namespace: this.localName
+        })
+      }, 0)
+    })
+  }
+
+  render() {
     return html`
-      <div class="base ${classMap({ required: self.required })}">
+      <div class="base ${classMap({ required: this.required })}">
         <div class="field-wrapper">
-          <div class="label">${self.label}</div>
+          <div class="label">${this.label}</div>
           <div class="control">
             <div class="fields">
               <sl-input size="small" class="input1"></sl-input>
@@ -96,15 +106,13 @@ function dateRangeImpl(self: DateRange) {
                 src=${calendarIcon}
               ></sl-icon>
             </div>
-            <div class="error">${self.error}</div>
+            <div class="error">${this.error}</div>
             <div class="picker-container"></div>
           </div>
         </div>
       </div>
     `
   }
-
-  return render
 }
 
 function createDateRangePicker(params: {

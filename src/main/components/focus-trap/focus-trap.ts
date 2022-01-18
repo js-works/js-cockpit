@@ -1,6 +1,13 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { useAfterMount } from 'js-element/hooks'
-import { createRef, html, lit, ref } from 'js-element/lit'
+import {
+  bind,
+  elem,
+  prop,
+  afterConnect,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref } from '../../utils/lit'
 
 // custom elements
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -22,24 +29,24 @@ export { FocusTrap }
 // === FocusTrap =====================================================
 
 @elem({
-  tag: 'c-focus-trap',
-  impl: lit(focusTrapImpl)
+  tag: 'c-focus-trap'
 })
-class FocusTrap extends HTMLElement {}
+class FocusTrap extends Component {
+  private _focusTrap: Trap | null = null
+  private _containerRef = createRef<HTMLElement>()
 
-function focusTrapImpl(self: FocusTrap) {
-  const containerRef = createRef<HTMLElement>()
+  constructor() {
+    super()
 
-  useAfterMount(() => {
-    const focusTrap = createFocusTrap(containerRef.value!)
-    focusTrap.activate()
+    afterConnect(this, () => {
+      this._focusTrap = createFocusTrap(this._containerRef.value!)
+      this._focusTrap.activate()
 
-    return () => focusTrap.deactivate()
-  })
-
-  function render() {
-    return html`<div ${ref(containerRef)}><slot></slot></div>`
+      return () => this._focusTrap!.deactivate()
+    })
   }
 
-  return render
+  render() {
+    return html`<div ${ref(this._containerRef)}><slot></slot></div>`
+  }
 }

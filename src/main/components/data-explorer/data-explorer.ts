@@ -1,10 +1,18 @@
-import { elem, prop, Attrs } from 'js-element'
-import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useAfterMount, useOnInit, useRefresher } from 'js-element/hooks'
+import {
+  bind,
+  elem,
+  prop,
+  afterInit,
+  afterConnect,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { createRef, html, classMap, ref } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
-import { useI18n } from '../../utils/hooks'
 import { addToDict, TermsOf } from 'js-localize'
 
 // events
@@ -95,10 +103,9 @@ addToDict(translations)
 @elem({
   tag: 'c-data-explorer',
   styles: [dataExplorerStyles],
-  impl: lit(dataExplorerImpl),
   uses: [ActionBar, DataTable, PaginationBar]
 })
-class DataExplorer extends HTMLElement {
+class DataExplorer extends Component {
   @prop({ attr: Attrs.string })
   title: string = ''
 
@@ -122,63 +129,24 @@ class DataExplorer extends HTMLElement {
 
   @prop
   fetchItems?: DataExplorer.FetchItems
-}
 
-function dataExplorerImpl(self: DataExplorer) {
-  const { i18n, t } = useI18n('jsCockpit.dataExplorer')
-  const actionBarRef = createRef<ActionBar>()
-  const dataTableRef = createRef<DataTable>()
-  const paginationBarRef = createRef<PaginationBar>()
-  const overlayRef = createRef<HTMLElement>()
+  private _loc = createLocalizer(this, 'jsCockpit.dataExplorer')
+  private _pageIndex = 0
+  private _pageSize = 50
+  private _totalItemCount = -1
+  private _sortField: string | number | null = null
+  private _sortDir: 'asc' | 'desc' = 'asc'
+  private _items: Record<string, any>[] = []
+  private _numSelectedRows = 0
+  private _showOverlay = false
+  private _timeoutId: any = null
+  private _actionBarRef = createRef<ActionBar>()
+  private _dataTableRef = createRef<DataTable>()
+  private _paginationBarRef = createRef<PaginationBar>()
+  private _overlayRef = createRef<HTMLElement>()
 
-  let pageIndex = 0
-  let pageSize = 50
-  let totalItemCount = -1
-  let sortField: string | number | null = null
-  let sortDir: 'asc' | 'desc' = 'asc'
-  let items: Record<string, any>[] = []
-  let numSelectedRows = 0
-  let showOverlay = false
-  let timeoutId: any = null
-
-  const onSortChange = (ev: SortChangeEvent) => {
-    sortField = ev.detail.sortField
-    sortDir = ev.detail.sortDir
-
-    fetchItems({ pageIndex: 0, sortField, sortDir })
-  }
-
-  const onSelectionChange = (ev: SelectionChangeEvent) => {
-    numSelectedRows = ev.detail.selection.size
-
-    actionBarRef.value!.actions = convertActions()
-  }
-
-  const onPageChange = (ev: PageChangeEvent) => {
-    pageIndex = ev.detail.pageIndex
-    fetchItems({ pageIndex })
-  }
-
-  const onPageSizeChange = (ev: PageSizeChangeEvent) => {
-    fetchItems({ pageIndex: 0, pageSize: ev.detail.pageSize })
-  }
-
-  useOnInit(() => {
-    sortField = self.initialSortField
-    sortDir = self.initialSortDir
-  })
-
-  useAfterMount(() => {
-    fetchItems({
-      pageIndex,
-      pageSize,
-      sortField,
-      sortDir
-    })
-  })
-
-  function fetchItems(
-    params: Partial<{
+  private _loadItems(
+    params?: Partial<{
       pageIndex: number
       pageSize: number
       sortField: string | number | null
@@ -187,73 +155,109 @@ function dataExplorerImpl(self: DataExplorer) {
   ) {
     const par = Object.assign(
       {
-        pageIndex,
-        pageSize,
-        sortField,
-        sortDir
+        pageIndex: this._pageIndex,
+        pageSize: this._pageSize,
+        sortField: this._sortField,
+        sortDir: this._sortDir
       },
       params
     )
 
-    if (!self.fetchItems) {
+    if (!this.fetchItems) {
       return
     }
 
-    timeoutId = setTimeout(() => {
-      showOverlay = true
-      overlayRef.value!.classList.replace('overlay-hide', 'overlay-show')
+    this._timeoutId = setTimeout(() => {
+      this._showOverlay = true
+      this._overlayRef.value!.classList.replace('overlay-hide', 'overlay-show')
     }, 200)
 
-    self
-      .fetchItems({
-        count: par.pageSize,
-        locale: i18n.getLocale(),
-        offset: par.pageIndex * par.pageSize,
-        sortField: par.sortField,
-        sortDir: par.sortDir
+    this.fetchItems({
+      count: par.pageSize,
+      locale: this._loc.getLocale(),
+      offset: par.pageIndex * par.pageSize,
+      sortField: par.sortField,
+      sortDir: par.sortDir
+    }).then((result) => {
+      this._pageIndex = par.pageIndex
+      this._pageSize = par.pageSize
+      this._totalItemCount = result.totalItemCount
+      this._sortField = par.sortField
+      this._sortDir = par.sortDir
+      this._items = result.items
+
+      Object.assign(this._paginationBarRef.value!, {
+        pageIndex: this._pageIndex,
+        pageSize: this._pageSize,
+        totalItemCount: this._totalItemCount
       })
-      .then((result) => {
-        pageIndex = par.pageIndex
-        pageSize = par.pageSize
-        totalItemCount = result.totalItemCount
-        sortField = par.sortField
-        sortDir = par.sortDir
-        items = result.items
 
-        Object.assign(paginationBarRef.value!, {
-          pageIndex,
-          pageSize,
-          totalItemCount
-        })
+      this._dataTableRef.value!.sortField = this._sortField
+      this._dataTableRef.value!.sortDir = this._sortDir
+      this._dataTableRef.value!.items = this._items
 
-        dataTableRef.value!.sortField = sortField
-        dataTableRef.value!.sortDir = sortDir
-        dataTableRef.value!.items = items
+      if (this._timeoutId) {
+        clearTimeout(this._timeoutId)
+        this._timeoutId = null
+      }
 
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
-        }
-
-        showOverlay = false
-        overlayRef.value!.classList.replace('overlay-show', 'overlay-hide')
-      })
+      this._showOverlay = false
+      this._overlayRef.value!.classList.replace('overlay-show', 'overlay-hide')
+    })
   }
 
-  function convertActions(): ActionBar.Actions {
-    if (!self.actions) {
+  @bind
+  private _onSortChange(ev: SortChangeEvent) {
+    this._loadItems({
+      pageIndex: 0,
+      sortField: ev.detail.sortField,
+      sortDir: ev.detail.sortDir
+    })
+  }
+
+  @bind
+  private _onSelectionChange(ev: SelectionChangeEvent) {
+    this._numSelectedRows = ev.detail.selection.size
+    this._actionBarRef.value!.actions = this._convertActions()
+  }
+
+  @bind
+  private _onPageChange(ev: PageChangeEvent) {
+    this._loadItems({ pageIndex: ev.detail.pageIndex })
+  }
+
+  @bind
+  private _onPageSizeChange(ev: PageSizeChangeEvent) {
+    this._loadItems({ pageIndex: 0, pageSize: ev.detail.pageSize })
+  }
+
+  constructor() {
+    super()
+
+    afterInit(this, () => {
+      this._sortField = this.initialSortField
+      this._sortDir = this.initialSortDir
+    })
+
+    afterConnect(this, () => {
+      this._loadItems()
+    })
+  }
+
+  private _convertActions(): ActionBar.Actions {
+    if (!this.actions) {
       return []
     }
 
-    return self.actions.map((it) => {
+    return this.actions.map((it) => {
       if (it.kind === 'action') {
         return {
           kind: 'action',
           actionId: '',
           text: it.text,
           disabled:
-            (it.type === 'single-row' && numSelectedRows !== 1) ||
-            (it.type === 'multi-row' && numSelectedRows === 0)
+            (it.type === 'single-row' && this._numSelectedRows !== 1) ||
+            (it.type === 'multi-row' && this._numSelectedRows === 0)
         }
       } else {
         return {
@@ -264,57 +268,57 @@ function dataExplorerImpl(self: DataExplorer) {
             text: it.text,
             actionId: '',
             disabled:
-              (it.type === 'single-row' && numSelectedRows !== 1) ||
-              (it.type === 'multi-row' && numSelectedRows === 0)
+              (it.type === 'single-row' && this._numSelectedRows !== 1) ||
+              (it.type === 'multi-row' && this._numSelectedRows === 0)
           }))
         }
       }
     })
   }
 
-  function render() {
+  render() {
     return html`
-      <div class="base ${classMap({ 'full-size': self.fullSize })}">
+      <div class="base ${classMap({ 'full-size': this.fullSize })}">
         <div class="header">
-          <h3 class="title">${self.title}</h3>
-          <div class="actions">${renderActionBar()}</div>
+          <h3 class="title">${this.title}</h3>
+          <div class="actions">${this._renderActionBar()}</div>
           <div class="search">
             <slot name="search"></slot>
           </div>
         </div>
         <c-data-table
           class="table"
-          .columns=${self.columns}
-          .selectionMode=${self.selectionMode}
-          .data=${items}
+          .columns=${this.columns}
+          .selectionMode=${this.selectionMode}
+          .data=${this._items}
           .bordered=${false}
-          .sortField=${self.initialSortField}
-          .sortDir=${self.initialSortDir}
-          .onSortChange=${onSortChange}
-          .onSelectionChange=${onSelectionChange}
-          ${ref(dataTableRef)}
+          .sortField=${this.initialSortField}
+          .sortDir=${this.initialSortDir}
+          .onSortChange=${this._onSortChange}
+          .onSelectionChange=${this._onSelectionChange}
+          ${ref(this._dataTableRef)}
         >
         </c-data-table>
         <div class="footer">
           <c-pagination-bar
-            .pageIndex=${pageIndex}
-            .pageSize=${pageSize}
-            .totalItemCount=${totalItemCount}
-            .onPageChange=${onPageChange}
-            .onPageSizeChange=${onPageSizeChange}
-            ${ref(paginationBarRef)}
+            .pageIndex=${this._pageIndex}
+            .pageSize=${this._pageSize}
+            .totalItemCount=${this._totalItemCount}
+            .onPageChange=${this._onPageChange}
+            .onPageSizeChange=${this._onPageSizeChange}
+            ${ref(this._paginationBarRef)}
           ></c-pagination-bar>
         </div>
         <div
           class="overlay ${classMap({
-            'overlay-show': showOverlay,
-            'overlay-hide': !showOverlay
+            'overlay-show': this._showOverlay,
+            'overlay-hide': !this._showOverlay
           })}"
-          ${ref(overlayRef)}
+          ${ref(this._overlayRef)}
         >
           <div class="overlay-top"></div>
           <div class="overlay-center">
-            <div class="loading-message">${t('loadingMessage')}</div>
+            <div class="loading-message">${this._loc('loadingMessage')}</div>
             <sl-spinner class="loading-spinner"></sl-spinner>
           </div>
           <div class="overlay-bottom"></div>
@@ -323,16 +327,18 @@ function dataExplorerImpl(self: DataExplorer) {
     `
   }
 
-  function renderActionBar() {
-    if (!self.actions) {
+  @bind
+  private _renderActionBar() {
+    if (!this.actions) {
       return null
     }
 
     return html`
-      <c-action-bar .actions=${convertActions()} ${ref(actionBarRef)}>
+      <c-action-bar
+        .actions=${this._convertActions()}
+        ${ref(this._actionBarRef)}
+      >
       </c-action-bar>
     `
   }
-
-  return render
 }

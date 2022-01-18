@@ -1,5 +1,14 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit, repeat } from 'js-element/lit'
+import {
+  bind,
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -29,30 +38,27 @@ namespace NavMenu {
 @elem({
   tag: 'c-nav-menu',
   styles: navMenuStyles,
-  uses: [SlIcon],
-  impl: lit(navMenuImpl)
+  uses: [SlIcon]
 })
-class NavMenu extends HTMLElement {
+class NavMenu extends Component {
   @prop
   items?: NavMenu.Item[]
 
   @prop
   activeItem?: number | string
-}
 
-function navMenuImpl(self: NavMenu) {
-  return () => {
+  render() {
     return html`
       <div class="base">
         <sl-icon src=${menuSvg} class="icon"></sl-icon>
         ${repeat(
-          self.items || [],
+          this.items || [],
           (_, idx) => idx,
           (item) => {
             return html`
               <div
                 class="item ${classMap({
-                  active: item.id === self.activeItem
+                  active: item.id === this.activeItem
                 })}"
               >
                 <div class="title">${item.title}</div>

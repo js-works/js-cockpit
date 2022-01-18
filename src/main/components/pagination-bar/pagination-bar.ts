@@ -1,8 +1,17 @@
-import { elem, method, prop, override, Attrs, Listener } from 'js-element'
-import { html, createRef, repeat, lit, ref } from 'js-element/lit'
-import { useEmitter } from 'js-element/hooks'
 import { addToDict, localize, TermsOf } from 'js-localize'
-import { useI18n } from '../../utils/hooks'
+
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // events
 import { PageChangeEvent } from '../../events/page-change-event'
@@ -104,10 +113,9 @@ type AuxData = {
 @elem({
   tag: 'c-pagination-bar',
   styles: paginationBarStyles,
-  impl: lit(paginationBarImpl),
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect]
 })
-class PaginationBar extends HTMLElement {
+class PaginationBar extends Component {
   @prop({ attr: Attrs.number })
   pageIndex?: number
 
@@ -126,87 +134,119 @@ class PaginationBar extends HTMLElement {
   @prop
   onPageSizeChange?: Listener<PageSizeChangeEvent>
 
-  @method
-  reset!: () => void
-}
+  reset() {
+    this._pageInputRef.value!.value = this._auxData.isValid
+      ? String(this._auxData.pageIndex)
+      : ''
 
-function paginationBarImpl(self: PaginationBar) {
-  let aux: AuxData
-  const { i18n, t } = useI18n('jsCockpit.paginationBar')
-  const pageInputRef = createRef<SlInput>()
-  const pageSizeSelectRef = createRef<SlSelect>()
-  const emitPageChange = useEmitter('c-page-change', () => self.onPageChange)
+    this._pageSizeSelectRef.value!.value = String(
+      this._auxData.isValid ? this._auxData.pageSize : defaultPageSize
+    )
+  }
 
-  const emitPageSizeChange = useEmitter(
-    'c-page-size-change',
-    () => self.onPageSizeChange
+  private _auxData!: AuxData
+  private _loc = createLocalizer(this, 'jsCockpit.paginationBar')
+  private _pageInputRef = createRef<SlInput>()
+  private _pageSizeSelectRef = createRef<SlSelect>()
+
+  private _emitPageChange = createEmitter(
+    this,
+    'c-page-change',
+    () => this.onPageChange
   )
 
-  const onFirstPage = () => moveToPage(0)
-  const onPrevPage = () => moveToPage(aux.pageIndex - 1)
-  const onNextPage = () => moveToPage(aux.pageIndex + 1)
-  const onLastPage = () => moveToPage(aux.pageCount - 1)
+  private _emitPageSizeChange = createEmitter(
+    this,
+    'c-page-size-change',
+    () => this.onPageSizeChange
+  )
 
-  const onPageFieldKey = (ev: KeyboardEvent) => {
+  @bind
+  private _onFirstPageClick() {
+    this._moveToPage(0)
+  }
+
+  @bind
+  private _onPrevPageClick() {
+    this._moveToPage(this._auxData.pageIndex - 1)
+  }
+
+  @bind
+  private _onNextPageClick() {
+    this._moveToPage(this._auxData.pageIndex + 1)
+  }
+
+  @bind
+  private _onLastPageClick() {
+    this._moveToPage(this._auxData.pageCount - 1)
+  }
+
+  @bind
+  private _onPageFieldKeyPressed(ev: KeyboardEvent) {
     if (ev.key !== 'Enter') {
       return
     }
 
-    const pageNo = parseFloat(pageInputRef.value!.value)
+    const pageNo = parseFloat(this._pageInputRef.value!.value)
 
-    if (!Number.isInteger(pageNo) || pageNo < 1 || pageNo > aux.pageCount) {
-      pageInputRef.value!.value = String(aux.pageIndex + 1)
+    if (
+      !Number.isInteger(pageNo) ||
+      pageNo < 1 ||
+      pageNo > this._auxData.pageCount
+    ) {
+      this._pageInputRef.value!.value = String(this._auxData.pageIndex + 1)
       return
     }
 
-    if (pageNo === aux.pageIndex + 1) {
+    if (pageNo === this._auxData.pageIndex + 1) {
       return
     }
 
-    moveToPage(pageNo - 1)
+    this._moveToPage(pageNo - 1)
   }
 
-  const onPageSizeSelect = (ev: Event) => {
+  @bind
+  private _onPageSizeSelect(ev: Event) {
     const newPageSize = parseInt((ev.target as any).value)
 
-    if (newPageSize !== aux.pageSize) {
-      emitPageSizeChange({ pageSize: newPageSize })
+    if (newPageSize !== this._auxData!.pageSize) {
+      this._emitPageSizeChange({ pageSize: newPageSize })
     }
   }
 
-  override(self, {
-    reset() {
-      pageInputRef.value!.value = aux.isValid ? String(aux.pageIndex) : ''
-
-      pageSizeSelectRef.value!.value = String(
-        aux.isValid ? aux.pageSize : defaultPageSize
-      )
-    }
-  })
-
-  function moveToPage(index: number) {
-    emitPageChange({ pageIndex: index })
+  private _moveToPage(index: number) {
+    this._emitPageChange({ pageIndex: index })
   }
 
-  function render() {
-    aux = getAuxData(self.pageIndex, self.pageSize, self.totalItemCount)
+  willUpdate() {
+    console.log(1111, this.totalItemCount)
+  }
+
+  render() {
+    console.log('totalItemCount:', this.totalItemCount)
+    this._auxData = this._getAuxData(
+      this.pageIndex,
+      this.pageSize,
+      this.totalItemCount
+    )
+    console.log('totalItemCount:', this.totalItemCount)
 
     return html`
       <div class="base">
-        ${renderPagination()} ${renderPageSizeSelector()}
-        ${renderPaginationInfo()}
+        ${this._renderPagination()} ${this._renderPageSizeSelector()}
+        ${this._renderPaginationInfo()}
       </div>
     `
   }
 
-  function renderPagination() {
-    if (!aux.isValid) {
+  private _renderPagination() {
+    if (!this._auxData.isValid) {
       return null
     }
 
-    const pageTxt = t('page')
-    const ofXPagesTxt = t('ofXPages', {
-      pageCount: aux.pageCount
+    const pageTxt = this._loc('page')
+    const ofXPagesTxt = this._loc('ofXPages', {
+      pageCount: this._auxData.pageCount
     })
 
     return html`
@@ -214,16 +254,16 @@ function paginationBarImpl(self: PaginationBar) {
         <sl-button
           variant="default"
           class="nav-button"
-          ?disabled=${aux.isFirstPage}
-          @click=${onFirstPage}
+          ?disabled=${this._auxData.isFirstPage}
+          @click=${this._onFirstPageClick}
         >
           <sl-icon src=${chevronDoubleLeftSvg}></sl-icon>
         </sl-button>
         <sl-button
           variant="default"
           class="nav-button"
-          ?disabled=${aux.isFirstPage}
-          @click=${onPrevPage}
+          ?disabled=${this._auxData.isFirstPage}
+          @click=${this._onPrevPageClick}
         >
           <sl-icon src=${chevronLeftSvg}></sl-icon>
         </sl-button>
@@ -231,27 +271,27 @@ function paginationBarImpl(self: PaginationBar) {
           ${pageTxt}
           <sl-input
             size="small"
-            value=${aux.pageIndex + 1}
+            value=${this._auxData.pageIndex + 1}
             class="page-number-input"
-            ?readonly=${aux.pageCount === 1}
-            @keypress=${onPageFieldKey}
-            ${ref(pageInputRef)}
+            ?readonly=${this._auxData.pageCount === 1}
+            @keypress=${this._onPageFieldKeyPressed}
+            ${ref(this._pageInputRef)}
           ></sl-input>
           ${ofXPagesTxt}
         </div>
         <sl-button
           variant="default"
           class="nav-button"
-          ?disabled=${aux.isLastPage}
-          @click=${onNextPage}
+          ?disabled=${this._auxData.isLastPage}
+          @click=${this._onNextPageClick}
         >
           <sl-icon src=${chevronRightSvg}></sl-icon>
         </sl-button>
         <sl-button
           variant="default"
           class="nav-button"
-          ?disabled=${aux.isLastPage}
-          @click=${onLastPage}
+          ?disabled=${this._auxData.isLastPage}
+          @click=${this._onLastPageClick}
         >
           <sl-icon src=${chevronDoubleRightSvg}></sl-icon>
         </sl-button>
@@ -259,18 +299,18 @@ function paginationBarImpl(self: PaginationBar) {
     `
   }
 
-  function renderPageSizeSelector() {
-    if (!aux.isValid) {
+  private _renderPageSizeSelector() {
+    if (!this._auxData.isValid) {
       return null
     }
 
     return html`
       <div class="page-size-selector">
-        ${t('pageSize')}
+        ${this._loc('pageSize')}
         <sl-select
           size="small"
-          value=${aux.pageSize}
-          @sl-select=${onPageSizeSelect}
+          value=${this._auxData.pageSize}
+          @sl-select=${this._onPageSizeSelect}
         >
           ${repeat(
             pageSizes,
@@ -283,71 +323,72 @@ function paginationBarImpl(self: PaginationBar) {
     `
   }
 
-  function renderPaginationInfo() {
-    if (!aux.isValid) {
+  private _renderPaginationInfo() {
+    if (!this._auxData.isValid) {
       return null
     }
 
     let info: String
 
-    info = t('itemsXToYOfZ', {
-      firstItemNo: aux.firstShownItemIndex,
-      lastItemNo: aux.lastShownItemIndex,
-      itemCount: aux.totalItemCount
-    })
+    info =
+      this._loc('itemsXToYOfZ', {
+        firstItemNo: this._auxData.firstShownItemIndex,
+        lastItemNo: this._auxData.lastShownItemIndex,
+        itemCount: this._auxData.totalItemCount
+      }) || ''
 
     return html`<div class="pagination-info">${info}</div>`
   }
 
-  return render
-}
+  private _getAuxData(
+    pageIndex: number | undefined,
+    pageSize: number | undefined,
+    totalItemCount: number | undefined
+  ): AuxData {
+    console.log('getAuxData - input:', pageIndex, pageSize, totalItemCount)
+    totalItemCount = 1234
+    const isValid =
+      pageIndex !== undefined &&
+      !isNaN(pageIndex) &&
+      isFinite(pageIndex) &&
+      Math.floor(pageIndex) === pageIndex &&
+      pageIndex >= 0 &&
+      pageSize !== undefined &&
+      !isNaN(pageSize) &&
+      isFinite(pageIndex) &&
+      Math.floor(pageSize) === pageSize &&
+      pageSize > 0 &&
+      totalItemCount !== undefined &&
+      !isNaN(totalItemCount) &&
+      isFinite(totalItemCount) &&
+      Math.floor(totalItemCount) === totalItemCount &&
+      totalItemCount >= 0 &&
+      pageIndex <= Math.ceil(totalItemCount / pageSize) - 1 &&
+      pageSizes.has(pageSize)
 
-function getAuxData(
-  pageIndex: number | undefined,
-  pageSize: number | undefined,
-  totalItemCount: number | undefined
-): AuxData {
-  const isValid =
-    pageIndex !== undefined &&
-    !isNaN(pageIndex) &&
-    isFinite(pageIndex) &&
-    Math.floor(pageIndex) === pageIndex &&
-    pageIndex >= 0 &&
-    pageSize !== undefined &&
-    !isNaN(pageSize) &&
-    isFinite(pageIndex) &&
-    Math.floor(pageSize) === pageSize &&
-    pageSize > 0 &&
-    totalItemCount !== undefined &&
-    !isNaN(totalItemCount) &&
-    isFinite(totalItemCount) &&
-    Math.floor(totalItemCount) === totalItemCount &&
-    totalItemCount >= 0 &&
-    pageIndex <= Math.ceil(totalItemCount / pageSize) - 1 &&
-    pageSizes.has(pageSize)
+    const pageCount = !isValid ? -1 : Math.ceil(totalItemCount! / pageSize!)
 
-  const pageCount = !isValid ? -1 : Math.ceil(totalItemCount! / pageSize!)
+    return {
+      isValid,
+      pageIndex: isValid ? pageIndex : -1,
+      pageSize: isValid ? pageSize : -1,
+      totalItemCount: isValid ? totalItemCount : -1,
+      pageCount,
+      isFirstPage: isValid && pageIndex === 0,
+      isLastPage: isValid && pageIndex === pageCount - 1,
+      firstShownItemIndex: isValid ? pageIndex * pageSize + 1 : -1,
 
-  return {
-    isValid,
-    pageIndex: isValid ? pageIndex : -1,
-    pageSize: isValid ? pageSize : -1,
-    totalItemCount: isValid ? totalItemCount : -1,
-    pageCount,
-    isFirstPage: isValid && pageIndex === 0,
-    isLastPage: isValid && pageIndex === pageCount - 1,
-    firstShownItemIndex: isValid ? pageIndex * pageSize + 1 : -1,
+      lastShownItemIndex: isValid
+        ? pageIndex < pageCount - 1
+          ? (pageIndex + 1) * pageSize
+          : totalItemCount
+        : -1,
 
-    lastShownItemIndex: isValid
-      ? pageIndex < pageCount - 1
-        ? (pageIndex + 1) * pageSize
-        : totalItemCount
-      : -1,
-
-    shownItemsCount: isValid
-      ? pageIndex < pageCount - 1
-        ? pageSize
-        : totalItemCount - pageIndex * pageSize
-      : -1
+      shownItemsCount: isValid
+        ? pageIndex < pageCount - 1
+          ? pageSize
+          : totalItemCount - pageIndex * pageSize
+        : -1
+    }
   }
 }
