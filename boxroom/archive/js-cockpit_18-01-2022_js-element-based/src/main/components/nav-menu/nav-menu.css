@@ -1,0 +1,56 @@
+.base {
+  display: flex;
+  gap: 4px;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+  height: 50px;
+  padding: 1px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+}
+
+.icon {
+  margin: 16px 1px 0 0;
+  font-smooth: never;
+
+  color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
+}
+
+.item {
+  position: relative;
+  font-size: var(--sl-font-size-small);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.item .title {
+  padding: 12px 16px;
+  white-space: nowrap;
+}
+
+.item:not(.active):hover {
+  position: relative;
+
+  background-color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
+
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.item:not(.active) .title:active {
+  background-color: var(--sl-color-primary-500);
+}
+
+.item.active {
+  font-weight: 600;
+  border: 0 solid var(--sl-color-primary-500);
+
+  background-color: var(--sl-light, var(--sl-color-neutral-600))
+    var(--sl-dark, var(--sl-color-neutral-300));
+
+  padding: 0 8px;
+  border-bottom-width: 3px;
+  cursor: default;
+}

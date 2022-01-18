@@ -1,0 +1,71 @@
+.base {
+  display: flex;
+  position: relative;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+.fields {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 280px;
+  max-width: 280px;
+}
+
+.input1,
+.input2 {
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 5rem;
+}
+
+.input1::part(base) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input2::part(base) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input1:not(:hover):not(:focus)::part(base) {
+  border-right-width: 0;
+}
+
+.input2:not(:hover):not(:focus)::part(base) {
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+.separator {
+  padding: 4px 10px 0 10px; /* TODO */
+  border: 0 solid var(--sl-color-neutral-400);
+  border-width: 1px 0 1px 0;
+  color: var(--sl-color-primary-500);
+  box-sizing: borrder-box;
+}
+
+.calendar-icon {
+  padding: 0 12px;
+  border: 0 solid var(--sl-color-neutral-400);
+  border-width: 1px 1px 1px 0;
+  height: 28.5px; /* TODO */
+  box-sizing: border-box;
+  color: var(--sl-input-icon-color);
+  cursor: pointer;
+}
+
+.calendar-icon:hover {
+  color: var(--sl-color-primary-500);
+}
+
+.picker-container {
+  display: block;
+  position: relative;
+  left: 0 !important;
+}

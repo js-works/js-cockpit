@@ -1,0 +1,22 @@
+.base {
+  display: flex;
+  gap: 2px;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+sl-button:not(:hover)::part(base) {
+  xxxborder-color: transparent;
+}
+
+sl-button::part(base) {
+  font-size: var(--sl-font-size-medium);
+  xheight: 36px;
+  xpadding: 2px 5px 0 5px;
+}
+
+sl-icon {
+  color: var(--sl-color-primary-500);
+  width: 16px;
+  height: 16px;
+}

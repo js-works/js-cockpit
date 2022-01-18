@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "target": "ESNext",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "lib": ["ES2021", "dom"],
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "js-cockpit": ["./src/main/js-cockpit.ts"]
+    },
+    "typeRoots": ["node_modules/@types"],
+    "types": []
+  },
+  "files": ["src/main/js-cockpit.ts"],
+  "include": ["./src/main/**/*.*", "./src/stories/**/*.*"],
+  "exclude": ["node_modules"]
+}

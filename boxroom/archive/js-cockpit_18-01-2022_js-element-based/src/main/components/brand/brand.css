@@ -1,0 +1,81 @@
+.base {
+  display: inline-block;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  text-align: left;
+}
+
+.content .logo {
+  width: 26px;
+  height: 26px;
+}
+
+.content.multi-color .logo {
+  color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
+}
+
+.content.small .logo {
+  width: 22px;
+  height: 22px;
+}
+
+.content.large .logo {
+  width: 30px;
+  height: 30px;
+}
+
+.content.huge .logo {
+  width: 36px;
+  height: 36px;
+}
+
+.headline-and-text {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin-left: 6px;
+  gap: 2px;
+}
+
+.headline {
+  font-size: 14px;
+  line-height: 100%;
+  white-space: nowrap;
+}
+
+.content.small .headline {
+  font-size: 12px;
+}
+
+.content.large .headline {
+  font-size: 16px;
+}
+
+.content.huge .headline {
+  font-size: 20px;
+}
+
+.text {
+  font-size: 18px;
+  line-height: 100%;
+  white-space: nowrap;
+}
+
+.content.small .text {
+  font-size: 16px;
+}
+
+.content.large .text {
+  font-size: 24px;
+}
+
+.content.huge .text {
+  font-size: 28px;
+}

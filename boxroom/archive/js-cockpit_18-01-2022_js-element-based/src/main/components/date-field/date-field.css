@@ -1,0 +1,21 @@
+.base {
+  display: flex;
+  position: relative;
+  font-family: var(--sl-font-sans);
+  user-select: none;
+}
+
+.picker-container {
+  position: fixed;
+  z-index: 32767;
+}
+
+sl-input {
+  position: relative;
+  width: 280px;
+}
+
+.calendar-icon:hover {
+  color: var(--sl-color-primary-500);
+  cursor: pointer;
+}

@@ -1,0 +1,37 @@
+.base {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  max-width: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  cursor: pointer;
+
+  background-color: var(--sl-light, var(--sl-color-primary-600))
+    var(--sl-dark, var(--sl-color-primary-400));
+}
+
+.logout-button:hover {
+  background-color: var(--sl-color-primary-500);
+}
+
+.logout-button:active {
+  background-color: var(--sl-color-primary-600);
+}
+
+.logout-icon {
+  width: 28px;
+  height: 28px;
+}

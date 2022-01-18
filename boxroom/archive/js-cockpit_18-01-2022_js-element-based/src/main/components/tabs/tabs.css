@@ -1,0 +1,28 @@
+.pages {
+  position: relative;
+  padding: 15px 10px;
+}
+
+.pages slot::slotted(c-tab) {
+  visibility: hidden;
+}
+
+sl-tab::part(base) {
+  padding: 6px 12px;
+  color: var(--sl-color-neutral-800);
+}
+
+sl-tab-group::part(active-tab-indicator) {
+  background-color: var(--sl-color-neutral-100);
+  border: 0 solid var(--sl-color-primary-500);
+  border-width: 0 0 2px 0;
+  height: calc(100% + 2px);
+}
+
+sl-tab-group::part(tabs) {
+  background-color: var(--sl-color-neutral-100);
+  border-color: transparent;
+  xborder-width: 1px 1px 1px 1px !important;
+  margin: 2px 0 10px 0;
+  padding: 0;
+}

@@ -1,0 +1,121 @@
+.base {
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-50);
+  border: 0 solid var(--sl-color-neutral-300);
+  border-width: 0 1px 0 0;
+  min-width: 15rem;
+  max-width: 15rem;
+  min-height: 100%;
+  max-height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+  user-select: none;
+}
+
+/* === uncollapsible ============================================== */
+
+.uncollapsible {
+  margin: 0.3rem 0 0 1px;
+}
+
+.uncollapsible .group-header {
+  font-weight: 600;
+  padding: 0.5rem 1rem 0.25rem 1rem;
+}
+
+.uncollapsible .item {
+  padding: 0.25rem 2rem;
+  cursor: pointer;
+}
+
+.uncollapsible .item.active {
+  padding: 0.25rem 2rem 0.25rem calc(2rem - 3px);
+  background-color: var(--sl-color-primary-200);
+  border: 0 solid var(--sl-color-primary-600);
+  border-left-width: 3px;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.uncollapsible .item:not(.active):hover {
+  background-color: var(--sl-color-primary-200);
+}
+
+/* === collapsible ================================================ */
+
+sl-details::part(base) {
+  border-width: 0 0 1px 0;
+  border-radius: 0;
+  border-color: var(--sl-color-neutral-300);
+}
+
+sl-details::part(header) {
+  padding: 0.6rem 1rem 0.4rem 1.5rem;
+  font-size: var(--sl-font-size-medium);
+  font-weight: var(--sl-font-weight-semibold);
+}
+
+sl-details::part(content) {
+  padding: 0;
+  margin-top: -2px;
+}
+
+.collapsible .items {
+  margin: 0.15rem 0 0.5rem 1px;
+}
+
+.collapsible .item {
+  display: flex;
+  padding: 0.3rem 0.5rem 0.3rem 2rem;
+  cursor: pointer;
+}
+
+/*
+.collapsible .item > .mark:before {
+  color: var(--sl-color-primary-600);
+  content: '\25aa';
+  margin: 0.4rem;
+}
+*/
+
+.collapsible .item.active {
+  padding: 0.3rem 2rem 0.3rem calc(2rem - 3px);
+  background-color: var(--sl-color-primary-200);
+  border: 0 solid var(--sl-color-primary-500);
+  border-left-width: 3px;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.collapsible .item:not(.active):hover {
+  background-color: var(--sl-color-neutral-200);
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: var(--sl-font-size-medium);
+  font-weight: var(--sl-font-weight-semibold);
+  color: var(--sl-color-neutral-1000);
+  padding: 4px 4px;
+  border: 0 solid var(--sl-color-neutral-300);
+  border-width: 0 0 1px 0;
+}
+
+.menu-caption {
+  flex-grow: 1;
+}
+
+.collapse-button:not(:hover)::part(base) {
+  background-color: transparent;
+  border: none;
+}
+
+.collapse-icon {
+  height: 24px;
+  width: 24px;
+  color: var(--sl-color-primary-600);
+}

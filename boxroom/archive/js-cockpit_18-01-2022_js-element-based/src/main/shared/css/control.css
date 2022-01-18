@@ -1,0 +1,44 @@
+.field-wrapper {
+  display: flex;
+
+  flex-direction: var(--sl-label-alignment-above, column)
+    var(--sl-label-alignment-aside, row);
+
+  white-space: nowrap;
+}
+
+.label {
+  min-width: var(--sl-label-alignment-above, auto)
+    var(--sl-label-alignment-aside, var(--sl-label-alignment-aside-width));
+
+  max-width: var(--sl-label-alignment-above, auto)
+    var(--sl-label-alignment-aside, var(--sl-label-alignment-aside-width));
+
+  text-align: var(--sl-label-alignment-above, left)
+    var(--sl-label-alignment-aside, right);
+
+  padding: 3px 4px 3px 0;
+  white-space: normal;
+  font-size: var(--sl-font-size-medium);
+  color: var(--sl-input-label-color);
+  font-weight: var(--sl-label-font-weight);
+}
+
+.label:after {
+  padding: 0 7px;
+  content: '';
+  margin: 0 7px 0 0;
+}
+
+.required .label:after {
+  color: var(--sl-color-danger-700);
+  padding: 0 4px;
+  font-size: 15px;
+  content: '*';
+}
+
+.error {
+  margin: 2px 0;
+  color: var(--sl-color-danger-700);
+  font-size: var(--sl-font-size-small);
+}

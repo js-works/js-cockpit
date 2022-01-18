@@ -1,0 +1,57 @@
+.base {
+  position: relative;
+  font-family: var(--sl-font-sans);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  color: var(--sl-color-neutral-1000);
+  background-color: var(--sl-color-neutral-0);
+  font-size: var(--sl-font-size-medium);
+  z-index: 1000;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.page-number-input {
+  display: inline-block;
+  width: 4rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+}
+
+.page-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 8px;
+}
+
+.nav-button {
+  width: 30px;
+  margin: 2px;
+}
+
+.nav-button::part(base) {
+  border-color: transparent;
+  padding: 0;
+}
+
+.nav-button:hover::part(base) {
+  border-color: var(--sl-color-primary-300);
+}
+
+.page-size-selector {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  gap: 8px;
+}
+
+sl-menu-item::part(label) {
+  min-width: 1.5rem;
+  text-align: center;
+}
