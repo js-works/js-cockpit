@@ -20,8 +20,7 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 import sideMenuStyles from './side-menu.css'
 
 // icons
-import collapseIcon2 from '../../icons/arrow-left.svg'
-import collapseIcon from '../../icons/arrow-left-short.svg'
+import menuHeaderIcon from './assets/menu-header-icon.svg'
 
 // === exports =======================================================
 
@@ -72,14 +71,10 @@ class SideMenu extends Component {
     return html`
       <div class="base">
         <div class="menu-header">
-          <div class="menu-caption">Modules</div>
-          <sl-button class="collapse-button" size="small">
-            <sl-icon
-              src=${collapseIcon}
-              slot="prefix"
-              class="collapse-icon"
-            ></sl-icon>
-          </sl-button>
+          <div class="menu-caption">
+            <sl-icon class="menu-header-icon" src=${menuHeaderIcon}></sl-icon>
+            <div class="menu-header-text">Menu</div>
+          </div>
         </div>
         ${this._renderMenu(this.menu)}
       </div>
