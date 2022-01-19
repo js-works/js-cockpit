@@ -24,7 +24,7 @@ function createLocalizer<C extends keyof Localize.TranslationsMap>(
   component: Component,
   category: C
 ): {
-  <K extends keyof Localize.TranslationsMap[C] & string>(
+  tr<K extends keyof Localize.TranslationsMap[C] & string>(
     key: K,
     params?: FirstArg<Localize.TranslationsMap[C][K]>
   ): string | null
@@ -46,8 +46,10 @@ function createLocalizer(component: Component, category?: Category): any {
     return localizer
   }
 
-  const ret = (key: string, params?: any) =>
-    localizer.translate(category as any, key, params)
+  Object.assign(localizer, {
+    tr: (key: string, params?: any) =>
+      localizer.translate(category as any, key, params)
+  })
 
-  return Object.assign(ret, localizer)
+  return localizer
 }

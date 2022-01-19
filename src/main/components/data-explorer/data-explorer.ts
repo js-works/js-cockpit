@@ -13,7 +13,7 @@ import { createLocalizer } from '../../utils/i18n'
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
-import { addToDict, TermsOf } from 'js-localize'
+import { addToDict, defineTerms, TermsOf } from 'js-localize'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -88,13 +88,13 @@ declare global {
   }
 }
 
-const translations = {
+const translations = defineTerms({
   en: {
     'jsCockpit.dataExplorer': {
       loadingMessage: 'Loading...'
     }
   }
-}
+})
 
 addToDict(translations)
 
@@ -130,7 +130,7 @@ class DataExplorer extends Component {
   @prop
   fetchItems?: DataExplorer.FetchItems
 
-  private _loc = createLocalizer(this, 'jsCockpit.dataExplorer')
+  private _i18n = createLocalizer(this, 'jsCockpit.dataExplorer')
   private _pageIndex = 0
   private _pageSize = 50
   private _totalItemCount = -1
@@ -174,7 +174,7 @@ class DataExplorer extends Component {
 
     this.fetchItems({
       count: par.pageSize,
-      locale: this._loc.getLocale(),
+      locale: this._i18n.getLocale(),
       offset: par.pageIndex * par.pageSize,
       sortField: par.sortField,
       sortDir: par.sortDir
@@ -318,7 +318,9 @@ class DataExplorer extends Component {
         >
           <div class="overlay-top"></div>
           <div class="overlay-center">
-            <div class="loading-message">${this._loc('loadingMessage')}</div>
+            <div class="loading-message">
+              ${this._i18n.tr('loadingMessage')}
+            </div>
             <sl-spinner class="loading-spinner"></sl-spinner>
           </div>
           <div class="overlay-bottom"></div>

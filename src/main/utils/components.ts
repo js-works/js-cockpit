@@ -7,7 +7,8 @@ import {
   PropertyValues
 } from 'lit'
 
-import { customElement, property, state as litState } from 'lit/decorators'
+import { property } from 'lit/decorators/property.js'
+import { state as litState } from 'lit/decorators/state.js'
 
 // === exports =======================================================
 

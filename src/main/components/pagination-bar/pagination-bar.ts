@@ -1,4 +1,4 @@
-import { addToDict, localize, TermsOf } from 'js-localize'
+import { addToDict, defineTerms, Localizer, TermsOf } from 'js-localize'
 
 import {
   bind,
@@ -53,43 +53,42 @@ declare global {
   }
 }
 
-const translations = (() => {
-  const { formatNumber } = localize('en')
-
-  return {
-    en: {
-      'jsCockpit.paginationBar': {
-        itemsXToYOfZ(params: {
+const translations = defineTerms({
+  en: {
+    'jsCockpit.paginationBar': {
+      itemsXToYOfZ(
+        params: {
           firstItemNo: number
           lastItemNo: number
           itemCount: number
-        }) {
-          const firstItemNo = formatNumber(params.firstItemNo)
-          const lastItemNo = formatNumber(params.lastItemNo)
-          const itemCount = formatNumber(params.itemCount)
-
-          return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
         },
+        i18n: Localizer
+      ) {
+        const firstItemNo = i18n.formatNumber(params.firstItemNo)
+        const lastItemNo = i18n.formatNumber(params.lastItemNo)
+        const itemCount = i18n.formatNumber(params.itemCount)
 
-        itemXOfY(params: { itemNo: number; itemCount: number }) {
-          const itemNo = formatNumber(params.itemNo)
-          const itemCount = formatNumber(params.itemCount)
+        return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
+      },
 
-          return `${itemNo} - ${itemCount}`
-        },
+      itemXOfY(params: { itemNo: number; itemCount: number }, i18n: Localizer) {
+        const itemNo = i18n.formatNumber(params.itemNo)
+        const itemCount = i18n.formatNumber(params.itemCount)
 
-        ofXPages(params: { pageCount: number }) {
-          const pageCount = formatNumber(params.pageCount)
+        return `${itemNo} - ${itemCount}`
+      },
 
-          return `of ${pageCount}`
-        },
+      ofXPages(params: { pageCount: number }, i18n: Localizer) {
+        const pageCount = i18n.formatNumber(params.pageCount)
 
-        page: 'Page',
-        pageSize: 'Items/Page'
-      }
+        return `of ${pageCount}`
+      },
+
+      page: 'Page',
+      pageSize: 'Items/Page'
     }
   }
-})()
+})
 
 addToDict(translations)
 
@@ -145,7 +144,7 @@ class PaginationBar extends Component {
   }
 
   private _auxData!: AuxData
-  private _loc = createLocalizer(this, 'jsCockpit.paginationBar')
+  private _i18n = createLocalizer(this, 'jsCockpit.paginationBar')
   private _pageInputRef = createRef<SlInput>()
   private _pageSizeSelectRef = createRef<SlSelect>()
 
@@ -244,10 +243,15 @@ class PaginationBar extends Component {
       return null
     }
 
-    const pageTxt = this._loc('page')
-    const ofXPagesTxt = this._loc('ofXPages', {
-      pageCount: this._auxData.pageCount
-    })
+    const pageTxt = this._i18n.tr('page')
+
+    const ofXPagesTxt = this._i18n.translate(
+      'jsCockpit.paginationBar',
+      'ofXPages',
+      {
+        pageCount: this._auxData.pageCount
+      }
+    )
 
     return html`
       <div class="pagination">
@@ -306,7 +310,7 @@ class PaginationBar extends Component {
 
     return html`
       <div class="page-size-selector">
-        ${this._loc('pageSize')}
+        ${this._i18n.tr('pageSize')}
         <sl-select
           size="small"
           value=${this._auxData.pageSize}
@@ -331,7 +335,7 @@ class PaginationBar extends Component {
     let info: String
 
     info =
-      this._loc('itemsXToYOfZ', {
+      this._i18n.translate('jsCockpit.paginationBar', 'itemsXToYOfZ', {
         firstItemNo: this._auxData.firstShownItemIndex,
         lastItemNo: this._auxData.lastShownItemIndex,
         itemCount: this._auxData.totalItemCount

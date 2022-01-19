@@ -1,7 +1,7 @@
 import { h } from '../../main/utils/dom'
 import { elem } from 'js-element'
 import { html, lit } from 'js-element/lit'
-import { sharedTheme } from '../shared/shared-theme'
+import { sharedTheme } from './shared-theme'
 
 import {
   Brand,

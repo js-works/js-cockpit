@@ -101,4 +101,4 @@ function loginFormDemoImpl() {
     `
 }
 
-export const loginForm = () => h('login-form-demo', { lang: 'de' })
+export const loginForm = () => h('login-form-demo')

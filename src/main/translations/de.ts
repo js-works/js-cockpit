@@ -1,6 +1,4 @@
-import { addToDict, localize, FullTranslations } from 'js-localize'
-
-const { formatNumber } = localize('de')
+import { addToDict, FullTranslations } from 'js-localize'
 
 const translations: FullTranslations<'jsCockpit'> = {
   de: {
@@ -71,23 +69,23 @@ const translations: FullTranslations<'jsCockpit'> = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ(params) {
-        const firstItemNo = formatNumber(params.firstItemNo)
-        const lastItemNo = formatNumber(params.lastItemNo)
-        const itemCount = formatNumber(params.itemCount)
+      itemsXToYOfZ(params, i18n) {
+        const firstItemNo = i18n.formatNumber(params.firstItemNo)
+        const lastItemNo = i18n.formatNumber(params.lastItemNo)
+        const itemCount = i18n.formatNumber(params.itemCount)
 
         return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
       },
 
-      itemXOfY(params) {
-        const itemNo = formatNumber(params.itemNo)
-        const itemCount = formatNumber(params.itemCount)
+      itemXOfY(params, i18n) {
+        const itemNo = i18n.formatNumber(params.itemNo)
+        const itemCount = i18n.formatNumber(params.itemCount)
 
         return `${itemNo} - ${itemCount}`
       },
 
-      ofXPages(params) {
-        const pageCount = formatNumber(params.pageCount)
+      ofXPages(params, i18n) {
+        const pageCount = i18n.formatNumber(params.pageCount)
 
         return `von ${pageCount}`
       },

@@ -150,4 +150,8 @@ function dialogDemoImpl(self: DialogsDemo) {
 }
 
 export const dialogs = () =>
-  h('c-theme-provider', { theme: sharedTheme }, h('dialogs-demo'))
+  h(
+    'c-theme-provider',
+    { theme: sharedTheme },
+    h('dialogs-demo', { lang: 'en' })
+  )

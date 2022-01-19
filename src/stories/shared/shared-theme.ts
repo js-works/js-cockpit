@@ -6,3 +6,9 @@ export const sharedTheme = new Theme([
   ThemeMods.compact
   //ThemeMods.dark
 ])
+
+document.documentElement.lang = 'de'
+
+setTimeout(() => {
+  //  document.documentElement.lang = 'en'
+}, 3000)

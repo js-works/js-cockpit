@@ -1,7 +1,7 @@
 import { elem, prop, Attrs } from 'js-element'
 import { classMap, createRef, html, lit, ref } from 'js-element/lit'
 import { useOnInit, useState } from 'js-element/hooks'
-import { addToDict, TermsOf } from 'js-localize'
+import { addToDict, defineTerms, TermsOf } from 'js-localize'
 import { useI18n } from '../../utils/hooks'
 import { hasSlot } from '../../utils/slots'
 
@@ -59,7 +59,7 @@ declare global {
   }
 }
 
-const translations = {
+const translations = defineTerms({
   en: {
     'jsCockpit.loginForm': {
       email: 'Email',
@@ -103,7 +103,7 @@ const translations = {
       username: 'Username'
     }
   }
-}
+})
 
 addToDict(translations)
 
