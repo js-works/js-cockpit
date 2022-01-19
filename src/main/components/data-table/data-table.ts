@@ -1,21 +1,19 @@
-// external imports
-import { elem, prop, override, Attrs, Listener } from 'js-element'
-
 import {
-  classMap,
-  createRef,
-  html,
-  ref,
-  lit,
-  TemplateResult
-} from 'js-element/lit'
+  afterConnect,
+  afterInit,
+  afterUpdate,
+  beforeUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Listener,
+  Component
+} from '../../utils/components'
 
-import {
-  useAfterUpdate,
-  useAfterMount,
-  useBeforeUpdate,
-  useEmitter
-} from 'js-element/hooks'
+import { classMap, createRef, html, ref, TemplateResult } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
@@ -68,10 +66,9 @@ type HeaderCell = {
 @elem({
   tag: 'c-data-table',
   styles: [dataTableStyles],
-  impl: lit(dataTableImpl),
   uses: [SlCheckbox]
 })
-class DataTable extends HTMLElement {
+class DataTable extends Component {
   @prop
   columns: DataTable.Column[] | null = null
 
@@ -95,116 +92,96 @@ class DataTable extends HTMLElement {
 
   @prop
   onSelectionChange?: Listener<SelectionChangeEvent>
-}
 
-function dataTableImpl(self: DataTable) {
-  const columnSizesStyles = document.createElement('style')
-  const containerRef = createRef<HTMLElement>()
-  const theadRef = createRef<HTMLElement>()
-  const tbodyRef = createRef<HTMLElement>()
-  const scrollPaneRef = createRef<HTMLElement>()
-  const rowsSelectorRef = createRef<SlCheckbox>()
-  const selectedRows = new Set<number>()
-  const emitSortChange = useEmitter('c-sort-change', () => self.onSortChange)
-
-  const emitSelectionChange = useEmitter(
-    'c-selection-change',
-    () => self.onSelectionChange
+  private _columnSizesStyles = document.createElement('style')
+  private _containerRef = createRef<HTMLElement>()
+  private _theadRef = createRef<HTMLElement>()
+  private _tbodyRef = createRef<HTMLElement>()
+  private _scrollPaneRef = createRef<HTMLElement>()
+  private _rowsSelectorRef = createRef<SlCheckbox>()
+  private _selectedRows = new Set<number>()
+  private _emitSortChange = createEmitter(
+    this,
+    'c-sort-change',
+    () => this.onSortChange
   )
 
-  columnSizesStyles.append(document.createTextNode(''))
-  self.shadowRoot!.firstChild!.appendChild(columnSizesStyles)
+  private _emitSelectionChange = createEmitter(
+    this,
+    'c-selection-change',
+    () => this.onSelectionChange
+  )
 
-  useAfterMount(() => {
-    const container = containerRef.value!
-    const resizeObserver = new ResizeObserver(() => updateColumnSizes())
-
-    resizeObserver.observe(container)
-
-    return () => resizeObserver.unobserve(container)
-  })
-
-  useBeforeUpdate(() => {
-    selectedRows.clear()
-    scrollPaneRef.value!.scroll({ top: 0, left: 0 })
-  })
-
-  // TODO - this is ugly!!!
-  useAfterUpdate(() => {
-    refreshSelection()
-    dispatchSelectionChange()
-  })
-
-  function updateColumnSizes() {
-    const theadHeight = theadRef.value!.offsetHeight
+  private _updateColumnSizes() {
+    const theadHeight = this._theadRef.value!.offsetHeight
 
     const newStyles = `
       .xxxxscroll-pane {
-        height: ${self.offsetHeight - theadHeight - 1}px;
-        max-height: ${self.offsetHeight - theadHeight - 1}px;
+        height: ${this.offsetHeight - theadHeight - 1}px;
+        max-height: ${this.offsetHeight - theadHeight - 1}px;
       }
     `
 
-    columnSizesStyles.innerText = newStyles
+    this._columnSizesStyles.innerText = newStyles
   }
 
-  function dispatchSortChange(
+  private _dispatchSortChange(
     sortField: number | string,
     sortDir: 'asc' | 'desc'
   ) {
-    emitSortChange({
+    this._emitSortChange({
       sortField: String(sortField),
       sortDir
     })
   }
 
-  function toggleRowsSelection() {
-    const numRows = self.items!.length
+  private _toggleRowsSelection() {
+    const numRows = this.items!.length
 
-    if (numRows > selectedRows.size) {
+    if (numRows > this._selectedRows.size) {
       for (let i = 0; i < numRows; ++i) {
-        selectedRows.add(i)
+        this._selectedRows.add(i)
       }
     } else {
-      selectedRows.clear()
+      this._selectedRows.clear()
     }
 
-    refreshSelection()
-    dispatchSelectionChange()
+    this._refreshSelection()
+    this._dispatchSelectionChange()
   }
 
-  function toggleRowSelection(idx: number) {
-    if (selectedRows.has(idx)) {
-      selectedRows.delete(idx)
+  private _toggleRowSelection(idx: number) {
+    if (this._selectedRows.has(idx)) {
+      this._selectedRows.delete(idx)
     } else {
-      selectedRows.add(idx)
+      this._selectedRows.add(idx)
     }
 
-    refreshSelection()
-    dispatchSelectionChange()
+    this._refreshSelection()
+    this._dispatchSelectionChange()
   }
 
-  function dispatchSelectionChange() {
-    const selection = new Set(selectedRows)
+  private _dispatchSelectionChange() {
+    const selection = new Set(this._selectedRows)
 
-    emitSelectionChange({ selection })
+    this._emitSelectionChange({ selection })
   }
 
-  function refreshSelection() {
-    if (!self.items) {
+  private _refreshSelection() {
+    if (!this.items) {
       return
     }
 
-    const rowsSelector = rowsSelectorRef.value!
-    const tbody = tbodyRef.value!
+    const rowsSelector = this._rowsSelectorRef.value!
+    const tbody = this._tbodyRef.value!
     const checkboxes = tbody.querySelectorAll('tr > td:first-child sl-checkbox')
-    const numRows = self.items!.length
-    const numSelectedRows = selectedRows.size
+    const numRows = this.items!.length
+    const numSelectedRows = this._selectedRows.size
 
     rowsSelector.checked = numSelectedRows === numRows
 
-    for (let i = 0; i < self.items!.length; ++i) {
-      const selected = selectedRows.has(i)
+    for (let i = 0; i < this.items!.length; ++i) {
+      const selected = this._selectedRows.has(i)
 
       if (selected) {
         tbody.children[i].classList.add('selected-row')
@@ -216,28 +193,53 @@ function dataTableImpl(self: DataTable) {
     }
   }
 
-  function render() {
+  construtor() {
+    this._columnSizesStyles.append(document.createTextNode(''))
+    this.shadowRoot!.firstChild!.appendChild(this._columnSizesStyles)
+
+    afterConnect(this, () => {
+      const container = this._containerRef.value!
+      const resizeObserver = new ResizeObserver(() => this._updateColumnSizes())
+
+      resizeObserver.observe(container)
+
+      return () => resizeObserver.unobserve(container)
+    })
+
+    beforeUpdate(this, () => {
+      this._selectedRows.clear()
+      this._scrollPaneRef.value!.scroll({ top: 0, left: 0 })
+    })
+
+    // TODO - this is ugly!!!
+    afterUpdate(this, () => {
+      this._refreshSelection()
+      this._dispatchSelectionChange()
+    })
+  }
+
+  render() {
     return html`
       <div class="base">
-        <div class="container" ${ref(containerRef)}>
-          ${renderTableHeader()} ${renderTableBody()}
+        <div class="container" ${ref(this._containerRef)}>
+          ${this._renderTableHeader()} ${this._renderTableBody()}
         </div>
       </div>
     `
   }
 
-  function renderTableHeader() {
+  private _renderTableHeader() {
     const rows: TemplateResult[] = []
-    const { headerCells } = getTableHeadInfo(self.columns || [])
+    const { headerCells } = getTableHeadInfo(this.columns || [])
 
     const rowsSelector =
-      self.selectionMode === 'single' || self.selectionMode === 'multi'
+      this.selectionMode === 'single' || this.selectionMode === 'multi'
         ? html`
             <th class="selector-column" rowspan=${headerCells.length}>
               <sl-checkbox
                 class="checkbox"
-                @sl-change=${toggleRowsSelection}
-                ${ref(rowsSelectorRef)}
+                @sl-change=${this._toggleRowsSelection}
+                ${ref(this._rowsSelectorRef)}
               ></sl-checkbox>
             </th>
           `
@@ -250,9 +252,9 @@ function dataTableImpl(self: DataTable) {
         let icon = ''
 
         if (cell.sortable) {
-          if (cell.field !== self.sortField) {
+          if (cell.field !== this.sortField) {
             icon = downUpArrowsIcon
-          } else if (self.sortDir === 'desc') {
+          } else if (this.sortDir === 'desc') {
             icon = downArrowIcon
           } else {
             icon = upArrowIcon
@@ -265,13 +267,13 @@ function dataTableImpl(self: DataTable) {
                 const sortField = cell.field!
 
                 const sortDir =
-                  sortField === self.sortField
-                    ? self.sortDir === 'asc'
+                  sortField === this.sortField
+                    ? this.sortDir === 'asc'
                       ? 'desc'
                       : 'asc'
                     : 'asc'
 
-                dispatchSortChange(sortField, sortDir)
+                this._dispatchSortChange(sortField, sortDir)
               }
             : null
 
@@ -299,29 +301,29 @@ function dataTableImpl(self: DataTable) {
 
     return html`
       <table class="head-table">
-        <thead ${ref(theadRef)}>
+        <thead ${ref(this._theadRef)}>
           ${rows}
         </thead>
       </table>
     `
   }
 
-  function renderTableBody() {
-    const { columns } = getTableHeadInfo(self.columns || [])
+  private _renderTableBody() {
+    const { columns } = getTableHeadInfo(this.columns || [])
     const rows: TemplateResult[] = []
 
-    if (self.items) {
-      self.items.forEach((rec, idx) => {
-        const selected = selectedRows.has(idx)
+    if (this.items) {
+      this.items.forEach((rec, idx) => {
+        const selected = this._selectedRows.has(idx)
 
         const rowSelector =
-          self.selectionMode === 'single' || self.selectionMode === 'multi'
+          this.selectionMode === 'single' || this.selectionMode === 'multi'
             ? html`
                 <td class="selector-column">
                   <sl-checkbox
                     type="checkbox"
                     ?checked=${selected}
-                    @sl-change=${() => toggleRowSelection(idx)}
+                    @sl-change=${() => this._toggleRowSelection(idx)}
                   >
                   </sl-checkbox>
                 </td>
@@ -331,7 +333,7 @@ function dataTableImpl(self: DataTable) {
         const cells: TemplateResult[] = []
 
         columns.forEach((column) => {
-          cells.push(html`<td>${renderCellContent(column, rec)}</td>`)
+          cells.push(html`<td>${this._renderCellContent(column, rec)}</td>`)
         })
 
         rows.push(
@@ -347,10 +349,10 @@ function dataTableImpl(self: DataTable) {
     }
 
     return html`
-      <div class="xxx yyy">
-        <div class="scroll-pane" ${ref(scrollPaneRef)}>
+      <div>
+        <div class="scroll-pane" ${ref(this._scrollPaneRef)}>
           <table class="body-table">
-            <tbody ${ref(tbodyRef)}>
+            <tbody ${ref(this._tbodyRef)}>
               ${rows}
             </tbody>
           </table>
@@ -359,12 +361,10 @@ function dataTableImpl(self: DataTable) {
     `
   }
 
-  function renderCellContent(column: HeaderCell, rec: any) {
+  private _renderCellContent(column: HeaderCell, rec: any) {
     // TODO
     return html`${rec[column.field!]}` // TODO
   }
-
-  return render
 }
 
 const getTableHeadInfo: (columns: DataTable.Column[]) => {

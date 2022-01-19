@@ -1,6 +1,6 @@
+import { bind, elem, Component } from '../main/utils/components'
+import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
 import { sharedTheme } from './shared/shared-theme'
 
 import {
@@ -27,14 +27,11 @@ export default {
     TextField,
     PasswordField,
     ThemeProvider
-  ],
-  impl: lit(loginFormDemoImpl)
+  ]
 })
-class LoginFormDemo extends HTMLElement {}
-
-function loginFormDemoImpl() {
-  return () =>
-    html`
+class LoginFormDemo extends Component {
+  render() {
+    return html`
       <c-theme-provider .theme=${sharedTheme}>
         <c-login-form
           full-size
@@ -99,6 +96,7 @@ function loginFormDemoImpl() {
         </c-login-form>
       </c-theme-provider>
     `
+  }
 }
 
 export const loginForm = () => h('login-form-demo')

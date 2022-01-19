@@ -6199,11 +6199,6 @@ jest-worker@^26.5.0, jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-"js-element@file:../js-element":
-  version "0.0.236"
-  dependencies:
-    lit-html "^2.1.1"
-
 "js-localize@file:../js-localize":
   version "0.0.2"
   dependencies:
@@ -6367,7 +6362,7 @@ lit-element@^3.1.0:
     "@lit/reactive-element" "^1.1.0"
     lit-html "^2.1.0"
 
-lit-html@^2.1.0, lit-html@^2.1.1:
+lit-html@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-2.1.1.tgz#f4da485798a0d967514d31730d387350fafb79f7"
   integrity sha512-E4BImK6lopAYanJpvcGaAG8kQFF1ccIulPu2BRNZI7acFB6i4ujjjsnaPVFT1j/4lD9r8GKih0Y8d7/LH8SeyQ==

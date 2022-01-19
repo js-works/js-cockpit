@@ -1,11 +1,17 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, createRef, lit, repeat, ref } from 'js-element/lit'
 import {
-  useAfterUpdate,
-  useRefresher,
-  useState,
-  useStatus
-} from 'js-element/hooks'
+  afterUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  state,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -25,43 +31,52 @@ export { Tabs }
 @elem({
   tag: 'c-tabs',
   styles: tabsStyles,
-  uses: [SlIcon, SlTabGroup, SlTabPanel, SlTab],
-  impl: lit(tabsImpl)
+  uses: [SlIcon, SlTabGroup, SlTabPanel, SlTab]
 })
-class Tabs extends HTMLElement {}
+class Tabs extends Component {
+  @state
+  private _activeIdx = 0
+  private _tabGroup = document.createElement('sl-tab-group')
+  private _tabGroupRef = createRef<SlTabGroup>()
+  private _slotRef = createRef<HTMLSlotElement>()
+  private _hasUpdated = false
 
-function tabsImpl(self: Tabs) {
-  const status = useStatus()
-  const refresh = useRefresher()
-  const tabGroup = document.createElement('sl-tab-group')
-  const tabGroupRef = createRef<SlTabGroup>()
-  const slotRef = createRef<HTMLSlotElement>()
-
-  const [state, setState] = useState({
-    activeIdx: 0
-  })
-
-  const onTabChange = (ev: any) => {
+  @bind
+  private _onTabChange(ev: any) {
     const newActiveIdx = parseInt(ev.detail.name.substr(5))
 
-    if (newActiveIdx !== state.activeIdx) {
-      setState('activeIdx', newActiveIdx)
+    if (newActiveIdx !== this._activeIdx) {
+      this._activeIdx = newActiveIdx
     }
   }
 
-  function render() {
-    if (!status.hasUpdated()) {
-      refresh()
+  constructor() {
+    super()
+
+    afterUpdate(this, () => {
+      this._hasUpdated = true
+    })
+  }
+
+  render() {
+    if (!this._hasUpdated) {
+      this._tabGroup = document.createElement('sl-tab-group')
 
       return html`
-        <sl-tab-group ${ref(tabGroupRef)} exportparts="base"></sl-tab-group>
-        <slot ${ref(slotRef)}></slot>
+        <sl-tab-group
+          ${ref(this._tabGroupRef)}
+          exportparts="base"
+        ></sl-tab-group>
+        <slot ${ref(this._slotRef)}></slot>
       `
     } else {
-      setTimeout(() => tabGroupRef.value!.show(`panel${state.activeIdx}`), 0)
+      setTimeout(
+        () => this._tabGroupRef.value!.show(`panel${this._activeIdx}`),
+        0
+      )
     }
 
-    const pages = slotRef
+    const pages = this._slotRef
       .value!.assignedElements()
       .filter((it: any) => it.localName === 'c-tab')
       .map((it: any) => ({ caption: (it as any).caption }))
@@ -69,7 +84,7 @@ function tabsImpl(self: Tabs) {
     return html`
       <div class="base">
         <style>
-          .pages slot::slotted(c-tab:nth-of-type(${state.activeIdx + 1})) {
+          .pages slot::slotted(c-tab:nth-of-type(${this._activeIdx + 1})) {
             visibility: visible;
             position: absolute;
             left: 0;
@@ -80,8 +95,8 @@ function tabsImpl(self: Tabs) {
         </style>
 
         <sl-tab-group
-          ${ref(tabGroupRef)}
-          @sl-tab-show=${onTabChange}
+          ${ref(this._tabGroupRef)}
+          @sl-tab-show=${this._onTabChange}
           exportparts="base"
         >
           ${repeat(
@@ -93,10 +108,8 @@ function tabsImpl(self: Tabs) {
               >`
           )}
         </sl-tab-group>
-        <div class="pages"><slot ${ref(slotRef)}></slot></div>
+        <div class="pages"><slot ${ref(this._slotRef)}></slot></div>
       </div>
     `
   }
-
-  return render
 }

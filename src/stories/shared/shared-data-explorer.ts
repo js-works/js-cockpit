@@ -1,5 +1,6 @@
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import { bind, elem, Component } from '../../main/utils/components'
+import { html } from '../../main/utils/lit'
+
 import {
   AppLayout,
   DataExplorer,
@@ -54,13 +55,11 @@ const columns: DataExplorer.Column[] = [
 
 @elem({
   tag: 'shared-data-explorer',
-  uses: [AppLayout, DataExplorer, SearchBox],
-  impl: lit(sharedDataExplorerDemoImpl)
+  uses: [AppLayout, DataExplorer, SearchBox]
 })
-export class SharedDataExplorer extends HTMLElement {}
-
-function sharedDataExplorerDemoImpl() {
-  return () => html`
+export class SharedDataExplorer extends Component {
+  render() {
+    return html`
     <c-data-explorer
       .title=${'Customers'}
       .columns=${columns}
@@ -117,6 +116,7 @@ function sharedDataExplorerDemoImpl() {
       </c-search-box>
     </c-data-explorer>
   `
+  }
 }
 
 const totalItemCount = 3234

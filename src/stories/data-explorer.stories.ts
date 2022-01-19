@@ -1,6 +1,6 @@
+import { elem, Component } from '../main/utils/components'
+import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
 import { AppLayout, DataExplorer, ThemeProvider, Theme } from 'js-cockpit'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
 

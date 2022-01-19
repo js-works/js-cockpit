@@ -1,5 +1,13 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
+import {
+  bind,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
 
 // custom elements
 import SlRadio from '@shoelace-style/shoelace/dist/components/radio/radio'
@@ -18,20 +26,17 @@ export { RadioGroup }
 @elem({
   tag: 'c-radio-group',
   styles: [radioGroupStyles, controlStyles],
-  uses: [SlRadio, SlRadioGroup],
-  impl: lit(radioGroupImpl)
+  uses: [SlRadio, SlRadioGroup]
 })
-class RadioGroup extends HTMLElement {
+class RadioGroup extends Component {
   @prop({ attr: Attrs.string })
   label = ''
-}
 
-function radioGroupImpl(self: RadioGroup) {
-  return () => {
+  render() {
     return html`
       <div class="base">
         <div class="field-wrapper">
-          <div class="label">${self.label}</div>
+          <div class="label">${this.label}</div>
           <div class="control">
             <sl-radio-group>
               <sl-radio value="1" checked>Item 1</sl-radio>

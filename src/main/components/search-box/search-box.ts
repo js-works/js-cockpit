@@ -1,5 +1,15 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, createRef, lit, ref, repeat } from 'js-element/lit'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import { FocusTrap } from '@a11y/focus-trap'
@@ -27,29 +37,29 @@ export { SearchBox }
 @elem({
   tag: 'c-search-box',
   styles: [searchBoxStyles, rightAlignedLabelsStyles],
-  impl: lit(searchBoxImpl),
   uses: [FocusTrap, SlButton, SlDropdown, SlIcon, SlInput]
 })
-class SearchBox extends HTMLElement {}
+class SearchBox extends Component {
+  private _dropdownRef = createRef<SlDropdown>()
 
-function searchBoxImpl(self: SearchBox) {
-  const dropdownRef = createRef<SlDropdown>()
-
-  const onKeyDown = (ev: KeyboardEvent) => {
+  @bind
+  private _onKeyDown(ev: KeyboardEvent) {
     if (ev.key !== 'Escape') {
       ev.stopPropagation()
     }
   }
 
-  const onCancelClick = () => {
-    dropdownRef.value!.hide()
+  @bind
+  private _onCancelClick() {
+    this._dropdownRef.value!.hide()
   }
 
-  const onApplyClick = () => {
-    dropdownRef.value!.hide()
+  @bind
+  private _onApplyClick() {
+    this._dropdownRef.value!.hide()
   }
 
-  function render() {
+  render() {
     return html`
       <div class="base">
         <sl-input size="small" placeholder="Search...">
@@ -59,7 +69,7 @@ function searchBoxImpl(self: SearchBox) {
             class="search-icon"
           ></sl-icon>
         </sl-input>
-        <sl-dropdown @keydown=${onKeyDown} ${ref(dropdownRef)}>
+        <sl-dropdown @keydown=${this._onKeyDown} ${ref(this._dropdownRef)}>
           <div slot="trigger">
             <sl-button
               variant="default"
@@ -78,14 +88,17 @@ function searchBoxImpl(self: SearchBox) {
                 <slot></slot>
               </div>
               <div class="filters-actions">
-                <sl-button size="small" class="button" @click=${onCancelClick}
+                <sl-button
+                  size="small"
+                  class="button"
+                  @click=${this._onCancelClick}
                   >Cancel</sl-button
                 >
                 <sl-button
                   variant="primary"
                   size="small"
                   class="button"
-                  @clck=${onApplyClick}
+                  @click=${this._onApplyClick}
                 >
                   Apply
                 </sl-button>
@@ -96,6 +109,4 @@ function searchBoxImpl(self: SearchBox) {
       </div>
     `
   }
-
-  return render
 }

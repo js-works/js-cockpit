@@ -53,7 +53,7 @@ class EmailField extends Component {
   required = false
 
   private _slInputRef = createRef<SlInput>()
-  private _loc = createLocalizer(this)
+  private _i18n = createLocalizer(this)
 
   private _formField: FormFieldController<string> = new FormFieldController(
     this,
@@ -63,7 +63,7 @@ class EmailField extends Component {
       validate: () => {
         if (this.required && !this.value) {
           return {
-            message: this._loc.translate(
+            message: this._i18n.translate(
               'jsCockpit.validation',
               'fieldRequired'
             ),

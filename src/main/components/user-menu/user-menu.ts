@@ -1,5 +1,17 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
+import {
+  afterUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  state,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -20,16 +32,13 @@ export { UserMenu }
 @elem({
   tag: 'c-user-menu',
   styles: userMenuStyles,
-  uses: [SlIcon],
-  impl: lit(userMenuImpl)
+  uses: [SlIcon]
 })
-class UserMenu extends HTMLElement {
+class UserMenu extends Component {
   @prop({ attr: Attrs.string })
   displayName: string = ''
-}
 
-function userMenuImpl(self: UserMenu) {
-  return () => {
+  render() {
     return html`
       <div part="base" class="base">
         <sl-icon src=${defautlAvatarSvg} class="avatar-icon"></sl-icon>

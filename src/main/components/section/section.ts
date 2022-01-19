@@ -1,5 +1,15 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit } from 'js-element/lit'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // styles
 import sectionStyles from './section.css'
@@ -12,19 +22,16 @@ export { Section }
 
 @elem({
   tag: 'c-section',
-  styles: sectionStyles,
-  impl: lit(sectionImpl)
+  styles: sectionStyles
 })
-class Section extends HTMLElement {
+class Section extends Component {
   @prop({ attr: Attrs.string })
   caption = ''
-}
 
-function sectionImpl(self: Section) {
-  return () => {
+  render() {
     return html`
       <div class="base">
-        <div class="caption">${self.caption}</div>
+        <div class="caption">${this.caption}</div>
         <div class="content">
           <slot></slot>
         </div>

@@ -1,6 +1,6 @@
+import { bind, elem, Component } from '../main/utils/components'
+import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
 import { sharedTheme } from './shared/shared-theme'
 
 import {
@@ -27,84 +27,88 @@ const styles = `
 @elem({
   tag: 'dialogs-demo',
   styles: styles,
-  impl: lit(dialogDemoImpl),
   uses: [ThemeProvider]
 })
-class DialogsDemo extends HTMLElement {}
-
-function dialogDemoImpl(self: DialogsDemo) {
-  const onInfoClick = () => {
-    showInfoDialog(self, {
+class DialogsDemo extends Component {
+  @bind
+  private _onInfoClick() {
+    showInfoDialog(this, {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Thanks :-)'
     })
   }
 
-  const onWarnClick = () => {
-    showWarnDialog(self, {
+  @bind
+  private _onWarnClick() {
+    showWarnDialog(this, {
       message: 'This is your last warning',
       title: 'Important!!!',
       okText: 'OK - I understand'
     })
   }
 
-  const onErrorClick = () => {
-    showErrorDialog(self, {
+  @bind
+  private _onErrorClick() {
+    showErrorDialog(this, {
       message: 'The form could not be submitted',
       title: 'Form error',
       okText: 'OK - I understand'
     })
   }
 
-  const onConfirmClick = () => {
-    showConfirmDialog(self, {
+  @bind
+  private _onConfirmClick() {
+    showConfirmDialog(this, {
       message: 'Do you really want to log out?',
       okText: 'Log out'
     }).then((confirmed) => {
       if (confirmed) {
-        showInfoDialog(self, {
+        showInfoDialog(this, {
           message: "You've been logged out"
         })
       }
     })
   }
 
-  const onApproveClick = () => {
-    showApproveDialog(self, {
+  @bind
+  private _onApproveClick() {
+    showApproveDialog(this, {
       message: 'Do you really want to delete the project?',
       title: 'Are you sure?',
       okText: 'Delete project'
     }).then((approved) => {
       if (approved) {
-        showInfoDialog(self, {
+        showInfoDialog(this, {
           message: 'Project has been deleted'
         })
       }
     })
   }
 
-  const onPromptClick = () => {
-    showInputDialog(self, {
+  @bind
+  private _onPromptClick() {
+    showInputDialog(this, {
       message: 'Please enter your name',
       title: 'Input required',
       cancelText: 'No way!'
     }).then((name) => {
       if (name !== null) {
-        showInfoDialog(self, {
+        showInfoDialog(this, {
           message: `Hello, ${name || 'stranger'}!`
         })
       }
     })
   }
 
-  const onDestroyPlanet = async () => {
-    const confirmed = await showConfirmDialog(self, {
+  @bind
+  private async _onDestroyPlanet() {
+    const confirmed = await showConfirmDialog(this, {
       message: 'Are you really sure that the planet shall be destroyed?'
     })
 
     if (confirmed) {
-      const approved = await showApproveDialog(self, {
+      const approved = await showApproveDialog(this, {
         message:
           'But this is such a lovely planet. ' +
           'Are you really, really sure it shall be destroyed?',
@@ -114,7 +118,7 @@ function dialogDemoImpl(self: DialogsDemo) {
       })
 
       if (approved) {
-        showErrorDialog(self, {
+        showErrorDialog(this, {
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
@@ -123,30 +127,32 @@ function dialogDemoImpl(self: DialogsDemo) {
     }
   }
 
-  return () => html`
-    <div class="demo">
-      <div>
-        <sl-button @click=${onInfoClick}>Info</sl-button>
+  render() {
+    return html`
+      <div class="demo">
+        <div>
+          <sl-button @click=${this._onInfoClick}>Info</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onWarnClick}>Warn</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onErrorClick}>Error</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onConfirmClick}>Confirm</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onApproveClick}>Approve</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
+        </div>
+        <br />
+        <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>
       </div>
-      <div>
-        <sl-button @click=${onWarnClick}>Warn</sl-button>
-      </div>
-      <div>
-        <sl-button @click=${onErrorClick}>Error</sl-button>
-      </div>
-      <div>
-        <sl-button @click=${onConfirmClick}>Confirm</sl-button>
-      </div>
-      <div>
-        <sl-button @click=${onApproveClick}>Approve</sl-button>
-      </div>
-      <div>
-        <sl-button @click=${onPromptClick}>Prompt</sl-button>
-      </div>
-      <br />
-      <sl-button @click=${onDestroyPlanet}>Destroy planet</sl-button>
-    </div>
-  `
+    `
+  }
 }
 
 export const dialogs = () =>

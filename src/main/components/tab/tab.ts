@@ -1,5 +1,15 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // styles
 import tabStyles from './tab.css'
@@ -12,18 +22,17 @@ export { Tab }
 
 @elem({
   tag: 'c-tab',
-  styles: tabStyles,
-  impl: lit(tabImpl)
+  styles: tabStyles
 })
-class Tab extends HTMLElement {
+class Tab extends Component {
   @prop({ attr: Attrs.string })
   caption = ''
-}
 
-function tabImpl(self: Tab) {
-  return () => html`
-    <div class="base">
-      <slot></slot>
-    </div>
-  `
+  render() {
+    return html`
+      <div class="base">
+        <slot></slot>
+      </div>
+    `
+  }
 }

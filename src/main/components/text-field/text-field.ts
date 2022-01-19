@@ -1,16 +1,16 @@
-import { elem, method, prop, override, Attrs } from 'js-element'
-import { classMap, html, createRef, lit, ref } from 'js-element/lit'
-
 import {
-  useAfterMount,
-  useAfterUpdate,
-  useInternals,
-  useRefresher,
-  useState,
-  useStatus
-} from 'js-element/hooks'
+  bind,
+  elem,
+  prop,
+  afterInit,
+  afterUpdate,
+  Attrs,
+  Component
+} from '../../utils/components'
 
-import { useFormField, useI18n } from '../../utils/hooks'
+import { classMap, createRef, html, ref } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
+import { FormFieldController } from '../../utils/controllers'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -29,12 +29,10 @@ export { TextField }
 
 @elem({
   tag: 'c-text-field',
-  formAssoc: true,
   styles: [controlStyles, textFieldStyles],
-  impl: lit(textFieldImpl),
   uses: [SlInput]
 })
-class TextField extends HTMLElement {
+class TextField extends Component {
   @prop({ attr: Attrs.string })
   name = ''
 
@@ -53,89 +51,87 @@ class TextField extends HTMLElement {
   @prop({ attr: Attrs.string })
   error = ''
 
-  @method
-  blur!: () => void
+  reset() {}
 
-  @method
-  focus!: () => void
+  focus() {
+    this._slInputRef.value!.focus()
+  }
 
-  @method
-  reset!: () => void
-}
+  blur() {
+    this._slInputRef.value!.blur()
+  }
 
-function textFieldImpl(self: TextField) {
-  const refresh = useRefresher()
-  const status = useStatus()
-  const slInputRef = createRef<SlInput & Element>() // TODO
-  const { i18n } = useI18n()
+  private _i18n = createLocalizer(this)
+  private _error: string | null = null
+  private _slInputRef = createRef<SlInput>()
 
-  const [state, setState] = useState({
-    error: null as string | null
-  })
+  private _formField: FormFieldController<string> =
+    new FormFieldController<string>(this, {
+      getValue: () => this.value,
 
-  const formField = useFormField({
-    getValue: () => self.value,
-
-    validate() {
-      if (self.required && !self.value) {
-        return {
-          message: i18n.translate('jsCockpit.validation', 'fieldRequired'),
-          anchor: slInputRef.value!
+      validate: () => {
+        if (this.required && !this.value) {
+          return {
+            message: this._i18n.translate(
+              'jsCockpit.validation',
+              'fieldRequired'
+            ),
+            anchor: this._slInputRef.value!
+          }
         }
+
+        return null
       }
+    })
 
-      return null
-    }
-  }) // TODO!!!
-
-  const onInput = () => {
-    self.value = slInputRef.value!.value // TODO: prevent refresh
-    formField.signalInput()
+  constructor() {
+    super()
   }
 
-  const onChange = () => {
-    formField.signalUpdate()
+  @bind
+  private _onInput() {
+    this.value = this._slInputRef.value!.value // TODO: prevent refresh
+    this._formField.signalInput()
   }
 
-  const onFocus = () => {
-    formField.signalFocus()
+  @bind
+  private _onChange() {
+    this._formField.signalUpdate()
   }
 
-  const onBlur = () => {
-    formField.signalBlur()
+  @bind
+  _onFocus() {
+    this._formField.signalFocus()
   }
 
-  override(self, {
-    reset() {},
-    focus: () => slInputRef.value!.focus(),
-    blur: () => slInputRef.value!.blur()
-  })
+  @bind
+  _onBlur() {
+    this._formField.signalBlur()
+  }
 
-  function render() {
+  render() {
     return html`
       <div
         class="base ${classMap({
-          required: self.required,
-          'has-error': formField.hasError()
+          required: this.required,
+          'has-error': this._formField.hasError()
         })}"
       >
         <div class="field-wrapper">
-          <div class="label">${self.label}</div>
+          <div class="label">${this.label}</div>
           <div class="control">
             <sl-input
               class="input"
-              ${ref(slInputRef)}
-              @sl-input=${onInput}
-              @sl-change=${onChange}
-              @focus=${onFocus}
-              @blur=${onBlur}
+              ${ref(this._slInputRef)}
+              @sl-input=${this._onInput}
+              @sl-change=${this._onChange}
+              @focus=${this._onFocus}
+              @blur=${this._onBlur}
             ></sl-input>
-            <div class="error">${formField.getErrorMsg()}</div>
+            <div class="error">${this._formField.getErrorMsg()}</div>
           </div>
         </div>
       </div>
     `
   }
-
-  return render
 }

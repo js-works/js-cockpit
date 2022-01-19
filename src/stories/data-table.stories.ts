@@ -1,6 +1,6 @@
+import { elem, Component } from '../main/utils/components'
+import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
-import { elem } from 'js-element'
-import { html, lit } from 'js-element/lit'
 import { DataTable } from 'js-cockpit'
 
 import theme from '@shoelace-style/shoelace/dist/themes/light.styles'
@@ -105,21 +105,20 @@ const data = [
 @elem({
   tag: 'data-table-demo',
   uses: [DataTable],
-  styles: themeStyles,
-  impl: lit(dataTableDemoImpl)
+  styles: themeStyles
 })
-class DataTableDemo extends HTMLElement {}
-
-function dataTableDemoImpl() {
-  return () => html`
-    <div style="max-height: 200px; border: 1px solid red">
-      <c-data-table
-        bordered
-        .columns=${columns}
-        .data=${[...data, ...data]}
-      ></c-data-table>
-    </div>
-  `
+class DataTableDemo extends Component {
+  render() {
+    return html`
+      <div style="max-height: 200px; border: 1px solid red">
+        <c-data-table
+          bordered
+          .columns=${columns}
+          .data=${[...data, ...data]}
+        ></c-data-table>
+      </div>
+    `
+  }
 }
 
 export const dataTable = () => h('data-table-demo')

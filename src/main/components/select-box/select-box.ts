@@ -1,6 +1,15 @@
-import { elem, method, prop, override, Attrs } from 'js-element'
-import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
-import {} from 'js-element/hooks'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'
@@ -22,10 +31,9 @@ export { SelectBox }
 @elem({
   tag: 'c-select-box',
   styles: [controlStyles, selectBoxStyles],
-  uses: [SlDivider, SlMenuItem, SlSelect],
-  impl: lit(selectBoxImpl)
+  uses: [SlDivider, SlMenuItem, SlSelect]
 })
-class SelectBox extends HTMLElement {
+class SelectBox extends Component {
   @prop({ attr: Attrs.string })
   value = ''
 
@@ -41,29 +49,26 @@ class SelectBox extends HTMLElement {
   @prop({ attr: Attrs.string })
   error = ''
 
-  @method
-  reset!: () => void
-}
+  reset() {}
 
-function selectBoxImpl(self: SelectBox) {
-  // const getFormCtrl = useFormCtrl()
-
-  return () => html`
-    <div class="base ${classMap({ required: self.required })}">
-      <div class="field-wrapper">
-        <div class="label">${self.label}</div>
-        <div class="control">
-          <sl-select size="small">
-            <sl-menu-item value="option-1">Option 1</sl-menu-item>
-            <sl-menu-item value="option-2">Option 2</sl-menu-item>
-            <sl-menu-item value="option-3">Option 3</sl-menu-item>
-            <sl-divider></sl-divider>
-            <sl-menu-item value="option-4">Option 4</sl-menu-item>
-            <sl-menu-item value="option-5">Option 5</sl-menu-item>
-            <sl-menu-item value="option-6">Option 6</sl-menu-item>
-          </sl-select>
+  render() {
+    return html`
+      <div class="base ${classMap({ required: this.required })}">
+        <div class="field-wrapper">
+          <div class="label">${this.label}</div>
+          <div class="control">
+            <sl-select size="small">
+              <sl-menu-item value="option-1">Option 1</sl-menu-item>
+              <sl-menu-item value="option-2">Option 2</sl-menu-item>
+              <sl-menu-item value="option-3">Option 3</sl-menu-item>
+              <sl-divider></sl-divider>
+              <sl-menu-item value="option-4">Option 4</sl-menu-item>
+              <sl-menu-item value="option-5">Option 5</sl-menu-item>
+              <sl-menu-item value="option-6">Option 6</sl-menu-item>
+            </sl-select>
+          </div>
         </div>
       </div>
-    </div>
-  `
+    `
+  }
 }

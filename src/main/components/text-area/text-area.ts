@@ -1,6 +1,17 @@
-import { elem, method, prop, override, Attrs } from 'js-element'
-import { classMap, html, createRef, repeat, lit, Ref } from 'js-element/lit'
-import {} from 'js-element/hooks'
+import {
+  afterUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  state,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea'
@@ -20,10 +31,9 @@ export { TextArea }
 @elem({
   tag: 'c-text-area',
   styles: [controlStyles, textAreaStyles],
-  uses: [SlTextarea],
-  impl: lit(textAreaImpl)
+  uses: [SlTextarea]
 })
-class TextArea extends HTMLElement {
+class TextArea extends Component {
   @prop({ attr: Attrs.string })
   value = ''
 
@@ -42,26 +52,23 @@ class TextArea extends HTMLElement {
   @prop({ attr: Attrs.string })
   error = ''
 
-  @method
-  reset!: () => void
-}
+  reset() {}
 
-function textAreaImpl(self: TextArea) {
-  // const getFormCtrl = useFormCtrl()
-
-  return () => html`
-    <div class="base ${classMap({ required: self.required })}">
-      <div class="field-wrapper">
-        <div class="label">${self.label}</div>
-        <div class="control">
-          <sl-textarea
-            class="input"
-            size="small"
-            rows=${self.rows}
-          ></sl-textarea>
-          <div class="error">${self.error}</div>
+  render() {
+    return html`
+      <div class="base ${classMap({ required: this.required })}">
+        <div class="field-wrapper">
+          <div class="label">${this.label}</div>
+          <div class="control">
+            <sl-textarea
+              class="input"
+              size="small"
+              rows=${this.rows}
+            ></sl-textarea>
+            <div class="error">${this.error}</div>
+          </div>
         </div>
       </div>
-    </div>
-  `
+    `
+  }
 }

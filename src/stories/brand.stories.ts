@@ -1,7 +1,4 @@
 import { h } from '../main/utils/dom'
-//import { elem } from 'js-element'
-//import { html, lit } from 'js-element/lit'
-//import { Brand, ThemeProvider } from 'js-cockpit'
 import { sharedTheme } from './shared/shared-theme'
 
 import { LitElement, html } from 'lit'

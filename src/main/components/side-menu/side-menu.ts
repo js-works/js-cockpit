@@ -1,5 +1,15 @@
-import { elem, prop, override, Attrs } from 'js-element'
-import { html, classMap, lit, repeat, TemplateResult } from 'js-element/lit'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
@@ -47,21 +57,18 @@ namespace SideMenu {
 @elem({
   tag: 'c-side-menu',
   styles: sideMenuStyles,
-  impl: lit(sideMenuImpl),
   uses: [SlDetails, SlMenu, SlMenuItem]
 })
-class SideMenu extends HTMLElement {
+class SideMenu extends Component {
   @prop
   menu: SideMenu.Menu = null
 
   @prop
   activeItemId: string | null = null
-}
 
-function sideMenuImpl(self: SideMenu) {
-  const openGroups = new Set<string>()
+  openGroups = new Set<string>()
 
-  function render() {
+  render() {
     return html`
       <div class="base">
         <div class="menu-header">
@@ -74,18 +81,18 @@ function sideMenuImpl(self: SideMenu) {
             ></sl-icon>
           </sl-button>
         </div>
-        ${renderMenu(self.menu)}
+        ${this._renderMenu(this.menu)}
       </div>
     `
   }
 
-  function renderMenu(menu: SideMenu.Menu) {
-    return !menu ? null : renderGroups(menu!)
+  private _renderMenu(menu: SideMenu.Menu) {
+    return !menu ? null : this._renderGroups(menu!)
   }
 
-  function renderGroups(groups: SideMenu.Groups) {
+  private _renderGroups(groups: SideMenu.Groups) {
     let content: any
-    const collapseMode = self.menu!.collapseMode
+    const collapseMode = this.menu!.collapseMode
     const uncollapsible = collapseMode !== 'full' && collapseMode !== 'auto'
 
     if (uncollapsible) {
@@ -95,21 +102,21 @@ function sideMenuImpl(self: SideMenu) {
         (group) => {
           return html`
             <div class="group-header">${group.title}</div>
-            ${renderItems(group.items)}
+            ${this._renderItems(group.items)}
           `
         }
       )
     } else {
       let activeGroupIdx = -1
 
-      if (self.activeItemId) {
+      if (this.activeItemId) {
         for (
           let i = 0;
           i < groups.groups.length && activeGroupIdx === -1;
           ++i
         ) {
           for (let j = 0; j < groups.groups[i].items.length; ++j) {
-            if (groups.groups[i].items[j].itemId === self.activeItemId) {
+            if (groups.groups[i].items[j].itemId === this.activeItemId) {
               activeGroupIdx = i
               break
             }
@@ -123,7 +130,7 @@ function sideMenuImpl(self: SideMenu) {
         (group, idx) => {
           return html`
             <sl-details summary=${group.title} ?open=${idx === activeGroupIdx}>
-              ${renderItems(group.items)}
+              ${this._renderItems(group.items)}
             </sl-details>
           `
         }
@@ -137,7 +144,7 @@ function sideMenuImpl(self: SideMenu) {
     `
   }
 
-  function renderItems(items: SideMenu.Item[]) {
+  private _renderItems(items: SideMenu.Item[]) {
     return html`
       <div class="items">
         ${repeat(
@@ -146,7 +153,7 @@ function sideMenuImpl(self: SideMenu) {
           (item) => {
             return html`<div
               class="item ${classMap({
-                active: item.itemId === self.activeItemId
+                active: item.itemId === this.activeItemId
               })}"
             >
               <span class="mark"></span>
@@ -157,6 +164,4 @@ function sideMenuImpl(self: SideMenu) {
       </div>
     `
   }
-
-  return render
 }

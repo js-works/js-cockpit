@@ -1,8 +1,19 @@
-import { elem, prop, Attrs } from 'js-element'
-import { classMap, createRef, html, lit, ref } from 'js-element/lit'
-import { useOnInit, useState } from 'js-element/hooks'
+import {
+  afterInit,
+  afterUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  state,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
 import { addToDict, defineTerms, TermsOf } from 'js-localize'
-import { useI18n } from '../../utils/hooks'
 import { hasSlot } from '../../utils/slots'
 
 // custom elements
@@ -112,7 +123,6 @@ addToDict(translations)
 @elem({
   tag: 'c-login-form',
   styles: [loginFormStyles, topAlignedLabelsStyles],
-  impl: lit(loginFormImpl),
   uses: [
     FocusTrap,
     MessageBar,
@@ -125,7 +135,7 @@ addToDict(translations)
     TextField
   ]
 })
-class LoginForm extends HTMLElement {
+class LoginForm extends Component {
   @prop({ attr: Attrs.string })
   initialView?: View
 
@@ -141,41 +151,52 @@ class LoginForm extends HTMLElement {
   @prop({ attr: Attrs.boolean })
   fullSize = false
 
-  @prop()
+  @prop
   processSubmit?: (
     data: LoginForm.SubmitData
   ) => Promise<string | undefined | null>
-}
 
-function loginFormImpl(self: LoginForm) {
-  const [state, setState] = useState({
-    view: 'login' as View,
-    showInvalidFormError: false,
-    successMessage: '',
-    errorMessage: '',
-    messageFading: 'none' as 'none' | 'fadeOut',
-    isLoading: false
-  })
+  @state
+  private _view: View = 'login'
 
-  const submitButtonRef = createRef<SlButton>()
-  const animationRef = createRef<SlAnimation>()
-  const formRef = createRef<HTMLFormElement>()
-  const { i18n, t } = useI18n('jsCockpit.loginForm')
+  @state
+  private _showInvalidFormError = false
 
-  const onForgotPasswordClick = () => {
-    changeView('forgotPassword')
+  @state
+  private _successMessage = ''
+
+  @state
+  private _errorMessage = ''
+
+  @state
+  private _messageFading = 'none' as 'none' | 'fadeOut'
+
+  @state
+  private _isLoading = false
+
+  private _submitButtonRef = createRef<SlButton>()
+  private _animationRef = createRef<SlAnimation>()
+  private _formRef = createRef<HTMLFormElement>()
+  private _i18n = createLocalizer(this, 'jsCockpit.loginForm')
+
+  @bind
+  private _onForgotPasswordClick() {
+    this._changeView('forgotPassword')
   }
 
-  const onGoToLoginClick = () => {
-    changeView('login')
+  @bind
+  private _onGoToLoginClick() {
+    this._changeView('login')
   }
 
-  const onGoToRegistrationClick = () => {
-    changeView('registration')
+  @bind
+  private _onGoToRegistrationClick() {
+    this._changeView('registration')
   }
 
-  const onSubmit = (ev?: any) => {
-    const form = formRef.value!
+  @bind
+  private _onSubmit(ev?: any) {
+    const form = this._formRef.value!
 
     // TODO
     if (ev) {
@@ -183,20 +204,21 @@ function loginFormImpl(self: LoginForm) {
     }
 
     if (!form.checkValidity()) {
-      setState('showInvalidFormError', true)
+      this._showInvalidFormError = true
       return
     }
 
-    if (typeof self.processSubmit !== 'function') {
-      setState({ errorMessage: '', successMessage: '' })
+    if (typeof this.processSubmit !== 'function') {
+      this._errorMessage = ''
+      this._successMessage = ''
       return
     }
 
     const formData = new FormData(form)
 
     const data: LoginForm.SubmitData = {
-      view: state.view as any,
-      locale: i18n.getLocale(),
+      view: this._view as any,
+      locale: this._i18n.getLocale(),
       params: {}
     }
 
@@ -204,86 +226,87 @@ function loginFormImpl(self: LoginForm) {
       data.params[key] = value
     })
 
-    if (state.view === 'login') {
-      ;(data as any).remeberLogin = self.enableRememberLogin // TODO!!!!
+    if (this._view === 'login') {
+      ;(data as any).remeberLogin = this.enableRememberLogin // TODO!!!!
     }
 
-    setState({ isLoading: true, successMessage: '', errorMessage: '' })
-    submitButtonRef.value!.focus()
+    this._isLoading = true
+    this._successMessage = ''
+    this._errorMessage = ''
+    this._submitButtonRef.value!.focus()
 
-    self
-      .processSubmit(data)
+    this.processSubmit(data)
       .then((message) => {
-        setState({
-          isLoading: false,
-          successMessage: 'Success',
-          errorMessage: ''
-        })
+        this._isLoading = false
+        ;(this._successMessage = 'Success'), (this._errorMessage = '')
       })
       .catch((error) => {
-        setState({
-          isLoading: false,
-          successMessage: '',
-          errorMessage: String(error) // TODO!!!!
-        })
+        this._isLoading = false
+        this._successMessage = ''
+        this._errorMessage = String(error)
       })
   }
 
-  // TODO
-  const onSubmitClick = (ev: any) => {
+  @bind
+  private _onSubmitClick(ev: any) {
     const form = ev.target.closest('form') // TODO
-    onSubmit()
+    this._onSubmit()
   }
 
-  self.addEventListener('mousedown', (ev) => {
-    if (state.isLoading) {
-      ev.preventDefault()
-    }
-  })
+  constructor() {
+    super()
 
-  useOnInit(() => {
-    let view: View = 'login'
-
-    if (self.enableForgotPassword && self.initialView === 'forgotPassword') {
-      view = 'forgotPassword'
-    } else if (self.enableRegistration && self.initialView === 'registration') {
-      view = 'registration'
-    } else if (
-      self.enableForgotPassword &&
-      self.initialView === 'resetPassword'
-    ) {
-      view = 'resetPassword'
-    }
-
-    setState('view', view)
-
-    self.addEventListener('input', () => {
-      clearMessages(true)
+    this.addEventListener('mousedown', (ev) => {
+      if (this._isLoading) {
+        ev.preventDefault()
+      }
     })
-  })
 
-  function clearMessages(delayed = false) {
+    afterInit(this, () => {
+      let view: View = 'login'
+
+      if (this.enableForgotPassword && this.initialView === 'forgotPassword') {
+        view = 'forgotPassword'
+      } else if (
+        this.enableRegistration &&
+        this.initialView === 'registration'
+      ) {
+        view = 'registration'
+      } else if (
+        this.enableForgotPassword &&
+        this.initialView === 'resetPassword'
+      ) {
+        view = 'resetPassword'
+      }
+
+      this._view = view
+
+      this.addEventListener('input', () => {
+        this._clearMessages(true)
+      })
+    })
+  }
+
+  private _clearMessages(delayed = false) {
     if (
-      state.showInvalidFormError ||
-      state.successMessage ||
-      state.errorMessage
+      this._showInvalidFormError ||
+      this._successMessage ||
+      this._errorMessage
     ) {
       if (!delayed) {
-        setState({
-          showInvalidFormError: false,
-          successMessage: '',
-          errorMessage: '',
-          messageFading: 'none'
-        })
+        ;(this._showInvalidFormError = false),
+          (this._successMessage = ''),
+          (this._errorMessage = ''),
+          (this._messageFading = 'none')
       } else {
-        setState({ messageFading: 'fadeOut' })
-        setTimeout(clearMessages, 500)
+        this._messageFading = 'fadeOut'
+        setTimeout(() => this._clearMessages(), 500)
       }
     }
   }
 
-  function changeView(view: View) {
-    const animation = animationRef.value!
+  private _changeView(view: View) {
+    const animation = this._animationRef.value!
     animation.duration = 400
     animation.easing = 'ease'
     animation.iterations = 1
@@ -294,21 +317,24 @@ function loginFormImpl(self: LoginForm) {
       animation.style.visibility = 'hidden'
     }, animation.duration - 50)
 
-    animation.addEventListener('sl-finish', function listener() {
-      setState({ view, isLoading: false })
-      clearMessages()
+    const finishListener = () => {
+      this._view = view
+      this._isLoading = false
+      this._clearMessages()
       setTimeout(() => (animation.style.visibility = 'visible'), 50)
-      animation.removeEventListener('sl-finish', listener)
+      animation.removeEventListener('sl-finish', finishListener)
       animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight'
       animation.play = true
-    })
+    }
+
+    animation.addEventListener('sl-finish', finishListener)
   }
 
-  function render() {
+  render() {
     return html`
-      <div class="base ${classMap({ 'full-size': self.fullSize })}">
-        ${!state.isLoading ? null : html`<div class="overlay"></div>`}
-        <sl-animation ${ref(animationRef)}>
+      <div class="base ${classMap({ 'full-size': this.fullSize })}">
+        ${!this._isLoading ? null : html`<div class="overlay"></div>`}
+        <sl-animation ${ref(this._animationRef)}>
           <div class="container">
             <div class="header">
               <slot name="header"></slot>
@@ -316,64 +342,70 @@ function loginFormImpl(self: LoginForm) {
             <div class="center">
               <div class="main">
                 <div class="column1">
-                  <div class="column1-top">${renderIntro()}</div>
-                  <div class="column1-bottom">${renderIntroIcon()}</div>
+                  <div class="column1-top">${this._renderIntro()}</div>
+                  <div class="column1-bottom">${this._renderIntroIcon()}</div>
                 </div>
-                <form class="column2" @submit=${onSubmit} ${ref(formRef)}>
-                  <div class="column2-top">${renderFields()}</div>
+                <form
+                  class="column2"
+                  @submit=${this._onSubmit}
+                  ${ref(this._formRef)}
+                >
+                  <div class="column2-top">${this._renderFields()}</div>
                   <div class="column2-bottom">
-                    ${state.view !== 'login' || !self.enableRememberLogin
+                    ${this._view !== 'login' || !this.enableRememberLogin
                       ? null
-                      : html`<sl-checkbox>${t('rememberLogin')}</sl-checkbox>`}
-                    ${!state.showInvalidFormError
+                      : html`<sl-checkbox
+                          >${this._i18n.tr('rememberLogin')}</sl-checkbox
+                        >`}
+                    ${!this._showInvalidFormError
                       ? null
                       : html`<c-message-bar
                           variant="danger"
                           class=${classMap({
                             message: true,
-                            'fade-out': state.messageFading === 'fadeOut'
+                            'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
-                          ${i18n.translate(
+                          ${this._i18n.translate(
                             'jsCockpit.validation',
                             'formInvalid'
                           )}
                         </c-message-bar>`}
-                    ${!state.successMessage
+                    ${!this._successMessage
                       ? null
                       : html`<c-message-bar
                           variant="success"
                           class=${classMap({
                             message: true,
-                            'fade-out': state.messageFading === 'fadeOut'
+                            'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
-                          ${state.successMessage}
+                          ${this._successMessage}
                         </c-message-bar>`}
-                    ${!state.errorMessage
+                    ${!this._errorMessage
                       ? null
                       : html`<c-message-bar
                           variant="danger"
                           class=${classMap({
                             message: true,
-                            'fade-out': state.messageFading === 'fadeOut'
+                            'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
-                          ${state.errorMessage}
+                          ${this._errorMessage}
                         </c-message-bar>`}
-                    <focus-trap .inactive=${!state.isLoading}>
+                    <focus-trap .inactive=${!this._isLoading}>
                       <sl-button
                         variant="primary"
                         size="large"
                         class="submit-button"
-                        @click=${onSubmitClick}
-                        ${ref(submitButtonRef)}
+                        @click=${this._onSubmitClick}
+                        ${ref(this._submitButtonRef)}
                       >
                         <div class="submit-button-content">
                           <span class="submit-button-text">
-                            ${renderSubmitButtonText()}
+                            ${this._renderSubmitButtonText()}
                           </span>
-                          ${!state.isLoading
+                          ${!this._isLoading
                             ? null
                             : html`<sl-spinner
                                 class="submit-button-spinner"
@@ -381,7 +413,7 @@ function loginFormImpl(self: LoginForm) {
                         </div>
                       </sl-button>
                     </focus-trap>
-                    ${renderLinks()}
+                    ${this._renderLinks()}
                   </div>
                 </form>
               </div>
@@ -395,14 +427,15 @@ function loginFormImpl(self: LoginForm) {
     `
   }
 
-  function renderIntro() {
-    switch (state.view) {
+  private _renderIntro() {
+    console.log(2222, this._view)
+    switch (this._view) {
       case 'login':
         return html`
           <slot name="login-intro">
             <div class="default-intro">
-              <h3>${t('loginIntroHeadline')}</h3>
-              <p>${t('loginIntroText')}</p>
+              <h3>${this._i18n.tr('loginIntroHeadline')}</h3>
+              <p>${this._i18n.tr('loginIntroText')}</p>
             </div>
           </slot>
         `
@@ -411,8 +444,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="registration-intro">
             <div class="default-intro">
-              <h3>${t('registrationIntroHeadline')}</h3>
-              <p>${t('registrationIntroText')}</p>
+              <h3>${this._i18n.tr('registrationIntroHeadline')}</h3>
+              <p>${this._i18n.tr('registrationIntroText')}</p>
             </div>
           </slot>
         `
@@ -421,8 +454,8 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="forgot-password-intro">
             <div class="default-intro">
-              <h3>${t('forgotPasswordIntroHeadline')}</h3>
-              <p>${t('forgotPasswordIntroText')}</p>
+              <h3>${this._i18n.tr('forgotPasswordIntroHeadline')}</h3>
+              <p>${this._i18n.tr('forgotPasswordIntroText')}</p>
             </div>
           </slot>
         `
@@ -430,69 +463,69 @@ function loginFormImpl(self: LoginForm) {
         return html`
           <slot name="reset-password-intro">
             <div class="default-intro">
-              <h3>${t('resetPasswordIntroHeadline')}</h3>
-              <p>${t('resetPasswordIntroText')}</p>
+              <h3>${this._i18n.tr('resetPasswordIntroHeadline')}</h3>
+              <p>${this._i18n.tr('resetPasswordIntroText')}</p>
             </div>
           </slot>
         `
     }
   }
 
-  function renderIntroIcon() {
+  private _renderIntroIcon() {
     const icon =
-      state.view === 'registration'
+      this._view === 'registration'
         ? registrationIntroIcon
-        : state.view === 'forgotPassword'
+        : this._view === 'forgotPassword'
         ? forgotPasswordIntroIcon
-        : state.view === 'resetPassword'
+        : this._view === 'resetPassword'
         ? resetPasswordIntroIcon
         : loginIntroIcon
 
     return html`<sl-icon alt="" src=${icon} class="intro-icon" />`
   }
 
-  function renderFields() {
-    switch (state.view) {
+  private _renderFields() {
+    switch (this._view) {
       case 'login':
         return html` <slot name="login-fields" class="fields-slot"> </slot>
-          ${hasSlot(self, 'login-fields')
+          ${hasSlot(this, 'login-fields')
             ? null
             : html`
                 <c-text-field
                   name="username"
-                  label=${t('username')}
+                  label=${this._i18n.tr('username')}
                   required
                 ></c-text-field>
                 <c-password-field
                   name="password"
-                  label=${t('password')}
+                  label=${this._i18n.tr('password')}
                   required
                 ></c-password-field>
               `}`
 
       case 'registration':
         return html`<slot name="registration-fields" class="fields-slot"></slot>
-          ${hasSlot(self, 'registration-fields')
+          ${hasSlot(this, 'registration-fields')
             ? null
             : html`
                 <c-text-field
                   name="username-reg"
-                  label=${t('username')}
+                  label=${this._i18n.tr('username')}
                   required
                 ></c-text-field>
                 <c-text-field
                   name="firstName-reg"
-                  label=${t('firstName')}
+                  label=${this._i18n.tr('firstName')}
                   required
                 ></c-text-field>
                 <c-text-field
                   name="lastName-reg"
-                  label=${t('lastName')}
+                  label=${this._i18n.tr('lastName')}
                   required
                 ></c-text-field>
                 <c-email-field
                   name="email-reg"
-                  label=${t('email')}
+                  label=${this._i18n.tr('email')}
                   required
                 ></c-email-field>
               `}`
@@ -502,18 +535,18 @@ function loginFormImpl(self: LoginForm) {
             name="forgot-password-fields"
             class="fields-slot"
           ></slot>
-          ${hasSlot(self, 'forgot-password-fields')
+          ${hasSlot(this, 'forgot-password-fields')
             ? null
             : html`
                 <c-text-field
                   name="username-fp"
-                  label=${t('username')}
+                  label=${this._i18n.tr('username')}
                   required
                 ></c-text-field>
 
                 <c-email-field
                   name="email-fp"
-                  label=${t('email')}
+                  label=${this._i18n.tr('email')}
                   required
                 ></c-email-field>
               `}`
@@ -523,119 +556,118 @@ function loginFormImpl(self: LoginForm) {
             name="reset-password-fields"
             class="fields-slot"
           ></slot>
-          ${hasSlot(self, 'forgot-password-fields')
+          ${hasSlot(this, 'forgot-password-fields')
             ? null
             : html`
                 <c-text-field
                   name="username-rp"
-                  label=${t('username')}
+                  label=${this._i18n.tr('username')}
                   required
                 ></c-text-field>
                 <c-password-field
                   name="newPasswordRepeat-rp"
-                  label=${t('newPasswordRepeat')}
+                  label=${this._i18n.tr('newPasswordRepeat')}
                   required
                 ></c-password-field>
                 <c-text-field
                   name="securityCode-rp"
-                  label=${t('securityCode')}
+                  label=${this._i18n.tr('securityCode')}
                   required
                 ></c-text-field>
               `}`
     }
   }
 
-  function renderLinks() {
-    switch (state.view) {
+  private _renderLinks() {
+    switch (this._view) {
       case 'login':
         return html`
           <div class="links">
-            ${renderForgotPasswordLink()} ${renderGoToRegistrationLink()}
+            ${this._renderForgotPasswordLink()}
+            ${this._renderGoToRegistrationLink()}
           </div>
         `
 
       case 'registration':
-        return html` <div class="links">${renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
 
       case 'forgotPassword':
-        return html` <div class="links">${renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
 
       case 'resetPassword':
-        return html` <div class="links">${renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
     }
   }
 
-  function renderForgotPasswordLink() {
-    return self.enableForgotPassword
+  private _renderForgotPasswordLink() {
+    return this.enableForgotPassword
       ? html`
           <sl-button
             variant="text"
             class="forgot-password-link"
-            @click=${onForgotPasswordClick}
+            @click=${this._onForgotPasswordClick}
           >
-            ${t('forgotPassword')}
+            ${this._i18n.tr('forgotPassword')}
           </sl-button>
         `
       : ''
   }
 
-  function renderGoToLoginLink() {
+  private _renderGoToLoginLink() {
     return html`
       <sl-button
         variant="text"
         class="go-to-login-link"
-        @click=${onGoToLoginClick}
+        @click=${this._onGoToLoginClick}
       >
-        ${t('goToLogin')}
+        ${this._i18n.tr('goToLogin')}
       </sl-button>
     `
   }
 
-  function renderGoToRegistrationLink() {
-    return self.enableRegistration
+  private _renderGoToRegistrationLink() {
+    return this.enableRegistration
       ? html`
           <sl-button
             variant="text"
             class="go-to-registration-link"
-            @click=${onGoToRegistrationClick}
+            @click=${this._onGoToRegistrationClick}
           >
-            ${t('goToRegistration')}
+            ${this._i18n.tr('goToRegistration')}
           </sl-button>
         `
       : ''
   }
 
-  function renderSubmitButtonText() {
-    if (!state.isLoading) {
-      switch (state.view) {
+  private _renderSubmitButtonText() {
+    if (!this._isLoading) {
+      switch (this._view) {
         case 'login':
-          return t('loginSubmitText')
+          return this._i18n.tr('loginSubmitText')
 
         case 'registration':
-          return t('registrationSubmitText')
+          return this._i18n.tr('registrationSubmitText')
 
         case 'forgotPassword':
-          return t('forgotPasswordSubmitText')
+          return this._i18n.tr('forgotPasswordSubmitText')
 
         case 'resetPassword':
-          return t('resetPasswordSubmitText')
+          return this._i18n.tr('resetPasswordSubmitText')
       }
     } else {
-      switch (state.view) {
+      switch (this._view) {
         case 'login':
-          return t('processingLoginSubmit')
+          return this._i18n.tr('processingLoginSubmit')
 
         case 'forgotPassword':
-          return t('processingForgotPasswordSubmit')
+          return this._i18n.tr('processingForgotPasswordSubmit')
 
         case 'resetPassword':
-          return t('processingResetPasswordSubmit')
+          return this._i18n.tr('processingResetPasswordSubmit')
 
         case 'registration':
-          return t('processingRegistrationSubmit')
+          return this._i18n.tr('processingRegistrationSubmit')
       }
     }
   }
-
-  return render
 }

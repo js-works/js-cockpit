@@ -1,5 +1,18 @@
-import { elem, prop } from 'js-element'
-import { html, lit } from 'js-element/lit'
+import {
+  afterUpdate,
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  state,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
+
 import { Theme } from '../../misc/theming'
 
 // styles
@@ -13,23 +26,20 @@ export { ThemeProvider }
 
 @elem({
   tag: 'c-theme-provider',
-  impl: lit(themeProviderImpl),
   styles: [themeProviderStyles]
 })
-class ThemeProvider extends HTMLElement {
+class ThemeProvider extends Component {
   @prop()
   theme?: Theme
-}
 
-function themeProviderImpl(self: ThemeProvider) {
-  return () => {
+  render() {
     let theme: Theme | null = null
 
     if (
-      self.theme ||
-      !window.getComputedStyle(self).getPropertyValue('--sl-color-primary-500')
+      this.theme ||
+      !window.getComputedStyle(this).getPropertyValue('--sl-color-primary-500')
     ) {
-      theme = self.theme instanceof Theme ? self.theme : Theme.default
+      theme = this.theme instanceof Theme ? this.theme : Theme.default
     }
 
     return html`

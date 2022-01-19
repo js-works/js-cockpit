@@ -1,6 +1,16 @@
-import { elem, method, prop, override, Attrs } from 'js-element'
-import { classMap, html, createRef, lit, ref } from 'js-element/lit'
-import { useFormField, useI18n } from '../../utils/hooks'
+import {
+  bind,
+  createEmitter,
+  elem,
+  prop,
+  Attrs,
+  Component,
+  Listener
+} from '../../utils/components'
+
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { createLocalizer } from '../../utils/i18n'
+import { FormFieldController } from '../../utils/controllers'
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
@@ -19,12 +29,10 @@ export { PasswordField }
 
 @elem({
   tag: 'c-password-field',
-  formAssoc: true,
   styles: [controlStyles, passwordFieldStyles],
-  uses: [SlInput],
-  impl: lit(passwordFieldImpl)
+  uses: [SlInput]
 })
-class PasswordField extends HTMLElement {
+class PasswordField extends Component {
   @prop({ attr: Attrs.string })
   name = ''
 
@@ -40,70 +48,80 @@ class PasswordField extends HTMLElement {
   @prop({ attr: Attrs.boolean })
   required = false
 
-  @method
-  reset!: () => void
-}
+  private _i18n = createLocalizer(this)
 
-function passwordFieldImpl(self: PasswordField) {
-  const slInputRef = createRef<SlInput>()
-  const { i18n } = useI18n()
+  private _formField: FormFieldController<string> = new FormFieldController(
+    this,
+    {
+      getValue: () => this.value,
 
-  const formField = useFormField({
-    getValue: () => self.value,
-
-    validate() {
-      if (self.required && !self.value) {
-        return {
-          message: i18n.translate('jsCockpit.validation', 'fieldRequired'),
-          anchor: slInputRef.value!
+      validate: () => {
+        if (this.required && !this.value) {
+          return {
+            message: this._i18n.translate(
+              'jsCockpit.validation',
+              'fieldRequired'
+            ),
+            anchor: this._slInputRef.value!
+          }
         }
+
+        return null
       }
-
-      return null
     }
-  }) // TODO!!!
+  )
 
-  const onInput = () => {
-    self.value = slInputRef.value!.value
-    formField.signalInput()
+  @bind
+  private _onInput() {
+    this.value = this._slInputRef.value!.value
+    this._formField.signalInput()
   }
 
-  const onChange = () => {
-    formField.signalUpdate()
+  @bind
+  private _onChange() {
+    this._formField.signalUpdate()
   }
 
-  const onFocus = () => {
-    formField.signalFocus()
+  @bind
+  private _onFocus() {
+    this._formField.signalFocus()
   }
 
-  const onBlur = () => {
-    formField.signalBlur()
+  @bind
+  private _onBlur() {
+    this._formField.signalBlur()
   }
 
-  return () => html`
-    <div
-      class="base ${classMap({
-        required: self.required,
-        'has-error': formField.hasError()
-      })}"
-    >
-      <div class="field-wrapper">
-        <div class="label">${self.label}</div>
-        <div class="control">
-          <sl-input
-            type="password"
-            name=${self.name}
-            toggle-password
-            class="input"
-            @sl-input=${onInput}
-            @sl-change=${onChange}
-            @focus=${onFocus}
-            @blur=${onBlur}
-            ${ref(slInputRef)}
-          ></sl-input>
-          <div class="error">${formField.getErrorMsg()}</div>
+  private _slInputRef = createRef<SlInput>()
+
+  reset() {}
+
+  render() {
+    return html`
+      <div
+        class="base ${classMap({
+          required: this.required,
+          'has-error': this._formField.hasError()
+        })}"
+      >
+        <div class="field-wrapper">
+          <div class="label">${this.label}</div>
+          <div class="control">
+            <sl-input
+              type="password"
+              name=${this.name}
+              toggle-password
+              class="input"
+              @sl-input=${this._onInput}
+              @sl-change=${this._onChange}
+              @focus=${this._onFocus}
+              @blur=${this._onBlur}
+              ${ref(this._slInputRef)}
+            ></sl-input>
+            <div class="error">${this._formField.getErrorMsg()}</div>
+          </div>
         </div>
       </div>
-    </div>
-  `
+    `
+  }
 }
