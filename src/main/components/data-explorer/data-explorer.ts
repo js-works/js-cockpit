@@ -136,7 +136,7 @@ class DataExplorer extends Component {
   private _totalItemCount = -1
   private _sortField: string | number | null = null
   private _sortDir: 'asc' | 'desc' = 'asc'
-  private _items: Record<string, any>[] = []
+  private _data: Record<string, any>[] = []
   private _numSelectedRows = 0
   private _showOverlay = false
   private _timeoutId: any = null
@@ -184,7 +184,7 @@ class DataExplorer extends Component {
       this._totalItemCount = result.totalItemCount
       this._sortField = par.sortField
       this._sortDir = par.sortDir
-      this._items = result.items
+      this._data = result.items
 
       Object.assign(this._paginationBarRef.value!, {
         pageIndex: this._pageIndex,
@@ -194,7 +194,7 @@ class DataExplorer extends Component {
 
       this._dataTableRef.value!.sortField = this._sortField
       this._dataTableRef.value!.sortDir = this._sortDir
-      this._dataTableRef.value!.items = this._items
+      this._dataTableRef.value!.data = this._data
 
       if (this._timeoutId) {
         clearTimeout(this._timeoutId)
@@ -290,7 +290,7 @@ class DataExplorer extends Component {
           class="table"
           .columns=${this.columns}
           .selectionMode=${this.selectionMode}
-          .data=${this._items}
+          .data=${this._data}
           .bordered=${false}
           .sortField=${this.initialSortField}
           .sortDir=${this.initialSortDir}

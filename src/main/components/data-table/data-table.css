@@ -1,5 +1,6 @@
 .base {
   position: relative;
+  height: 100%;
   font-family: var(--sl-font-sans);
   user-select: none;
   overflow: hidden;
@@ -7,24 +8,21 @@
   font-size: var(--sl-font-size-medium);
 }
 
-base.bordered {
+.base.bordered {
   border: 1px solid var(--sl-color-neutral-300);
+  border-collapse: collapse;
+}
+
+.scroll-pane-container {
+  position: relative;
+  height: 462px;
 }
 
 .scroll-pane {
   position: absolute;
-  xposition: relative;
   height: 100%;
   width: 100%;
-  xheight: inherit;
-  xheight: inherit;
   overflow: auto;
-}
-
-.yyy {
-  position: relative;
-  height: 482px;
-  xoverflow: hidden;
 }
 
 table {

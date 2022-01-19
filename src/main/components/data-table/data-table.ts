@@ -85,7 +85,7 @@ class DataTable extends Component {
   bordered = true
 
   @prop
-  items: any[][] | object[] | null = null
+  data: any[][] | object[] | null = null
 
   @prop
   onSortChange?: Listener<SortChangeEvent>
@@ -100,6 +100,7 @@ class DataTable extends Component {
   private _scrollPaneRef = createRef<HTMLElement>()
   private _rowsSelectorRef = createRef<SlCheckbox>()
   private _selectedRows = new Set<number>()
+
   private _emitSortChange = createEmitter(
     this,
     'c-sort-change',
@@ -136,7 +137,7 @@ class DataTable extends Component {
   }
 
   private _toggleRowsSelection() {
-    const numRows = this.items!.length
+    const numRows = this.data!.length
 
     if (numRows > this._selectedRows.size) {
       for (let i = 0; i < numRows; ++i) {
@@ -168,19 +169,19 @@ class DataTable extends Component {
   }
 
   private _refreshSelection() {
-    if (!this.items) {
+    if (!this.data) {
       return
     }
 
     const rowsSelector = this._rowsSelectorRef.value!
     const tbody = this._tbodyRef.value!
     const checkboxes = tbody.querySelectorAll('tr > td:first-child sl-checkbox')
-    const numRows = this.items!.length
+    const numRows = this.data!.length
     const numSelectedRows = this._selectedRows.size
 
     rowsSelector.checked = numSelectedRows === numRows
 
-    for (let i = 0; i < this.items!.length; ++i) {
+    for (let i = 0; i < this.data!.length; ++i) {
       const selected = this._selectedRows.has(i)
 
       if (selected) {
@@ -219,9 +220,14 @@ class DataTable extends Component {
   }
 
   render() {
+    const tbody = this._renderTableBody()
+
     return html`
       <div class="base">
-        <div class="container" ${ref(this._containerRef)}>
+        <div
+          class="container ${classMap({ bordered: this.bordered })}"
+          ${ref(this._containerRef)}
+        >
           ${this._renderTableHeader()} ${this._renderTableBody()}
         </div>
       </div>
@@ -312,10 +318,9 @@ class DataTable extends Component {
     const { columns } = getTableHeadInfo(this.columns || [])
     const rows: TemplateResult[] = []
 
-    if (this.items) {
-      this.items.forEach((rec, idx) => {
+    if (this.data) {
+      this.data.forEach((rec, idx) => {
         const selected = this._selectedRows.has(idx)
-
         const rowSelector =
           this.selectionMode === 'single' || this.selectionMode === 'multi'
             ? html`
@@ -349,7 +354,7 @@ class DataTable extends Component {
     }
 
     return html`
-      <div>
+      <div class="scroll-pane-container">
         <div class="scroll-pane" ${ref(this._scrollPaneRef)}>
           <table class="body-table">
             <tbody ${ref(this._tbodyRef)}>
