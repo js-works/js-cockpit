@@ -80,7 +80,7 @@ class Theme {
   #themeTokens: ThemeTokens
   #css: string | null = null
 
-  static #default: Theme | null = null
+  static #default: Theme | undefined
 
   static get default() {
     if (!this.#default) {

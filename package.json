@@ -49,6 +49,7 @@
     "remixicon": "^2.5.0",
     "svg-url-loader": "^7.1.1",
     "terser": "^5.10.0",
+    "ts-loader": "8.3.0",
     "typescript": "^4.5.4",
     "vanillajs-datepicker": "github:mymth/vanillajs-datepicker"
   },

@@ -217,18 +217,12 @@ class PaginationBar extends Component {
     this._emitPageChange({ pageIndex: index })
   }
 
-  willUpdate() {
-    console.log(1111, this.totalItemCount)
-  }
-
   render() {
-    console.log('totalItemCount:', this.totalItemCount)
     this._auxData = this._getAuxData(
       this.pageIndex,
       this.pageSize,
       this.totalItemCount
     )
-    console.log('totalItemCount:', this.totalItemCount)
 
     return html`
       <div class="base">
@@ -349,8 +343,6 @@ class PaginationBar extends Component {
     pageSize: number | undefined,
     totalItemCount: number | undefined
   ): AuxData {
-    console.log('getAuxData - input:', pageIndex, pageSize, totalItemCount)
-    totalItemCount = 1234
     const isValid =
       pageIndex !== undefined &&
       !isNaN(pageIndex) &&
