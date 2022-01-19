@@ -10,6 +10,7 @@ import {
   TextField
 } from 'js-cockpit'
 
+// @ts-ignore
 import faker from 'faker'
 
 export default {

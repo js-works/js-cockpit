@@ -1,5 +1,3 @@
-import 'element-internals-polyfill'
-
 // components
 export { ActionBar } from './components/action-bar/action-bar'
 export { AppLayout } from './components/app-layout/app-layout'

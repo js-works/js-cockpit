@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["faker"]
+  "reject": ["faker", "@types/faker"]
 }

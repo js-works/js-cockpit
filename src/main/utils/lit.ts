@@ -1,5 +1,5 @@
-export { html, LitElement, TemplateResult } from 'lit'
-export type { ReactiveController } from 'lit'
+export { html, LitElement } from 'lit'
+export type { ReactiveController, TemplateResult } from 'lit'
 export { createRef, ref } from 'lit/directives/ref.js'
 export { classMap } from 'lit/directives/class-map.js'
 export { styleMap } from 'lit/directives/style-map.js'

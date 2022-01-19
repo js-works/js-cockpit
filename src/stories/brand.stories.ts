@@ -1,37 +1,17 @@
+import { Brand, Theme, ThemeProvider } from 'js-cockpit'
+//import { elem, Component } from '../main/utils/components'
+//import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
 import { sharedTheme } from './shared/shared-theme'
 
-import { LitElement, html } from 'lit'
-import { customElement, property } from 'lit/decorators'
-
-@customElement('my-text')
-class MyText extends LitElement {
-  @property({ type: String, reflect: true })
-  text = ''
-
-  render() {
-    return html`<div>${this.text}</div>`
-  }
-}
-
-void MyText
-
-if (false) {
-  setTimeout(() => {
-    setInterval(() => {
-      document.querySelector<MyText>('my-text')!.text =
-        new Date().toLocaleTimeString()
-      document.querySelector<MyText>('my-text')!.requestUpdate()
-      //self.shadowRoot!.querySelector<Brand>('c-brand')!.size = 'huge'
-      //self.shadowRoot!.querySelector<Brand>('c-brand')!.requestUpdate()
-    }, 1000)
-  }, 3000)
-}
+import { html, LitElement, unsafeCSS } from 'lit'
+import { property } from 'lit/decorators/property.js'
+import { customElement } from 'lit/decorators/custom-element.js'
 
 export default {
   title: 'brand'
 }
-/*
+
 const brandDemoStyles = `
   .brand-demo {
     display: flex;
@@ -39,19 +19,52 @@ const brandDemoStyles = `
   }
 `
 
-@elem({
-  tag: 'brand-demo',
-  uses: [Brand, ThemeProvider],
-  styles: [brandDemoStyles],
-  impl: lit(brandDemoImpl)
-})
-class BrandDemo extends HTMLElement {}
+@customElement('my-demo')
+class MyDemo extends LitElement {
+  @property()
+  text = 'waiting...'
 
-function brandDemoImpl(self: BrandDemo) {
-  return () =>
-    html`
-      <my-text text="start"></my-text>
+  constructor() {
+    super()
+
+    setTimeout(() => {
+      this.text = 'done'
+      //this.requestUpdate()
+    }, 3000)
+  }
+
+  render() {
+    return html`<div>${this.text}</div>`
+  }
+}
+
+void (Brand || ThemeProvider)
+
+@customElement('brand-demo')
+//  tag: 'brand-demo',
+//  uses: [Brand, ThemeProvider],
+//  styles: [brandDemoStyles]
+//})
+class BrandDemo extends LitElement {
+  static styles = unsafeCSS(brandDemoStyles)
+
+  constructor() {
+    super()
+
+    /*
+    setTimeout(() => {
+      const brandElem = this.shadowRoot!.querySelector<Brand>('c-brand')!
+      brandElem.size = 'huge'
+      brandElem?.requestUpdate()
+    }, 1000)
+    */
+  }
+
+  render() {
+    return html`
       <c-theme-provider .theme=${sharedTheme}>
+        <my-demo></my-demo>
+        <hr />
         <div class="brand-demo">
           <div>
             <c-brand
@@ -117,13 +130,7 @@ function brandDemoImpl(self: BrandDemo) {
         </div>
       </c-theme-provider>
     `
+  }
 }
-*/
-export const brand = () => h('my-text')
 
-/*
-document.documentElement.lang = 'de'
-Dialogs.error('Please enter your telephone number').then((result) =>
-  alert(result)
-)
-*/
+export const brand = () => h('my-demo')
