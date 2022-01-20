@@ -4,6 +4,8 @@ import { elem, Component } from '../../main/utils/components'
 import { html } from '../../main/utils/lit'
 
 import {
+  showInfoDialog,
+  loadTheme,
   Brand,
   Cockpit,
   DataForm,
@@ -21,6 +23,8 @@ import {
 export default {
   title: 'cockpit'
 }
+
+loadTheme(sharedTheme)
 
 // ===============================================================================
 
@@ -116,33 +120,32 @@ export class SharedCockpit extends Component {
         <c-cockpit>
           <c-brand
             slot="header-start"
-            class="orangered"
             headline="my-company"
             text="Back Office"
             multi-color
           ></c-brand>
           <c-nav-menu
             slot="header"
-            class="orange"
             .items=${[
               {
-                id: 1,
-                title: 'Dashboard'
+                actionId: '1',
+                text: 'Dashboard'
               },
               {
-                id: 2,
-                title: 'User management'
+                actionId: '2',
+                text: 'User management'
               },
               {
-                id: 3,
-                title: 'Catalog'
+                actionId: '3',
+                text: 'Catalog'
               },
               {
-                id: 4,
-                title: 'CMS'
+                actionId: '4',
+                text: 'CMS'
               }
             ]}
-            .activeItem=${2}
+            .activeId=${'2'}
+            @c-action=${notSupportedHandler}
           ></c-nav-menu>
           <c-user-menu slot="header-end"></c-user-menu>
           <div slot="sidebar" class="lightgreen full-height">
@@ -153,6 +156,12 @@ export class SharedCockpit extends Component {
       </c-theme-provider>
     `
   }
+}
+
+function notSupportedHandler() {
+  showInfoDialog({
+    message: 'Feature not implemented. This just a simple demo.'
+  })
 }
 
 export const cockpit2 = () => h('cockpit-demo2')

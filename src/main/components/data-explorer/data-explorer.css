@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 0 6px;
+  padding: 2px 8px;
   margin: 2px;
   color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-0);

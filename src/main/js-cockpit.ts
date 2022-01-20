@@ -28,6 +28,7 @@ export { TextField } from './components/text-field/text-field'
 export { UserMenu } from './components/user-menu/user-menu'
 
 // events
+export { ActionEvent } from './events/action-event'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 

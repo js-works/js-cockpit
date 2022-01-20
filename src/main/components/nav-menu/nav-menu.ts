@@ -1,14 +1,15 @@
 import {
   bind,
+  createEmitter,
   elem,
   prop,
-  afterInit,
-  afterUpdate,
   Attrs,
-  Component
+  Component,
+  Listener
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { ActionEvent } from '../../events/action-event'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -27,8 +28,8 @@ export { NavMenu }
 
 namespace NavMenu {
   export type Item = {
-    id: number | string
-    title: string
+    actionId: string
+    text: string
     disabled?: boolean
   }
 }
@@ -44,8 +45,26 @@ class NavMenu extends Component {
   @prop
   items?: NavMenu.Item[]
 
+  @prop({ attr: Attrs.string })
+  activeId?: number | string
+
   @prop
-  activeItem?: number | string
+  onAction?: Listener<ActionEvent>
+
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
+
+  @bind
+  private _onItemClick(ev: MouseEvent) {
+    const item = ev.currentTarget
+
+    const actionId = !(item instanceof HTMLElement)
+      ? null
+      : item.getAttribute('data-action')
+
+    if (actionId !== null && actionId !== '') {
+      this._emitAction({ actionId })
+    }
+  }
 
   render() {
     return html`
@@ -55,15 +74,19 @@ class NavMenu extends Component {
           this.items || [],
           (_, idx) => idx,
           (item) => {
-            return html`
-              <div
-                class="item ${classMap({
-                  active: item.id === this.activeItem
-                })}"
-              >
-                <div class="title">${item.title}</div>
-              </div>
-            `
+            return item.disabled
+              ? null
+              : html`
+                  <div
+                    class="item ${classMap({
+                      active: item.actionId === this.activeId
+                    })}"
+                    data-action=${item.actionId}
+                    @click=${this._onItemClick}
+                  >
+                    <div class="text">${item.text}</div>
+                  </div>
+                `
           }
         )}
       </div>

@@ -317,8 +317,8 @@ function showDialog<T = void>(
 ): Promise<T> {
   const target =
     parent ||
-    document.querySelector('#root') ||
     document.querySelector('#app') ||
+    document.querySelector('#root') ||
     document.body
 
   const locale = detectLocale(target)
