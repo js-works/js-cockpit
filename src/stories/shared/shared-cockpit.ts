@@ -49,66 +49,65 @@ export class SharedCockpit extends Component {
   render() {
     const menu: SideMenu.Menu = {
       kind: 'groups',
-      collapseMode: 'none',
       groups: [
         {
           kind: 'group',
           groupId: 'products',
-          title: 'Products',
+          text: 'Products',
           items: [
             {
               kind: 'item',
               itemId: 'manage-products',
-              title: 'Manage products'
+              text: 'Manage products'
             },
             {
               kind: 'item',
               itemId: 'price-calculation',
-              title: 'Price calculation'
+              text: 'Price calculation'
             },
             {
               kind: 'item',
               itemId: 'import-products',
-              title: 'Import products'
+              text: 'Import products'
             }
           ]
         },
         {
           kind: 'group',
           groupId: 'services',
-          title: 'Services',
+          text: 'Services',
           items: [
             {
               kind: 'item',
               itemId: 'assign-services-to-products',
-              title: 'Assign services to products'
+              text: 'Assign services to products'
             },
             {
               kind: 'item',
               itemId: 'export-services',
-              title: 'Export services'
+              text: 'Export services'
             }
           ]
         },
         {
           kind: 'group',
           groupId: 'administration',
-          title: 'Administration',
+          text: 'Administration',
           items: [
             {
               kind: 'item',
               itemId: 'user-management',
-              title: 'User management'
+              text: 'User management'
             },
             {
               kind: 'item',
               itemId: 'configuration',
-              title: 'Configuration'
+              text: 'Configuration'
             },
             {
               kind: 'item',
               itemId: 'cronjobs',
-              title: 'Cronjobs'
+              text: 'Cronjobs'
             }
           ]
         }
@@ -128,32 +127,37 @@ export class SharedCockpit extends Component {
             slot="header"
             .items=${[
               {
-                action: '1',
+                itemId: '1',
                 text: 'Dashboard'
               },
               {
-                action: '2',
+                itemId: '2',
                 text: 'User management'
               },
               {
-                action: '3',
+                itemId: '3',
                 text: 'Catalog'
               },
               {
-                action: '4',
+                itemId: '4',
                 text: 'CMS'
               }
             ]}
-            .activeItem=${'2'}
-            @c-action=${notSupportedHandler}
+            active-item="2"
+            @c-action=${notImplementedHandler}
           ></c-nav-menu>
           <c-user-menu
             slot="header-end"
             user-name="Jane Doe"
-            @c-logout=${notSupportedHandler}
+            @c-logout=${notImplementedHandler}
           ></c-user-menu>
           <div slot="sidebar" class="lightgreen full-height">
-            <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>
+            <c-side-menu
+              header-text="User management"
+              .menu=${menu}
+              active-item="price-calculation"
+              @c-action=${notImplementedHandler}
+            ></c-side-menu>
           </div>
           <div slot="main" class="yellow full-height"><slot></slot></div>
         </c-cockpit>
@@ -162,10 +166,10 @@ export class SharedCockpit extends Component {
   }
 }
 
-function notSupportedHandler() {
+function notImplementedHandler() {
   showInfoDialog({
     title: 'Not implemented',
-    message: 'This feature is not implmented as this is just a simple demo.',
+    message: 'This feature is not implemented as this is just a simple demo.',
     okText: 'Okay, I understand'
   })
 }

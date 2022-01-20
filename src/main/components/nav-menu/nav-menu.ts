@@ -28,8 +28,9 @@ export { NavMenu }
 
 namespace NavMenu {
   export type Item = {
-    action: string
+    itemId: string
     text: string
+    action?: string
     disabled?: boolean
   }
 }
@@ -74,14 +75,16 @@ class NavMenu extends Component {
           this.items || [],
           (_, idx) => idx,
           (item) => {
+            let action = item.action !== undefined ? item.action : item.itemId
+
             return item.disabled
               ? null
               : html`
                   <div
                     class="item ${classMap({
-                      active: item.action === this.activeItem
+                      active: item.itemId === this.activeItem
                     })}"
-                    data-action=${item.action}
+                    data-action=${action}
                     @click=${this._onItemClick}
                   >
                     <div class="text">${item.text}</div>

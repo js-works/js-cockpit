@@ -1,3 +1,5 @@
+import { addToDict, defineTerms, TermsOf } from 'js-localize'
+
 import {
   bind,
   createEmitter,
@@ -10,6 +12,7 @@ import {
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
 import { createLocalizer } from '../../utils/i18n'
+import { ActionEvent } from '../../events/action-event'
 
 // custom elements
 import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
@@ -20,7 +23,7 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 import sideMenuStyles from './side-menu.css'
 
 // icons
-import menuHeaderIcon from './assets/menu-header-icon.svg'
+import headerIcon from './assets/menu-header-icon.svg'
 
 // === exports =======================================================
 
@@ -34,22 +37,42 @@ namespace SideMenu {
   export type Groups = {
     kind: 'groups'
     groups: Group[]
-    collapseMode?: 'none' | 'full' | 'auto'
   }
 
   export type Group = {
     kind: 'group'
     groupId: string
-    title: string
+    text: string
     items: Item[]
   }
 
   export type Item = {
     kind: 'item'
     itemId: string
-    title: string
+    text: string
+    action?: string
   }
 }
+
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface TranslationsMap {
+      'jsCockpit.sideMenu': TermsOf<typeof translations>
+    }
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.sideMenu': {
+      headerText: 'Menu'
+    }
+  }
+})
+
+addToDict(translations)
 
 // === SideMenu ======================================================
 
@@ -59,21 +82,46 @@ namespace SideMenu {
   uses: [SlDetails, SlMenu, SlMenuItem]
 })
 class SideMenu extends Component {
+  @prop({ attr: Attrs.string })
+  headerText?: string
+
   @prop
   menu: SideMenu.Menu = null
 
-  @prop
-  activeItemId: string | null = null
+  @prop({ attr: Attrs.string })
+  collapseMode?: 'none' | 'auto'
 
-  openGroups = new Set<string>()
+  @prop({ attr: Attrs.string })
+  activeItem: string | null = null
+
+  @prop
+  onAction?: Listener<ActionEvent>
+
+  private _i18n = createLocalizer(this, 'jsCockpit.sideMenu')
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
+
+  @bind
+  private _onItemClick(ev: MouseEvent) {
+    const item = ev.currentTarget
+
+    const action = !(item instanceof HTMLElement)
+      ? null
+      : item.getAttribute('data-action')
+
+    if (action !== null && action !== '') {
+      this._emitAction({ action })
+    }
+  }
 
   render() {
+    const headerText = this.headerText ?? this._i18n.tr('headerText')
+
     return html`
       <div class="base">
         <div class="menu-header">
           <div class="menu-caption">
-            <sl-icon class="menu-header-icon" src=${menuHeaderIcon}></sl-icon>
-            <div class="menu-header-text">Menu</div>
+            <sl-icon class="menu-header-icon" src=${headerIcon}></sl-icon>
+            <div class="menu-header-text">${headerText}</div>
           </div>
         </div>
         ${this._renderMenu(this.menu)}
@@ -87,31 +135,19 @@ class SideMenu extends Component {
 
   private _renderGroups(groups: SideMenu.Groups) {
     let content: any
-    const collapseMode = this.menu!.collapseMode
-    const uncollapsible = collapseMode !== 'full' && collapseMode !== 'auto'
+    const collapsible = this.collapseMode === 'auto'
 
-    if (uncollapsible) {
-      content = repeat(
-        groups.groups,
-        (_, idx) => idx,
-        (group) => {
-          return html`
-            <div class="group-header">${group.title}</div>
-            ${this._renderItems(group.items)}
-          `
-        }
-      )
-    } else {
+    if (collapsible) {
       let activeGroupIdx = -1
 
-      if (this.activeItemId) {
+      if (this.activeItem) {
         for (
           let i = 0;
           i < groups.groups.length && activeGroupIdx === -1;
           ++i
         ) {
           for (let j = 0; j < groups.groups[i].items.length; ++j) {
-            if (groups.groups[i].items[j].itemId === this.activeItemId) {
+            if (groups.groups[i].items[j].itemId === this.activeItem) {
               activeGroupIdx = i
               break
             }
@@ -124,16 +160,27 @@ class SideMenu extends Component {
         (_, idx) => idx,
         (group, idx) => {
           return html`
-            <sl-details summary=${group.title} ?open=${idx === activeGroupIdx}>
+            <sl-details summary=${group.text} ?open=${idx === activeGroupIdx}>
               ${this._renderItems(group.items)}
             </sl-details>
+          `
+        }
+      )
+    } else {
+      content = repeat(
+        groups.groups,
+        (_, idx) => idx,
+        (group) => {
+          return html`
+            <div class="group-header">${group.text}</div>
+            ${this._renderItems(group.items)}
           `
         }
       )
     }
 
     return html`
-      <div class=${classMap({ collapsible: !uncollapsible, uncollapsible })}>
+      <div class=${classMap({ collapsible, uncollapsible: !collapsible })}>
         ${content}
       </div>
     `
@@ -146,13 +193,16 @@ class SideMenu extends Component {
           items,
           (_, idx) => idx,
           (item) => {
+            let action = item.action !== undefined ? item.action : item.itemId
+            console.log(2222, item, this.activeItem)
             return html`<div
               class="item ${classMap({
-                active: item.itemId === this.activeItemId
+                active: item.itemId === this.activeItem
               })}"
+              data-action=${action}
+              @click=${this._onItemClick}
             >
-              <span class="mark"></span>
-              <span>${item.title}</span>
+              <span>${item.text}</span>
             </div>`
           }
         )}

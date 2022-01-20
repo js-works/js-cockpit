@@ -75,7 +75,11 @@
 }
 
 .uncollapsible .item:not(.active):hover {
-  background-color: var(--sl-color-primary-200);
+  background-color: var(--sl-color-neutral-200);
+}
+
+.uncollapsible .item:not(.active):active {
+  background-color: var(--sl-color-neutral-300);
 }
 
 /* === collapsible ================================================ */
