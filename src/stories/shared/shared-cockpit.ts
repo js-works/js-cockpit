@@ -170,7 +170,7 @@ export class SharedCockpit extends Component {
 function notImplementedHandler() {
   showInfoDialog({
     title: 'Not implemented',
-    message: 'This feature is not implemented as this is just a simple demo.',
+    message: 'This  is not implemented as this is just a simple demo.',
     okText: 'Okay, I understand'
   })
 }

@@ -179,6 +179,7 @@ class DataExplorer extends Component {
       sortField: par.sortField,
       sortDir: par.sortDir
     }).then((result) => {
+      this._dataTableRef.value!.clearSelection()
       this._pageIndex = par.pageIndex
       this._pageSize = par.pageSize
       this._totalItemCount = result.totalItemCount

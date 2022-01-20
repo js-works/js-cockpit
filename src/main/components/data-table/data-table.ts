@@ -93,6 +93,14 @@ class DataTable extends Component {
   @prop
   onSelectionChange?: Listener<SelectionChangeEvent>
 
+  clearSelection() {
+    if (this._selectedRows.size > 0) {
+      this._selectedRows.clear()
+      this._refreshSelection()
+      this._dispatchSelectionChange()
+    }
+  }
+
   private _columnSizesStyles = document.createElement('style')
   private _containerRef = createRef<HTMLElement>()
   private _theadRef = createRef<HTMLElement>()

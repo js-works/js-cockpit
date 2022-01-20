@@ -3,8 +3,8 @@
   background-color: var(--sl-color-neutral-50);
   border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 1px 0 0;
-  min-width: 14rem;
-  max-width: 14rem;
+  min-width: 15rem;
+  max-width: 15rem;
   min-height: 100%;
   max-height: 100%;
   overflow: auto;
