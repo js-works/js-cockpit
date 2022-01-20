@@ -151,12 +151,13 @@ export class SharedCockpit extends Component {
             user-name="Jane Doe"
             @c-logout=${notImplementedHandler}
           ></c-user-menu>
-          <div slot="sidebar" class="lightgreen full-height">
+          <div slot="sidebar" class="full-height">
             <c-side-menu
               header-text="User management"
               .menu=${menu}
-              active-item="price-calculation"
+              active-item="export-services"
               @c-action=${notImplementedHandler}
+              collapse-mode="manual"
             ></c-side-menu>
           </div>
           <div slot="main" class="yellow full-height"><slot></slot></div>

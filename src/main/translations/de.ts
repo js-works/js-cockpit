@@ -89,6 +89,10 @@ const translations: FullTranslations<'jsCockpit'> = {
       pageSize: 'Datensätze/Seite'
     },
 
+    'jsCockpit.sideMenu': {
+      headerText: 'Menü'
+    },
+
     'jsCockpit.validation': {
       fieldRequired: 'Erforderliches Feld',
       formInvalid: 'Das Formular wurde nicht korrekt ausgefüllt'

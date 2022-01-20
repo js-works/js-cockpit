@@ -10,7 +10,7 @@
 }
 
 .icon {
-  margin: 16px 1px 0 0;
+  margin: 14px 1px 0 0;
   font-smooth: never;
 
   color: var(--sl-light, var(--sl-color-primary-600))

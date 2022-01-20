@@ -10,7 +10,7 @@ import {
   Listener
 } from '../../utils/components'
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, html, repeat } from '../../utils/lit'
 import { createLocalizer } from '../../utils/i18n'
 import { ActionEvent } from '../../events/action-event'
 
@@ -85,11 +85,14 @@ class SideMenu extends Component {
   @prop({ attr: Attrs.string })
   headerText?: string
 
+  @prop({ attr: Attrs.boolean })
+  hideHeader?: boolean
+
   @prop
   menu: SideMenu.Menu = null
 
   @prop({ attr: Attrs.string })
-  collapseMode?: 'none' | 'auto'
+  collapseMode?: 'none' | 'manual'
 
   @prop({ attr: Attrs.string })
   activeItem: string | null = null
@@ -114,17 +117,26 @@ class SideMenu extends Component {
   }
 
   render() {
+    return html`
+      <div class="base">
+        ${this._renderHeader()} ${this._renderMenu(this.menu)}
+      </div>
+    `
+  }
+
+  private _renderHeader() {
+    if (this.hideHeader) {
+      return null
+    }
+
     const headerText = this.headerText ?? this._i18n.tr('headerText')
 
     return html`
-      <div class="base">
-        <div class="menu-header">
-          <div class="menu-caption">
-            <sl-icon class="menu-header-icon" src=${headerIcon}></sl-icon>
-            <div class="menu-header-text">${headerText}</div>
-          </div>
+      <div class="menu-header">
+        <div class="menu-caption">
+          <sl-icon class="menu-header-icon" src=${headerIcon}></sl-icon>
+          <div class="menu-header-text">${headerText}</div>
         </div>
-        ${this._renderMenu(this.menu)}
       </div>
     `
   }
@@ -135,7 +147,7 @@ class SideMenu extends Component {
 
   private _renderGroups(groups: SideMenu.Groups) {
     let content: any
-    const collapsible = this.collapseMode === 'auto'
+    const collapsible = this.collapseMode === 'manual'
 
     if (collapsible) {
       let activeGroupIdx = -1

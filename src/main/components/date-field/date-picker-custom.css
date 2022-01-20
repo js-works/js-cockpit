@@ -51,7 +51,7 @@
 
 .datepicker-cell.today:not(.selected),
 .datepicker-cell.today.focused:not(.selected) {
-  background-color: var(--sl-color-success-100);
+  background-color: var(--sl-color-neutral-200);
 }
 
 .datepicker-cell.selected,
@@ -67,7 +67,7 @@
 
 .datepicker-controls .button:hover,
 .datepicker-controls .button:focus {
-  background-color: var(--sl-color-primary-100);
+  background-color: var(--sl-color-neutral-200);
 }
 
 .datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
