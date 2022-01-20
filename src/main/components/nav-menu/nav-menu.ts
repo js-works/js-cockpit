@@ -28,7 +28,7 @@ export { NavMenu }
 
 namespace NavMenu {
   export type Item = {
-    actionId: string
+    action: string
     text: string
     disabled?: boolean
   }
@@ -46,7 +46,7 @@ class NavMenu extends Component {
   items?: NavMenu.Item[]
 
   @prop({ attr: Attrs.string })
-  activeId?: number | string
+  activeItem?: string
 
   @prop
   onAction?: Listener<ActionEvent>
@@ -57,12 +57,12 @@ class NavMenu extends Component {
   private _onItemClick(ev: MouseEvent) {
     const item = ev.currentTarget
 
-    const actionId = !(item instanceof HTMLElement)
+    const action = !(item instanceof HTMLElement)
       ? null
       : item.getAttribute('data-action')
 
-    if (actionId !== null && actionId !== '') {
-      this._emitAction({ actionId })
+    if (action !== null && action !== '') {
+      this._emitAction({ action })
     }
   }
 
@@ -79,9 +79,9 @@ class NavMenu extends Component {
               : html`
                   <div
                     class="item ${classMap({
-                      active: item.actionId === this.activeId
+                      active: item.action === this.activeItem
                     })}"
-                    data-action=${item.actionId}
+                    data-action=${item.action}
                     @click=${this._onItemClick}
                   >
                     <div class="text">${item.text}</div>

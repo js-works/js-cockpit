@@ -14,6 +14,9 @@ import confirmationIcon from '../icons/question-circle.svg'
 import approvalIcon from '../icons/question-diamond.svg'
 import inputIcon from '../icons/keyboard.svg'
 
+//styles
+import dialogStyles from './dialogs.css'
+
 // === exports =======================================================
 
 export {
@@ -71,81 +74,6 @@ type DialogConfig<T> = {
 }
 
 // === styles ========================================================
-
-const styles = `
-  .base {
-    position: absolute;
-    width: 0;
-    max-width: 0;
-    height: 0;
-    max-height: 0;
-    left: -10000px;
-    top: -10000px;
-    overflow: hidden;
-  }
-
-  .dialog {
-    font-family: var(--sl-font-sans);
-    font-size: var(--sl-font-size-medium);
-    padding: 0;
-  }
-
-  .dialog::part(title) {
-    padding-bottom: 0.5rem;
-    user-select: none;
-  }
-  
-  .dialog::part(body) {
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
-    user-select: none;
-  }
-  
-  .dialog::part(footer) {
-    user-select: none;
-  }
-
-  .dialog::part(close-button) {
-    display: none;
-  }
-
-  .buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-  }
-
-  sl-button.button::part(base) {
-    font-weight: var(--sl-label-font-weight);
-  }
-
-  .icon {
-    font-size: var(--sl-font-size-x-large);
-  }
-
-  .icon.normal {
-    color: var(--sl-color-primary-500);
-  }
-  
-  .icon.warning {
-    color: var(--sl-color-warning-500);
-  }
-  
-  .icon.danger {
-    color: var(--sl-color-danger-500);
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    font-size: var(--sl-font-size-large);
-  }
-
-  .message {
-    margin-bottom: 0.5rem;
-  }
-`
 
 function createDialogFn<P extends Record<string, any>, R = void>(
   logic: (parent: HTMLElement | null, params: P) => Promise<R>
@@ -404,7 +332,7 @@ function showDialog<T = void>(
   icon.classList.add(`${params.type}`)
   icon.src = params.icon
 
-  setText(styles, 'style')
+  setText(dialogStyles, 'style')
 
   const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!
   const hiddenField = document.createElement('input')

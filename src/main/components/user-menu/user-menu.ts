@@ -79,7 +79,7 @@ class UserMenu extends Component {
       <div part="base" class="base">
         <sl-icon src=${defaultAvatarIcon} class="avatar-icon"></sl-icon>
         ${this.userName || this._i18n.tr('anonymous')}
-        <sl-tooltip content=${this._i18n.tr('logOut')} placement="bottom-end">
+        <sl-tooltip content=${this._i18n.tr('logOut')}>
           <a class="logout-button" @click=${this._onLogoutClick}>
             <sl-icon src=${logoutIcon} class="logout-icon"></sl-icon>
           </a>

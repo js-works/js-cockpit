@@ -71,7 +71,7 @@ table > tbody > tr > td {
 }
 
 table > tbody > tr:nth-child(even) td {
-  background-color: var(--sl-color-neutral-100);
+  background-color: var(--sl-color-neutral-50);
 }
 
 .selector-column {

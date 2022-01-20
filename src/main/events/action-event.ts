@@ -1,5 +1,5 @@
 type ActionDetail = {
-  actionId: string
+  action: string
 }
 
 export interface ActionEvent extends CustomEvent<ActionDetail> {

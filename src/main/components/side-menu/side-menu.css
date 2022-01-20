@@ -25,7 +25,7 @@
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-200);
-  border: 0 solid var(--sl-color-neutral-400);
+  border: 0 dotted var(--sl-color-primary-800);
   border-width: 0 0 1px 0;
   padding: 0.5rem 1rem;
 }
@@ -39,6 +39,7 @@
 
 .menu-header-icon {
   margin-top: 1px;
+  color: var(--sl-color-neutral-900);
 }
 
 /* === uncollapsible ============================================== */
@@ -50,6 +51,13 @@
 .uncollapsible .group-header {
   font-weight: 600;
   padding: 0.5rem 1rem 0.25rem 1rem;
+  margin-top: 7px;
+  border: 0 solid var(--sl-color-neutral-200);
+  border-width: 1px 0 0 0;
+}
+
+.uncollapsible .group-header:first-child {
+  border: none;
 }
 
 .uncollapsible .item {

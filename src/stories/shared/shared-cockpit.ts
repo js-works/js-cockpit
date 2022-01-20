@@ -49,7 +49,7 @@ export class SharedCockpit extends Component {
   render() {
     const menu: SideMenu.Menu = {
       kind: 'groups',
-      collapseMode: 'full',
+      collapseMode: 'none',
       groups: [
         {
           kind: 'group',
@@ -128,23 +128,23 @@ export class SharedCockpit extends Component {
             slot="header"
             .items=${[
               {
-                actionId: '1',
+                action: '1',
                 text: 'Dashboard'
               },
               {
-                actionId: '2',
+                action: '2',
                 text: 'User management'
               },
               {
-                actionId: '3',
+                action: '3',
                 text: 'Catalog'
               },
               {
-                actionId: '4',
+                action: '4',
                 text: 'CMS'
               }
             ]}
-            .activeId=${'2'}
+            .activeItem=${'2'}
             @c-action=${notSupportedHandler}
           ></c-nav-menu>
           <c-user-menu

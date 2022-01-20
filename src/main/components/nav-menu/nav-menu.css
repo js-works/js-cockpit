@@ -45,12 +45,13 @@
 
 .item.active {
   font-weight: 600;
-  border: 0 solid var(--sl-color-primary-500);
+  padding: 0 8px;
+  cursor: default;
 
   background-color: var(--sl-light, var(--sl-color-neutral-600))
     var(--sl-dark, var(--sl-color-neutral-300));
 
-  padding: 0 8px;
-  border-bottom-width: 3px;
-  cursor: default;
+  border: 0 solid var(--sl-color-primary-600);
+  border-width: 0 0 3px 0;
+  margin-bottom: -2px;
 }
