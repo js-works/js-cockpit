@@ -58,15 +58,13 @@ class MessageBar extends Component {
 
     return html`
       <div class="base ${className} ${this.transparent ? 'transparent' : ''}">
-        <div class="inner">
-          ${html`
-            <div class="column1">
-              <sl-icon class="icon" src=${icon}></sl-icon>
-            </div>
-          `}
-          <div class="column2">
-            <slot></slot>
+        ${html`
+          <div class="column1">
+            <sl-icon class="icon" src=${icon}></sl-icon>
           </div>
+        `}
+        <div class="column2">
+          <slot></slot>
         </div>
       </div>
     `

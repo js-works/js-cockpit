@@ -48,11 +48,6 @@
   border-color: var(--sl-color-danger-200);
 }
 
-.inner {
-  display: flex;
-  flex-direction: row;
-}
-
 .column1 {
   display: flex;
   flex-grow: 0;
@@ -77,10 +72,6 @@
   color: inherit;
   padding-left: auto;
   padding-right: auto;
-}
-
-.base.transparent {
-  justify-content: center;
 }
 
 .base.transparent .column1 {
