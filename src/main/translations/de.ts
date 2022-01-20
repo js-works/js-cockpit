@@ -2,11 +2,6 @@ import { addToDict, FullTranslations } from 'js-localize'
 
 const translations: FullTranslations<'jsCockpit'> = {
   de: {
-    'jsCockpit.validation': {
-      fieldRequired: 'Erforderliches Feld',
-      formInvalid: 'Das Formular wurde nicht korrekt ausgefüllt'
-    },
-
     'jsCockpit.dialogs': {
       ok: 'OK',
       cancel: 'Abbrechen',
@@ -92,6 +87,16 @@ const translations: FullTranslations<'jsCockpit'> = {
 
       page: 'Seite',
       pageSize: 'Datensätze/Seite'
+    },
+
+    'jsCockpit.validation': {
+      fieldRequired: 'Erforderliches Feld',
+      formInvalid: 'Das Formular wurde nicht korrekt ausgefüllt'
+    },
+
+    'jsCockpit.userMenu': {
+      anonymous: 'Anonymous',
+      logOut: 'Abmelden'
     }
   }
 }

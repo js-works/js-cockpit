@@ -147,7 +147,11 @@ export class SharedCockpit extends Component {
             .activeId=${'2'}
             @c-action=${notSupportedHandler}
           ></c-nav-menu>
-          <c-user-menu slot="header-end"></c-user-menu>
+          <c-user-menu
+            slot="header-end"
+            user-name="Jane Doe"
+            @c-logout=${notSupportedHandler}
+          ></c-user-menu>
           <div slot="sidebar" class="lightgreen full-height">
             <c-side-menu .menu=${menu} .activeItemId=${'3'}></c-side-menu>
           </div>
@@ -160,7 +164,9 @@ export class SharedCockpit extends Component {
 
 function notSupportedHandler() {
   showInfoDialog({
-    message: 'Feature not implemented. This just a simple demo.'
+    title: 'Not implemented',
+    message: 'This feature is not implmented as this is just a simple demo.',
+    okText: 'Okay, I understand'
   })
 }
 

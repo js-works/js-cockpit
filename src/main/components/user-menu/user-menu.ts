@@ -1,24 +1,28 @@
+import { addToDict, defineTerms, TermsOf } from 'js-localize'
+
 import {
-  afterUpdate,
   bind,
   createEmitter,
   elem,
   prop,
-  state,
   Attrs,
   Component,
   Listener
 } from '../../utils/components'
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { html } from '../../utils/lit'
 import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip'
+
+// events
+import { LogoutEvent } from '../../events/logout-event'
 
 // icons
-import defautlAvatarSvg from './assets/default-avatar.svg'
-import logoutSvg from './assets/logout.svg'
+import defaultAvatarIcon from './assets/default-avatar.svg'
+import logoutIcon from './assets/logout.svg'
 
 // styles
 import userMenuStyles from './user-menu.css'
@@ -27,25 +31,59 @@ import userMenuStyles from './user-menu.css'
 
 export { UserMenu }
 
-// === UserMenu ===================================================
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface TranslationsMap {
+      'jsCockpit.userMenu': TermsOf<typeof translations>
+    }
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.userMenu': {
+      anonymous: 'Anonymous',
+      logOut: 'Log out'
+    }
+  }
+})
+
+addToDict(translations)
+
+// === UserMenu ======================================================
 
 @elem({
   tag: 'c-user-menu',
   styles: userMenuStyles,
-  uses: [SlIcon]
+  uses: [SlIcon, SlTooltip]
 })
 class UserMenu extends Component {
   @prop({ attr: Attrs.string })
-  displayName: string = ''
+  userName: string = ''
+
+  @prop
+  onLogout?: Listener<LogoutEvent>
+
+  private _i18n = createLocalizer(this, 'jsCockpit.userMenu')
+  private _emitLogout = createEmitter(this, 'c-logout', () => this.onLogout)
+
+  @bind
+  private _onLogoutClick() {
+    this._emitLogout()
+  }
 
   render() {
     return html`
       <div part="base" class="base">
-        <sl-icon src=${defautlAvatarSvg} class="avatar-icon"></sl-icon>
-        Jane Doe
-        <a class="logout-button">
-          <sl-icon src=${logoutSvg} class="logout-icon"></sl-icon>
-        </a>
+        <sl-icon src=${defaultAvatarIcon} class="avatar-icon"></sl-icon>
+        ${this.userName || this._i18n.tr('anonymous')}
+        <sl-tooltip content=${this._i18n.tr('logOut')} placement="bottom-end">
+          <a class="logout-button" @click=${this._onLogoutClick}>
+            <sl-icon src=${logoutIcon} class="logout-icon"></sl-icon>
+          </a>
+        </sl-tooltip>
       </div>
     `
   }
