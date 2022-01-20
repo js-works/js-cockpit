@@ -342,7 +342,14 @@ class LoginForm extends Component {
             <div class="center">
               <div class="main">
                 <div class="column1">
-                  <div class="column1-top">${this._renderIntro()}</div>
+                  <div class="column1-top">
+                    <div>${this._renderIntro()}</div>
+                    ${this._view !== 'login'
+                      ? null
+                      : html`<div class="login-intro-appendix">
+                          <slot name="login-intro-appendix"></slot>
+                        </div>`}
+                  </div>
                   <div class="column1-bottom">${this._renderIntroIcon()}</div>
                 </div>
                 <form

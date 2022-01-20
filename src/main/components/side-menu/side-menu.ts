@@ -206,7 +206,7 @@ class SideMenu extends Component {
           (_, idx) => idx,
           (item) => {
             let action = item.action !== undefined ? item.action : item.itemId
-            console.log(2222, item, this.activeItem)
+
             return html`<div
               class="item ${classMap({
                 active: item.itemId === this.activeItem

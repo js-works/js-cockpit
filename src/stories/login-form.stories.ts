@@ -56,6 +56,19 @@ class LoginFormDemo extends Component {
             text="Back Office"
             size="large"
           ></c-brand>
+          <div slot="login-intro-appendix">
+            <style></style>
+            <div>
+              <br />
+              <c-message-bar variant="warning" transparent>
+                <div style="font-weight: 600; padding: 0 0 4px 0;">
+                  Test account
+                </div>
+                Username: jane<br />
+                Password: doe
+              </c-message-bar>
+            </div>
+          </div>
           <!--
           <div slot="login-fields">
             <c-text-field

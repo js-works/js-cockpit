@@ -1,12 +1,4 @@
-import {
-  bind,
-  elem,
-  prop,
-  afterInit,
-  afterUpdate,
-  Attrs,
-  Component
-} from '../../utils/components'
+import { bind, elem, prop, Attrs, Component } from '../../utils/components'
 
 import { html } from '../../utils/lit'
 
@@ -49,8 +41,14 @@ class MessageBar extends Component {
   @prop({ attr: Attrs.string })
   variant: 'info' | 'success' | 'warning' | 'danger' = 'info'
 
+  @prop({ attr: Attrs.boolean })
+  transparent?: boolean
+
+  @prop({ attr: Attrs.boolean })
+  inheritColor?: boolean
+
   render() {
-    const appearance = appearanceByVariant.get(this.variant)
+    let appearance = appearanceByVariant.get(this.variant)
 
     if (!appearance) {
       return null
@@ -59,12 +57,16 @@ class MessageBar extends Component {
     const { icon, className } = appearance
 
     return html`
-      <div class="base ${className}">
-        <div class="column1">
-          <sl-icon class="icon" src=${icon}></sl-icon>
-        </div>
-        <div class="column2">
-          <slot></slot>
+      <div class="base ${className} ${this.transparent ? 'transparent' : ''}">
+        <div class="inner">
+          ${html`
+            <div class="column1">
+              <sl-icon class="icon" src=${icon}></sl-icon>
+            </div>
+          `}
+          <div class="column2">
+            <slot></slot>
+          </div>
         </div>
       </div>
     `

@@ -219,6 +219,10 @@ sl-button.go-to-registration-link::part(label) {
   --track-width: 2px;
 }
 
+.login-intro-appendix {
+  margin-bottom: 0.75rem;
+}
+
 .overlay {
   position: absolute;
   background-color: transparent;

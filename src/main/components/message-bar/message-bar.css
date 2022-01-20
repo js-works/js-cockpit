@@ -5,6 +5,7 @@
   border-style: solid;
   font-size: var(--sl-font-size-medium);
   border-radius: var(--sl-border-radius-medium);
+  text-align: left;
 }
 
 .base.variant-info {
@@ -47,6 +48,11 @@
   border-color: var(--sl-color-danger-200);
 }
 
+.inner {
+  display: flex;
+  flex-direction: row;
+}
+
 .column1 {
   display: flex;
   flex-grow: 0;
@@ -57,12 +63,27 @@
 }
 
 .column2 {
-  display: flex;
-  align-items: center;
   flex-grow: 1;
   padding: 0.4rem 0.75rem;
 }
 
 .icon {
-  font-size: 125%;
+  font-size: 150%;
+}
+
+.base.transparent {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  padding-left: auto;
+  padding-right: auto;
+}
+
+.base.transparent {
+  justify-content: center;
+}
+
+.base.transparent .column1 {
+  border: 0 dotted;
+  border-width: 0 1px 0 0;
 }
