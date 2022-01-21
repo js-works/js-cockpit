@@ -33,7 +33,7 @@ table {
   background-color: var(--sl-color-neutral-0);
 }
 
-table > thead > tr > th {
+table.head-table > thead > tr > th {
   align-items: center;
   border: 1px solid var(--sl-color-neutral-300);
   padding: 2px 10px;
@@ -43,32 +43,32 @@ table > thead > tr > th {
   box-sizing: border-box;
 }
 
-table > thead th.sortable:hover {
+table.head-table > thead th.sortable:hover {
   cursor: pointer;
 }
 
-table > thead th.sortable:hover {
+table.head-table > thead th.sortable:hover {
   color: var(--sl-color-primary-950);
   background-color: var(--sl-color-neutral-100);
 }
 
-table > thead th.sortable:active {
+table.head-table > thead th.sortable:active {
   background-color: var(--sl-color-primary-200);
 }
 
-table > thead > tr > th .content {
+table.head-table > thead > tr > th .content {
   padding: 3px 2px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-table > thead th .icon {
+table.head-table > thead > tr > th .icon {
   width: 18px;
   height: 18px;
 }
 
-table > tbody > tr > td {
+table.body-table > tbody > tr > td {
   padding: 0;
   text-align: left;
   vertical-align: middle;
@@ -77,16 +77,15 @@ table > tbody > tr > td {
   box-sizing: border-box;
 }
 
-table > tbody > tr > td .content {
+table.body-table > tbody > tr > td .content {
   padding: 2px 3px;
 }
 
-table > tbody > tr:nth-child(even) td {
+table.body-table > tbody > tr:nth-child(even) > td {
   background-color: var(--sl-color-neutral-50);
 }
 
 .selector-column {
-  position: relative;
   text-align: center;
   vertical-align: middle;
   width: 40px;
@@ -94,17 +93,17 @@ table > tbody > tr:nth-child(even) td {
   max-width: 40px;
 }
 
-.selector-column > sl-checkbox {
-  transform: translate(-4px, -2px);
+th.selector-column > sl-checkbox {
+  transform: translate(1px, 0);
 }
 
-th.selector-column > sl-checkbox {
-  transform: translate(0, -2px);
+td.selector-column > sl-checkbox {
+  transform: translate(11px, 0);
 }
 
 thead > tr > th,
 tbody > tr > td {
-  padding: 0 15px;
+  xpadding: 0 15px;
   box-sizing: border-box;
 }
 
