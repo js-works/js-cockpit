@@ -119,7 +119,10 @@ class SideMenu extends Component {
   render() {
     return html`
       <div class="base">
-        ${this._renderHeader()} ${this._renderMenu(this.menu)}
+        ${this._renderHeader()}
+        <div class="scrollpane-container">
+          <div class="scrollpane">${this._renderMenu(this.menu)}</div>
+        </div>
       </div>
     `
   }

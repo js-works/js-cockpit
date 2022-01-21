@@ -3,6 +3,7 @@ import { html } from '../../utils/lit'
 
 // styles
 import cockpitStyles from './cockpit.css'
+import scrollbarStyles from '../../shared/css/scrollbar.css'
 
 // === exports =======================================================
 
@@ -12,7 +13,7 @@ export { Cockpit }
 
 @elem({
   tag: 'c-cockpit',
-  styles: cockpitStyles,
+  styles: [cockpitStyles, scrollbarStyles],
   uses: []
 })
 class Cockpit extends Component {

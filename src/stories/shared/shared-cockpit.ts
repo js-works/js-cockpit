@@ -96,18 +96,18 @@ export class SharedCockpit extends Component {
           items: [
             {
               kind: 'item',
-              itemId: 'user-management',
-              text: 'User management'
+              itemId: 'database-configuration',
+              text: 'Database configuration'
             },
             {
               kind: 'item',
-              itemId: 'configuration',
-              text: 'Configuration'
+              itemId: 'log-settings',
+              text: 'Log setting'
             },
             {
               kind: 'item',
-              itemId: 'cronjobs',
-              text: 'Cronjobs'
+              itemId: 'export-configurations',
+              text: 'Export all configurations'
             }
           ]
         }
@@ -155,7 +155,7 @@ export class SharedCockpit extends Component {
             <c-side-menu
               header-text="User management"
               .menu=${menu}
-              active-item="export-services"
+              active-item="price-calculation"
               @c-action=${notImplementedHandler}
               collapse-mode="manual"
             ></c-side-menu>
