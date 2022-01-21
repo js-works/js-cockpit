@@ -94,11 +94,11 @@ table.body-table > tbody > tr:nth-child(even) > td {
 }
 
 th.selector-column > sl-checkbox {
-  transform: translate(1px, 0);
+  transform: translate(3px, 0);
 }
 
 td.selector-column > sl-checkbox {
-  transform: translate(11px, 0);
+  transform: translate(15px, 0);
 }
 
 thead > tr > th,
