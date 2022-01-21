@@ -38,7 +38,7 @@ export { DataTable }
 
 // === constants =====================================================
 
-const widthOfRowSelectorColumn = '20px'
+const widthOfRowSelectorColumn = '0'
 
 // === types =========================================================
 
@@ -139,10 +139,15 @@ class DataTable extends Component {
     const colgroup = tbody.parentNode!.querySelector('colgroup')!
     const cols = colgroup.querySelectorAll('col')
     const ths = thead.querySelectorAll('th')
+    let widthSum = 0
 
     for (let i = 0; i < cols.length - 1; ++i) {
-      ths[i].style.width = cols[i].offsetWidth + 'px'
+      const width = cols[i].offsetWidth
+      ths[i].style.width = `${width}px`
+      widthSum += width
     }
+
+    ths[ths.length - 1].style.width = `${thead.offsetWidth - widthSum}px`
   }
 
   private _dispatchSortChange(
@@ -253,11 +258,7 @@ class DataTable extends Component {
     const rowsSelector =
       this.selectionMode === 'single' || this.selectionMode === 'multi'
         ? html`
-            <th
-              class="selector-column"
-              rowspan=${headerCells.length}
-              styles=${`width: ${widthOfRowSelectorColumn}px`}
-            >
+            <th class="selector-column" rowspan=${headerCells.length}>
               <sl-checkbox
                 class="checkbox"
                 @sl-change=${this._toggleRowsSelection}
@@ -373,11 +374,11 @@ class DataTable extends Component {
       const cols: TemplateResult[] = []
 
       if (this.selectionMode === 'single' || this.selectionMode === 'multi') {
-        cols.push(html`<col width=${widthOfRowSelectorColumn}></col>`)
+        cols.push(html`<col />`)
       }
 
       for (const column of columns) {
-        cols.push(html`<col width=${column.width + '*'}></col>`)
+        cols.push(html`<col width=${column.width + '*'} />`)
       }
 
       colgroup = html`

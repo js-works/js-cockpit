@@ -13,12 +13,12 @@
   border-collapse: collapse;
 }
 
-.scroll-pane-container {
+.scrollpane-container {
   position: relative;
   height: 462px;
 }
 
-.scroll-pane {
+.scrollpane {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -77,15 +77,23 @@ table > tbody > tr:nth-child(even) td {
 }
 
 .selector-column {
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  text-align: center;
+  padding: 0;
 }
 
-.selector-column .checkbox {
+.selector-column > sl-checkbox {
+  position: absolute;
+  top: 0;
+  left: 9px;
 }
 
-.row > td {
-  padding: 4px 5px;
+thead > tr > th,
+tbody > tr > td {
+  padding: 0 15px;
   box-sizing: border-box;
 }
 

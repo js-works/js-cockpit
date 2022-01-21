@@ -21,7 +21,6 @@ const columns: DataExplorer.Column[] = [
   {
     type: 'column',
     text: 'First name',
-    width: 200,
     field: 'firstName'
   },
   {
