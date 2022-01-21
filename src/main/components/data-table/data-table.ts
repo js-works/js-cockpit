@@ -357,7 +357,11 @@ class DataTable extends Component {
         const cells: TemplateResult[] = []
 
         columns.forEach((column) => {
-          cells.push(html`<td>${this._renderCellContent(column, rec)}</td>`)
+          cells.push(
+            html`<td>
+              <div class="content">${this._renderCellContent(column, rec)}</div>
+            </td>`
+          )
         })
 
         rows.push(
@@ -377,8 +381,10 @@ class DataTable extends Component {
         cols.push(html`<col />`)
       }
 
+      const sum = columns.reduce((acc, column) => acc + column.width!, 0)
+
       for (const column of columns) {
-        cols.push(html`<col width=${column.width + '*'} />`)
+        cols.push(html`<col width=${(column.width! / sum) * 100 + '%'} />`)
       }
 
       colgroup = html`
