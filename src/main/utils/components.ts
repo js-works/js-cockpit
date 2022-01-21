@@ -13,16 +13,17 @@ import { state as litState } from 'lit/decorators/state.js'
 // === exports =======================================================
 
 export {
+  afterInit,
+  afterConnect,
+  afterDisconnect,
+  afterFirstUpdate,
+  afterUpdate,
+  beforeUpdate,
   bind,
   createEmitter,
   elem,
   prop,
   state,
-  afterInit,
-  afterConnect,
-  afterDisconnect,
-  afterUpdate,
-  beforeUpdate,
   Attrs,
   Listener,
   Component
@@ -275,6 +276,21 @@ function beforeUpdate(component: Component, action: () => Cleanup): void {
       cleanup = null
     }
   })
+}
+
+function afterFirstUpdate(component: Component, action: () => void): void {
+  if (component.hasUpdated) {
+    return
+  }
+
+  const controller = {
+    hostUpdated() {
+      action()
+      component.removeController(controller)
+    }
+  }
+
+  component.addController(controller)
 }
 
 function afterUpdate(component: Component, action: () => Cleanup): void {

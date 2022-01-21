@@ -1,5 +1,7 @@
 import {
   afterConnect,
+  afterDisconnect,
+  afterFirstUpdate,
   afterInit,
   afterUpdate,
   beforeUpdate,
@@ -34,6 +36,10 @@ import downUpArrowsIcon from './assets/down-up-arrows.svg'
 
 export { DataTable }
 
+// === constants =====================================================
+
+const widthOfRowSelectorColumn = '20px'
+
 // === types =========================================================
 
 namespace DataTable {
@@ -59,6 +65,7 @@ type HeaderCell = {
   rowSpan: number
   field: number | string | null
   sortable: boolean
+  width?: number
 }
 
 // === DataTable =====================================================
@@ -97,17 +104,17 @@ class DataTable extends Component {
     if (this._selectedRows.size > 0) {
       this._selectedRows.clear()
       this._refreshSelection()
-      this._dispatchSelectionChange()
+      this._completeSelectionChange()
     }
   }
 
-  private _columnSizesStyles = document.createElement('style')
   private _containerRef = createRef<HTMLElement>()
   private _theadRef = createRef<HTMLElement>()
   private _tbodyRef = createRef<HTMLElement>()
   private _scrollPaneRef = createRef<HTMLElement>()
   private _rowsSelectorRef = createRef<SlCheckbox>()
   private _selectedRows = new Set<number>()
+  private _tableHeadInfo: ReturnType<typeof getTableHeadInfo> | undefined
 
   private _emitSortChange = createEmitter(
     this,
@@ -122,16 +129,20 @@ class DataTable extends Component {
   )
 
   private _updateColumnSizes() {
-    const theadHeight = this._theadRef.value!.offsetHeight
+    if (!this.columns) {
+      return
+    }
 
-    const newStyles = `
-      .xxxxscroll-pane {
-        height: ${this.offsetHeight - theadHeight - 1}px;
-        max-height: ${this.offsetHeight - theadHeight - 1}px;
-      }
-    `
+    const thead = this._theadRef.value!
+    const tbody = this._tbodyRef.value!
 
-    this._columnSizesStyles.innerText = newStyles
+    const colgroup = tbody.parentNode!.querySelector('colgroup')!
+    const cols = colgroup.querySelectorAll('col')
+    const ths = thead.querySelectorAll('th')
+
+    for (let i = 0; i < cols.length - 1; ++i) {
+      ths[i].style.width = cols[i].offsetWidth + 'px'
+    }
   }
 
   private _dispatchSortChange(
@@ -156,7 +167,7 @@ class DataTable extends Component {
     }
 
     this._refreshSelection()
-    this._dispatchSelectionChange()
+    this._completeSelectionChange()
   }
 
   private _toggleRowSelection(idx: number) {
@@ -167,13 +178,13 @@ class DataTable extends Component {
     }
 
     this._refreshSelection()
-    this._dispatchSelectionChange()
+    this._completeSelectionChange()
   }
 
-  private _dispatchSelectionChange() {
-    const selection = new Set(this._selectedRows)
-
-    this._emitSelectionChange({ selection })
+  private _completeSelectionChange() {
+    this._emitSelectionChange({
+      selection: new Set(this._selectedRows)
+    })
   }
 
   private _refreshSelection() {
@@ -202,28 +213,21 @@ class DataTable extends Component {
     }
   }
 
-  construtor() {
-    this._columnSizesStyles.append(document.createTextNode(''))
-    this.shadowRoot!.firstChild!.appendChild(this._columnSizesStyles)
+  constructor() {
+    super()
 
-    afterConnect(this, () => {
-      const container = this._containerRef.value!
-      const resizeObserver = new ResizeObserver(() => this._updateColumnSizes())
+    const resizeObserver = new ResizeObserver(() => this._updateColumnSizes())
 
-      resizeObserver.observe(container)
-
-      return () => resizeObserver.unobserve(container)
+    afterFirstUpdate(this, () => {
+      resizeObserver.observe(this._containerRef.value!)
     })
 
-    beforeUpdate(this, () => {
-      this._selectedRows.clear()
-      this._scrollPaneRef.value!.scroll({ top: 0, left: 0 })
+    afterDisconnect(this, () => {
+      resizeObserver.unobserve(this._containerRef.value!)
     })
 
-    // TODO - this is ugly!!!
     afterUpdate(this, () => {
-      this._refreshSelection()
-      this._dispatchSelectionChange()
+      this._updateColumnSizes()
     })
   }
 
@@ -249,7 +253,11 @@ class DataTable extends Component {
     const rowsSelector =
       this.selectionMode === 'single' || this.selectionMode === 'multi'
         ? html`
-            <th class="selector-column" rowspan=${headerCells.length}>
+            <th
+              class="selector-column"
+              rowspan=${headerCells.length}
+              styles=${`width: ${widthOfRowSelectorColumn}px`}
+            >
               <sl-checkbox
                 class="checkbox"
                 @sl-change=${this._toggleRowsSelection}
@@ -323,8 +331,10 @@ class DataTable extends Component {
   }
 
   private _renderTableBody() {
-    const { columns } = getTableHeadInfo(this.columns || [])
+    this._tableHeadInfo = getTableHeadInfo(this.columns || [])
+    const columns = this._tableHeadInfo!.columns
     const rows: TemplateResult[] = []
+    let colgroup: TemplateResult | null = null
 
     if (this.data) {
       this.data.forEach((rec, idx) => {
@@ -359,12 +369,29 @@ class DataTable extends Component {
           </tr>`
         )
       })
+
+      const cols: TemplateResult[] = []
+
+      if (this.selectionMode === 'single' || this.selectionMode === 'multi') {
+        cols.push(html`<col width=${widthOfRowSelectorColumn}></col>`)
+      }
+
+      for (const column of columns) {
+        cols.push(html`<col width=${column.width + '*'}></col>`)
+      }
+
+      colgroup = html`
+        <colgroup>
+          ${cols}
+        </colgroup>
+      `
     }
 
     return html`
-      <div class="scroll-pane-container">
-        <div class="scroll-pane" ${ref(this._scrollPaneRef)}>
+      <div class="scrollpane-container">
+        <div class="scrollpane" ${ref(this._scrollPaneRef)}>
           <table class="body-table">
+            ${colgroup}
             <tbody ${ref(this._tbodyRef)}>
               ${rows}
             </tbody>
@@ -400,7 +427,7 @@ const getTableHeadInfo: (columns: DataTable.Column[]) => {
 
     for (const column of columns) {
       if (column.type === 'column') {
-        const cell = {
+        const cell: HeaderCell = {
           text: column.text || '',
           colSpan: 1,
           rowSpan: 1, // might be updated later
@@ -408,10 +435,17 @@ const getTableHeadInfo: (columns: DataTable.Column[]) => {
           sortable: (column.field && column.sortable) || false
         }
 
+        const width = column.width
+
+        cell.width =
+          typeof width !== 'number' || isNaN(width) || !isFinite(width)
+            ? 100
+            : width
+
         headerCells[depth].push(cell)
         deepestCells.push([cell, depth])
       } else {
-        const cell = {
+        const cell: HeaderCell = {
           text: column.text || '',
           colSpan: column.columns.length,
           rowSpan: 1, // will be set below
