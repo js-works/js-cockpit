@@ -34,5 +34,6 @@
 }
 
 .content {
-  xbackground-color: rgba(0 0 0 / 1.5%);
+  xbackground-color: var(--sl-color-neutral-50);
+  xbackground-color: rgba(0 0 0 / 2%);
 }
