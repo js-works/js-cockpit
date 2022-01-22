@@ -4,7 +4,7 @@
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
   user-select: none;
-  background-color: var(--sl-color-neutral-0);
+  xbackground-color: var(--sl-color-neutral-50);
 }
 
 .header {
@@ -24,11 +24,11 @@
   max-height: 1px;
   overflow: hidden;
   border: none !important;
-  background-color: var(--sl-color-neutral-300);
+  background-color: var(--sl-color-neutral-200);
 }
 
 .separator1 {
-  width: 1rem;
+  width: 0.9rem;
 }
 
 .separator2 {
@@ -37,7 +37,7 @@
 
 .caption {
   font-size: 96%;
-  padding: 0 0.25rem;
+  padding: 0 0.2rem;
   font-weight: 400;
   margin: 0 2px 4px 2px;
 }
@@ -45,5 +45,6 @@
 .content {
   display: flex;
   padding: 4px 16px;
+  margin: 0 0 1rem 0;
   gap: 24px;
 }

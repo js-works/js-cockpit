@@ -179,14 +179,8 @@ function createDataForm() {
               required
               lang="en-US"
             ></c-date-field>
-            <c-date-field
-              label="Day of birth 2"
-              value="2017-01-01"
-              required
-              lang="de-DE"
-            ></c-date-field>
-            <c-date-range label="Date range" required></c-date-range>
             <!--
+              <c-date-range label="Date range" required></c-date-range>
               <c-radio-group
                 label="Options"
                 orient="horizontal"
