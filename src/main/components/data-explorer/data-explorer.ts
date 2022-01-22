@@ -107,7 +107,7 @@ addToDict(translations)
 })
 class DataExplorer extends Component {
   @prop({ attr: Attrs.string })
-  title: string = ''
+  headline: string = ''
 
   @prop
   columns: DataExplorer.Column[] | null = null
@@ -281,7 +281,7 @@ class DataExplorer extends Component {
     return html`
       <div class="base ${{ 'full-size': this.fullSize }}">
         <div class="header">
-          <h3 class="title">${this.title}</h3>
+          <h3 class="headline">${this.headline}</h3>
           <div class="actions">${this._renderActionBar()}</div>
           <div class="search">
             <slot name="search"></slot>

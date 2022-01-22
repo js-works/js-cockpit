@@ -221,7 +221,22 @@ class DataTable extends Component {
   constructor() {
     super()
 
-    const resizeObserver = new ResizeObserver(() => this._updateColumnSizes())
+    const resizeObserver = (() => {
+      let alreadyHandled = false
+
+      const ret = new ResizeObserver(() => {
+        if (!alreadyHandled) {
+          alreadyHandled = true
+
+          setTimeout(() => {
+            this._updateColumnSizes()
+            alreadyHandled = false
+          }, 0) // TODO
+        }
+      })
+
+      return ret
+    })()
 
     afterFirstUpdate(this, () => {
       resizeObserver.observe(this._containerRef.value!)
