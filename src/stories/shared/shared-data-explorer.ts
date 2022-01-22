@@ -57,7 +57,15 @@ const columns: DataExplorer.Column[] = [
 
 @elem({
   tag: 'shared-data-explorer',
-  uses: [AppLayout, DataExplorer, SearchBox]
+  uses: [AppLayout, DataExplorer, SearchBox],
+
+  styles: `
+    :host {
+      display: block;
+      border: 5px solid blue;
+    height: 900px !important;
+    }
+  `
 })
 export class SharedDataExplorer extends Component {
   render() {

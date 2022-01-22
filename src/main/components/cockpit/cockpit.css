@@ -64,8 +64,12 @@
 }
 
 .main {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
   position: relative;
   flex-grow: 1;
+  border: 3px solid green;
 }
 
 .scroll-pane {
