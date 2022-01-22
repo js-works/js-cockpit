@@ -24,6 +24,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner'
 import { FocusTrap } from '@a11y/focus-trap'
 import { MessageBar } from '../message-bar/message-bar'
+import { Form } from '../form/form'
 import { PasswordField } from '../password-field/password-field'
 import { TextField } from '../text-field/text-field'
 
@@ -125,6 +126,7 @@ addToDict(translations)
   styles: [loginFormStyles, topAlignedLabelsStyles],
   uses: [
     FocusTrap,
+    Form,
     MessageBar,
     PasswordField,
     SlAnimation,
@@ -176,7 +178,7 @@ class LoginForm extends Component {
 
   private _submitButtonRef = createRef<SlButton>()
   private _animationRef = createRef<SlAnimation>()
-  private _formRef = createRef<HTMLFormElement>()
+  private _formRef = createRef<Form>()
   private _i18n = createLocalizer(this, 'jsCockpit.loginForm')
 
   @bind
@@ -202,7 +204,7 @@ class LoginForm extends Component {
     if (ev) {
       ev.preventDefault()
     }
-
+    /*
     if (!form.checkValidity()) {
       this._showInvalidFormError = true
       return
@@ -245,12 +247,12 @@ class LoginForm extends Component {
         this._successMessage = ''
         this._errorMessage = String(error)
       })
+  */
   }
 
   @bind
   private _onSubmitClick(ev: any) {
-    const form = ev.target.closest('form') // TODO
-    this._onSubmit()
+    this._formRef.value!.submit()
   }
 
   constructor() {
@@ -352,7 +354,7 @@ class LoginForm extends Component {
                   </div>
                   <div class="column1-bottom">${this._renderIntroIcon()}</div>
                 </div>
-                <form
+                <c-form
                   class="column2"
                   @submit=${this._onSubmit}
                   ${ref(this._formRef)}
@@ -422,7 +424,7 @@ class LoginForm extends Component {
                     </focus-trap>
                     ${this._renderLinks()}
                   </div>
-                </form>
+                </c-form>
               </div>
             </div>
             <div class="footer">

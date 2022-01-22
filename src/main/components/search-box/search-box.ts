@@ -52,7 +52,7 @@ class SearchBox extends Component {
   render() {
     return html`
       <div class="base">
-        <sl-input size="small" placeholder="Search...">
+        <sl-input size="small" clearable placeholder="Search...">
           <sl-icon
             src=${searchIcon}
             slot="prefix"
