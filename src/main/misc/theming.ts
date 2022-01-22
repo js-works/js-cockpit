@@ -253,6 +253,7 @@ const ThemeMods = {
   compact(tokens: ThemeTokens): Partial<ThemeTokens> {
     return {
       'font-size-medium': '0.92rem',
+      'font-size-x-large': '1.5rem',
       'input-height-small': '1.85rem',
       'input-height-medium': '1.95rem',
       'input-height-large': '2.5rem'

@@ -48,6 +48,7 @@
 
 .actions {
   flex-grow: 1;
+  margin-top: 2px;
 }
 
 .search {
