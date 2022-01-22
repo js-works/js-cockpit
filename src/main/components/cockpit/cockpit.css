@@ -69,7 +69,6 @@
   justify-content: stretch;
   position: relative;
   flex-grow: 1;
-  border: 3px solid green;
 }
 
 .main-slot {
@@ -79,11 +78,6 @@
   justify-content: stretch;
   position: relative;
   flex-grow: 1;
-  border: 3px solid orange;
-}
-
-.main-slot::slotted(*) {
-  border: 10px solid teal;
 }
 
 .scroll-pane {

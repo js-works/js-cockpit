@@ -121,6 +121,9 @@ class DataExplorer extends Component {
   @prop({ attr: Attrs.string })
   selectionMode: 'single' | 'multi' | 'none' = 'none'
 
+  @prop({ attr: Attrs.boolean })
+  fullSize = false
+
   @prop
   actions?: DataExplorer.Actions
 
@@ -276,7 +279,7 @@ class DataExplorer extends Component {
 
   render() {
     return html`
-      <div class="base">
+      <div class="base ${{ 'full-size': this.fullSize }}">
         <div class="header">
           <h3 class="title">${this.title}</h3>
           <div class="actions">${this._renderActionBar()}</div>

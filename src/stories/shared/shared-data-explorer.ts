@@ -65,13 +65,11 @@ const columns: DataExplorer.Column[] = [
       display: flex;
       align-items: stretch;
       justify-content: stretch;
-      border: 5px solid blue;
       height: 100%;
       width: 100%;
     }
 
     c-data-explorer {
-      border: 10px solid yellow !important;
       flex-grow: 1 !important;
     }
   `
@@ -79,12 +77,13 @@ const columns: DataExplorer.Column[] = [
 export class SharedDataExplorer extends Component {
   render() {
     return html`<c-data-explorer
-      .title=${'Customers'}
+      title="Customers"
       .columns=${columns}
       .fetchItems=${fetchFakeItems}
-      .initialSortField=${'lastName'}
-      .initialSortDir=${'desc'}
-      .selectionMode=${'multi'}
+      initial-sort-field="lastName"
+      initial-sort-dir="desc"
+      selection-mode="multi"
+      full-size
       .actions=${[
         {
           kind: 'action',
