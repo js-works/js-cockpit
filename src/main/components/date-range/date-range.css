@@ -43,11 +43,13 @@
 }
 
 .separator {
+  margin-bottom: 2.25px;
   padding: 4px 10px 0 10px; /* TODO */
   border: 0 solid var(--sl-color-neutral-400);
   border-width: 1px 0 1px 0;
   color: var(--sl-color-primary-500);
-  box-sizing: borrder-box;
+  background-color: var(--sl-input-background-color);
+  box-sizing: border-box;
 }
 
 .calendar-icon {

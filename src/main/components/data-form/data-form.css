@@ -32,3 +32,7 @@
   width: 20px;
   height: 20px;
 }
+
+.content {
+  xbackground-color: rgba(0 0 0 / 1.5%);
+}

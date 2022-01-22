@@ -71,7 +71,9 @@ class DataForm extends Component {
             </sl-button>
           </div>
         </div>
-        <slot></slot>
+        <div class="content">
+          <slot></slot>
+        </div>
       </div>
     `
   }

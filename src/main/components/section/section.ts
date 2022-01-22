@@ -31,7 +31,15 @@ class Section extends Component {
   render() {
     return html`
       <div class="base">
-        <div class="caption">${this.caption}</div>
+        ${!this.caption
+          ? null
+          : html`
+              <div class="header">
+                <hr class="separator1" />
+                <div class="caption">${this.caption}</div>
+                <hr class="separator2" />
+              </div>
+            `}
         <div class="content">
           <slot></slot>
         </div>

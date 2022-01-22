@@ -162,56 +162,48 @@ function createDataForm() {
             <c-text-field label="Short name" required></c-text-field>
           </c-fieldset>
         </c-section>
-        <c-tabs>
-          <c-tab caption="Customer data">
-            <c-section caption="Customer address">
-              <c-fieldset>
-                <c-select-box label="Salutation"></c-select-box>
-                <c-text-field label="First name" required></c-text-field>
-                <c-text-field label="Last name" required></c-text-field>
-                <c-text-field label="Phone" required></c-text-field>
-              </c-fieldset>
-              <c-fieldset>
-                <c-text-field label="Company" required></c-text-field>
-                <c-text-field label="Display name"></c-text-field>
-                <c-text-field label="Alias name"></c-text-field>
-                <c-date-field
-                  label="Day of birth"
-                  value="2017-01-01"
-                  required
-                  lang="en-US"
-                ></c-date-field>
-                <c-date-field
-                  label="Day of birth 2"
-                  value="2017-01-01"
-                  required
-                  lang="de-DE"
-                ></c-date-field>
-                <c-date-range label="Date range" required></c-date-range>
-                <!--
+        <c-section caption="Customer address">
+          <c-fieldset>
+            <c-select-box label="Salutation"></c-select-box>
+            <c-text-field label="First name" required></c-text-field>
+            <c-text-field label="Last name" required></c-text-field>
+            <c-text-field label="Phone" required></c-text-field>
+          </c-fieldset>
+          <c-fieldset>
+            <c-text-field label="Company" required></c-text-field>
+            <c-text-field label="Display name"></c-text-field>
+            <c-text-field label="Alias name"></c-text-field>
+            <c-date-field
+              label="Day of birth"
+              value="2017-01-01"
+              required
+              lang="en-US"
+            ></c-date-field>
+            <c-date-field
+              label="Day of birth 2"
+              value="2017-01-01"
+              required
+              lang="de-DE"
+            ></c-date-field>
+            <c-date-range label="Date range" required></c-date-range>
+            <!--
               <c-radio-group
                 label="Options"
                 orient="horizontal"
                 required
               ></c-radio-group>
               -->
-              </c-fieldset>
-            </c-section>
-            <c-section caption="Contact information">
-              <c-fieldset>
-                <c-text-field label="Phone" required></c-text-field>
-                <c-text-field label="Mobile"></c-text-field>
-                <c-text-area label="Comments"></c-text-area>
-                <c-date-field label="Day of birth" required></c-date-field>
-                <c-date-range label="Date range" required></c-date-range>
-              </c-fieldset>
-            </c-section>
-          </c-tab>
-          <c-tab caption="Documents">Tab2</c-tab>
-          <c-tab caption="Images">Tab3</c-tab>
-          <c-tab caption="Settings">Tab3</c-tab>
-          <c-tab caption="Permissions">Tab3</c-tab>
-        </c-tabs>
+          </c-fieldset>
+        </c-section>
+        <c-section caption="Contact information">
+          <c-fieldset>
+            <c-text-field label="Phone" required></c-text-field>
+            <c-text-field label="Mobile"></c-text-field>
+            <c-text-area label="Comments"></c-text-area>
+            <c-date-field label="Day of birth" required></c-date-field>
+            <c-date-range label="Date range" required></c-date-range>
+          </c-fieldset>
+        </c-section>
       </c-data-form>
     </div>
   `
