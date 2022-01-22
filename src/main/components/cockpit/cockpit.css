@@ -78,7 +78,6 @@
 ::slotted(c-brand) {
   position: relative;
   margin: 0 11px;
-  bottom: 1px;
 }
 
 ::slotted(c-nav-menu) {

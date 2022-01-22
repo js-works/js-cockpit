@@ -50,7 +50,8 @@ const columns: DataExplorer.Column[] = [
     type: 'column',
     text: 'Country',
     field: 'country',
-    sortable: true
+    sortable: true,
+    width: 180
   }
 ]
 

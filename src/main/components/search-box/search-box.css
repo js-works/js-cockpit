@@ -40,3 +40,7 @@ sl-button.filter-button::part(label) {
 sl-button.button::part(label) {
   font-size: 120%;
 }
+
+.search-icon {
+  color: var(--sl-color-primary-700);
+}

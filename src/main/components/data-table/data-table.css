@@ -1,6 +1,7 @@
 .base {
   position: relative;
-  height: 100%;
+  display: flex;
+  height: 196px;
   font-family: var(--sl-font-sans);
   user-select: none;
   overflow: hidden;
@@ -14,13 +15,29 @@
   box-sizing: border-box;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.head-table {
+  flex-grow: 0;
+}
+
+.body-table {
+  flex-grow: 1;
+}
+
 .scrollpane-container {
   position: relative;
-  height: 462px;
+  flex-grow: 1;
 }
 
 .scrollpane {
   position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -115,5 +132,5 @@ tbody > tr > td {
 }
 
 .row.selected-row > td {
-  background-color: var(--sl-color-primary-100);
+  background-color: var(--sl-color-primary-100) !important;
 }

@@ -1,15 +1,5 @@
-import {
-  bind,
-  createEmitter,
-  elem,
-  prop,
-  Attrs,
-  Component,
-  Listener
-} from '../../utils/components'
-
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
+import { bind, elem, Component } from '../../utils/components'
+import { createRef, html, ref } from '../../utils/lit'
 
 // custom elements
 import { FocusTrap } from '@a11y/focus-trap'
