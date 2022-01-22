@@ -29,7 +29,7 @@
 
 .header {
   display: flex;
-  gap: 2.5rem;
+  gap: 1.25rem;
   margin: 0 0 6px 0;
   padding: 12px 0 4px 0;
   xxxborder: 0 solid var(--sl-color-neutral-300);
@@ -41,7 +41,7 @@
   margin: 0 0.75rem;
   padding: 0;
   font-family: var(--sl-font-sans);
-  font-size: var(--sl-font-size-large);
+  font-size: var(--sl-font-size-x-large);
   font-weight: var(--sl-font-weight-normal);
   color: var(--sl-color-neutral-1000);
 }
