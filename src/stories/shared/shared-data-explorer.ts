@@ -61,16 +61,24 @@ const columns: DataExplorer.Column[] = [
 
   styles: `
     :host {
-      display: block;
+      xposition: relative;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
       border: 5px solid blue;
-    height: 900px !important;
+      height: 100%;
+      width: 100%;
+    }
+
+    c-data-explorer {
+      border: 10px solid yellow !important;
+      flex-grow: 1 !important;
     }
   `
 })
 export class SharedDataExplorer extends Component {
   render() {
-    return html`
-    <c-data-explorer
+    return html`<c-data-explorer
       .title=${'Customers'}
       .columns=${columns}
       .fetchItems=${fetchFakeItems}

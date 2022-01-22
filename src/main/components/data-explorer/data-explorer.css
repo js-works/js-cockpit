@@ -1,7 +1,7 @@
 :host {
   display: flex;
   flex-grow: 1;
-  height: 275px;
+  xheight: 275px;
   border: 1px solid red;
 }
 

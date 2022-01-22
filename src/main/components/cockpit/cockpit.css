@@ -66,13 +66,30 @@
 .main {
   display: flex;
   align-items: stretch;
-  justify-content: center;
+  justify-content: stretch;
   position: relative;
   flex-grow: 1;
   border: 3px solid green;
 }
 
+.main-slot {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  position: relative;
+  flex-grow: 1;
+  border: 3px solid orange;
+}
+
+.main-slot::slotted(*) {
+  border: 10px solid teal;
+}
+
 .scroll-pane {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
   position: absolute;
   width: 100%;
   height: 100%;

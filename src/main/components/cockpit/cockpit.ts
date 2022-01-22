@@ -59,7 +59,7 @@ class Cockpit extends Component {
           </div>
           <div class="main">
             <div class="scroll-pane">
-              <slot name="main"></slot>
+              <slot name="main" class="main-slot"></slot>
             </div>
           </div>
           <div class="main-end">
