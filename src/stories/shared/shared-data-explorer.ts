@@ -77,7 +77,7 @@ const columns: DataExplorer.Column[] = [
 export class SharedDataExplorer extends Component {
   render() {
     return html`<c-data-explorer
-      headline="Customers"
+      headline="Customer"
       .columns=${columns}
       .fetchItems=${fetchFakeItems}
       initial-sort-field="lastName"

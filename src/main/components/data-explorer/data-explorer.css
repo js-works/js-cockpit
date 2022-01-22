@@ -39,7 +39,7 @@
 
 .headline {
   margin: 0 0.75rem;
-  padding: 0;
+  padding: 0.125rem 0.75rem;
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-x-large);
   font-weight: var(--sl-font-weight-normal);

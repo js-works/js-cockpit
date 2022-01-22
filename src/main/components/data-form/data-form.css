@@ -1,5 +1,6 @@
 .base {
-  padding: 8px 16px;
+  padding: 2px 6px;
+  margin: 2px;
   color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-0);
 }
@@ -9,13 +10,14 @@
   gap: 1.25rem;
   align-items: center;
   justify-content: center;
-  padding: 8px 0 8px 0;
-  margin: 0 0 3px 0;
+  padding: 12px 0 6px 0;
+  margin: 0 0 6px 0;
   border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 0 1px 0;
 }
 
 .headline {
+  margin: 0 0.75rem;
   padding: 0.125rem 0.75rem;
   font-size: var(--sl-font-size-x-large);
 }
