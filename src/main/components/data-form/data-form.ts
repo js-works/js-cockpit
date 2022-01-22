@@ -72,7 +72,9 @@ class DataForm extends Component {
           </div>
         </div>
         <div class="content">
-          <slot></slot>
+          <div class="scrollpane">
+            <slot></slot>
+          </div>
         </div>
       </div>
     `
