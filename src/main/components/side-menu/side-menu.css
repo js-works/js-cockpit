@@ -142,3 +142,23 @@ sl-details::part(content) {
 .collapsible .item:not(.active):hover {
   background-color: var(--sl-color-neutral-200);
 }
+
+/* === this makes side menu transparent */
+.base {
+  background: #fefefe;
+}
+
+sl-details::part(base) {
+  background: none;
+}
+
+.menu-header {
+  background-color: var(--sl-color-neutral-100);
+  opacity: 90%;
+}
+
+.uncollapsible .item:not(.active):hover {
+  background-color: var(--sl-color-neutral-2x00);
+}
+
+// ================================== //
