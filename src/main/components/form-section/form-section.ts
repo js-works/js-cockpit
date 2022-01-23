@@ -12,19 +12,19 @@ import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
 import { createLocalizer } from '../../utils/i18n'
 
 // styles
-import sectionStyles from './section.css'
+import sectionStyles from './form-section.css'
 
 // === exports =======================================================
 
-export { Section }
+export { FormSection }
 
-// === Section ===================================================
+// === FormSection ===================================================
 
 @elem({
-  tag: 'c-section',
+  tag: 'c-form-section',
   styles: sectionStyles
 })
-class Section extends Component {
+class FormSection extends Component {
   @prop({ attr: Attrs.string })
   caption = ''
 

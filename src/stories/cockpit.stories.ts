@@ -9,7 +9,7 @@ import {
   DataForm,
   Fieldset,
   RadioGroup,
-  Section,
+  FormSection,
   NavMenu,
   SideMenu,
   Tab,
@@ -102,7 +102,7 @@ export const cockpit1 = () => h('cockpit-demo1')
     DataForm,
     Fieldset,
     RadioGroup,
-    Section,
+    FormSection,
     NavMenu,
     SideMenu,
     SharedDataExplorer,
@@ -133,7 +133,7 @@ export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
     DataForm,
     Fieldset,
     RadioGroup,
-    Section,
+    FormSection,
     NavMenu,
     SideMenu,
     SharedDataExplorer,
@@ -156,13 +156,15 @@ function createDataForm() {
   return html`
     <div>
       <c-data-form headline="Customer" lang="de-DE">
-        <c-section>
-          <c-fieldset orient="horizontal">
+        <c-form-section>
+          <c-fieldset>
             <c-text-field label="Customer No." required></c-text-field>
+          </c-fieldset>
+          <c-fieldset>
             <c-text-field label="Short name" required></c-text-field>
           </c-fieldset>
-        </c-section>
-        <c-section caption="Customer address">
+        </c-form-section>
+        <c-form-section caption="Customer address">
           <c-fieldset>
             <c-select-box label="Salutation"></c-select-box>
             <c-text-field label="First name" required></c-text-field>
@@ -188,8 +190,8 @@ function createDataForm() {
               ></c-radio-group>
               -->
           </c-fieldset>
-        </c-section>
-        <c-section caption="Contact information">
+        </c-form-section>
+        <c-form-section caption="Contact information">
           <c-fieldset>
             <c-text-field label="Phone" required></c-text-field>
             <c-text-field label="Mobile"></c-text-field>
@@ -197,7 +199,7 @@ function createDataForm() {
             <c-date-field label="Day of birth" required></c-date-field>
             <c-date-range label="Date range" required></c-date-range>
           </c-fieldset>
-        </c-section>
+        </c-form-section>
       </c-data-form>
     </div>
   `
