@@ -27,18 +27,15 @@ const colorLuminances = [
 const semanticColors = [
   'primary',
   'success',
-  'info',
   'warning',
-  'danger'
+  'danger',
+  'neutral'
 ] as const
 
 const paletteColors = [
   'amber',
   'blue',
-  'blue-gray',
-  'cool-gray',
   'cyan',
-  'danger',
   'emerald',
   'fuchsia',
   'gray',
@@ -52,11 +49,8 @@ const paletteColors = [
   'red',
   'rose',
   'sky',
-  'success',
   'teal',
-  'true-gray',
   'violet',
-  'warm-gray',
   'yellow'
 ] as const
 
@@ -69,9 +63,9 @@ type ThemeTokens = typeof lightThemeTokens
 type ColorScheme = {
   primaryColor?: string
   successColor?: string
-  infoColor?: string
   warningColor?: string
   dangerColor?: string
+  neutralColor?: string
 }
 
 // === Theme ==========================================================
@@ -194,7 +188,7 @@ const ThemeMods = {
     //invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
     //invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
 
-    allColors.forEach((color) => {
+    paletteColors.forEach((color) => {
       for (let i = 0; i < 5; ++i) {
         const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
         const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
@@ -217,10 +211,20 @@ const ThemeMods = {
       'color-neutral-800': 'rgb(233 233 236)',
       'color-neutral-900': 'rgb(249 249 250)',
       'color-neutral-950': 'rgb(252 252 253)',
-      'color-neutral-1000': 'rgb(255 255 255)'
+      'color-neutral-1000': 'rgb(255 255 255)',
 
       //'input-background-color': '42 42 46',
       //'input-border-color': 'var(--sl-color-neutral-200)'
+
+      'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
+      'shadow-small': '0 1px 2px rgb(0 0 0 / 24%)',
+      'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
+      'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
+      'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
+
+      'focus-ring-alpha': '45%',
+      'overlay-background-color': 'hsl(0 0% 0% / 43%)',
+      'panel-background-color': 'var(--sl-color-neutral-50)'
     })
 
     return darkTokens
