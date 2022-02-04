@@ -42,5 +42,5 @@ sl-button.button::part(label) {
 }
 
 .search-icon {
-  color: var(--sl-color-primary-700);
+  color: var(--sl-color-primary-600);
 }

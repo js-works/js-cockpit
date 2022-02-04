@@ -42,7 +42,6 @@ const paletteColors = [
   'green',
   'indigo',
   'lime',
-  'neutral',
   'orange',
   'pink',
   'purple',
@@ -184,11 +183,11 @@ const ThemeMods = {
     darkTokens['dark'] =
       tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
 
-    // TODO
-    //invertedTokens['color-neutral-0'] = tokens['color-neutral-1000']
-    //invertedTokens['color-neutral-1000'] = tokens['color-neutral-0']
+    allColors.forEach((color) => {
+      if (tokens[`color-${color}-500`].includes('var(')) {
+        return
+      }
 
-    paletteColors.forEach((color) => {
       for (let i = 0; i < 5; ++i) {
         const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
         const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
