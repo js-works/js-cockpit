@@ -34,9 +34,6 @@ export { LogoutEvent } from './events/logout-event'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
-// i18n
-export { detectLocale, observeLocale } from './utils/locale-detection'
-
 // misc
 export * from './misc/dialogs'
 export * from './misc/theming'

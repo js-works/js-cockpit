@@ -1,6 +1,5 @@
 import { localize, Category, Localizer } from 'js-localize'
 import { Component } from './components'
-import { observeLocale } from './locale-detection'
 
 // === exports =======================================================
 
@@ -31,20 +30,20 @@ function createLocalizer<C extends keyof Localize.TranslationsMap>(
 } & Localizer
 
 function createLocalizer(component: Component, category?: Category): any {
-  const { connect, disconnect, getLocale } = observeLocale(component, () =>
-    component.requestUpdate()
-  )
+  const localizer = localize({
+    element: component,
 
-  component.addController({
-    hostConnected: connect,
-    hostDisconnected: disconnect
+    onChange() {
+      component.requestUpdate()
+    },
+
+    init(getLocale, connect, disconnect) {
+      component.addController({
+        hostConnected: connect,
+        hostDisconnected: disconnect
+      })
+    }
   })
-
-  const localizer = localize(getLocale())
-
-  if (!category) {
-    return localizer
-  }
 
   Object.assign(localizer, {
     tr: (key: string, params?: any) =>

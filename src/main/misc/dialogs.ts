@@ -3,7 +3,6 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
-import { detectLocale } from '../utils/locale-detection'
 import { addToDict, localize, TermsOf } from 'js-localize'
 
 // icons
@@ -249,8 +248,12 @@ function showDialog<T = void>(
     document.querySelector('#root') ||
     document.body
 
-  const locale = detectLocale(target)
-  const localizer = localize(locale)
+  // TODO!!!
+  const localizer = localize({
+    element: target,
+    onChange() {},
+    init() {}
+  })
 
   const translate = (textId: keyof TermsOf<'jsCockpit.dialogs'>) =>
     localizer.translate('jsCockpit.dialogs', textId)
