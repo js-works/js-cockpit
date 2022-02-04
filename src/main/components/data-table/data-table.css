@@ -69,7 +69,9 @@ table.head-table > thead th.sortable:hover {
 }
 
 table.head-table > thead th.sortable:hover {
-  color: var(--sl-color-primary-950);
+  color: var(--sl-light, var(--sl-color-primary-950))
+    var(--sl-dark, var(--sl-color-primary-50));
+
   background-color: var(--sl-color-neutral-100);
 }
 

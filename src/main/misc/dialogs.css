@@ -12,6 +12,9 @@
 .dialog {
   font-family: var(--sl-font-sans);
   font-size: var(--sl-font-size-medium);
+  color: var(--sl-light, var(--sl-color-neutral-1000))
+    var(--sl-dark, var(--sl-color-neutral-1000));
+
   padding: 0;
 }
 

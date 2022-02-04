@@ -132,7 +132,10 @@ sl-details::part(content) {
 
 .collapsible .item.active {
   padding: 0.3rem 2rem 0.3rem calc(2rem - 3px);
-  background-color: var(--sl-color-primary-200);
+
+  background-color: var(--sl-light, var(--sl-color-primary-200))
+    var(--sl-dark, var(--sl-color-primary-800));
+
   border: 0 solid var(--sl-color-primary-500);
   border-left-width: 3px;
   box-sizing: border-box;
@@ -145,7 +148,7 @@ sl-details::part(content) {
 
 /* === this makes side menu transparent */
 .base {
-  background: #fefefe;
+  background: var(--sl-color-neutral-0);
 }
 
 sl-details::part(base) {
@@ -158,7 +161,7 @@ sl-details::part(base) {
 }
 
 .uncollapsible .item:not(.active):hover {
-  background-color: var(--sl-color-neutral-2x00);
+  background-color: var(--sl-color-neutral-200);
 }
 
-// ================================== //
+/* ================================== */

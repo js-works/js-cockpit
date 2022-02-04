@@ -99,7 +99,10 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background-color: var(--sl-color-neutral-600);
+
+  background-color: var(--sl-light, var(--sl-color-neutral-600))
+    var(--sl-dark, var(--sl-color-neutral-300));
+
   padding: 1rem 1.7rem;
   border-radius: 2px;
 }
@@ -109,13 +112,16 @@
 }
 
 .loading-message {
-  color: var(--sl-color-neutral-0);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
+
   font-size: var(--sl-font-size-medium);
 }
 
 .loading-spinner {
   font-size: 1.8rem;
-  --indicator-color: var(--sl-color-neutral-100);
+  --indicator-color: var(--sl-light, var(--sl-color-neutral-100))
+    var(--sl-dark, var(--sl-color-neutral-900));
 }
 
 .overlay-show {
