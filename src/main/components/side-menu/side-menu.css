@@ -40,8 +40,7 @@
   font-size: var(--sl-font-size-medium);
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-neutral-1000);
-  background-color: var(--sl-color-neutral-200);
-  border: 0 solid var(--sl-color-primary-800);
+  border: 0 solid var(--sl-color-neutral-200);
   border-width: 0 0 1px 0;
   padding: 0.5rem 1rem;
 }
@@ -154,11 +153,6 @@ sl-details::part(content) {
 
 sl-details::part(base) {
   background: none;
-}
-
-.menu-header {
-  background-color: var(--sl-color-neutral-100);
-  opacity: 90%;
 }
 
 .uncollapsible .item:not(.active):hover {

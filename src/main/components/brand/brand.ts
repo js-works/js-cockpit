@@ -23,7 +23,7 @@ export { Brand }
 })
 class Brand extends Component {
   @prop({ attr: Attrs.string })
-  logo = ''
+  logo: String | null = null
 
   @prop({ attr: Attrs.string })
   headline = ''
@@ -38,7 +38,7 @@ class Brand extends Component {
   multiColor = false
 
   render() {
-    const logo = this.logo?.trim() || defaultLogoSvg
+    const logo = this.logo === 'default' ? defaultLogoSvg : this.logo || null
     const size = this.size || 'medium'
 
     return html`
@@ -50,7 +50,7 @@ class Brand extends Component {
             'multi-color': this.multiColor
           })}
         >
-          <sl-icon src=${logo} class="logo"></sl-icon>
+          ${!logo ? null : html`<sl-icon src=${logo} class="logo"></sl-icon>`}
           <div class="headline-and-text">
             <div class="headline">${this.headline}</div>
             <div class="text">${this.text}</div>

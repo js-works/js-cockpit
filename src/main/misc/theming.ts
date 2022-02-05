@@ -189,96 +189,123 @@ const ThemeMods = {
     }
   },
 
-  dark(tokens: ThemeTokens): Partial<ThemeTokens> {
-    if (tokens['dark'] === 'var(--on)') {
-      return {}
-    }
-
-    const darkTokens: Record<string, string> = Object.assign({}, tokens)
-
-    darkTokens['light'] =
-      tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
-
-    darkTokens['dark'] =
-      tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
-
-    allColors.forEach((color) => {
-      if (tokens[`color-${color}-500`].includes('var(')) {
-        return
+  dark(veryDark: boolean = false) {
+    return (tokens: ThemeTokens): Partial<ThemeTokens> => {
+      if (tokens['dark'] === 'var(--on)') {
+        return {}
       }
 
-      for (let i = 0; i < 5; ++i) {
-        const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
-        const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
+      const darkTokens: Record<string, string> = Object.assign({}, tokens)
 
-        darkTokens[key1] = (tokens as any)[key2]
-        darkTokens[key2] = (tokens as any)[key1]
+      darkTokens['light'] =
+        tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
+
+      darkTokens['dark'] =
+        tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
+
+      allColors.forEach((color) => {
+        if (tokens[`color-${color}-500`].includes('var(')) {
+          return
+        }
+
+        for (let i = 0; i < 5; ++i) {
+          const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
+          const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
+
+          darkTokens[key1] = (tokens as any)[key2]
+          darkTokens[key2] = (tokens as any)[key1]
+        }
+      })
+
+      if (!veryDark) {
+        Object.assign(darkTokens, {
+          //'color-neutral-0': 'rgb(58 67 77)',
+          'color-neutral-0': 'rgb(54 54 54)',
+          'color-neutral-50': 'rgb(65 75 86)',
+          'color-neutral-100': 'rgb(93 93 97)',
+          'color-neutral-200': 'rgb(103 103 106)',
+          'color-neutral-300': 'rgb(117 117 114)',
+          'color-neutral-400': 'rgb(120 120 124)',
+          'color-neutral-500': 'rgb(128 128 127)',
+          'color-neutral-600': 'rgb(166 166 175)',
+          'color-neutral-700': 'rgb(217 217 221)',
+          'color-neutral-800': 'rgb(233 233 236)',
+          'color-neutral-900': 'rgb(249 249 250)',
+          'color-neutral-950': 'rgb(252 252 253)',
+          'color-neutral-1000': 'rgb(255 255 255)'
+        })
+      } else {
+        Object.assign(darkTokens, {
+          'color-neutral-0': 'rgb(30 30 33)',
+          'color-neutral-50': 'rgb(32 32 36)',
+          'color-neutral-100': 'rgb(33 33 37)',
+          'color-neutral-200': 'rgb(43 43 46)',
+          'color-neutral-300': 'rgb(67 67 74)',
+          'color-neutral-400': 'rgb(86 86 95)',
+          'color-neutral-500': 'rgb(118 118 127)',
+          'color-neutral-600': 'rgb(166 166 175)',
+          'color-neutral-700': 'rgb(217 217 221)',
+          'color-neutral-800': 'rgb(233 233 236)',
+          'color-neutral-900': 'rgb(249 249 250)',
+          'color-neutral-950': 'rgb(252 252 253)',
+          'color-neutral-1000': 'rgb(255 255 255)'
+        })
       }
-    })
 
-    Object.assign(darkTokens, {
-      'color-neutral-0': 'rgb(30 30 33)',
-      'color-neutral-50': 'rgb(32 32 36)',
-      'color-neutral-100': 'rgb(33 33 37)',
-      'color-neutral-200': 'rgb(43 43 46)',
-      'color-neutral-300': 'rgb(67 67 74)',
-      'color-neutral-400': 'rgb(86 86 95)',
-      'color-neutral-500': 'rgb(118 118 127)',
-      'color-neutral-600': 'rgb(166 166 175)',
-      'color-neutral-700': 'rgb(217 217 221)',
-      'color-neutral-800': 'rgb(233 233 236)',
-      'color-neutral-900': 'rgb(249 249 250)',
-      'color-neutral-950': 'rgb(252 252 253)',
-      'color-neutral-1000': 'rgb(255 255 255)',
+      Object.assign(darkTokens, {
+        //'input-background-color': '42 42 46',
+        //'input-border-color': 'var(--sl-color-neutral-200)'
 
-      //'input-background-color': '42 42 46',
-      //'input-border-color': 'var(--sl-color-neutral-200)'
+        'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
+        'shadow-small': '0 1px 2px rgb(0 0 0 / 24%)',
+        'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
+        'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
+        'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
 
-      'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
-      'shadow-small': '0 1px 2px rgb(0 0 0 / 24%)',
-      'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
-      'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
-      'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
+        'focus-ring-alpha': '45%',
+        'overlay-background-color': 'hsl(0 0% 0% / 43%)',
+        'panel-background-color': 'var(--sl-color-neutral-50)'
+      })
 
-      'focus-ring-alpha': '45%',
-      'overlay-background-color': 'hsl(0 0% 0% / 43%)',
-      'panel-background-color': 'var(--sl-color-neutral-50)'
-    })
-
-    return darkTokens
-  },
-
-  modern(tokens: ThemeTokens): Partial<ThemeTokens> {
-    return {
-      'font-sans':
-        "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-
-      'font-weight-semibold': '600',
-      'label-font-weight': 'var(--sl-font-weight-semibold)',
-      'border-radius-small': '0px',
-      'border-radius-medium': '1px',
-      'border-radius-large': '2px',
-      'border-radius-x-large': '3px',
-
-      'focus-ring':
-        '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)',
-
-      'focus-ring-width': '1px',
-      'focus-ring-alpha': '100%',
-
-      'input-border-color': 'var(--sl-color-neutral-400)',
-      'input-border-color-hover': 'var(--sl-color-neutral-600)',
-      'input-border-color-focus': 'var(--sl-color-primary-700)'
+      return darkTokens
     }
   },
 
-  compact(tokens: ThemeTokens): Partial<ThemeTokens> {
-    return {
-      'font-size-medium': '0.92rem',
-      'font-size-x-large': '1.5rem',
-      'input-height-small': '1.85rem',
-      'input-height-medium': '1.95rem',
-      'input-height-large': '2.5rem'
+  modern() {
+    return (tokens: ThemeTokens): Partial<ThemeTokens> => {
+      return {
+        'font-sans':
+          "-apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+
+        'font-weight-semibold': '600',
+        'label-font-weight': 'var(--sl-font-weight-semibold)',
+        'border-radius-small': '0px',
+        'border-radius-medium': '1px',
+        'border-radius-large': '2px',
+        'border-radius-x-large': '3px',
+
+        'focus-ring':
+          '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)',
+
+        'focus-ring-width': '1px',
+        'focus-ring-alpha': '100%',
+
+        'input-border-color': 'var(--sl-color-neutral-400)',
+        'input-border-color-hover': 'var(--sl-color-neutral-600)',
+        'input-border-color-focus': 'var(--sl-color-primary-700)'
+      }
+    }
+  },
+
+  compact() {
+    return (tokens: ThemeTokens): Partial<ThemeTokens> => {
+      return {
+        'font-size-medium': '0.92rem',
+        'font-size-x-large': '1.5rem',
+        'input-height-small': '1.85rem',
+        'input-height-medium': '1.95rem',
+        'input-height-large': '2.5rem'
+      }
     }
   }
 }

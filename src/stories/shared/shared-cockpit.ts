@@ -24,7 +24,7 @@ export default {
   title: 'cockpit'
 }
 
-//loadTheme(sharedTheme)
+loadTheme(sharedTheme)
 
 // ===============================================================================
 

@@ -15,7 +15,18 @@ class MiniCockpit extends Component {
     return html`
       <c-theme-provider .theme=${sharedTheme}>
         <c-cockpit>
-          <c-side-menu slot="sidebar" .menu=${menu}></c-side-menu>
+          <c-brand
+            slot="sidebar-start"
+            headline="my-company"
+            text="Back Office"
+            size="large"
+            multi-color
+          ></c-brand>
+          <c-side-menu
+            slot="sidebar"
+            active-item="manage-products"
+            .menu=${menu}
+          ></c-side-menu>
           <div slot="main">
             <shared-data-explorer></shared-data-explorer>
           </div>

@@ -66,9 +66,7 @@ declare global {
 
 const translations = defineTerms({
   en: {
-    'jsCockpit.sideMenu': {
-      headerText: 'Menu'
-    }
+    'jsCockpit.sideMenu': {}
   }
 })
 
@@ -84,9 +82,6 @@ addToDict(translations)
 class SideMenu extends Component {
   @prop({ attr: Attrs.string })
   headerText?: string
-
-  @prop({ attr: Attrs.boolean })
-  hideHeader?: boolean
 
   @prop
   menu: SideMenu.Menu = null
@@ -128,17 +123,15 @@ class SideMenu extends Component {
   }
 
   private _renderHeader() {
-    if (this.hideHeader) {
+    if (!this.headerText) {
       return null
     }
-
-    const headerText = this.headerText ?? this._i18n.tr('headerText')
 
     return html`
       <div class="menu-header">
         <div class="menu-caption">
           <sl-icon class="menu-header-icon" src=${headerIcon}></sl-icon>
-          <div class="menu-header-text">${headerText}</div>
+          <div class="menu-header-text">${this.headerText}</div>
         </div>
       </div>
     `

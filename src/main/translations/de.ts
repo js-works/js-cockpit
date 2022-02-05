@@ -89,9 +89,7 @@ const translations: FullTranslations<'jsCockpit'> = {
       pageSize: 'Datensätze/Seite'
     },
 
-    'jsCockpit.sideMenu': {
-      headerText: 'Menü'
-    },
+    'jsCockpit.sideMenu': {},
 
     'jsCockpit.validation': {
       fieldRequired: 'Erforderliches Feld',

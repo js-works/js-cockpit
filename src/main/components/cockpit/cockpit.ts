@@ -22,7 +22,7 @@ class Cockpit extends Component {
   theme = Theme.default
 
   render() {
-    const darkTheme = new Theme(this.theme, ThemeMods.dark)
+    const darkTheme = new Theme(this.theme, ThemeMods.dark())
 
     return html`
       <div class="base">
