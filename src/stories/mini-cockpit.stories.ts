@@ -19,6 +19,7 @@ class MiniCockpit extends Component {
             slot="sidebar-start"
             headline="my-company"
             text="Back Office"
+            logo="default"
             size="large"
             multi-color
           ></c-brand>

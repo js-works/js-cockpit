@@ -121,6 +121,7 @@ export class SharedCockpit extends Component {
             slot="header-start"
             headline="my-company"
             text="Back Office"
+            logo="default"
             multi-color
           ></c-brand>
           <c-nav-menu

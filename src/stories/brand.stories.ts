@@ -30,6 +30,7 @@ class BrandDemo extends Component {
               headline="Size: small"
               text="Back Office"
               size="small"
+              logo="default"
             ></c-brand>
             <br />
             <br />
@@ -37,6 +38,7 @@ class BrandDemo extends Component {
               headline="Size: medium"
               text="Back Office"
               size="medium"
+              logo="default"
             ></c-brand>
             <br />
             <br />
@@ -44,6 +46,7 @@ class BrandDemo extends Component {
               headline="Size: large"
               text="Back Office"
               size="large"
+              logo="default"
             ></c-brand>
             <br />
             <br />
@@ -51,6 +54,7 @@ class BrandDemo extends Component {
               headline="Size: huge"
               text="Back Office"
               size="huge"
+              logo="default"
             ></c-brand>
           </div>
 
@@ -59,6 +63,7 @@ class BrandDemo extends Component {
               headline="Size: small"
               text="Back Office"
               size="small"
+              logo="default"
               multi-color
             ></c-brand>
             <br />
@@ -67,6 +72,7 @@ class BrandDemo extends Component {
               headline="Size: medium"
               text="Back Office"
               size="medium"
+              logo="default"
               multi-color
             ></c-brand>
             <br />
@@ -75,6 +81,7 @@ class BrandDemo extends Component {
               headline="Size: large"
               text="Back Office"
               size="large"
+              logo="default"
               multi-color
             ></c-brand>
             <br />
@@ -83,6 +90,7 @@ class BrandDemo extends Component {
               headline="Size: huge"
               text="Back Office"
               size="huge"
+              logo="default"
               multi-color
             ></c-brand>
           </div>
