@@ -1,5 +1,6 @@
-import { elem, Component } from '../../utils/components'
+import { afterConnect, elem, prop, Component } from '../../utils/components'
 import { html } from '../../utils/lit'
+import { Theme, ThemeMods } from '../../misc/theming'
 
 // styles
 import cockpitStyles from './cockpit.css'
@@ -17,7 +18,12 @@ export { Cockpit }
   uses: []
 })
 class Cockpit extends Component {
+  @prop
+  theme = Theme.default
+
   render() {
+    const darkTheme = new Theme(this.theme, ThemeMods.dark)
+
     return html`
       <div class="base">
         <div class="row1">
@@ -42,7 +48,11 @@ class Cockpit extends Component {
             <slot name="subheader-end"></slot>
           </div>
         </div>
-        <div class="col1">
+        <c-theme-provider
+          .theme=${darkTheme}
+          class="col1"
+          style="background-color: yellow"
+        >
           <div class="sidebar-start">
             <slot name="sidebar-start"></slot>
           </div>
@@ -52,7 +62,7 @@ class Cockpit extends Component {
           <div class="sidebar-end">
             <slot name="sidebar-end"></slot>
           </div>
-        </div>
+        </c-theme-provider>
         <div class="col2">
           <div class="main-start">
             <slot name="main-start"></slot>

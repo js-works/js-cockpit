@@ -50,12 +50,13 @@
   flex-direction: column;
 }
 
-.sidebar {
-  position: relative;
+c-theme-provider.col1::part(base) {
+  height: 100%;
   display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  flex-grow: 1;
+}
+
+.sidebar {
+  display: flex;
 }
 
 .col2 {

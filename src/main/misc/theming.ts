@@ -87,20 +87,39 @@ class Theme {
   constructor(modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>)
   constructor(modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[])
 
-  constructor(arg: any) {
-    this.#themeTokens = { ...lightThemeTokens }
+  constructor(
+    base: Theme,
+    modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>
+  )
 
-    if (typeof arg === 'function') {
-      Object.assign(this.#themeTokens, arg(this.#themeTokens))
-    } else if (Array.isArray(arg)) {
-      arg.forEach((modifier: Function) => {
+  constructor(
+    base: Theme,
+    modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[]
+  )
+
+  constructor(arg1: any, arg2?: any) {
+    this.#themeTokens =
+      arg1 instanceof Theme ? { ...arg1.getTokens() } : { ...lightThemeTokens }
+
+    if (arg1 instanceof Theme) {
+      arg1 = arg2
+    }
+
+    if (typeof arg1 === 'function') {
+      Object.assign(this.#themeTokens, arg1(this.#themeTokens))
+    } else if (Array.isArray(arg1)) {
+      arg1.forEach((modifier: Function) => {
         Object.assign(this.#themeTokens, modifier(this.#themeTokens))
       })
-    } else if (arg && typeof arg === 'object') {
-      Object.assign(this.#themeTokens, arg)
+    } else if (arg1 && typeof arg1 === 'object') {
+      Object.assign(this.#themeTokens, arg1)
     } else {
       throw new TypeError('Illegal argument for Theme constructor')
     }
+  }
+
+  getTokens() {
+    return this.#themeTokens
   }
 
   toCss(selector = ':root, :host'): string {

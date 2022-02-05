@@ -46,7 +46,7 @@ class ThemeProvider extends Component {
       <style>
         ${theme?.toCss()}
       </style>
-      <div class="base">
+      <div class="base" part="base">
         <slot></slot>
       </div>
     `

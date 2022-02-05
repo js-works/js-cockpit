@@ -1,10 +1,12 @@
 .base {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-50);
   border: 0 solid var(--sl-color-neutral-300);
   border-width: 0 1px 0 0;
+  height: 100%;
   min-width: 15rem;
   max-width: 15rem;
   min-height: 100%;
@@ -39,7 +41,7 @@
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-200);
-  border: 0 dotted var(--sl-color-primary-800);
+  border: 0 solid var(--sl-color-primary-800);
   border-width: 0 0 1px 0;
   padding: 0.5rem 1rem;
 }
