@@ -220,7 +220,7 @@ const ThemeMods = {
       if (!veryDark) {
         Object.assign(darkTokens, {
           //'color-neutral-0': 'rgb(58 67 77)',
-          'color-neutral-0': 'rgb(54 54 54)',
+          'color-neutral-0': 'rgb(52 52 52)',
           'color-neutral-50': 'rgb(65 75 86)',
           'color-neutral-100': 'rgb(93 93 97)',
           'color-neutral-200': 'rgb(103 103 106)',

@@ -62,11 +62,13 @@
 }
 
 .uncollapsible .group-header {
-  font-weight: 600;
+  font-weight: var(--sl-light, var(--sl-font-weight-semibold))
+    var(--sl-dark, var(--sl-font-weight-normal));
+
   padding: 0.5rem 1rem 0.25rem 1rem;
   margin-top: 7px;
   border: 0 solid var(--sl-color-neutral-200);
-  border-width: 1px 0 0 0;
+  border-width: var(--sl-light, 1px 0 0 0) var(--sl-dark, 0);
 }
 
 .uncollapsible .group-header:first-child {
@@ -76,18 +78,27 @@
 .uncollapsible .item {
   padding: 0.25rem 2rem;
   cursor: pointer;
+
+  color: var(--sl-light, var(--sl-color-neutral, 1000))
+    var(--sl-dark, var(--sl-color-neutral-600));
 }
 
 .uncollapsible .item.active {
   padding: 0.25rem 2rem 0.25rem calc(2rem - 3px);
-  background-color: var(--sl-color-primary-200);
+
+  color: var(--sl-color-neutral-1000);
+
+  background-color: var(--sl-light, var(--sl-color-primary-200))
+    var(--sl-dark, var(--sl-color-primary-400));
+
   border: 0 solid var(--sl-color-primary-600);
-  border-left-width: 3px;
+  border-left-width: var(--sl-light, 3px) var(--sl-dark, 0);
   box-sizing: border-box;
   cursor: default;
 }
 
 .uncollapsible .item:not(.active):hover {
+  color: var(--sl-color-neutral-1000);
   background-color: var(--sl-color-neutral-200);
 }
 

@@ -22,7 +22,7 @@ class Cockpit extends Component {
   theme = Theme.default
 
   render() {
-    const darkTheme = new Theme(this.theme, ThemeMods.dark())
+    //const darkTheme = new Theme(this.theme, ThemeMods.dark())
 
     return html`
       <div class="base">
@@ -48,11 +48,7 @@ class Cockpit extends Component {
             <slot name="subheader-end"></slot>
           </div>
         </div>
-        <c-theme-provider
-          .theme=${darkTheme}
-          class="col1"
-          style="background-color: yellow"
-        >
+        <c-theme-provider class="col1" style="background-color: yellow">
           <div class="sidebar-start">
             <slot name="sidebar-start"></slot>
           </div>
