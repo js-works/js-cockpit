@@ -59,7 +59,7 @@
 }
 
 .user-menu-trigger:hover .user-display-name {
-  opacity: 100%;
+  color: var(--sl-color-neutral-0);
 }
 
 .user-menu {
@@ -81,11 +81,11 @@
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
-  opacity: 50%;
+  color: var(--sl-color-neutral-400);
 }
 
 .user-menu-trigger:hover .user-menu-info {
-  opacity: 100%;
+  color: var(--sl-color-neutral-0);
 }
 
 .user-menu-caret {
@@ -107,23 +107,23 @@
   display: flex;
   flex-grow: 1;
   padding: 0.5rem 1rem;
-  opacity: 50%;
+  color: var(--sl-color-neutral-400);
 }
 
 .main-menu-item:not(.main-menu-item-active):hover {
+  color: var(--sl-color-neutral-0);
   background-color: rgb(42 52 60);
   cursor: pointer;
 }
 
 .main-menu-item:not(.main-menu-item-active):active {
-  background-color: var(--sl-color-primary-600);
-  opacity: 100%;
+  color: var(--sl-color-neutral-0);
+  background-color: var(--sl-color-primary-800);
 }
 
 .main-menu-item-active {
   color: var(--sl-color-neutral-0);
   background-color: rgb(46 56 64);
-  opacity: 100%;
 }
 
 .main-menu-item-icon {
