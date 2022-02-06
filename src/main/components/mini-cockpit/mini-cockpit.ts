@@ -1,5 +1,5 @@
 import { elem, prop, Attrs, Component } from '../../utils/components'
-import { classMap, html, repeat } from '../../utils/lit'
+import { classMap, html, repeat, TemplateResult } from '../../utils/lit'
 
 // styles
 import miniCockpitStyles from './mini-cockpit.css'
@@ -158,17 +158,32 @@ class MiniCockpit extends Component {
     const mainMenu = this.config!.mainMenu
     const activeItem = mainMenu.activeItem
     const items = mainMenu.items
+    const hasIcons = items.some((it) => !!it.icon)
 
     const menuItems = html`
       ${repeat(items, (it) => {
+        const icon = !hasIcons
+          ? null
+          : !it.icon
+          ? html`<div class="main-menu-item-icon"></div>`
+          : html`
+              <div class="main-menu-item-icon">
+                <sl-icon src=${it.icon}></sl-icon>
+              </div>
+            `
+
         const className = classMap({
           'main-menu-item': true,
           'main-menu-item-active': !!activeItem && activeItem === it.itemId
         })
 
-        return html`<a data-action=${it.action || it.itemId} class=${className}
-          >${it.text}</a
-        >`
+        return html` <a
+          data-action=${it.action || it.itemId}
+          class=${className}
+        >
+          ${icon}
+          <div class="main-menu-item-text">${it.text}</div>
+        </a>`
       })}
     `
 

@@ -14,16 +14,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 14rem;
   color: var(--sl-color-neutral-0);
   xxxbackground-color: var(--sl-color-neutral-600);
   xxxbackground-color: rgb(65 75 83);
   xxxbackground-color: rgb(75 85 93);
   xxxbackground-color: rgb(78 86 94);
   xxxbackground-color: rgb(65 75 83);
-  xxxbackground-color: var(--sl-color-primary-800);
-  background-color: var(--sl-color-primary-800);
-  min-width: 12rem;
+  background-color: rgb(60 70 78);
+  xxxbackground-color: var(--sl-color-neutral-600);
+  min-width: 13rem;
+  max-width: 16rem;
   user-select: none;
 }
 
@@ -36,6 +36,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   margin: 1em 1rem 1.75rem 1rem;
 }
@@ -59,12 +60,12 @@
 }
 
 .user-menu-trigger:hover .avatar-icon {
-  color: var(--sl-color-primary-300);
-  background-color: var(--sl-color-primary-100);
+  color: var(--sl-color-primary-400);
+  background-color: var(--sl-color-primary-200);
 }
 
-.user-display-name {
-  opacity: 50%;
+.user-menu-trigger:hover .user-display-name {
+  opacity: 100%;
 }
 
 .user-menu {
@@ -86,16 +87,15 @@
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  opacity: 60%;
 }
 
 .user-menu-trigger:hover .user-menu-info {
-  color: var(--sl-color-primary-300);
-  font-weight: var(--sl-font-weight-semibold);
+  opacity: 100%;
 }
 
 .user-menu-caret {
   font-size: 80%;
-  opacity: 50%;
 }
 
 .user-menu-items {
@@ -113,14 +113,25 @@
   display: flex;
   flex-grow: 1;
   padding: 0.5rem 1rem;
+  opacity: 60%;
 }
 
 .main-menu-item:not(.main-menu-item-active):hover {
-  color: var(--sl-color-neutal-1000);
-  background-color: var(--sl-color-primary-700);
+  background-color: var(--sl-color-neutral-500);
   cursor: pointer;
+  opacity: 80%;
+}
+
+.main-menu-item:not(.main-menu-item-active):active {
+  background-color: var(--sl-color-primary-600);
 }
 
 .main-menu-item-active {
-  background-color: var(--sl-color-primary-500);
+  color: var(--sl-color-neutral-0);
+  background-color: var(--sl-color-primary-700);
+  opacity: 100%;
+}
+
+.main-menu-item-icon {
+  width: 2rem;
 }

@@ -6,6 +6,13 @@ import { SharedDataExplorer } from './shared/shared-data-explorer'
 
 import { MiniCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
 
+// icons
+import dashboardIcon from 'bootstrap-icons/icons/house-door.svg'
+import salesIcon from 'bootstrap-icons/icons/graph-up-arrow.svg'
+import transactionsIcon from 'bootstrap-icons/icons/table.svg'
+import reportsIcon from 'bootstrap-icons/icons/file-earmark-text.svg'
+import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg'
+
 @elem({
   tag: 'mini-cockpit-demo',
   uses: [MiniCockpit, SharedDataExplorer]
@@ -23,7 +30,7 @@ class MiniCockpitDemo extends Component {
 function getCockpitConfig(): MiniCockpit.Config {
   return {
     brand: {
-      title: 'MyCompany',
+      title: 'My Company',
       subtitle: 'Back Office'
     },
 
@@ -48,31 +55,31 @@ function getCockpitConfig(): MiniCockpit.Config {
 
     mainMenu: {
       kind: 'items',
-      activeItem: 'dashboard',
+      activeItem: 'sales',
 
       items: [
         {
-          icon: '',
+          icon: dashboardIcon,
           text: 'Dashboard',
           itemId: 'dashboard'
         },
         {
-          icon: '',
+          icon: salesIcon,
           text: 'Sales',
           itemId: 'sales'
         },
         {
-          icon: '',
+          icon: transactionsIcon,
           text: 'Transactions',
           itemId: 'transations'
         },
         {
-          icon: '',
+          icon: reportsIcon,
           text: 'Reports',
           itemId: 'reports'
         },
         {
-          icon: '',
+          icon: scheduleIcon,
           text: 'Schedule',
           itemId: 'schedule'
         }
