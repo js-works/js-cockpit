@@ -111,18 +111,18 @@
 }
 
 .main-menu-item:not(.main-menu-item-active):hover {
-  background-color: var(--sl-color-neutral-500);
+  background-color: rgb(42 52 60);
   cursor: pointer;
-  opacity: 80%;
 }
 
 .main-menu-item:not(.main-menu-item-active):active {
   background-color: var(--sl-color-primary-600);
+  opacity: 100%;
 }
 
 .main-menu-item-active {
   color: var(--sl-color-neutral-0);
-  background-color: rgb(42 52 62);
+  background-color: rgb(46 56 64);
   opacity: 100%;
 }
 
