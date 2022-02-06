@@ -4,102 +4,33 @@ import { h } from '../main/utils/dom'
 import { sharedTheme } from './shared/shared-theme'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
 
-import { Cockpit, SideMenu, ThemeProvider } from 'js-cockpit'
+import { MiniCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
 
 @elem({
-  tag: 'mini-cockpit',
-  uses: [Cockpit, SharedDataExplorer, SideMenu, ThemeProvider]
+  tag: 'mini-cockpit-demo',
+  uses: [MiniCockpit, SharedDataExplorer]
 })
-class MiniCockpit extends Component {
+class MiniCockpitDemo extends Component {
   render() {
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
-        <c-cockpit>
-          <c-brand
-            slot="sidebar-start"
-            headline="my-company"
-            text="Back Office"
-            logo="default"
-            size="large"
-            multi-color
-          ></c-brand>
-          <c-side-menu
-            slot="sidebar"
-            active-item="manage-products"
-            .menu=${menu}
-          ></c-side-menu>
-          <div slot="main">
-            <shared-data-explorer></shared-data-explorer>
-          </div>
-        </c-cockpit>
-      </c-theme-provider>
+      <c-mini-cockpit
+        brand-title="my company"
+        brand-subtitle="Back Office"
+        user-display-name="Jane Doe"
+      >
+        <shared-data-explorer slot="content"></shared-data-explorer>
+      </c-mini-cockpit>
     `
   }
 }
 
-const menu: SideMenu.Menu = {
-  kind: 'groups',
-  groups: [
+const menu: MiniCockpit.Menu = {
+  kind: 'items',
+  items: [
     {
-      kind: 'group',
-      groupId: 'products',
-      text: 'Products',
-      items: [
-        {
-          kind: 'item',
-          itemId: 'manage-products',
-          text: 'Manage products'
-        },
-        {
-          kind: 'item',
-          itemId: 'price-calculation',
-          text: 'Price calculation'
-        },
-        {
-          kind: 'item',
-          itemId: 'import-products',
-          text: 'Import products'
-        }
-      ]
-    },
-    {
-      kind: 'group',
-      groupId: 'services',
-      text: 'Services',
-      items: [
-        {
-          kind: 'item',
-          itemId: 'assign-services-to-products',
-          text: 'Assign services to products'
-        },
-        {
-          kind: 'item',
-          itemId: 'export-services',
-          text: 'Export services'
-        }
-      ]
-    },
-    {
-      kind: 'group',
-      groupId: 'administration',
-      text: 'Administration',
-      items: [
-        {
-          kind: 'item',
-          itemId: 'database-configuration',
-          text: 'Database configuration'
-        },
-        {
-          kind: 'item',
-          itemId: 'log-settings',
-          text: 'Log setting'
-        },
-        {
-          kind: 'item',
-          itemId: 'export-configurations',
-          text: 'Export all configurations'
-        }
-      ]
+      icon: '',
+      text: '',
+      actionId: ''
     }
   ]
 }
@@ -108,4 +39,4 @@ export default {
   title: 'mini-cockpit'
 }
 
-export const miniCockpit = () => h('mini-cockpit')
+export const miniCockpit = () => h('mini-cockpit-demo')
