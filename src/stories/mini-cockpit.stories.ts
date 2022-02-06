@@ -55,7 +55,7 @@ function getCockpitConfig(): MiniCockpit.Config {
 
     mainMenu: {
       kind: 'items',
-      activeItem: 'sales',
+      activeItem: 'transactions',
 
       items: [
         {
@@ -71,7 +71,7 @@ function getCockpitConfig(): MiniCockpit.Config {
         {
           icon: transactionsIcon,
           text: 'Transactions',
-          itemId: 'transations'
+          itemId: 'transactions'
         },
         {
           icon: reportsIcon,
