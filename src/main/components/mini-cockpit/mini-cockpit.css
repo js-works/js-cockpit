@@ -19,13 +19,17 @@
   xxxbackground-color: var(--sl-color-neutral-600);
   xxxbackground-color: rgb(65 75 83);
   xxxbackground-color: rgb(75 85 93);
-  background-color: rgb(73 73 80);
+  xxxbackground-color: rgb(78 86 94);
+  xxxbackground-color: rgb(65 75 83);
+  xxxbackground-color: var(--sl-color-primary-800);
+  background-color: var(--sl-color-primary-800);
+  min-width: 12rem;
   user-select: none;
 }
 
 .content {
   flex-grow: 1;
-  background-color: var(--sl-color-neutral-50);
+  background-color: var(--sl-color-neutral-100);
 }
 
 .brand {
@@ -33,7 +37,7 @@
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 1em 1rem 3rem 1rem;
+  margin: 1em 1rem 1.75rem 1rem;
 }
 
 .brand-title {
@@ -67,6 +71,7 @@
   align-self: stretch;
   cursor: pointer;
   text-align: center;
+  margin: 0 0 2rem 0;
 }
 
 .user-menu-trigger {
@@ -84,7 +89,7 @@
 }
 
 .user-menu-trigger:hover .user-menu-info {
-  color: var(--sl-color-primary-400);
+  color: var(--sl-color-primary-300);
   font-weight: var(--sl-font-weight-semibold);
 }
 
@@ -96,4 +101,26 @@
 .user-menu-items {
   text-align: center;
   align-self: center;
+}
+
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.main-menu-item {
+  display: flex;
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+}
+
+.main-menu-item:not(.main-menu-item-active):hover {
+  color: var(--sl-color-neutal-1000);
+  background-color: var(--sl-color-primary-700);
+  cursor: pointer;
+}
+
+.main-menu-item-active {
+  background-color: var(--sl-color-primary-500);
 }

@@ -13,26 +13,72 @@ import { MiniCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
 class MiniCockpitDemo extends Component {
   render() {
     return html`
-      <c-mini-cockpit
-        brand-title="my company"
-        brand-subtitle="Back Office"
-        user-display-name="Jane Doe"
-      >
+      <c-mini-cockpit .config=${getCockpitConfig()}>
         <shared-data-explorer slot="content"></shared-data-explorer>
       </c-mini-cockpit>
     `
   }
 }
 
-const menu: MiniCockpit.Menu = {
-  kind: 'items',
-  items: [
-    {
-      icon: '',
-      text: '',
-      actionId: ''
+function getCockpitConfig(): MiniCockpit.Config {
+  return {
+    brand: {
+      title: 'MyCompany',
+      subtitle: 'Back Office'
+    },
+
+    user: {
+      displayName: 'Jane Doe'
+    },
+
+    userMenu: {
+      kind: 'items',
+
+      items: [
+        {
+          action: 'preferences',
+          text: 'Preferenes'
+        },
+        {
+          action: 'profile',
+          text: 'Profile'
+        }
+      ]
+    },
+
+    mainMenu: {
+      kind: 'items',
+      activeItem: 'dashboard',
+
+      items: [
+        {
+          icon: '',
+          text: 'Dashboard',
+          itemId: 'dashboard'
+        },
+        {
+          icon: '',
+          text: 'Sales',
+          itemId: 'sales'
+        },
+        {
+          icon: '',
+          text: 'Transactions',
+          itemId: 'transations'
+        },
+        {
+          icon: '',
+          text: 'Reports',
+          itemId: 'reports'
+        },
+        {
+          icon: '',
+          text: 'Schedule',
+          itemId: 'schedule'
+        }
+      ]
     }
-  ]
+  }
 }
 
 export default {

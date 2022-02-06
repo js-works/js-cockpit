@@ -1,5 +1,5 @@
 import { elem, prop, Attrs, Component } from '../../utils/components'
-import { html } from '../../utils/lit'
+import { classMap, html, repeat } from '../../utils/lit'
 
 // styles
 import miniCockpitStyles from './mini-cockpit.css'
@@ -23,14 +23,41 @@ export { MiniCockpit }
 // === types =========================================================
 
 namespace MiniCockpit {
-  export type Menu = {
+  export type Brand = {
+    title: string
+    subtitle?: string
+  }
+
+  export type User = {
+    displayName: string
+  }
+
+  export type UserMenu = {
     kind: 'items'
+
+    items: {
+      text: string
+      action: string
+    }[]
+  }
+
+  export type MainMenu = {
+    kind: 'items'
+    activeItem?: string
 
     items: {
       icon: string
       text: string
-      actionId: string
+      itemId: string
+      action?: string
     }[]
+  }
+
+  export type Config = {
+    brand: Brand
+    user: User
+    userMenu: UserMenu
+    mainMenu: MainMenu
   }
 }
 
@@ -42,16 +69,14 @@ namespace MiniCockpit {
   uses: [SlButton, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
 class MiniCockpit extends Component {
-  @prop({ attr: Attrs.string })
-  brandTitle = ''
-
-  @prop({ attr: Attrs.string })
-  brandSubtitle = ''
-
-  @prop({ attr: Attrs.string })
-  userDisplayName = ''
+  @prop
+  config?: MiniCockpit.Config
 
   render() {
+    if (!this.config) {
+      return null
+    }
+
     return html`
       <!-- TODO -->
       <link
@@ -62,6 +87,7 @@ class MiniCockpit extends Component {
       <div class="base">
         <div class="sidebar">
           ${this._renderBrand()} ${this._renderUserMenu()}
+          ${this._renderMainMenu()}
         </div>
         <div class="content">
           <slot name="content"></slot>
@@ -71,8 +97,11 @@ class MiniCockpit extends Component {
   }
 
   private _renderBrand() {
-    const title = !this.brandSubtitle ? '' : this.brandTitle
-    const subtitle = this.brandSubtitle || this.brandTitle
+    const config = this.config!
+    const brand = config.brand
+
+    const title = !brand.subtitle ? '' : brand.title
+    const subtitle = brand.subtitle || brand.title
 
     if (!title && !subtitle) {
       return null
@@ -91,7 +120,17 @@ class MiniCockpit extends Component {
   }
 
   private _renderUserMenu() {
-    const displayName = this.userDisplayName || 'Anonymous'
+    const config = this.config!
+    const user = config.user
+    const displayName = user.displayName || 'Anonymous' // TODO
+
+    const userMenuItems = html`
+      ${repeat(
+        config.userMenu.items,
+        (it) =>
+          html`<sl-menu-item data-action=${it.action}>${it.text}</sl-menu-item>`
+      )}
+    `
 
     return html`
       <sl-dropdown class="user-menu" placement="bottom" distance="10">
@@ -105,18 +144,34 @@ class MiniCockpit extends Component {
           </div>
         </div>
         <sl-menu class="user-menu-items">
-          <sl-menu-item>
-            Preferences
-          </sl-menu-item>
-          <sl-menu-item>
-            Profile
-          </sl-menu-item>
+          ${userMenuItems}
           <sl-divider></sl-divider>
-          <sl-menu-item>
+          <sl-menu-item data-action="logOut">
             Log out
           </sl-menu-item>
         </sl-menu>
       </drop-down>
     `
+  }
+
+  private _renderMainMenu() {
+    const mainMenu = this.config!.mainMenu
+    const activeItem = mainMenu.activeItem
+    const items = mainMenu.items
+
+    const menuItems = html`
+      ${repeat(items, (it) => {
+        const className = classMap({
+          'main-menu-item': true,
+          'main-menu-item-active': !!activeItem && activeItem === it.itemId
+        })
+
+        return html`<a data-action=${it.action || it.itemId} class=${className}
+          >${it.text}</a
+        >`
+      })}
+    `
+
+    return html` <div class="main-menu">${menuItems}</div> `
   }
 }
