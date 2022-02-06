@@ -124,6 +124,9 @@
 .main-menu-item-active {
   color: var(--sl-color-neutral-0);
   background-color: rgb(46 56 64);
+  border: 0 solid var(--sl-color-primary-600);
+  border-width: 0 0 0 2px;
+  box-sizing: border-box;
 }
 
 .main-menu-item-icon {
