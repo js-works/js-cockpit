@@ -1,7 +1,7 @@
 import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit'
 
 export const sharedTheme = new Theme([
-  ThemeMods.colors(ColorSchemes.pacificBlue),
+  ThemeMods.colors(ColorSchemes.pink),
   ThemeMods.modern()
   //ThemeMods.compact()
   //ThemeMods.dark()
@@ -14,6 +14,17 @@ export const sharedTheme = new Theme([
   })
     */
 ])
+
+const linkElem = document.createElement('link')
+linkElem.setAttribute('rel', 'stylesheet')
+linkElem.setAttribute('type', 'text/css')
+
+linkElem.setAttribute(
+  'href',
+  'https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700'
+)
+
+document.head.append(linkElem)
 
 document.documentElement.lang = 'de'
 

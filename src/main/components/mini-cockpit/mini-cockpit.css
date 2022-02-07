@@ -32,7 +32,10 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin: 1em 1rem 1.75rem 1rem;
+  padding: 0.625em 1rem;
+  margin: 0 0 0.75rem 0;
+  xxxmargin: 0 0 1.25rem 0;
+  xxxbackground-color: var(--sl-color-primary-800);
 }
 
 .brand-title {

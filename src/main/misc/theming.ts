@@ -276,7 +276,6 @@ const ThemeMods = {
       return {
         'font-sans':
           "'Open Sans', -apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-
         'font-weight-semibold': '600',
         'label-font-weight': 'var(--sl-font-weight-semibold)',
         'border-radius-small': '0px',

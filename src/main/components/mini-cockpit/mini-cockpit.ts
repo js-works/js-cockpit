@@ -177,16 +177,15 @@ class MiniCockpit extends Component {
           'main-menu-item-active': !!activeItem && activeItem === it.itemId
         })
 
-        return html` <a
-          data-action=${it.action || it.itemId}
-          class=${className}
-        >
-          ${icon}
-          <div class="main-menu-item-text">${it.text}</div>
-        </a>`
+        return html`
+          <a data-action=${it.action || it.itemId} class=${className}>
+            ${icon}
+            <div class="main-menu-item-text">${it.text}</div>
+          </a>
+        `
       })}
     `
 
-    return html` <div class="main-menu">${menuItems}</div> `
+    return html`<div class="main-menu">${menuItems}</div>`
   }
 }
