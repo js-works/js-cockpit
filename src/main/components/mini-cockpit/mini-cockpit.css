@@ -16,7 +16,7 @@
   align-items: center;
   color: var(--sl-color-neutral-0);
   xxxbackground-color: rgb(60 70 78);
-  background-color: rgb(77, 81, 93);
+  background-color: rgb(76, 81, 93);
   min-width: 13rem;
   max-width: 16rem;
   user-select: none;
@@ -116,7 +116,7 @@
 
 .main-menu-item:not(.main-menu-item-active):hover {
   color: var(--sl-color-neutral-0);
-  background-color: rgb(42 52 60);
+  background-color: rgb(54 62 70);
   cursor: pointer;
 }
 
@@ -127,7 +127,7 @@
 
 .main-menu-item-active {
   color: var(--sl-color-neutral-0);
-  background-color: rgb(46 56 64);
+  background-color: rgb(54 62 70);
   border: 0 solid var(--sl-color-primary-600);
   border-width: 0 0 0 2px;
   padding: 0.5rem 1rem 0.5rem calc(1rem - 2px);
