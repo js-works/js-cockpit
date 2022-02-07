@@ -15,7 +15,8 @@
   flex-direction: column;
   align-items: center;
   color: var(--sl-color-neutral-0);
-  background-color: rgb(60 70 78);
+  xxxbackground-color: rgb(60 70 78);
+  background-color: rgb(67, 71, 83);
   min-width: 13rem;
   max-width: 16rem;
   user-select: none;
