@@ -3,6 +3,7 @@ import { html } from '../main/utils/lit'
 import { h } from '../main/utils/dom'
 import { sharedTheme } from './shared/shared-theme'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
+import { SharedDataForm } from './shared/shared-data-form'
 
 import { MiniCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
 
@@ -15,13 +16,13 @@ import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg'
 
 @elem({
   tag: 'mini-cockpit-demo',
-  uses: [MiniCockpit, SharedDataExplorer]
+  uses: [MiniCockpit, SharedDataExplorer, SharedDataForm]
 })
 class MiniCockpitDemo extends Component {
   render() {
     return html`
       <c-mini-cockpit .config=${getCockpitConfig()}>
-        <shared-data-explorer slot="content"></shared-data-explorer>
+        <shared-data-explorer slot="content"> </shared-data-explorer>
       </c-mini-cockpit>
     `
   }

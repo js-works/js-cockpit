@@ -22,6 +22,7 @@ import {
 
 import { SharedCockpit } from './shared/shared-cockpit'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
+import { SharedDataForm } from './shared/shared-data-form'
 
 export default {
   title: 'cockpit'
@@ -137,6 +138,7 @@ export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
     NavMenu,
     SideMenu,
     SharedDataExplorer,
+    SharedDataForm,
     Tab,
     Tabs,
     TextArea,
@@ -146,61 +148,12 @@ export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
 })
 class CockpitDemo3 extends Component {
   render() {
-    return html`<shared-cockpit>${createDataForm()}</shared-cockpit>`
+    return html`
+      <shared-cockpit>
+        <shared-data-form></shared-data-form>
+      </shared-cockpit>
+    `
   }
 }
 
 export const cockpit3 = () => h('cockpit-demo3')
-
-function createDataForm() {
-  return html`
-    <div>
-      <c-data-form headline="Customer" lang="de-DE">
-        <c-form-section>
-          <c-fieldset>
-            <c-text-field label="Customer No." required></c-text-field>
-          </c-fieldset>
-          <c-fieldset>
-            <c-text-field label="Short name" required></c-text-field>
-          </c-fieldset>
-        </c-form-section>
-        <c-form-section caption="Customer address">
-          <c-fieldset>
-            <c-select-box label="Salutation"></c-select-box>
-            <c-text-field label="First name" required></c-text-field>
-            <c-text-field label="Last name" required></c-text-field>
-            <c-text-field label="Phone" required></c-text-field>
-          </c-fieldset>
-          <c-fieldset>
-            <c-text-field label="Company" required></c-text-field>
-            <c-text-field label="Display name"></c-text-field>
-            <c-text-field label="Alias name"></c-text-field>
-            <c-date-field
-              label="Day of birth"
-              value="2017-01-01"
-              required
-              lang="en-US"
-            ></c-date-field>
-            <!--
-              <c-date-range label="Date range" required></c-date-range>
-              <c-radio-group
-                label="Options"
-                orient="horizontal"
-                required
-              ></c-radio-group>
-              -->
-          </c-fieldset>
-        </c-form-section>
-        <c-form-section caption="Contact information">
-          <c-fieldset>
-            <c-text-field label="Phone" required></c-text-field>
-            <c-text-field label="Mobile"></c-text-field>
-            <c-text-area label="Comments"></c-text-area>
-            <c-date-field label="Day of birth" required></c-date-field>
-            <c-date-range label="Date range" required></c-date-range>
-          </c-fieldset>
-        </c-form-section>
-      </c-data-form>
-    </div>
-  `
-}

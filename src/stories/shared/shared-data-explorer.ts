@@ -13,10 +13,6 @@ import {
 // @ts-ignore
 import faker from 'faker'
 
-export default {
-  title: 'data-explorer'
-}
-
 const columns: DataExplorer.Column[] = [
   {
     type: 'column',
