@@ -6,7 +6,7 @@
   height: 100%;
   display: flex;
   font-family: var(--sl-font-sans);
-  font-size: var(--sl-font-size-normal);
+  font-size: var(--sl-font-size-medium);
   box-sizing: border-box;
 }
 
