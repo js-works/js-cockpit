@@ -1,8 +1,12 @@
-import { elem, prop, Attrs, Component } from '../../utils/components'
+import {
+  bind,
+  elem,
+  prop,
+  afterInit,
+  Attrs,
+  Component
+} from '../../utils/components'
 import { classMap, html, repeat, TemplateResult } from '../../utils/lit'
-
-// styles
-import microCockpitStyles from './micro-cockpit.css'
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -16,6 +20,10 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 // icons
 import avatarIcon from '../../icons/person-fill.svg'
 import caretIcon from '../../icons/chevron-down.svg'
+
+// styles
+import microCockpitStyles from './micro-cockpit.css'
+import scrollbarStyles from '../../shared/css/scrollbar.css'
 
 // === exports =======================================================
 
@@ -58,6 +66,7 @@ namespace MicroCockpit {
 
   export type MainMenuGroup = {
     kind: 'group'
+    groupId: string
     icon: string
     text: string
     subitems: MainMenuSubitem[]
@@ -82,12 +91,53 @@ namespace MicroCockpit {
 
 @elem({
   tag: 'c-micro-cockpit',
-  styles: microCockpitStyles,
+  styles: [microCockpitStyles, scrollbarStyles],
   uses: [SlButton, SlDetails, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
 class MicroCockpit extends Component {
   @prop
   config?: MicroCockpit.Config
+
+  private _openGroups: Set<string> = new Set()
+
+  constructor() {
+    super()
+
+    afterInit(this, () => {
+      const mainMenu = this.config?.mainMenu
+      const activeItem = mainMenu?.activeItem
+
+      if (!activeItem) {
+        return
+      }
+
+      for (const item of mainMenu.items) {
+        if (item.kind !== 'group') {
+          continue
+        }
+
+        if (item.subitems.some((it) => it.itemId === activeItem)) {
+          this._openGroups.add(item.groupId)
+        }
+      }
+    })
+  }
+
+  @bind
+  private _onGroupOpen(ev: Event) {
+    const details = <SlDetails>ev.target
+    const groupId = details.getAttribute('data-group')
+
+    this._openGroups.add(groupId!)
+  }
+
+  @bind
+  private _onGroupClose(ev: Event) {
+    const details = <SlDetails>ev.target
+    const groupId = details.getAttribute('data-group')
+
+    this._openGroups.delete(groupId!)
+  }
 
   render() {
     if (!this.config) {
@@ -213,13 +263,21 @@ class MicroCockpit extends Component {
       (it) => it.itemId && it.itemId === this.config!.mainMenu.activeItem
     )
 
+    const open = this._openGroups.has(group.groupId)
+
     const className = classMap({
       'main-menu-group': true,
       'main-menu-group-active': active
     })
 
     return html`
-      <sl-details class=${className} ?open=${active}>
+      <sl-details
+        class=${className}
+        ?open=${open}
+        @sl-show=${this._onGroupOpen}
+        @sl-hide=${this._onGroupClose}
+        data-group=${group.groupId}
+      >
         <div slot="summary" class="main-menu-group">
           <div class="main-menu-group-icon">
             <sl-icon src=${group.icon}></sl-icon>

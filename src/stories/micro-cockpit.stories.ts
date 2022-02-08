@@ -79,6 +79,7 @@ function getCockpitConfig(): MicroCockpit.Config {
         },
         {
           kind: 'group',
+          groupId: 'reports',
           icon: reportsIcon,
           text: 'Reports',
           subitems: [
@@ -101,6 +102,7 @@ function getCockpitConfig(): MicroCockpit.Config {
         },
         {
           kind: 'group',
+          groupId: 'user-management',
           icon: reportsIcon,
           text: 'User management',
           subitems: [
