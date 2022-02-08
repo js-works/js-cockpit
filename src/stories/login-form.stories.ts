@@ -52,6 +52,7 @@ class LoginFormDemo extends Component {
         >
           <c-brand
             slot="header"
+            logo="default"
             headline="my-company"
             text="Back Office"
             size="large"

@@ -205,7 +205,7 @@ class MicroCockpit extends Component {
       <sl-dropdown class="user-menu" placement="bottom" distance="10">
         <div slot="trigger" class="user-menu-trigger">
           <div class="avatar">
-            <sl-icon src=${avatarIcon} class="avatar-icon"></sl-icon>
+            <sl-icon src=${avatarIcon} class="default-avatar-icon"></sl-icon>
           </div>
           <div class="user-menu-info">
             <div class="user-display-name">${displayName}</div>

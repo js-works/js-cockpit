@@ -61,16 +61,17 @@
   margin: 0 0.25rem;
 }
 
-.avatar-icon {
+.default-avatar-icon {
   font-size: 250%;
   color: var(--sl-color-neutral-300);
-  background-color: var(--sl-color-neutral-100);
+  background-color: var(--sl-color-neutral-500);
   border-radius: 50%;
   padding: 0.5rem;
+  opacity: 75%;
 }
 
-.user-menu-trigger:hover .avatar-icon {
-  color: var(--sl-color-primary-400);
+.user-menu-trigger:hover .default-avatar-icon {
+  color: var(--sl-color-primary-500);
   background-color: var(--sl-color-primary-200);
 }
 
