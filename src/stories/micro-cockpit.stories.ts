@@ -56,7 +56,7 @@ function getCockpitConfig(): MicroCockpit.Config {
 
     mainMenu: {
       kind: 'items',
-      activeItem: 'transactions',
+      activeItem: 'user-groups',
 
       items: [
         {
@@ -84,18 +84,40 @@ function getCockpitConfig(): MicroCockpit.Config {
           subitems: [
             {
               kind: 'subitem',
-              text: 'Report 1',
+              text: 'Top 10 Customers',
               itemId: 'report1'
             },
             {
               kind: 'subitem',
-              text: 'Report 2',
+              text: 'Revenues',
               itemId: 'report2'
             },
             {
               kind: 'subitem',
-              text: 'Report 2',
+              text: 'Gains',
               itemId: 'report2'
+            }
+          ]
+        },
+        {
+          kind: 'group',
+          icon: reportsIcon,
+          text: 'User management',
+          subitems: [
+            {
+              kind: 'subitem',
+              text: 'Users',
+              itemId: 'users'
+            },
+            {
+              kind: 'subitem',
+              text: 'User groups',
+              itemId: 'user-groups'
+            },
+            {
+              kind: 'subitem',
+              text: 'Roles',
+              itemId: 'roles'
             }
           ]
         },

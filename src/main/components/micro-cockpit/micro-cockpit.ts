@@ -103,8 +103,10 @@ class MicroCockpit extends Component {
       />
       <div class="base">
         <div class="sidebar">
-          ${this._renderBrand()} ${this._renderUserMenu()}
-          ${this._renderMainMenu()}
+          <div class="sidebar-scrollpane">
+            ${this._renderBrand()} ${this._renderUserMenu()}
+            ${this._renderMainMenu()}
+          </div>
         </div>
         <div class="content">
           <slot name="content"></slot>
@@ -207,8 +209,17 @@ class MicroCockpit extends Component {
   }
 
   _renderMainMenuGroup(group: MicroCockpit.MainMenuGroup) {
+    const active = group.subitems.some(
+      (it) => it.itemId && it.itemId === this.config!.mainMenu.activeItem
+    )
+
+    const className = classMap({
+      'main-menu-group': true,
+      'main-menu-group-active': active
+    })
+
     return html`
-      <sl-details class="main-menu-group">
+      <sl-details class=${className} ?open=${active}>
         <div slot="summary" class="main-menu-group">
           <div class="main-menu-group-icon">
             <sl-icon src=${group.icon}></sl-icon>
@@ -223,10 +234,18 @@ class MicroCockpit extends Component {
   }
 
   private _renderSubitem(subitem: MicroCockpit.MainMenuSubitem) {
+    const mainMenu = this.config!.mainMenu
     const action = subitem.action || subitem.itemId
 
+    const className = classMap({
+      'main-menu-subitem': true,
+
+      'main-menu-subitem-active':
+        subitem.itemId && subitem.itemId === mainMenu.activeItem
+    })
+
     return html`
-      <a data-action=${action} class="main-menu-subitem">${subitem.text}</a>
+      <a data-action=${action} class=${className}>${subitem.text}</a>
     `
   }
 }
