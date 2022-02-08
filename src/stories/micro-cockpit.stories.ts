@@ -60,26 +60,47 @@ function getCockpitConfig(): MicroCockpit.Config {
 
       items: [
         {
+          kind: 'item',
           icon: dashboardIcon,
           text: 'Dashboard',
           itemId: 'dashboard'
         },
         {
+          kind: 'item',
           icon: salesIcon,
           text: 'Sales',
           itemId: 'sales'
         },
         {
+          kind: 'item',
           icon: transactionsIcon,
           text: 'Transactions',
           itemId: 'transactions'
         },
         {
+          kind: 'group',
           icon: reportsIcon,
           text: 'Reports',
-          itemId: 'reports'
+          subitems: [
+            {
+              kind: 'subitem',
+              text: 'Report 1',
+              itemId: 'report1'
+            },
+            {
+              kind: 'subitem',
+              text: 'Report 2',
+              itemId: 'report2'
+            },
+            {
+              kind: 'subitem',
+              text: 'Report 2',
+              itemId: 'report2'
+            }
+          ]
         },
         {
+          kind: 'item',
           icon: scheduleIcon,
           text: 'Schedule',
           itemId: 'schedule'

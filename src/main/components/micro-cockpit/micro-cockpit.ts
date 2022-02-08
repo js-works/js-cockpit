@@ -6,6 +6,7 @@ import microCockpitStyles from './micro-cockpit.css'
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
+import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -44,13 +45,29 @@ namespace MicroCockpit {
   export type MainMenu = {
     kind: 'items'
     activeItem?: string
+    items: (MainMenuItem | MainMenuGroup)[]
+  }
 
-    items: {
-      icon: string
-      text: string
-      itemId: string
-      action?: string
-    }[]
+  export type MainMenuItem = {
+    kind: 'item'
+    icon: string
+    text: string
+    itemId: string
+    action?: string
+  }
+
+  export type MainMenuGroup = {
+    kind: 'group'
+    icon: string
+    text: string
+    subitems: MainMenuSubitem[]
+  }
+
+  export type MainMenuSubitem = {
+    kind: 'subitem'
+    text: string
+    itemId: string
+    action?: string
   }
 
   export type Config = {
@@ -66,7 +83,7 @@ namespace MicroCockpit {
 @elem({
   tag: 'c-micro-cockpit',
   styles: microCockpitStyles,
-  uses: [SlButton, SlDropdown, SlIcon, SlMenu, SlMenuItem]
+  uses: [SlButton, SlDetails, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
 class MicroCockpit extends Component {
   @prop
@@ -156,36 +173,60 @@ class MicroCockpit extends Component {
 
   private _renderMainMenu() {
     const mainMenu = this.config!.mainMenu
-    const activeItem = mainMenu.activeItem
     const items = mainMenu.items
-    const hasIcons = items.some((it) => !!it.icon)
 
     const menuItems = html`
-      ${repeat(items, (it) => {
-        const icon = !hasIcons
-          ? null
-          : !it.icon
-          ? html`<div class="main-menu-item-icon"></div>`
-          : html`
-              <div class="main-menu-item-icon">
-                <sl-icon src=${it.icon}></sl-icon>
-              </div>
-            `
-
-        const className = classMap({
-          'main-menu-item': true,
-          'main-menu-item-active': !!activeItem && activeItem === it.itemId
-        })
-
-        return html`
-          <a data-action=${it.action || it.itemId} class=${className}>
-            ${icon}
-            <div class="main-menu-item-text">${it.text}</div>
-          </a>
-        `
+      ${repeat(items, (it, idx) => {
+        return it.kind === 'group'
+          ? this._renderMainMenuGroup(it)
+          : this._renderMainMenuItem(it)
       })}
     `
 
     return html`<div class="main-menu">${menuItems}</div>`
+  }
+
+  _renderMainMenuItem(item: MicroCockpit.MainMenuItem) {
+    const config = this.config!
+    const mainMenu = config.mainMenu
+    const activeItem = mainMenu.activeItem
+
+    const className = classMap({
+      'main-menu-item': true,
+      'main-menu-item-active': !!activeItem && activeItem === item.itemId
+    })
+
+    return html`
+      <a data-action=${item.action || item.itemId} class=${className}>
+        <div class="main-menu-item-icon">
+          <sl-icon src=${item.icon}></sl-icon>
+        </div>
+        <div class="main-menu-item-text">${item.text}</div>
+      </a>
+    `
+  }
+
+  _renderMainMenuGroup(group: MicroCockpit.MainMenuGroup) {
+    return html`
+      <sl-details class="main-menu-group">
+        <div slot="summary" class="main-menu-group">
+          <div class="main-menu-group-icon">
+            <sl-icon src=${group.icon}></sl-icon>
+          </div>
+          <div class="main-menu-group-text">${group.text}</div>
+        </div>
+        ${repeat(group.subitems, (it) => {
+          return this._renderSubitem(it)
+        })}
+      </sl-details>
+    `
+  }
+
+  private _renderSubitem(subitem: MicroCockpit.MainMenuSubitem) {
+    const action = subitem.action || subitem.itemId
+
+    return html`
+      <a data-action=${action} class="main-menu-subitem">${subitem.text}</a>
+    `
   }
 }

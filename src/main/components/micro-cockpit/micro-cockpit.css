@@ -142,3 +142,51 @@
 .main-menu-item-active .main-menu-item-icon {
   color: var(--sl-color-primary-700);
 }
+
+sl-details.main-menu-group::part(base) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: none;
+  border: none;
+}
+
+sl-details.main-menu-group::part(header) {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+sl-details.main-menu-group::part(summary),
+sl-details.main-menu-group::part(summary-icon) {
+  color: var(--sl-color-neutral-400);
+}
+
+sl-details.main-menu-group:hover::part(summary),
+sl-details.main-menu-group:hover::part(summary-icon) {
+  color: var(--sl-color-neutral-0);
+}
+
+sl-details.main-menu-group::part(content) {
+  padding: 0;
+}
+
+.main-menu-group {
+  display: flex;
+}
+
+.main-menu-group-icon {
+  width: 2rem;
+}
+
+.main-menu-subitem {
+  display: block;
+  padding: 0.5rem 1rem 0.5rem 3.5rem;
+  margin: 0;
+  color: var(--sl-color-neutral-400);
+}
+
+.main-menu-subitem:hover {
+  color: var(--sl-color-neutral-0);
+  background-color: rgb(54 62 70);
+  cursor: pointer;
+}
