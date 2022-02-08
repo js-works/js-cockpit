@@ -72,8 +72,8 @@ slot[name='footer']::slotted(div) {
   display: flex;
   flex-direction: column;
   flex-grow: 5;
-  min-width: 330px;
-  max-width: 330px;
+  min-width: 300px;
+  max-width: 300px;
   padding: 26px 20px 24px 20px;
   box-sizing: border-box;
 

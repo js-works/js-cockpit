@@ -16,8 +16,9 @@
   align-items: center;
   color: var(--sl-color-neutral-0);
   xxxbackground-color: rgb(60 70 78);
-  background-color: rgb(70, 76, 84);
-  min-width: 13rem;
+  xxxbackground-color: rgb(70, 76, 84);
+  background-color: rgb(76, 81, 93);
+  min-width: 12rem;
   max-width: 16rem;
   user-select: none;
 }

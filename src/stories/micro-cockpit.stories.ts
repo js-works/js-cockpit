@@ -5,7 +5,7 @@ import { sharedTheme } from './shared/shared-theme'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
 import { SharedDataForm } from './shared/shared-data-form'
 
-import { MiniCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
+import { MicroCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
 
 // icons
 import dashboardIcon from 'bootstrap-icons/icons/house-door.svg'
@@ -15,20 +15,20 @@ import reportsIcon from 'bootstrap-icons/icons/file-earmark-text.svg'
 import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg'
 
 @elem({
-  tag: 'mini-cockpit-demo',
-  uses: [MiniCockpit, SharedDataExplorer, SharedDataForm]
+  tag: 'micro-cockpit-demo',
+  uses: [MicroCockpit, SharedDataExplorer, SharedDataForm]
 })
-class MiniCockpitDemo extends Component {
+class MicroCockpitDemo extends Component {
   render() {
     return html`
-      <c-mini-cockpit .config=${getCockpitConfig()}>
+      <c-micro-cockpit .config=${getCockpitConfig()}>
         <shared-data-explorer slot="content"> </shared-data-explorer>
-      </c-mini-cockpit>
+      </c-micro-cockpit>
     `
   }
 }
 
-function getCockpitConfig(): MiniCockpit.Config {
+function getCockpitConfig(): MicroCockpit.Config {
   return {
     brand: {
       title: 'My Company',
@@ -90,7 +90,7 @@ function getCockpitConfig(): MiniCockpit.Config {
 }
 
 export default {
-  title: 'mini-cockpit'
+  title: 'micro-cockpit'
 }
 
-export const miniCockpit = () => h('mini-cockpit-demo')
+export const microCockpit = () => h('micro-cockpit-demo')

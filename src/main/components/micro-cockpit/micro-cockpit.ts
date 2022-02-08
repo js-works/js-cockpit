@@ -2,7 +2,7 @@ import { elem, prop, Attrs, Component } from '../../utils/components'
 import { classMap, html, repeat, TemplateResult } from '../../utils/lit'
 
 // styles
-import miniCockpitStyles from './mini-cockpit.css'
+import microCockpitStyles from './micro-cockpit.css'
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -18,11 +18,11 @@ import caretIcon from '../../icons/chevron-down.svg'
 
 // === exports =======================================================
 
-export { MiniCockpit }
+export { MicroCockpit }
 
 // === types =========================================================
 
-namespace MiniCockpit {
+namespace MicroCockpit {
   export type Brand = {
     title: string
     subtitle?: string
@@ -61,16 +61,16 @@ namespace MiniCockpit {
   }
 }
 
-// === MiniCockpit ===================================================
+// === MicroCockpit ===================================================
 
 @elem({
-  tag: 'c-mini-cockpit',
-  styles: miniCockpitStyles,
+  tag: 'c-micro-cockpit',
+  styles: microCockpitStyles,
   uses: [SlButton, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
-class MiniCockpit extends Component {
+class MicroCockpit extends Component {
   @prop
-  config?: MiniCockpit.Config
+  config?: MicroCockpit.Config
 
   render() {
     if (!this.config) {
