@@ -10,7 +10,6 @@ import { classMap, html, repeat, TemplateResult } from '../../utils/lit'
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -19,7 +18,7 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 
 // icons
 import avatarIcon from '../../icons/person-fill.svg'
-import caretIcon from '../../icons/chevron-down.svg'
+import chevronDownIcon from '../../icons/chevron-down.svg'
 
 // styles
 import microCockpitStyles from './micro-cockpit.css'
@@ -92,7 +91,7 @@ namespace MicroCockpit {
 @elem({
   tag: 'c-micro-cockpit',
   styles: [microCockpitStyles, scrollbarStyles],
-  uses: [SlButton, SlDetails, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
+  uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
 class MicroCockpit extends Component {
   @prop
@@ -124,19 +123,22 @@ class MicroCockpit extends Component {
   }
 
   @bind
-  private _onGroupOpen(ev: Event) {
-    const details = <SlDetails>ev.target
-    const groupId = details.getAttribute('data-group')
+  private _onGroupToggle(ev: Event) {
+    const node = <HTMLElement>(<HTMLElement>ev.currentTarget).parentNode!
+    const groupId = node.getAttribute('data-group')!
+    const open = this._openGroups.has(groupId)
 
-    this._openGroups.add(groupId!)
-  }
+    const contentNode = node.children[1]
 
-  @bind
-  private _onGroupClose(ev: Event) {
-    const details = <SlDetails>ev.target
-    const groupId = details.getAttribute('data-group')
-
-    this._openGroups.delete(groupId!)
+    if (open) {
+      this._openGroups.delete(groupId)
+      node.classList.remove('main-menu-group--open')
+      node.classList.add('main-menu-group--closed')
+    } else {
+      this._openGroups.add(groupId)
+      node.classList.remove('main-menu-group--closed')
+      node.classList.add('main-menu-group--open')
+    }
   }
 
   render() {
@@ -209,7 +211,7 @@ class MicroCockpit extends Component {
           </div>
           <div class="user-menu-info">
             <div class="user-display-name">${displayName}</div>
-            <sl-icon class="user-menu-caret" src=${caretIcon}></sl-icon>
+            <sl-icon class="user-menu-caret" src=${chevronDownIcon}></sl-icon>
           </div>
         </div>
         <sl-menu class="user-menu-items">
@@ -267,27 +269,28 @@ class MicroCockpit extends Component {
 
     const className = classMap({
       'main-menu-group': true,
-      'main-menu-group-active': active
+      'main-menu-group--open': open,
+      'main-menu-group--closed': !open,
+      'main-menu-group--active': active
     })
 
     return html`
-      <sl-details
-        class=${className}
-        ?open=${open}
-        @sl-show=${this._onGroupOpen}
-        @sl-hide=${this._onGroupClose}
-        data-group=${group.groupId}
-      >
-        <div slot="summary" class="main-menu-group">
-          <div class="main-menu-group-icon">
+      <div class=${className} data-group=${group.groupId}>
+        <div class="main-menu-group-header" @click=${this._onGroupToggle}>
+          <div class="main-menu-group-header-icon">
             <sl-icon src=${group.icon}></sl-icon>
           </div>
-          <div class="main-menu-group-text">${group.text}</div>
+          <div class="main-menu-group-header-text">${group.text}</div>
+          <div class="main-menu-group-header-chevron">
+            <sl-icon src=${chevronDownIcon}></sl-icon>
+          </div>
         </div>
-        ${repeat(group.subitems, (it) => {
-          return this._renderSubitem(it)
-        })}
-      </sl-details>
+        <div class="main-menu-group-subitems">
+          ${repeat(group.subitems, (it) => {
+            return this._renderSubitem(it)
+          })}
+        </div>
+      </div>
     `
   }
 
