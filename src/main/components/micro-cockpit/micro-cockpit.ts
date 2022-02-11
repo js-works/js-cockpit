@@ -98,6 +98,7 @@ class MicroCockpit extends Component {
   config?: MicroCockpit.Config
 
   private _openGroups: Set<string> = new Set()
+  private _timeoutId: number | null = null
 
   constructor() {
     super()
@@ -150,7 +151,12 @@ class MicroCockpit extends Component {
       node.classList.remove('main-menu-group--closed')
     }
 
-    setTimeout(() => {
+    if (this._timeoutId !== null) {
+      clearTimeout(this._timeoutId)
+    }
+
+    this._timeoutId = setTimeout(() => {
+      this._timeoutId = null
       contentNode.style.maxHeight = ''
       contentNode.style.overflow = ''
     }, 500)

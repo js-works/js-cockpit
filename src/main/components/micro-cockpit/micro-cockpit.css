@@ -155,9 +155,6 @@
   color: var(--sl-color-primary-700);
 }
 
-.main-menu-group {
-}
-
 .main-menu-group-header {
   display: flex;
   padding: 0.5rem 0 0.5rem 0;
@@ -179,7 +176,7 @@
 }
 
 .main-menu-group .main-menu-group-subitems {
-  transition: max-height 0.5s linear;
+  transition: max-height 0.25s;
 }
 
 .main-menu-group--open .main-menu-group-subitems {
@@ -193,7 +190,7 @@
 }
 
 .main-menu-group .main-menu-group-header-chevron {
-  transition: 0.5s transform linear;
+  transition: 0.25s transform;
 }
 
 .main-menu-group--closed .main-menu-group-header-chevron {
