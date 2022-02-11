@@ -268,7 +268,7 @@ class MicroCockpit extends Component {
 
     const className = classMap({
       'main-menu-item': true,
-      'main-menu-item-active': !!activeItem && activeItem === item.itemId
+      'main-menu-item--active': !!activeItem && activeItem === item.itemId
     })
 
     return html`
@@ -322,7 +322,7 @@ class MicroCockpit extends Component {
     const className = classMap({
       'main-menu-subitem': true,
 
-      'main-menu-subitem-active':
+      'main-menu-subitem--active':
         subitem.itemId && subitem.itemId === mainMenu.activeItem
     })
 

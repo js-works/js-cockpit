@@ -158,7 +158,16 @@
 .main-menu-group-header {
   display: flex;
   padding: 0.5rem 0 0.5rem 0;
+  color: var(--sl-color-neutral-400);
   cursor: pointer;
+}
+
+.main-menu-group--active .main-menu-group-header {
+  color: var(--sl-color-neutral-0);
+}
+
+.main-menu-group:not(.main-menu-group--active) .main-menu-group-header:hover {
+  color: var(--sl-color-neutral-0);
 }
 
 .main-menu-group-header-icon {
