@@ -140,7 +140,7 @@ class MicroCockpit extends Component {
       node.classList.add('main-menu-group--closed')
       node.classList.remove('main-menu-group--open')
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         contentNode.style.maxHeight = '0px'
       })
     } else {
