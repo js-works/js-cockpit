@@ -4,8 +4,8 @@ import { h } from '../main/utils/dom'
 import { sharedTheme } from './shared/shared-theme'
 import { SharedDataExplorer } from './shared/shared-data-explorer'
 import { SharedDataForm } from './shared/shared-data-form'
-
 import { MicroCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
+import { ActionEvent } from '../main/events/action-event'
 
 // icons
 import dashboardIcon from 'bootstrap-icons/icons/house-door.svg'
@@ -19,10 +19,18 @@ import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg'
   uses: [MicroCockpit, SharedDataExplorer, SharedDataForm]
 })
 class MicroCockpitDemo extends Component {
+  @bind
+  private _onAction(ev: ActionEvent) {
+    alert(ev.detail.action)
+  }
+
   render() {
     return html`
-      <c-micro-cockpit .config=${getCockpitConfig()}>
-        <shared-data-explorer slot="content"> </shared-data-explorer>
+      <c-micro-cockpit
+        .config=${getCockpitConfig()}
+        @c-action=${this._onAction}
+      >
+        <shared-data-explorer slot="content"></shared-data-explorer>
       </c-micro-cockpit>
     `
   }

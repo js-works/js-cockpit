@@ -1,12 +1,16 @@
 import {
   bind,
+  createEmitter,
   elem,
   prop,
   afterInit,
   Attrs,
+  Listener,
   Component
 } from '../../utils/components'
-import { classMap, html, repeat, TemplateResult } from '../../utils/lit'
+
+import { classMap, html, repeat } from '../../utils/lit'
+import { ActionEvent } from '../../events/action-event'
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
@@ -97,6 +101,10 @@ class MicroCockpit extends Component {
   @prop
   config?: MicroCockpit.Config
 
+  @prop
+  onAction?: Listener<ActionEvent>
+
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
   private _openGroups: Set<string> = new Set()
   private _timeoutId: number | null = null
 
@@ -162,6 +170,14 @@ class MicroCockpit extends Component {
     }, 500)
   }
 
+  @bind
+  private _onItemClick(ev: MouseEvent) {
+    const target = <HTMLElement>ev.currentTarget
+    const action = target.getAttribute('data-action')!
+
+    this._emitAction({ action })
+  }
+
   render() {
     if (!this.config) {
       return null
@@ -220,7 +236,11 @@ class MicroCockpit extends Component {
       ${repeat(
         config.userMenu.items,
         (it) =>
-          html`<sl-menu-item data-action=${it.action}>${it.text}</sl-menu-item>`
+          html`<sl-menu-item
+            data-action=${it.action}
+            @click=${this._onItemClick}
+            >${it.text}</sl-menu-item
+          >`
       )}
     `
 
@@ -238,7 +258,7 @@ class MicroCockpit extends Component {
         <sl-menu class="user-menu-items">
           ${userMenuItems}
           <sl-divider></sl-divider>
-          <sl-menu-item data-action="logOut">
+          <sl-menu-item data-action="logOut" @click=${this._onItemClick}>
             Log out
           </sl-menu-item>
         </sl-menu>
@@ -272,7 +292,11 @@ class MicroCockpit extends Component {
     })
 
     return html`
-      <a data-action=${item.action || item.itemId} class=${className}>
+      <a
+        data-action=${item.action || item.itemId}
+        class=${className}
+        @click=${this._onItemClick}
+      >
         <div class="main-menu-item-icon">
           <sl-icon src=${item.icon}></sl-icon>
         </div>
@@ -308,14 +332,14 @@ class MicroCockpit extends Component {
         </div>
         <div class="main-menu-group-subitems">
           ${repeat(group.subitems, (it) => {
-            return this._renderSubitem(it)
+            return this._renderMainManuSubitem(it)
           })}
         </div>
       </div>
     `
   }
 
-  private _renderSubitem(subitem: MicroCockpit.MainMenuSubitem) {
+  private _renderMainManuSubitem(subitem: MicroCockpit.MainMenuSubitem) {
     const mainMenu = this.config!.mainMenu
     const action = subitem.action || subitem.itemId
 
@@ -327,7 +351,9 @@ class MicroCockpit extends Component {
     })
 
     return html`
-      <a data-action=${action} class=${className}>${subitem.text}</a>
+      <a data-action=${action} class=${className} @click=${this._onItemClick}
+        >${subitem.text}</a
+      >
     `
   }
 }
