@@ -12,10 +12,17 @@
 
 .sidebar {
   position: relative;
-  color: var(--sl-color-neutral-0);
+
   xxxbackground-color: rgb(60 70 78);
   xxxbackground-color: rgb(70, 76, 84);
-  background-color: rgb(76, 81, 93);
+  xxxbackground-color: rgb(76, 81, 93);
+
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
+
+  background-color: var(--sl-light, rgb(70, 78, 90))
+    var(--sl-dark, var(--sl-color-neutral-0));
+
   min-width: 15rem;
   max-width: 20rem;
   user-select: none;
@@ -63,7 +70,10 @@
 
 .default-avatar-icon {
   font-size: 250%;
-  color: var(--sl-color-primary-300);
+
+  color: var(--sl-light, var(--sl-color-primary-300))
+    var(--sl-dark, var(--sl-color-primary-700));
+
   background-color: var(--sl-color-neutral-500);
   border-radius: 50%;
   padding: 0.5rem;
@@ -71,12 +81,16 @@
 }
 
 .user-menu-trigger:hover .default-avatar-icon {
-  color: var(--sl-color-primary-500);
-  background-color: var(--sl-color-primary-200);
+  color: var(--sl-light, var(--sl-color-primary-500))
+    var(--sl-dark, var(--sl-color-primary-700));
+
+  background-color: var(--sl-light, var(--sl-color-primary-200))
+    var(--sl-dark, var(--sl-color-neutral-400));
 }
 
-.user-menu-trigger:hover .user-display-name {
-  color: var(--sl-color-neutral-0);
+.user-menu-trigger:hover * {
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
 }
 
 .user-menu {
@@ -128,14 +142,21 @@
 }
 
 .main-menu-item:not(.main-menu-item--active):hover {
-  color: var(--sl-color-neutral-0);
-  background-color: rgb(54 62 70);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
+
+  background-color: var(--sl-light, rgb(54 62 70))
+    var(--sl-dark, var(--sl-color-neutral-200));
+
   cursor: pointer;
 }
 
 .main-menu-item:not(.main-menu-item--active):active {
-  color: var(--sl-color-neutral-0);
-  background-color: var(--sl-color-primary-800);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-700));
+
+  background-color: var(--sl-light, var(--sl-color-primary-800))
+    var(--sl-dark, var(--sl-color-primary-200));
 }
 
 .main-menu-item--active {
@@ -163,11 +184,13 @@
 }
 
 .main-menu-group--active .main-menu-group-header {
-  color: var(--sl-color-neutral-0);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
 }
 
 .main-menu-group:not(.main-menu-group--active) .main-menu-group-header:hover {
-  color: var(--sl-color-neutral-0);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
 }
 
 .main-menu-group-header-icon {
@@ -214,21 +237,32 @@
 }
 
 .main-menu-subitem:not(.main-menu-subitem--active):hover {
-  color: var(--sl-color-neutral-0);
-  background-color: rgb(54 62 70);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-1000));
+
+  background-color: var(--sl-light, rgb(54 62 70))
+    var(--sl-dark, var(--sl-color-neutral-200));
+
   cursor: pointer;
 }
 
 .main-menu-subitem--active {
   border: 0 solid var(--sl-color-primary-600);
-  border-width: 0 0 0 2px;
+  border-width: var(--sl-light, 0 0 0 2px) var(-sl-dark, 0);
   padding: 0.5rem 1rem 0.5rem calc(3.5rem - 2px);
   box-sizing: border-box;
-  color: var(--sl-color-neutral-0);
-  background-color: rgb(54 62 70);
+
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-primary-800));
+
+  background-color: var(--sl-light, rgb(54 62 70))
+    var(--sl-dark, var(--sl-color-primary-200));
 }
 
 .main-menu-subitem:not(.main-menu-subitem--active):active {
-  color: var(--sl-color-neutral-0);
-  background-color: var(--sl-color-primary-800);
+  color: var(--sl-light, var(--sl-color-neutral-0))
+    var(--sl-dark, var(--sl-color-neutral-700));
+
+  background-color: var(--sl-light, var(--sl-color-primary-800))
+    var(--sl-dark, var(--sl-color-primary-200));
 }

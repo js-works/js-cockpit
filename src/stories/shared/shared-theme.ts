@@ -1,10 +1,10 @@
 import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit'
 
 export const sharedTheme = new Theme([
-  ThemeMods.colors(ColorSchemes.bostonBlue),
+  ThemeMods.colors(ColorSchemes.default),
   ThemeMods.modern(),
   ThemeMods.compact()
-  //ThemeMods.dark()
+  //ThemeMods.dark(true)
   /*
   (tokens) => ({
     'input-border-color': 'var(--sl-color-neutral-200)',

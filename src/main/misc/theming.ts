@@ -237,8 +237,8 @@ const ThemeMods = {
       } else {
         Object.assign(darkTokens, {
           'color-neutral-0': 'rgb(30 30 33)',
-          'color-neutral-50': 'rgb(32 32 36)',
-          'color-neutral-100': 'rgb(33 33 37)',
+          'color-neutral-50': 'rgb(36 36 39)',
+          'color-neutral-100': 'rgb(40 40 43)',
           'color-neutral-200': 'rgb(43 43 46)',
           'color-neutral-300': 'rgb(67 67 74)',
           'color-neutral-400': 'rgb(86 86 95)',
