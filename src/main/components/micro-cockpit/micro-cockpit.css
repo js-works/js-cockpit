@@ -179,21 +179,21 @@
 }
 
 .main-menu-group .main-menu-group-subitems {
-  transition: all 0.5s ease-in-out;
+  transition: max-height 0.5s linear;
 }
 
 .main-menu-group--open .main-menu-group-subitems {
   max-height: auto;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .main-menu-group--closed .main-menu-group-subitems {
-  max-height: 0;
+  max-height: 0px;
   overflow: hidden;
 }
 
 .main-menu-group .main-menu-group-header-chevron {
-  transition: var(--sl-transition-medium) transform ease;
+  transition: 0.5s transform linear;
 }
 
 .main-menu-group--closed .main-menu-group-header-chevron {

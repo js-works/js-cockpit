@@ -128,17 +128,32 @@ class MicroCockpit extends Component {
     const groupId = node.getAttribute('data-group')!
     const open = this._openGroups.has(groupId)
 
-    const contentNode = node.children[1]
+    const contentNode = node.querySelector(
+      '.main-menu-group-subitems'
+    )! as HTMLElement
 
     if (open) {
       this._openGroups.delete(groupId)
-      node.classList.remove('main-menu-group--open')
+      contentNode.style.maxHeight = contentNode.scrollHeight + 'px'
+      contentNode.style.overflow = 'hidden'
       node.classList.add('main-menu-group--closed')
+      node.classList.remove('main-menu-group--open')
+
+      setTimeout(() => {
+        contentNode.style.maxHeight = '0px'
+      })
     } else {
       this._openGroups.add(groupId)
-      node.classList.remove('main-menu-group--closed')
+      contentNode.style.maxHeight = contentNode.scrollHeight + 'px'
+      contentNode.style.overflow = 'hidden'
       node.classList.add('main-menu-group--open')
+      node.classList.remove('main-menu-group--closed')
     }
+
+    setTimeout(() => {
+      contentNode.style.maxHeight = ''
+      contentNode.style.overflow = ''
+    }, 500)
   }
 
   render() {
