@@ -208,7 +208,6 @@
 }
 
 .main-menu-group .main-menu-group-subitems {
-  transition: max-height 0.25s;
 }
 
 .main-menu-group--open .main-menu-group-subitems {
@@ -222,7 +221,7 @@
 }
 
 .main-menu-group .main-menu-group-header-chevron {
-  transition: 0.25s transform;
+  transition: var(--sl-transition-medium) transform;
 }
 
 .main-menu-group--closed .main-menu-group-header-chevron {

@@ -12,6 +12,11 @@ import {
 import { classMap, html, repeat } from '../../utils/lit'
 import { ActionEvent } from '../../events/action-event'
 
+import {
+  runOpenVerticalTransition,
+  runCloseVerticalTransition
+} from '../../misc/transitions'
+
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
@@ -143,31 +148,15 @@ class MicroCockpit extends Component {
 
     if (open) {
       this._openGroups.delete(groupId)
-      contentNode.style.maxHeight = contentNode.scrollHeight + 'px'
-      contentNode.style.overflow = 'hidden'
+      runCloseVerticalTransition(contentNode, 'var(--sl-transition-medium)')
       node.classList.add('main-menu-group--closed')
       node.classList.remove('main-menu-group--open')
-
-      requestAnimationFrame(() => {
-        contentNode.style.maxHeight = '0px'
-      })
     } else {
       this._openGroups.add(groupId)
-      contentNode.style.maxHeight = contentNode.scrollHeight + 'px'
-      contentNode.style.overflow = 'hidden'
+      runOpenVerticalTransition(contentNode, 'var(--sl-transition-medium)')
       node.classList.add('main-menu-group--open')
       node.classList.remove('main-menu-group--closed')
     }
-
-    if (this._timeoutId !== null) {
-      clearTimeout(this._timeoutId)
-    }
-
-    this._timeoutId = setTimeout(() => {
-      this._timeoutId = null
-      contentNode.style.maxHeight = ''
-      contentNode.style.overflow = ''
-    }, 500)
   }
 
   @bind
