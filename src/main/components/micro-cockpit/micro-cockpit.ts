@@ -148,24 +148,14 @@ class MicroCockpit extends Component {
 
     if (open) {
       this._openGroups.delete(groupId)
-
-      runCloseVerticalTransition(
-        contentNode,
-        'var(--sl-transition-medium)'
-      ).then(() => {
-        node.classList.add('main-menu-group--closed')
-        node.classList.remove('main-menu-group--open')
-      })
+      runCloseVerticalTransition(contentNode, 'var(--sl-transition-medium)')
+      node.classList.add('main-menu-group--closed')
+      node.classList.remove('main-menu-group--open')
     } else {
       this._openGroups.add(groupId)
-
-      runOpenVerticalTransition(
-        contentNode,
-        'var(--sl-transition-medium)'
-      ).then(() => {
-        node.classList.add('main-menu-group--open')
-        node.classList.remove('main-menu-group--closed')
-      })
+      runOpenVerticalTransition(contentNode, 'var(--sl-transition-medium)')
+      node.classList.add('main-menu-group--open')
+      node.classList.remove('main-menu-group--closed')
     }
   }
 
