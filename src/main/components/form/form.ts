@@ -3,6 +3,7 @@ import {
   elem,
   prop,
   afterInit,
+  afterConnect,
   afterUpdate,
   Attrs,
   Component
@@ -27,10 +28,29 @@ class Form extends Component {
 
   constructor() {
     super()
+
+    this.addController({
+      hostUpdate: () => {
+        console.log(`${this.localName} update`)
+      },
+
+      hostUpdated: () => {
+        console.log(`${this.localName} updated`)
+      }
+    })
+
+    afterConnect(this, () => {
+      console.log('yyy')
+      console.log('c-form connected')
+
+      this.addEventListener('xxx', (ev: any) => {
+        console.log('xxx event:', ev)
+      })
+    })
   }
 
   submit() {
-    alert('submit')
+    alert('submitted')
   }
 
   render() {

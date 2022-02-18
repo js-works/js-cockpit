@@ -357,6 +357,7 @@ class LoginForm extends Component {
                 <c-form
                   class="column2"
                   @submit=${this._onSubmit}
+                  @xxx=${() => console.log('wooohoo')}
                   ${ref(this._formRef)}
                 >
                   <div class="column2-top">${this._renderFields()}</div>
@@ -437,7 +438,6 @@ class LoginForm extends Component {
   }
 
   private _renderIntro() {
-    console.log(2222, this._view)
     switch (this._view) {
       case 'login':
         return html`
@@ -496,7 +496,7 @@ class LoginForm extends Component {
   private _renderFields() {
     switch (this._view) {
       case 'login':
-        return html` <slot name="login-fields" class="fields-slot"> </slot>
+        return html`<slot name="login-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'login-fields')
             ? null
             : html`

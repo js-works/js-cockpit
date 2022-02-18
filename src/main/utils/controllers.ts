@@ -17,7 +17,50 @@ class FormFieldController<T> {
         anchor: HTMLElement
       } | null
     }
-  ) {}
+  ) {
+    const getLabel = () => (component as any).label
+    let hasRendered = false
+
+    component.addController({
+      hostConnected() {
+        hasRendered = false
+        console.log(`host ${getLabel()},  ${component.localName} connected`)
+      },
+
+      hostDisconnected() {},
+
+      hostUpdate() {
+        if (!hasRendered) {
+          hasRendered = true
+          console.log('dispatch')
+          component.dispatchEvent(
+            new CustomEvent('xxx', {
+              bubbles: true,
+              composed: true,
+
+              detail: {
+                kind: 'formField',
+
+                init(params: {
+                  submitForm: () => void //
+                  cancel: () => void
+                }): {
+                  getName: () => string
+                  getValue: () => any
+                  validate: (data: Record<string, any>) => Error | null
+                  reset: () => void
+                } {
+                  return null as any // TODO
+                }
+              }
+            })
+          )
+        }
+      },
+
+      hostUpdated() {}
+    })
+  }
 
   signalInput(): void {}
 
