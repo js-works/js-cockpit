@@ -6,6 +6,7 @@ import { readFile, writeFile, rm } from 'fs/promises'
 import { execSync } from 'child_process'
 import { promisify } from 'util'
 import archiver from 'archiver'
+import { sassPlugin } from 'esbuild-sass-plugin'
 
 const brotliCompress = promisify(zlib.brotliCompress)
 
@@ -28,11 +29,18 @@ async function build() {
       minify: true,
       sourcemap: true,
       format,
-      loader: { '.svg': 'dataurl', '.css': 'text' },
+      loader: { '.svg': 'dataurl' /*, '.css': 'text'*/ },
       external: ['lit', '@shoelace-style/shoelace/*'],
       define: {
         'process.env.NODE_ENV': '"production"'
-      }
+      },
+
+      plugins: [
+        sassPlugin({
+          type: 'css-text',
+          outputStyle: 'compressed'
+        })
+      ]
     })
 
     await createBrotliFile(outfile, outfile + '.br')

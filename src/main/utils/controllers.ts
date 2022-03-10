@@ -11,11 +11,13 @@ class FormFieldController<T> {
     component: LitElement,
 
     params: {
+      //getName(): string
       getValue(): T
       validate(): {
         message: string
         anchor: HTMLElement
       } | null
+      //reset(): void
     }
   ) {
     const getLabel = () => (component as any).label
@@ -41,15 +43,25 @@ class FormFieldController<T> {
               detail: {
                 kind: 'formField',
 
-                init(params: {
+                init(initParams: {
                   submitForm: () => void //
                   cancel: () => void
                 }): {
-                  getName: () => string
+                  //getName: () => string
                   getValue: () => any
-                  validate: (data: Record<string, any>) => Error | null
-                  reset: () => void
+                  validate: (data: Record<string, any>) => {
+                    message: string
+                    anchor: HTMLElement
+                  } | null
+                  //reset: () => void
                 } {
+                  return {
+                    //getName: () => params.getName(),
+                    getValue: () => params.getValue(),
+                    //reset: () => params.reset(),
+                    validate: () => params.validate()
+                  }
+
                   return null as any // TODO
                 }
               }
