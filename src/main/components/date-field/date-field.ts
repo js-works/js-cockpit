@@ -12,7 +12,7 @@ import { createLocalizer } from '../../utils/i18n'
 
 import {
   getLocalization,
-  initPopper,
+  initPopup,
   DatepickerInstance
 } from './date-picker-utils'
 
@@ -162,7 +162,7 @@ function createDatepicker(params: {
     getCalendarWeek: localization.getCalendarWeek
   })
 
-  initPopper(slInput, datepicker)
+  initPopup(slInput, datepicker)
 
   return datepicker
 }

@@ -71,7 +71,7 @@ class SearchBox extends Component {
               Filter
             </sl-button>
           </div>
-          <div>
+          <div class="popup">
             <focus-trap>
               <div class="filters-header">Filters</div>
               <div class="filters">

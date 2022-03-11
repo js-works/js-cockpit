@@ -1,6 +1,6 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { localize } from 'js-localize'
-import { createPopper } from '@popperjs/core'
+import { autoUpdate, computePosition, flip } from '@floating-ui/dom'
 
 // @ts-ignore
 import { Datepicker } from 'vanillajs-datepicker'
@@ -9,7 +9,7 @@ import { Datepicker } from 'vanillajs-datepicker'
 
 export {
   getLocalization,
-  initPopper,
+  initPopup,
   DatepickerInstance,
   DateRangePickerInstance
 }
@@ -31,46 +31,36 @@ function getLocalization(locale: string, namespace: string): Localization {
   )
 }
 
-function initPopper(slInput: SlInput, datepicker: DatepickerInstance) {
-  const inputElem = (slInput as any).shadowRoot!.querySelector('input')
-  const pickerElem = datepicker.picker.element
+function initPopup(slInput: SlInput, datepicker: DatepickerInstance) {
+  const input = slInput.shadowRoot?.querySelector('input')!
+  const datepickerElem = datepicker.picker.element
+  datepickerElem.style.position = 'absolute !important'
 
-  const popper = createPopper(slInput as any, pickerElem, {
-    placement: 'bottom-start',
-    strategy: 'absolute',
-
-    modifiers: [
-      {
-        name: 'offset',
-
-        options: {
-          offset({ placement }: { placement: string }) {
-            return placement === 'top-start' ? [0, 4] : [0, 0]
-          }
-        }
-      }
-    ]
-  })
-
-  // ugly workaround due to some strange popper
-  // positioning issues
-  inputElem.addEventListener('show', () => {
-    pickerElem.style.visibility = 'hidden'
-    pickerElem.style.overflow = 'hidden'
-    slInput.readonly = true
-
-    requestAnimationFrame(() => {
-      popper.update()
-
-      requestAnimationFrame(() => {
-        popper.update()
-        pickerElem.style.visibility = ''
-        pickerElem.style.overflow = ''
+  const update = () => {
+    computePosition(slInput, datepickerElem, {
+      placement: 'bottom-start',
+      middleware: [flip()]
+    }).then(({ x, y }) => {
+      Object.assign(datepickerElem.style, {
+        left: `${x}px`,
+        top: `${y}px`
       })
     })
+  }
+
+  update()
+
+  let cleanup: (() => void) | null = null
+
+  input.addEventListener('show', () => {
+    update()
+    cleanup = autoUpdate(slInput, datepickerElem, update)
   })
 
-  return popper
+  input.addEventListener('hide', () => {
+    cleanup && cleanup()
+    cleanup = null
+  })
 }
 
 function createLocalization(locale: string) {

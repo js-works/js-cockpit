@@ -15,7 +15,7 @@ import { DateRangePicker } from 'vanillajs-datepicker'
 
 import {
   getLocalization,
-  initPopper,
+  initPopup,
   DatepickerInstance,
   DateRangePickerInstance
 } from '../date-field/date-picker-utils'
@@ -166,7 +166,7 @@ function createDateRangePicker(params: {
       format: localization.format
     })
 
-    initPopper(slInput1, dateRangePicker.datepickers[0])
-    initPopper(slInput2, dateRangePicker.datepickers[1])
+    initPopup(slInput1, dateRangePicker.datepickers[0])
+    initPopup(slInput2, dateRangePicker.datepickers[1])
   }, 0)
 }
