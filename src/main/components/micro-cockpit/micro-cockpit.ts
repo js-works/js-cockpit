@@ -30,7 +30,7 @@ import avatarIcon from '../../icons/person-fill.svg'
 import chevronDownIcon from '../../icons/chevron-down.svg'
 
 // styles
-import microCockpitStyles from './micro-cockpit.css'
+import microCockpitStyles from './micro-cockpit.scss'
 import scrollbarStyles from '../../shared/css/scrollbar.css'
 
 // === exports =======================================================

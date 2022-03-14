@@ -40,6 +40,11 @@ module.exports = ({ config }) => {
   })
 
   config.module.rules.push({
+    test: /\.scss$/,
+    use: ['raw-loader', 'sass-loader']
+  })
+
+  config.module.rules.push({
     test: /\.svg$/,
     use: {
       loader: 'svg-url-loader',
