@@ -30,10 +30,8 @@ import calendarIcon from '../../icons/calendar-range.svg'
 import arrowRightIcon from '../../icons/arrow-right.svg'
 
 // styles
-
 import dateRangeStyles from './date-range.css'
-import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
-import datePickerCustomStyles from '../date-field/date-picker-custom.css'
+import datePickerStyles from '../date-field/date-picker.scss'
 import controlStyles from '../../shared/css/control.css'
 
 // === exports =======================================================
@@ -44,12 +42,7 @@ export { DateRange }
 
 @elem({
   tag: 'c-date-range',
-  styles: [
-    datePickerBaseStyles,
-    datePickerCustomStyles,
-    dateRangeStyles,
-    controlStyles
-  ],
+  styles: [datePickerStyles, dateRangeStyles, controlStyles],
   uses: [SlIcon, SlIconButton, SlInput]
 })
 class DateRange extends Component {

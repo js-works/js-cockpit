@@ -29,9 +29,11 @@ import calendarIcon from '../../icons/calendar3.svg'
 
 // styles
 import dateFieldStyles from './date-field.css'
-import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
-import datePickerCustomStyles from './date-picker-custom.css'
+//import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
+
+//import datePickerCustomStyles from './date-picker-custom.css'
 import controlStyles from '../../shared/css/control.css'
+import datePickerStyles from './date-picker.scss'
 
 // === exports ====================================================
 
@@ -42,8 +44,9 @@ export { DateField }
 @elem({
   tag: 'c-date-field',
   styles: [
-    datePickerBaseStyles,
-    datePickerCustomStyles,
+    // datePickerBaseStyles,
+    // datePickerCustomStyles,
+    datePickerStyles,
     dateFieldStyles,
     controlStyles
   ],

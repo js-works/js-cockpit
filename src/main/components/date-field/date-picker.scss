@@ -1,0 +1,68 @@
+$dp-background-color: var(--sl-color-neutral-0);
+$dp-border-color: var(--sl-color-neutral-400);
+$dp-border-radius: var(--sl-border-radius-sm);
+$dp-border-radius-small: var(--sl-border-radius-sm);
+$dp-line-height-base: 1.5;
+$dp-font-size-normal: var(--sl-font-size-md);
+$dp-font-size-small: var(--sl-font-size-sm);
+$dp-font-weight-semibold: var(--sl-font-semibold);
+$dp-font-weight-bold: var(--sl-font-bold);
+$dp-dropdown-offset: 4px;
+$dp-dropdown-shadow: var(--sl-shadow-medium);
+$dp-dropdown-z: 32000;
+
+$dp-title-background-color: var(--sl-color-neutral-200);
+
+$dp-cell-size-base: 2.25rem;
+$dp-cell-focus-background-color: var(--sl-color-neutral-300);
+$dp-cell-prevnext-color: var(--sl-color-neutral-400);
+$dp-cell-disabled-color: var(--sl-color-neutral-300);
+$dp-cell-selected-background-color: var(--sl-color-primary-300);
+$dp-cell-selected-color: var(--sl-color-neutral-1000);
+$dp-cell-selected-font-weight: var(--sl-font-semibold);
+$dp-cell-today-background-color: var(--sl-color-neutral-200);
+$dp-cell-today-color: var(--sl-color-neutral-1000);
+$dp-cell-highlighted-background-color: var(--sl-color-neutral-100);
+$dp-range-start-end-background-color: var(--sl-color-primary-300);
+$dp-range-start-end-color: var(--sl-color-neutral-1000);
+$dp-range-background-color: var(--sl-color-primary-200);
+$dp-range-today-background-color: var(--sl-color-primary-300);
+$dp-week-color: var(--sl-color-neutral-400);
+$dp-footer-background-color: orange;
+
+$dp-input-in-edit-border-color: red;
+$dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em;
+
+//== calculated variables ==//
+$dp-cell-shrink-threshold: calc($dp-cell-size-base * 10);
+$dp-cell-shrinked-width: calc($dp-cell-size-base * 7 / 8);
+$dp-dow-height: calc($dp-font-size-normal * $dp-line-height-base);
+$dp-dow-font-size: calc(($dp-font-size-small + $dp-font-size-normal) / 2);
+$dp-grid-width: calc($dp-cell-size-base * 7);
+$dp-grid-shrinked-width: calc($dp-cell-shrinked-width * 7);
+$dp-month-year-height: calc($dp-cell-size-base * 2);
+
+$dp-cell-today-focus-background-color: var(--sl-color-neutral-300);
+$dp-cell-highlighted-hover-background-color: var(--sl-color-neutral-200);
+$dp-header-hover-background-color: var(--sl-color-neutral-200);
+$dp-header-active-background-color: var(--sl-color-neutral-300);
+$dp-cell-hover-background-color: var(--sl-color-neutral-200);
+$dp-cell-prevnext-selected-color: var(--sl-color-primary-400);
+$dp-range-start-end-focus-background-color: var(--sl-color-primary-500);
+$dp-range-hover-background-color: var(--sl-color-primary-400);
+$dp-range-focus-background-color: var(--sl-color-primary-400);
+$dp-range-disabled-background-color: teal;
+
+$dp-header-focus-box-shadow: 0 0 0 0.125em rgba(white, 0.25);
+$dp-title-box-shadow: inset 0 -1px 1px rgba(black, 0.1);
+$dp-footer-box-shadow: inset 0 1px 1px rgba(black, 0.1);
+
+$dp-input-in-edit-box-shadow: $dp-input-in-edit-focus-box-shadow-size
+  rgba($dp-input-in-edit-border-color, 0.2);
+
+.datepicker {
+  padding: 0;
+  border: 1px solid var(--sl-color-neutral-300);
+}
+
+@import '../../../../node_modules/vanillajs-datepicker/sass/datepicker.scss';
