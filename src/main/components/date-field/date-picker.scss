@@ -20,13 +20,13 @@ $dp-cell-disabled-color: var(--sl-color-neutral-300);
 $dp-cell-selected-background-color: var(--sl-color-primary-300);
 $dp-cell-selected-color: var(--sl-color-neutral-1000);
 $dp-cell-selected-font-weight: var(--sl-font-semibold);
-$dp-cell-today-background-color: var(--sl-color-emerald-100);
+$dp-cell-today-background-color: var(--sl-color-emerald-50);
 $dp-cell-today-color: var(--sl-color-neutral-1000);
 $dp-cell-highlighted-background-color: var(--sl-color-neutral-100);
 $dp-range-start-end-background-color: var(--sl-color-primary-300);
 $dp-range-start-end-color: var(--sl-color-neutral-1000);
 $dp-range-background-color: var(--sl-color-primary-200);
-$dp-range-today-background-color: var(--sl-color-emerald-100);
+$dp-range-today-background-color: var(--sl-color-emerald-50);
 $dp-week-color: var(--sl-color-neutral-400);
 $dp-footer-background-color: orange;
 
@@ -42,7 +42,7 @@ $dp-grid-width: calc($dp-cell-size-base * 7);
 $dp-grid-shrinked-width: calc($dp-cell-shrinked-width * 7);
 $dp-month-year-height: calc($dp-cell-size-base * 2);
 
-$dp-cell-today-focus-background-color: var(--sl-color-emerald-200);
+$dp-cell-today-focus-background-color: var(--sl-color-emerald-100);
 $dp-cell-highlighted-hover-background-color: var(--sl-color-neutral-200);
 $dp-header-hover-background-color: var(--sl-color-neutral-200);
 $dp-header-active-background-color: var(--sl-color-neutral-300);

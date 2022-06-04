@@ -1,0 +1,4 @@
+:host {
+  --sl-label-horizontal: var(--on);
+  --sl-label-vertical: var(--off);
+}

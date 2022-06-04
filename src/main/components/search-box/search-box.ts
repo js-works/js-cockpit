@@ -14,7 +14,7 @@ import filterIcon from '../../icons/filter.svg'
 
 // styles
 import searchBoxStyles from './search-box.css'
-import rightAlignedLabelsStyles from '../../shared/css/label-alignment-aside.css'
+import rightAlignedLabelsStyles from '../../shared/css/label-horizontal.css'
 
 // === exports =======================================================
 

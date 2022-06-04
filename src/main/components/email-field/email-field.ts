@@ -106,7 +106,6 @@ class EmailField extends Component {
         })}"
       >
         <div class="field-wrapper">
-          <div class="label">${this.label}</div>
           <div class="control">
             <sl-input
               type="email"
@@ -119,6 +118,7 @@ class EmailField extends Component {
               @blur=${this._onBlur}
               ${ref(this._slInputRef)}
             >
+              <div slot="label" class="label">${this.label}</div>
               <div slot="suffix">
                 <sl-icon src=${emailIcon} class="icon"></sl-icon>
               </div>

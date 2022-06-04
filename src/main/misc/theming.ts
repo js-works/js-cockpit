@@ -518,10 +518,10 @@ const lightThemeTokens = {
   light: 'var(--on)' as 'var(--on)' | 'var(--off)',
   dark: 'var(--off)' as 'var(--on)' | 'var(--off)',
 
-  // used for conditional label alignment (top vs. right)
-  'label-alignment-above': 'var(--on)',
-  'label-alignment-aside': 'var(--off)',
-  'label-alignment-aside-width': '8rem',
+  // used for conditional label alignment (vertical vs. horizontal)
+  'label-vertical': 'var(--on)',
+  'label-horizontal': 'var(--off)',
+  'label-horizontal-width': '8rem',
 
   // other new tokens
   'label-font-weight': 'var(--sl-font-weight-normal)',

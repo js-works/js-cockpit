@@ -85,10 +85,11 @@ class DateRange extends Component {
     return html`
       <div class="base ${classMap({ required: this.required })}">
         <div class="field-wrapper">
-          <div class="label">${this.label}</div>
           <div class="control">
             <div class="fields">
-              <sl-input size="small" class="input1"></sl-input>
+              <sl-input size="small" class="input1">
+                <div slot="label" class="label">${this.label}</div>
+              </sl-input>
               <div class="separator">
                 <sl-icon src=${arrowRightIcon}></sl-icon>
               </div>

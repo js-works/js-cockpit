@@ -105,7 +105,6 @@ class PasswordField extends Component {
         })}"
       >
         <div class="field-wrapper">
-          <div class="label">${this.label}</div>
           <div class="control">
             <sl-input
               type="password"
@@ -117,7 +116,9 @@ class PasswordField extends Component {
               @focus=${this._onFocus}
               @blur=${this._onBlur}
               ${ref(this._slInputRef)}
-            ></sl-input>
+            >
+              <div slot="label" class="label">${this.label}</div>
+            </sl-input>
             <div class="error">${this._formField.getErrorMsg()}</div>
           </div>
         </div>

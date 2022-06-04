@@ -30,7 +30,7 @@ import { TextField } from '../text-field/text-field'
 
 // styles
 import loginFormStyles from './login-form.css'
-import topAlignedLabelsStyles from '../../shared/css/label-alignment-above.css'
+import topAlignedLabelsStyles from '../../shared/css/label-vertical.css'
 
 // icons
 import loginIntroIcon from './assets/login.svg'

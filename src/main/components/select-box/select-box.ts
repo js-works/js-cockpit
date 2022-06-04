@@ -55,9 +55,9 @@ class SelectBox extends Component {
     return html`
       <div class="base ${classMap({ required: this.required })}">
         <div class="field-wrapper">
-          <div class="label">${this.label}</div>
           <div class="control">
             <sl-select size="small">
+              <div slot="label" class="label">${this.label}</div>
               <sl-menu-item value="option-1">Option 1</sl-menu-item>
               <sl-menu-item value="option-2">Option 2</sl-menu-item>
               <sl-menu-item value="option-3">Option 3</sl-menu-item>

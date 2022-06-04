@@ -105,14 +105,11 @@ class DateField extends Component {
     return html`
       <div class="base ${classMap({ required: this.required })}">
         <div class="field-wrapper">
-          <div class="label">${this.label}</div>
           <div class="control">
             <sl-input>
-              <sl-icon
-                slot="suffix"
-                class="calendar-icon"
-                src=${calendarIcon}
-              ></sl-icon>
+              <sl-icon slot="suffix" class="calendar-icon" src=${calendarIcon}>
+              </sl-icon>
+              <div slot="label" class="label">${this.label}</div>
             </sl-input>
             <div class="error">${this.error}</div>
             <div class="picker-container"></div>
