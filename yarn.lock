@@ -1383,22 +1383,15 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@floating-ui/core@^0.5.0":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.5.1.tgz#d85d18938c4080f28dae338f5499d372ff93a7ff"
-  integrity sha512-LOFg65vdU4o4eZjVKNhu7VXbjdnY0amMw9sydLtKZiCNwj0eMD06rmktbWp9L/f6w6s9Qqe22lkks8PbwYwy4Q==
-
 "@floating-ui/core@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.7.0.tgz#f2442168d65c22daeb48cfb730cbc3a29a846ac7"
   integrity sha512-W7+i5Suhhvv97WDTW//KqUA43f/2a4abprM1rWqtLM9lIlJ29tbFI8h232SvqunXon0WmKNEKVjbOsgBhTnbLw==
 
-"@floating-ui/dom@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.3.1.tgz#d5608b9f16a17054c66f9e7b7e6bc289d65b64ec"
-  integrity sha512-HJX/2xgGPt01YHQNAya2taqg5HDnY6ipF0B0Bk/Th2s4FD9R89Ecw3TEegLLO+VrQnPEGbuHOGJ6Fr3BPM0DYg==
-  dependencies:
-    "@floating-ui/core" "^0.5.0"
+"@floating-ui/core@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.7.3.tgz#d274116678ffae87f6b60e90f88cc4083eefab86"
+  integrity sha512-buc8BXHmG9l82+OQXOFU3Kr2XQx9ys01U/Q9HMIrZ300iLc8HLMgh7dcCqgYzAzf4BkoQvDcXf5Y+CuEZ5JBYg==
 
 "@floating-ui/dom@^0.5.0":
   version "0.5.0"
@@ -1406,6 +1399,13 @@
   integrity sha512-PS75dnMg4GdWjDFOiOs15cDzYJpukRNHqQn0ugrBlsrpk2n+y8bwZ24XrsdLSL7kxshmxxr2nTNycLnmRIvV7g==
   dependencies:
     "@floating-ui/core" "^0.7.0"
+
+"@floating-ui/dom@^0.5.2":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.5.3.tgz#ade192cf9a911fc3e95fb614fe281658b654043c"
+  integrity sha512-vpjWB1uC7rajvgA58uzlJZgtWqrdDQLw+XVA3w63ZTmsWwRmVd0Gl5Dy9VMAViI9cP7hBWaJt23Jy3AVgVYnoQ==
+  dependencies:
+    "@floating-ui/core" "^0.7.3"
 
 "@gar/promisify@^1.0.1":
   version "1.1.2"
@@ -1491,10 +1491,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@lit-labs/react@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@lit-labs/react/-/react-1.0.2.tgz#a9059c39d40a1598deb17fc57dd9ed7f924165fe"
-  integrity sha512-jfcHoNsdbxA3vHTnvm4Q08skWFFYvpXRdPZ7Z31oC3lxeKfLR5WGQldr/fTF1Q0gKY3zusLsvX5UiSurV/F+og==
+"@lit-labs/react@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@lit-labs/react/-/react-1.0.4.tgz#e87a620338955a4e12163b0f3bee18a99c651174"
+  integrity sha512-Sy4RCxTZpTE2TwByjVac6gC7jzr8bCQC6s9bJhhJDKos4ZlN2cqcuVz63n0mpSSr1zxFh+Z0o0VR223l36Y4Ag==
 
 "@lit/reactive-element@^1.3.0":
   version "1.3.0"
@@ -1605,22 +1605,27 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/animations/-/animations-1.1.0.tgz#17539abafd6dcbf2a79e089e1593175e9f7835b5"
   integrity sha512-Be+cahtZyI2dPKRm8EZSx3YJQ+jLvEcn3xzRP7tM4tqBnvd/eW/64Xh0iOf0t2w5P8iJKfdBbpVNE9naCaOf2g==
 
-"@shoelace-style/localize@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-2.1.3.tgz#20c8d8d9ac6259764b2a502cdcde39304b594543"
-  integrity sha512-AY3uF1Dzg3sBK4nKxvZ2KAjsdFxhLfHVWUpXXjIPaR+rPp8fxBWoNVvnLiROOV/cLg/zdLcU+Nn/xJdqcbEuDw==
+"@shoelace-style/localize@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-2.2.1.tgz#f3c7a81662091e9a3a96298765037f933a75a577"
+  integrity sha512-bzKaqla+yF4qQhgZAaURq1HKtTP8fwIvIxcDw9JqHjophuMR1MI2xl1SnhFTYJhlQRctdKs2imZvFVtg5WERjQ==
 
-"@shoelace-style/shoelace@^2.0.0-beta.73":
-  version "2.0.0-beta.73"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.73.tgz#28fcf26142e1012c150f6a1f0f0318181bc5ec47"
-  integrity sha512-sOKRy+uimJAQDc8DCA65YihGUSUf0YVUC80KbvEY8RZHtP4gPX/Bzw7v/RPEGNLlPEOXAcqMNlKoLFPTqDuKbg==
+"@shoelace-style/localize@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.0.tgz#830ded93ccc3a319797cdffda27fa5b70854e933"
+  integrity sha512-V+MWxPcTouKBK84t49v8+XE2AAffEIly7chn4md2i7+5wRqrk1uDBjkt8zxKXUx7CWeHT/i/oftjvWVhHRmC1A==
+
+"@shoelace-style/shoelace@^2.0.0-beta.75":
+  version "2.0.0-beta.75"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.75.tgz#01592031d6abd537fd7b92e2ffcc41a5ed62cd06"
+  integrity sha512-WavVn/A6VsSZB2XqUy0k8O5oimaBqzYbq5+DZ6bJpd7+JAt1JGETcn9mtOoSI5Hww6TVuhnqcBhQkk1s5iGzNA==
   dependencies:
-    "@floating-ui/dom" "^0.3.1"
-    "@lit-labs/react" "^1.0.2"
+    "@floating-ui/dom" "^0.5.2"
+    "@lit-labs/react" "^1.0.4"
     "@shoelace-style/animations" "^1.1.0"
-    "@shoelace-style/localize" "^2.1.3"
+    "@shoelace-style/localize" "^2.2.1"
     color "4.2"
-    lit "^2.1.4"
+    lit "^2.2.5"
     qr-creator "^1.0.0"
 
 "@storybook/addon-actions@6.4.22", "@storybook/addon-actions@^6.4.22":
@@ -7005,19 +7010,19 @@ lit-html@^2.2.0:
   dependencies:
     "@types/trusted-types" "^2.0.2"
 
-lit@^2.1.4:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/lit/-/lit-2.2.0.tgz#1b83a2c1e4c5ecf3be785292b1a13e193597f610"
-  integrity sha512-FDyxUuczo6cJJY/2Bkgfh1872U4ikUvmK1Cb6+lYC1CW+QOo8CaWXCpvPKFzYsz0ojUxoruBLVrECc7VI2f1dQ==
+lit@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/lit/-/lit-2.2.3.tgz#77203d8f247de7c0d4955817f89e40c927349b9c"
+  integrity sha512-5/v+r9dH3Pw/o0rhp/qYk3ERvOUclNF31bWb0FiW6MPgwdQIr+/KCt/p3zcd8aPl8lIGnxdGrVcZA+gWS6oFOQ==
   dependencies:
     "@lit/reactive-element" "^1.3.0"
     lit-element "^3.2.0"
     lit-html "^2.2.0"
 
-lit@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/lit/-/lit-2.2.3.tgz#77203d8f247de7c0d4955817f89e40c927349b9c"
-  integrity sha512-5/v+r9dH3Pw/o0rhp/qYk3ERvOUclNF31bWb0FiW6MPgwdQIr+/KCt/p3zcd8aPl8lIGnxdGrVcZA+gWS6oFOQ==
+lit@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/lit/-/lit-2.2.5.tgz#60e8dd5b751fe31f849c64f74f1784a88235d664"
+  integrity sha512-Ln463c0xJZfzVxBcHddNvFQQ8Z22NK7KgNmrzwFF1iESHUud412RRExzepj18wpTbusgwoTnOYuoTpo9uyNBaQ==
   dependencies:
     "@lit/reactive-element" "^1.3.0"
     lit-element "^3.2.0"
