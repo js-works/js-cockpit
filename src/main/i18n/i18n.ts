@@ -8,6 +8,8 @@ import {
   TermKey
 } from './localize/localize'
 
+import { getDirection } from './localize/localize-utils'
+
 import {
   registerTranslation,
   LocalizeController
@@ -60,8 +62,8 @@ function addToDict<T extends Translation>(
 
     const convertedTranslations: any = {
       $code: locale,
-      $name: '???', // TODO
-      $dir: 'ltr' // TODO
+      $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
+      $dir: getDirection(locale)
     }
 
     for (const category of Object.keys(translations)) {

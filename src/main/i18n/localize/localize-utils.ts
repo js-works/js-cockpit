@@ -5,6 +5,7 @@ export {
   formatNumber,
   formatRelativeTime,
   getCalendarWeek,
+  getDirection,
   getFirstDayOfWeek,
   getLocaleInfo,
   getWeekendDays,
@@ -16,12 +17,6 @@ export {
 
 const defaultFirstDayOfWeek = 1
 const defaultWeekendDays = Object.freeze([0, 6]) // Sunday and Saturday
-
-const defaultDateFormat: Intl.DateTimeFormatOptions = Object.freeze({
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric'
-})
 
 // === getLocaleInfo =================================================
 
@@ -42,6 +37,28 @@ function getLocaleInfo(locale: string): LocaleInfo {
   }
 
   return info!
+}
+
+// === getDirection ==================================================
+
+var rtlLangs = new Set([
+  'ar',
+  'dv',
+  'fa',
+  'ha',
+  'he',
+  'ks',
+  'ku',
+  'ps',
+  'ug',
+  'ur',
+  'yi'
+])
+
+function getDirection(locale: string) {
+  const lang = locale.substring(0, 2)
+
+  return rtlLangs.has(lang) ? 'rtl' : 'ltr'
 }
 
 // === getFirstDayOfWeek =============================================
@@ -267,16 +284,8 @@ function formatNumber(
 function formatDate(
   locale: string,
   date: Date,
-  format?: Intl.DateTimeFormatOptions | null
+  format?: Intl.DateTimeFormatOptions
 ): string {
-  if (!format) {
-    if (getDateParser(locale) === parseIsoDate) {
-      return formatIsoDate(date)
-    }
-
-    format = defaultDateFormat
-  }
-
   return new Intl.DateTimeFormat(locale, format).format(date)
 }
 
