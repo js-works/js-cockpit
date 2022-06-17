@@ -10,31 +10,39 @@ import {
 
 import {
   registerTranslation,
-  Translation as LocalizeTranslation,
   LocalizeController
 } from '@shoelace-style/localize'
 
 import { CockpitTranslation } from './terms'
 
+// always bundle the English translations
+import './translations/en'
+import { ReactiveControllerHost } from 'lit'
+
+// === exports =======================================================
+
 export {
   addToDict,
-  Category,
+  localizeAdapter,
   CockpitTranslation,
   CockpitTranslations,
   ComponentLocalizer,
-  Locale,
   Localizer,
-  LocalizeAdapter,
   PartialCockpitTranslations,
-  TermKey,
   Translation
 }
 
-import './translations/en'
+// === constants =====================================================
 
 const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
 const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 const categoryTermSeparator = '/'
+
+// === exported values ===============================================
+
+const localizeAdapter = createLocalizeAdapter()
+
+// === exported types ================================================
 
 type CockpitTranslations = Record<Locale, CockpitTranslation>
 
@@ -42,13 +50,15 @@ type PartialCockpitTranslations = Partial<
   { [K in keyof CockpitTranslations]: Partial<CockpitTranslations[K]> }
 >
 
+// === exported functions ============================================
+
 function addToDict<T extends Translation>(
   translationsByLocale: Record<Locale, T>
 ) {
-  for (const [locale, translations] of <any>(
-    Object.entries(translationsByLocale)
-  )) {
-    const convertedTranslations: LocalizeTranslation = {
+  for (const locale of Object.keys(translationsByLocale)) {
+    const translations: any = translationsByLocale[locale]
+
+    const convertedTranslations: any = {
       $code: locale,
       $name: '???', // TODO
       $dir: 'ltr' // TODO
@@ -64,9 +74,8 @@ function addToDict<T extends Translation>(
           throw Error(`Illegal translation key "${termKey}"`)
         }
 
-        const key = `${category}${categoryTermSeparator}${termKey}`
-
-        ;(convertedTranslations as any)[key] = translations[category][termKey]
+        convertedTranslations[`${category}${categoryTermSeparator}${termKey}`] =
+          translations[category][termKey]
       }
     }
 
@@ -74,46 +83,36 @@ function addToDict<T extends Translation>(
   }
 }
 
-const translate: (
-  locale: Locale,
-  category: Category,
-  termKey: TermKey,
-  params?: Record<string, any>,
-  i18n?: Localizer<any>
-) => string = (() => {
-  const element = Object.assign(document.createElement('div'), {
-    addController() {},
-    removeController() {},
-    requestUpdate() {},
-    updateComplete: Promise.resolve(true)
-  })
+// === local functions ===============================================
 
-  const localizeController = new LocalizeController(element)
+function createLocalizeAdapter(): Adapter {
+  const elem: HTMLElement & ReactiveControllerHost = Object.assign(
+    document.createElement('div'),
+    {
+      addController() {},
+      removeController() {},
+      requestUpdate() {},
+      updateComplete: Promise.resolve(true)
+    }
+  )
 
-  return (locale, category, termKey, params, i18n) => {
-    const key = `${category}/${termKey}`
-    element.lang = locale
+  const localizeController = new LocalizeController(elem)
 
-    return localizeController.term(key, params, i18n)
-  }
-})()
+  return {
+    translate(locale, category, termKey, params, i18n) {
+      const key = `${category}${categoryTermSeparator}${termKey}`
+      elem.lang = locale
 
-const LocalizeAdapter: Adapter = {
-  translate,
+      return localizeController.term(key, params, i18n)
+    },
 
-  observeComponent(element) {
-    const ctrl = new LocalizeController(element)
+    observeComponent(element) {
+      const ctrl = new LocalizeController(element)
 
-    return {
-      getLocale: () => ctrl.lang(),
-      getDirection: () => (ctrl.dir() === 'rtl' ? 'rtl' : 'ltr')
+      return {
+        getLocale: () => ctrl.lang(),
+        getDirection: () => (ctrl.dir() === 'rtl' ? 'rtl' : 'ltr')
+      }
     }
   }
-}
-
-const origTermFunc = LocalizeController.prototype.term
-
-LocalizeController.prototype.term = function () {
-  // TODO!!!!!!
-  return origTermFunc.apply(this, arguments as any)
 }

@@ -1,12 +1,9 @@
 import { ReactiveControllerHost } from 'lit'
-import { Cockpit } from '../components/cockpit/cockpit'
 
 import {
-  Category,
+  localizeAdapter,
   CockpitTranslation,
   ComponentLocalizer,
-  LocalizeAdapter,
-  TermKey,
   Translation
 } from '../i18n/i18n'
 
@@ -16,6 +13,6 @@ class I18nController<
   T extends Translation = CockpitTranslation
 > extends ComponentLocalizer<T> {
   constructor(element: HTMLElement & ReactiveControllerHost) {
-    super(element, LocalizeAdapter)
+    super(element, localizeAdapter)
   }
 }
