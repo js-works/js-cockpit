@@ -1,11 +1,4 @@
-import { registerTranslation } from '@shoelace-style/localize'
-
-import {
-  LocalizeController,
-  Translation as LocalizeTranslation
-} from '@shoelace-style/localize'
-
-import { ReactiveControllerHost } from 'lit'
+import type { ReactiveControllerHost } from 'lit'
 
 import {
   formatDate,
@@ -13,30 +6,28 @@ import {
   formatRelativeTime,
   getCalendarWeek,
   getFirstDayOfWeek,
-  getLocaleInfo,
   getWeekendDays,
   parseDate,
   parseNumber
 } from './localize-utils'
 
 export {
-  addToDict,
+  Adapter,
   Category,
-  ComponentLocalizer,
+  Direction,
   Locale,
-  Localizer,
   TermKey,
-  Translation
+  Translation,
+  ComponentLocalizer,
+  Localizer
 }
 
 const defaultLocale = 'en-US'
-const regexCategory = /^[a-z][a-zA-Z0-9]*(\.[a-z][a-zA-Z0-9]*)*$/
-const regexTermKey = /^[a-z][a-zA-Z0-9]*(\.[a-z][a-zA-Z0-9]*)*$/
-const categoryTermSeparator = '::'
 
 type Locale = string
 type Category = string
 type TermKey = string
+type Direction = 'ltr' | 'rtl'
 
 type TermValue<T extends Translation> =
   | string
@@ -49,8 +40,7 @@ type Translation<T = any> = T extends {
   }
 }
   ? T
-  : //  : never
-    never
+  : never
 
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
@@ -59,39 +49,28 @@ type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 type DayNameFormat = 'long' | 'short' | 'narrow'
 type MonthNameFormat = 'long' | 'short' | 'narrow'
 
-class Localizer<T extends Translation> {
-  #getLocale: () => Locale
-
-  static #translate: (
+interface Adapter {
+  translate: (
     locale: Locale,
     category: Category,
     termKey: TermKey,
-    params: Record<string, any> | null,
-    i18n: Localizer<any>
+    params?: Record<string, any>,
+    i18n?: Localizer<any>
   ) => string
 
-  static {
-    const element = Object.assign(document.createElement('div'), 
-      {
-        addController() {},
-        removeController() {},
-        requestUpdate() {},
-        updateComplete: Promise.resolve(true)
-      }
-    )
-
-    const localizeController = new LocalizeController(element)
-
-    Localizer.#translate = (locale, category, termKey, params, i18n) => {
-      const key = `${category}${categoryTermSeparator}${termKey}`
-      element.lang = locale
-
-      return localizeController.term(key, params, i18n)
-    }
+  observeComponent(element: HTMLElement & ReactiveControllerHost): {
+    getLocale(): Locale
+    getDirection(): Direction
   }
+}
 
-  constructor(getLocale: () => Locale) {
+abstract class Localizer<T extends Translation> {
+  #getLocale: () => Locale
+  #adapter: Adapter
+
+  constructor(getLocale: () => Locale, adapter: Adapter) {
     this.#getLocale = getLocale
+    this.#adapter = adapter
   }
 
   getLocale(): Locale {
@@ -100,20 +79,23 @@ class Localizer<T extends Translation> {
 
   translate<C extends keyof T>(
     category: C
-  ): <K extends keyof T[C]>(termKey: K, params?: FirstArgument<T[C][K]>) => string
+  ): <K extends keyof T[C]>(
+    termKey: K,
+    params?: FirstArgument<T[C][K]>
+  ) => string
 
   translate<C extends keyof T, K extends keyof T[C]>(
     category: C,
     termKey: keyof T[C],
     params?: FirstArgument<T[C][K]>
   ): string
-  
+
   translate(category: any, termKey?: any, params?: any): any {
     if (arguments.length === 1) {
       return (key: any, params?: any) => this.translate(category, key, params)
     }
 
-    return Localizer.#translate(
+    return this.#adapter.translate(
       this.#getLocale(),
       category as string,
       termKey as string,
@@ -198,18 +180,19 @@ class Localizer<T extends Translation> {
   }
 }
 
-class ComponentLocalizer<T extends Translation> extends Localizer<T> {
+abstract class ComponentLocalizer<T extends Translation> extends Localizer<T> {
   #element: HTMLElement
-  #localizeController: LocalizeController
+  #getDirection: () => Direction
 
-  constructor(element: HTMLElement & ReactiveControllerHost) {
-    super(() => this.#localizeController.lang()) 
+  constructor(element: HTMLElement & ReactiveControllerHost, adapter: Adapter) {
+    const { getLocale, getDirection } = adapter.observeComponent(element)
+    super(getLocale, adapter)
     this.#element = element
-    this.#localizeController = new LocalizeController(element)
+    this.#getDirection = getDirection
   }
 
-  getDirection(): 'ltr' | 'rtl' {
-    const ret = this.#localizeController.dir()
+  getDirection(): Direction {
+    const ret = this.#getDirection()
 
     return ret === 'rtl' ? 'rtl' : 'ltr'
   }
@@ -218,27 +201,3 @@ class ComponentLocalizer<T extends Translation> extends Localizer<T> {
 type FirstArgument<T> = T extends (firstArg: infer A, ...rest: any[]) => any
   ? A
   : never
-
-function addToDict<T extends Translation>(
-  translationsByLocale: Record<Locale, T>
-) {
-  for (const [locale, translations] of <any>(
-    Object.entries(translationsByLocale)
-  )) {
-    const convertedTranslations: LocalizeTranslation = {
-      $code: locale,
-      $name: '???', // TODO
-      $dir: 'ltr' // TODO
-    }
-
-    for (const category of Object.keys(translations)) {
-      for (const termKey of Object.keys(translations[category])) {
-        const key = `${category}${categoryTermSeparator}${termKey}`
-
-        ;(convertedTranslations as any)[key] = translations[category][termKey]
-      }
-    }
-
-    registerTranslation(convertedTranslations)
-  }
-}
