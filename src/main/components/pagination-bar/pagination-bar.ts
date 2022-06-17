@@ -1,4 +1,4 @@
-import { addToDict, defineTerms, Localizer, TermsOf } from 'js-localize'
+import { I18nController } from '../../controllers/i18n-controller'
 
 import {
   bind,
@@ -11,7 +11,6 @@ import {
 } from '../../utils/components'
 
 import { createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
 
 // events
 import { PageChangeEvent } from '../../events/page-change-event'
@@ -42,55 +41,6 @@ export { PaginationBar }
 
 const pageSizes = new Set([25, 50, 100, 250, 500])
 const defaultPageSize = 50
-
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.paginationBar': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.paginationBar': {
-      itemsXToYOfZ(
-        params: {
-          firstItemNo: number
-          lastItemNo: number
-          itemCount: number
-        },
-        i18n: Localizer
-      ) {
-        const firstItemNo = i18n.formatNumber(params.firstItemNo)
-        const lastItemNo = i18n.formatNumber(params.lastItemNo)
-        const itemCount = i18n.formatNumber(params.itemCount)
-
-        return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
-      },
-
-      itemXOfY(params: { itemNo: number; itemCount: number }, i18n: Localizer) {
-        const itemNo = i18n.formatNumber(params.itemNo)
-        const itemCount = i18n.formatNumber(params.itemCount)
-
-        return `${itemNo} - ${itemCount}`
-      },
-
-      ofXPages(params: { pageCount: number }, i18n: Localizer) {
-        const pageCount = i18n.formatNumber(params.pageCount)
-
-        return `of ${pageCount}`
-      },
-
-      page: 'Page',
-      pageSize: 'Items/Page'
-    }
-  }
-})
-
-addToDict(translations)
 
 // === types =========================================================
 
@@ -144,7 +94,8 @@ class PaginationBar extends Component {
   }
 
   private _auxData!: AuxData
-  private _i18n = createLocalizer(this, 'jsCockpit.paginationBar')
+  private _i18n = new I18nController(this)
+  private _t = this._i18n.translate('jsCockpit.paginationBar')
   private _pageInputRef = createRef<SlInput>()
   private _pageSizeSelectRef = createRef<SlSelect>()
 
@@ -237,15 +188,11 @@ class PaginationBar extends Component {
       return null
     }
 
-    const pageTxt = this._i18n.tr('page')
+    const pageTxt = this._t('page')
 
-    const ofXPagesTxt = this._i18n.translate(
-      'jsCockpit.paginationBar',
-      'ofXPages',
-      {
-        pageCount: this._auxData.pageCount
-      }
-    )
+    const ofXPagesTxt = this._t('ofXPages', {
+      pageCount: this._auxData.pageCount
+    })
 
     return html`
       <div class="pagination">
@@ -304,7 +251,7 @@ class PaginationBar extends Component {
 
     return html`
       <div class="page-size-selector">
-        ${this._i18n.tr('pageSize')}
+        ${this._t('pageSize')}
         <sl-select
           size="small"
           value=${this._auxData.pageSize}
@@ -329,7 +276,7 @@ class PaginationBar extends Component {
     let info: String
 
     info =
-      this._i18n.translate('jsCockpit.paginationBar', 'itemsXToYOfZ', {
+      this._t('itemsXToYOfZ', {
         firstItemNo: this._auxData.firstShownItemIndex,
         lastItemNo: this._auxData.lastShownItemIndex,
         itemCount: this._auxData.totalItemCount

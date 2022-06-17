@@ -9,11 +9,10 @@ import {
 } from '../../utils/components'
 
 import { createRef, html, classMap, ref } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
-import { addToDict, defineTerms, TermsOf } from 'js-localize'
+import { I18nController } from '../../controllers/i18n-controller'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -78,26 +77,6 @@ namespace DataExplorer {
   }>
 }
 
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.dataExplorer': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.dataExplorer': {
-      loadingMessage: 'Loading...'
-    }
-  }
-})
-
-addToDict(translations)
-
 // === DataExplorer ==================================================
 
 @elem({
@@ -130,7 +109,8 @@ class DataExplorer extends Component {
   @prop
   fetchItems?: DataExplorer.FetchItems
 
-  private _i18n = createLocalizer(this, 'jsCockpit.dataExplorer')
+  private _i18n = new I18nController(this)
+  private _t = this._i18n.translate('jsCockpit.dataExplorer')
   private _pageIndex = 0
   private _pageSize = 50
   private _totalItemCount = -1
@@ -319,9 +299,7 @@ class DataExplorer extends Component {
         >
           <div class="overlay-top"></div>
           <div class="overlay-center">
-            <div class="loading-message">
-              ${this._i18n.tr('loadingMessage')}
-            </div>
+            <div class="loading-message">${this._t('loadingMessage')}</div>
             <sl-spinner class="loading-spinner"></sl-spinner>
           </div>
           <div class="overlay-bottom"></div>

@@ -1,4 +1,4 @@
-import { addToDict, defineTerms, TermsOf } from 'js-localize'
+import { I18nController } from '../../controllers/i18n-controller'
 
 import {
   bind,
@@ -11,7 +11,6 @@ import {
 } from '../../utils/components'
 
 import { classMap, html, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
 import { ActionEvent } from '../../events/action-event'
 
 // custom elements
@@ -54,24 +53,6 @@ namespace SideMenu {
   }
 }
 
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.sideMenu': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.sideMenu': {}
-  }
-})
-
-addToDict(translations)
-
 // === SideMenu ======================================================
 
 @elem({
@@ -95,7 +76,8 @@ class SideMenu extends Component {
   @prop
   onAction?: Listener<ActionEvent>
 
-  private _i18n = createLocalizer(this, 'jsCockpit.sideMenu')
+  private _i18n = new I18nController(this)
+  private _t = this._i18n.translate('jsCockpit.sideMenu')
   private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
 
   @bind

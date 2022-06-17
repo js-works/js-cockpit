@@ -1,4 +1,4 @@
-import { LitElement, ReactiveController } from './lit'
+import { LitElement, ReactiveController } from '../utils/lit'
 
 // === exports =======================================================
 

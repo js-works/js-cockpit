@@ -12,8 +12,7 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
-import { addToDict, defineTerms, TermsOf } from 'js-localize'
+import { I18nController } from '../../controllers/i18n-controller'
 import { hasSlot } from '../../utils/slots'
 
 // custom elements
@@ -60,64 +59,6 @@ namespace LoginForm {
         params: Record<string, any>
       }
 }
-
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.loginForm': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.loginForm': {
-      email: 'Email',
-      firstName: 'First name',
-      lastName: 'Last name',
-      failedLoginSubmit: 'You could not be logged in',
-      failedForgotPasswordSubmit: 'Data could not be submitted',
-      failedResetPasswordSubmit: 'Data could not be submitted',
-      failedRegistrationSubmit: 'Data could not be submitted',
-      forgotPassword: 'Forgot password?',
-      forgotPasswordIntroHeadline: 'Forgot password?',
-      forgotPasswordIntroText:
-        "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
-      forgotPasswordSubmitText: 'Request password reset',
-      goToLogin: 'Go to login form',
-      goToRegistration: 'Need account?',
-      loginIntroHeadline: 'Login',
-      loginIntroText: 'Please enter your credentials in the form to log in',
-      loginSubmitText: 'Log in',
-      newPassword: 'New passwort',
-      newPasswordRepeat: 'Repeat new password',
-      password: 'Password',
-      processingLoginSubmit: 'Logging in...',
-      processingForgotPasswordSubmit: 'Submitting...',
-      processingResetPasswordSubmit: 'Submitting...',
-      processingRegistrationSubmit: 'Submitting...',
-      registrationIntroHeadline: 'Registration',
-      registrationIntroText:
-        'Please fill out the form and press the submit button to register',
-      registrationSubmitText: 'Register',
-      rememberLogin: 'Remember login',
-      resetPasswordIntroHeadline: 'Reset password',
-      resetPasswordIntroText:
-        'Please fill out and submit the form to reset your password',
-      resetPasswordSubmitText: 'Reset password',
-      securityCode: 'Security code',
-      successfulLoginSubmit: 'You have ben successfuly logged in',
-      successfulForgotPasswordSubmit: 'Data have been submitted succesfully',
-      successfulResetPasswordSubmit: 'Data have been submitted successfully',
-      successfulRegistrationSubmit: 'Data have been submitted successfuly',
-      username: 'Username'
-    }
-  }
-})
-
-addToDict(translations)
 
 // === Login form ====================================================
 
@@ -179,7 +120,8 @@ class LoginForm extends Component {
   private _submitButtonRef = createRef<SlButton>()
   private _animationRef = createRef<SlAnimation>()
   private _formRef = createRef<Form>()
-  private _i18n = createLocalizer(this, 'jsCockpit.loginForm')
+  private _i18n = new I18nController(this)
+  private _t = this._i18n.translate('jsCockpit.loginForm')
 
   @bind
   private _onForgotPasswordClick() {
@@ -365,7 +307,7 @@ class LoginForm extends Component {
                     ${this._view !== 'login' || !this.enableRememberLogin
                       ? null
                       : html`<sl-checkbox
-                          >${this._i18n.tr('rememberLogin')}</sl-checkbox
+                          >${this._t('rememberLogin')}</sl-checkbox
                         >`}
                     ${!this._showInvalidFormError
                       ? null
@@ -443,8 +385,8 @@ class LoginForm extends Component {
         return html`
           <slot name="login-intro">
             <div class="default-intro">
-              <h3>${this._i18n.tr('loginIntroHeadline')}</h3>
-              <p>${this._i18n.tr('loginIntroText')}</p>
+              <h3>${this._t('loginIntroHeadline')}</h3>
+              <p>${this._t('loginIntroText')}</p>
             </div>
           </slot>
         `
@@ -453,8 +395,8 @@ class LoginForm extends Component {
         return html`
           <slot name="registration-intro">
             <div class="default-intro">
-              <h3>${this._i18n.tr('registrationIntroHeadline')}</h3>
-              <p>${this._i18n.tr('registrationIntroText')}</p>
+              <h3>${this._t('registrationIntroHeadline')}</h3>
+              <p>${this._t('registrationIntroText')}</p>
             </div>
           </slot>
         `
@@ -463,8 +405,8 @@ class LoginForm extends Component {
         return html`
           <slot name="forgot-password-intro">
             <div class="default-intro">
-              <h3>${this._i18n.tr('forgotPasswordIntroHeadline')}</h3>
-              <p>${this._i18n.tr('forgotPasswordIntroText')}</p>
+              <h3>${this._t('forgotPasswordIntroHeadline')}</h3>
+              <p>${this._t('forgotPasswordIntroText')}</p>
             </div>
           </slot>
         `
@@ -472,8 +414,8 @@ class LoginForm extends Component {
         return html`
           <slot name="reset-password-intro">
             <div class="default-intro">
-              <h3>${this._i18n.tr('resetPasswordIntroHeadline')}</h3>
-              <p>${this._i18n.tr('resetPasswordIntroText')}</p>
+              <h3>${this._t('resetPasswordIntroHeadline')}</h3>
+              <p>${this._t('resetPasswordIntroText')}</p>
             </div>
           </slot>
         `
@@ -502,12 +444,12 @@ class LoginForm extends Component {
             : html`
                 <c-text-field
                   name="username"
-                  label=${this._i18n.tr('username')}
+                  label=${this._t('username')}
                   required
                 ></c-text-field>
                 <c-password-field
                   name="password"
-                  label=${this._i18n.tr('password')}
+                  label=${this._t('password')}
                   required
                 ></c-password-field>
               `}`
@@ -519,22 +461,22 @@ class LoginForm extends Component {
             : html`
                 <c-text-field
                   name="username-reg"
-                  label=${this._i18n.tr('username')}
+                  label=${this._t('username')}
                   required
                 ></c-text-field>
                 <c-text-field
                   name="firstName-reg"
-                  label=${this._i18n.tr('firstName')}
+                  label=${this._t('firstName')}
                   required
                 ></c-text-field>
                 <c-text-field
                   name="lastName-reg"
-                  label=${this._i18n.tr('lastName')}
+                  label=${this._t('lastName')}
                   required
                 ></c-text-field>
                 <c-email-field
                   name="email-reg"
-                  label=${this._i18n.tr('email')}
+                  label=${this._t('email')}
                   required
                 ></c-email-field>
               `}`
@@ -549,13 +491,13 @@ class LoginForm extends Component {
             : html`
                 <c-text-field
                   name="username-fp"
-                  label=${this._i18n.tr('username')}
+                  label=${this._t('username')}
                   required
                 ></c-text-field>
 
                 <c-email-field
                   name="email-fp"
-                  label=${this._i18n.tr('email')}
+                  label=${this._t('email')}
                   required
                 ></c-email-field>
               `}`
@@ -570,17 +512,17 @@ class LoginForm extends Component {
             : html`
                 <c-text-field
                   name="username-rp"
-                  label=${this._i18n.tr('username')}
+                  label=${this._t('username')}
                   required
                 ></c-text-field>
                 <c-password-field
                   name="newPasswordRepeat-rp"
-                  label=${this._i18n.tr('newPasswordRepeat')}
+                  label=${this._t('newPasswordRepeat')}
                   required
                 ></c-password-field>
                 <c-text-field
                   name="securityCode-rp"
-                  label=${this._i18n.tr('securityCode')}
+                  label=${this._t('securityCode')}
                   required
                 ></c-text-field>
               `}`
@@ -616,7 +558,7 @@ class LoginForm extends Component {
             class="forgot-password-link"
             @click=${this._onForgotPasswordClick}
           >
-            ${this._i18n.tr('forgotPassword')}
+            ${this._t('forgotPassword')}
           </sl-button>
         `
       : ''
@@ -629,7 +571,7 @@ class LoginForm extends Component {
         class="go-to-login-link"
         @click=${this._onGoToLoginClick}
       >
-        ${this._i18n.tr('goToLogin')}
+        ${this._t('goToLogin')}
       </sl-button>
     `
   }
@@ -642,7 +584,7 @@ class LoginForm extends Component {
             class="go-to-registration-link"
             @click=${this._onGoToRegistrationClick}
           >
-            ${this._i18n.tr('goToRegistration')}
+            ${this._t('goToRegistration')}
           </sl-button>
         `
       : ''
@@ -652,30 +594,30 @@ class LoginForm extends Component {
     if (!this._isLoading) {
       switch (this._view) {
         case 'login':
-          return this._i18n.tr('loginSubmitText')
+          return this._t('loginSubmitText')
 
         case 'registration':
-          return this._i18n.tr('registrationSubmitText')
+          return this._t('registrationSubmitText')
 
         case 'forgotPassword':
-          return this._i18n.tr('forgotPasswordSubmitText')
+          return this._t('forgotPasswordSubmitText')
 
         case 'resetPassword':
-          return this._i18n.tr('resetPasswordSubmitText')
+          return this._t('resetPasswordSubmitText')
       }
     } else {
       switch (this._view) {
         case 'login':
-          return this._i18n.tr('processingLoginSubmit')
+          return this._t('processingLoginSubmit')
 
         case 'forgotPassword':
-          return this._i18n.tr('processingForgotPasswordSubmit')
+          return this._t('processingForgotPasswordSubmit')
 
         case 'resetPassword':
-          return this._i18n.tr('processingResetPasswordSubmit')
+          return this._t('processingResetPasswordSubmit')
 
         case 'registration':
-          return this._i18n.tr('processingRegistrationSubmit')
+          return this._t('processingRegistrationSubmit')
       }
     }
   }

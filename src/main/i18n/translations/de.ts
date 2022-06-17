@@ -1,6 +1,8 @@
-import { addToDict, FullTranslations } from 'js-localize'
+/* spellchecker: disable */
 
-const translations: FullTranslations<'jsCockpit'> = {
+import { addToDict, CockpitTranslations } from '../i18n'
+
+const translations: CockpitTranslations = {
   de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
@@ -64,25 +66,25 @@ const translations: FullTranslations<'jsCockpit'> = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ(params, i18n) {
-        const firstItemNo = i18n.formatNumber(params.firstItemNo)
-        const lastItemNo = i18n.formatNumber(params.lastItemNo)
-        const itemCount = i18n.formatNumber(params.itemCount)
+      itemsXToYOfZ({ firstItemNo, lastItemNo, itemCount }, i18n) {
+        const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
+        const formattedLastItemNo = i18n.formatNumber(lastItemNo)
+        const formattedItemCount = i18n.formatNumber(itemCount)
 
-        return `${firstItemNo} - ${lastItemNo} / ${itemCount}`
+        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
       },
 
-      itemXOfY(params, i18n) {
-        const itemNo = i18n.formatNumber(params.itemNo)
-        const itemCount = i18n.formatNumber(params.itemCount)
+      itemXOfY({ itemNo, itemCount }, i18n) {
+        const formattedItemNo = i18n.formatNumber(itemNo)
+        const formattedItemCount = i18n.formatNumber(itemCount)
 
-        return `${itemNo} - ${itemCount}`
+        return `${formattedItemNo} / ${formattedItemCount}`
       },
 
-      ofXPages(params, i18n) {
-        const pageCount = i18n.formatNumber(params.pageCount)
+      ofXPages({ pageCount }, i18n) {
+        const formattedPageCount = i18n.formatNumber(pageCount)
 
-        return `von ${pageCount}`
+        return `von ${formattedPageCount}`
       },
 
       page: 'Seite',

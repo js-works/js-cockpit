@@ -9,7 +9,6 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
 
 // styles
 import tabStyles from './tab.css'

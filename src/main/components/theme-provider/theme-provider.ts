@@ -10,9 +10,7 @@ import {
   Listener
 } from '../../utils/components'
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
-
+import { html } from '../../utils/lit'
 import { Theme } from '../../misc/theming'
 
 // styles

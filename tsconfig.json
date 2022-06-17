@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "allowJs": false,
-    "target": "ESNext",
-    "module": "ES2020",
+    "target": "ES2022",
+    "module": "ES2022",
     "moduleResolution": "node",
     "strict": true,
     "useDefineForClassFields": false,
@@ -12,7 +12,7 @@
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "sourceMap": true,
-    "lib": ["ES2021", "dom"],
+    "lib": ["ES2022", "dom"],
     "esModuleInterop": true,
     "baseUrl": ".",
     "skipLibCheck": true,

@@ -1,5 +1,3 @@
-import { addToDict, defineTerms, TermsOf } from 'js-localize'
-
 import {
   bind,
   createEmitter,
@@ -11,7 +9,7 @@ import {
 } from '../../utils/components'
 
 import { html } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
+import { I18nController } from '../../controllers/i18n-controller'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -31,27 +29,6 @@ import userMenuStyles from './user-menu.css'
 
 export { UserMenu }
 
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.userMenu': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.userMenu': {
-      anonymous: 'Anonymous',
-      logOut: 'Log out'
-    }
-  }
-})
-
-addToDict(translations)
-
 // === UserMenu ======================================================
 
 @elem({
@@ -66,7 +43,8 @@ class UserMenu extends Component {
   @prop
   onLogout?: Listener<LogoutEvent>
 
-  private _i18n = createLocalizer(this, 'jsCockpit.userMenu')
+  private _i18n = new I18nController(this)
+  private _t = this._i18n.translate('jsCockpit.userMenu')
   private _emitLogout = createEmitter(this, 'c-logout', () => this.onLogout)
 
   @bind
@@ -78,9 +56,9 @@ class UserMenu extends Component {
     return html`
       <div part="base" class="base">
         <sl-icon src=${defaultAvatarIcon} class="avatar-icon"></sl-icon>
-        ${this.userName || this._i18n.tr('anonymous')}
+        ${this.userName || this._t('anonymous')}
         <sl-tooltip
-          content=${this._i18n.tr('logOut')}
+          content=${this._t('logOut')}
           placement="top-end"
           skidding="-5"
         >

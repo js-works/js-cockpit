@@ -3,7 +3,8 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
-import { addToDict, localize, TermsOf } from 'js-localize'
+
+import { CockpitTranslations, Localizer } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -27,32 +28,8 @@ export {
   showWarnDialog
 }
 
-// === translations ===================================================
-
-declare global {
-  namespace Localize {
-    interface TranslationsMap {
-      'jsCockpit.dialogs': TermsOf<typeof translations>
-    }
-  }
-}
-
-const translations = {
-  en: {
-    'jsCockpit.dialogs': {
-      ok: 'OK',
-      cancel: 'Cancel',
-      information: 'Information',
-      warning: 'Warning',
-      error: 'Error',
-      input: 'Input',
-      confirmation: 'Confirmation',
-      approval: 'Approval'
-    }
-  }
-}
-
-addToDict(translations)
+// required custom element (to prevent too much tree shaking)
+void FocusTrap
 
 // === types =========================================================
 
@@ -239,7 +216,9 @@ const showInputDialog = createDialogFn<
 function showDialog<T = void>(
   parent: HTMLElement | null,
   init: (
-    translate: (textId: keyof TermsOf<'jsCockpit.dialogs'>) => string
+    translate: (
+      textId: keyof CockpitTranslations['jsCockpit.dialogs']
+    ) => string
   ) => DialogConfig<T>
 ): Promise<T> {
   const target =
@@ -249,13 +228,11 @@ function showDialog<T = void>(
     document.body
 
   // TODO!!!
-  const localizer = localize({
-    element: target,
-    onChange() {},
-    init() {}
-  })
+  const localizer = new Localizer<CockpitTranslations>(
+    () => target.lang || document.documentElement.lang
+  )
 
-  const translate = (textId: keyof TermsOf<'jsCockpit.dialogs'>) =>
+  const translate = (textId: keyof CockpitTranslations['jsCockpit.dialogs']) =>
     localizer.translate('jsCockpit.dialogs', textId)
 
   const params = init(translate)

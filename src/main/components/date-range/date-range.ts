@@ -8,7 +8,7 @@ import {
 } from '../../utils/components'
 
 import { html, classMap } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
+import { I18nController } from '../../controllers/i18n-controller'
 
 // @ts-ignore
 import { DateRangePicker } from 'vanillajs-datepicker'
@@ -58,14 +58,14 @@ class DateRange extends Component {
   @prop({ attr: Attrs.boolean })
   required = false
 
-  private _loc = createLocalizer(this)
+  private _i18n = new I18nController(this)
   private _datepicker: DateRangePickerInstance | null = null
 
   constructor() {
     super()
 
     afterInit(this, () => {
-      const getLocale = () => this._loc.getLocale()
+      const getLocale = () => this._i18n.getLocale()
       const shadowRoot = this.shadowRoot!
 
       setTimeout(() => {

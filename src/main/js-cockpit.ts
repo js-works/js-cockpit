@@ -41,4 +41,5 @@ export * from './misc/theming'
 
 // translations
 import './misc/validation'
-import './translations/de'
+import './i18n/translations/en'
+import './i18n/translations/de' // TODO!!!!!

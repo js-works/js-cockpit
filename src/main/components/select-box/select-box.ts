@@ -9,7 +9,6 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
 
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'

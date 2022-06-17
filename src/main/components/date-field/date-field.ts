@@ -8,7 +8,7 @@ import {
 } from '../../utils/components'
 
 import { html, classMap } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
+import { I18nController } from '../../controllers/i18n-controller'
 
 import {
   getLocalization,
@@ -68,7 +68,7 @@ class DateField extends Component {
   @prop({ attr: Attrs.boolean })
   required = false
 
-  private _loc = createLocalizer(this)
+  private _i18n = new I18nController(this)
   private _datepicker: DatepickerInstance | null = null
 
   constructor() {
@@ -79,7 +79,7 @@ class DateField extends Component {
 
       setTimeout(() => {
         this._datepicker = createDatepicker({
-          getLocale: this._loc.getLocale,
+          getLocale: this._i18n.getLocale,
           slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
           pickerContainer: shadowRoot.querySelector('.picker-container')!,
           namespace: this.localName
@@ -88,7 +88,7 @@ class DateField extends Component {
     })
 
     afterUpdate(this, () => {
-      const locale = this._loc.getLocale()
+      const locale = this._i18n.getLocale()
       const localization = getLocalization(locale, this.localName)
 
       if (this._datepicker) {

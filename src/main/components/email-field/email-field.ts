@@ -9,8 +9,8 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref } from '../../utils/lit'
-import { createLocalizer } from '../../utils/i18n'
-import { FormFieldController } from '../../utils/controllers'
+import { I18nController } from '../../controllers/i18n-controller'
+import { FormFieldController } from '../../controllers/form-field-controller'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -53,7 +53,7 @@ class EmailField extends Component {
   required = false
 
   private _slInputRef = createRef<SlInput>()
-  private _i18n = createLocalizer(this)
+  private _i18n = new I18nController(this)
 
   private _formField: FormFieldController<string> = new FormFieldController(
     this,
