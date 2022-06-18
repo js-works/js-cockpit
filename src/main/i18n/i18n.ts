@@ -4,8 +4,12 @@ import {
   ComponentLocalizer,
   Locale,
   Localizer,
+  PartialTranslation,
+  PartialTranslations,
   Translation,
-  TermKey
+  Translations,
+  TermKey,
+  TermValue
 } from './localize/localize'
 
 import { getDirection } from './localize/localize-utils'
@@ -31,6 +35,8 @@ export {
   ComponentLocalizer,
   Localizer,
   PartialCockpitTranslations,
+  PartialTranslation,
+  PartialTranslations,
   Translation
 }
 
@@ -46,17 +52,13 @@ const localizeAdapter = createLocalizeAdapter()
 
 // === exported types ================================================
 
-type CockpitTranslations = Record<Locale, CockpitTranslation>
+type CockpitTranslations = Translations<CockpitTranslation>
 
-type PartialCockpitTranslations = Partial<
-  { [K in keyof CockpitTranslations]: Partial<CockpitTranslations[K]> }
->
+type PartialCockpitTranslations = PartialTranslations<CockpitTranslation>
 
 // === exported functions ============================================
 
-function addToDict<T extends Translation>(
-  translationsByLocale: Record<Locale, T>
-) {
+function addToDict(translationsByLocale: Record<Locale, any>) {
   for (const locale of Object.keys(translationsByLocale)) {
     const translations: any = translationsByLocale[locale]
 

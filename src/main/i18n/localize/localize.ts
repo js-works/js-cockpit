@@ -25,27 +25,37 @@ export {
   RelativeTimeFormat,
   RelativeTimeUnit,
   TermKey,
-  Translation
+  TermValue,
+  Translation,
+  Translations,
+  PartialTranslation,
+  PartialTranslations
 }
 
 type Locale = string
 type Category = string
 type TermKey = string
 type Direction = 'ltr' | 'rtl'
+type TermValue = string | ((params: any, localizer: Localizer<any>) => string)
 
-type TermValue<T extends Translation> =
-  | string
-  | ((params: any, localizer: Localizer<T>) => string) // TODO!!!!!!
-
-type Translation<T = any> = T extends {
-  // T extends Record<Category, Record<TermKey, TermValue<T>>>
-  [C in keyof T]: {
-    [K in keyof T[C]]: TermValue<T>
+type Translation = {
+  [C: Category]: {
+    [K: TermKey]: TermValue
   }
 }
-  ? T
-  : never
 
+type Translations<T extends Translation> = Record<Locale, T>
+
+type PartialTranslation<T extends Translation> = {
+  [C in keyof T]?: {
+    [K in keyof T[C]]?: T[C][K]
+  }
+}
+
+type PartialTranslations<T extends Translation> = Record<
+  Locale,
+  PartialTranslation<T>
+>
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
 type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
@@ -81,6 +91,15 @@ abstract class Localizer<T extends Translation> {
     return this.#getLocale()
   }
 
+  translate<U extends Translation = any>(): <
+    C extends keyof U,
+    K extends keyof U[C]
+  >(
+    category: C,
+    termKey: K,
+    params?: FirstArgument<U[C][K]>
+  ) => string
+
   translate<C extends keyof T>(
     category: C
   ): <K extends keyof T[C]>(
@@ -94,8 +113,11 @@ abstract class Localizer<T extends Translation> {
     params?: FirstArgument<T[C][K]>
   ): string
 
-  translate(category: any, termKey?: any, params?: any): any {
-    if (arguments.length === 1) {
+  translate(category?: any, termKey?: any, params?: any): any {
+    if (arguments.length === 0) {
+      return (category: any, key: any, params: any) =>
+        this.translate(category, key, params)
+    } else if (arguments.length === 1) {
       return (key: any, params?: any) => this.translate(category, key, params)
     }
 

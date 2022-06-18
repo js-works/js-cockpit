@@ -2,7 +2,23 @@ import { Localizer, Translation } from './localize/localize'
 
 type I18n = Localizer<CockpitTranslation>
 
-export interface CockpitTranslation extends Translation {
+const x: I18n = null as any
+x.translate('jsCockpit.dataExplorer', 'loadingMessage')
+
+export { CockpitTranslation }
+
+const xx = {
+  'jsCockpit.dialogs': {
+    ok: 'string',
+    cancel: 'string'
+  }
+}
+
+type X = {
+  a: number
+}
+
+type CockpitTranslation = {
   'jsCockpit.dialogs': {
     ok: string
     cancel: string
@@ -67,7 +83,11 @@ export interface CockpitTranslation extends Translation {
     ): string
 
     itemXOfY(params: { itemNo: number; itemCount: number }, i18n: I18n): string
-    ofXPages(params: { pageCount: number }, i18n: I18n): string
+
+    ofXPages( //
+      params: { pageCount: number },
+      i18n: I18n
+    ): string
 
     page: string
     pageSize: string

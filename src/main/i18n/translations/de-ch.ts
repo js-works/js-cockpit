@@ -3,7 +3,9 @@
 import { addToDict, PartialCockpitTranslations } from '../i18n'
 
 const translations: PartialCockpitTranslations = {
-  de: {}
+  de: {
+    'jsCockpit.dataExplorer': {}
+  }
 }
 
 addToDict(translations)
