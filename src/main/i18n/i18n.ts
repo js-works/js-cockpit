@@ -1,6 +1,5 @@
 import {
   Adapter,
-  Category,
   ComponentLocalizer,
   Locale,
   Localizer,

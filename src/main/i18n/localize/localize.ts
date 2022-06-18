@@ -91,10 +91,7 @@ abstract class Localizer<T extends Translation> {
     return this.#getLocale()
   }
 
-  translate<U extends Translation = any>(): <
-    C extends keyof U,
-    K extends keyof U[C]
-  >(
+  translate<U extends Translation>(): <C extends keyof U, K extends keyof U[C]>(
     category: C,
     termKey: K,
     params?: FirstArgument<U[C][K]>
