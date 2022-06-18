@@ -60,7 +60,7 @@ const translations: CockpitTranslations = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ({ firstItemNo, lastItemNo, itemCount }, i18n) {
+      itemsXToYOfZ: ({ firstItemNo, lastItemNo, itemCount }, i18n) => {
         const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
         const formattedLastItemNo = i18n.formatNumber(lastItemNo)
         const formattedItemCount = i18n.formatNumber(itemCount)
@@ -68,14 +68,14 @@ const translations: CockpitTranslations = {
         return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
       },
 
-      itemXOfY({ itemNo, itemCount }, i18n) {
+      itemXOfY: ({ itemNo, itemCount }, i18n) => {
         const formattedItemNo = i18n.formatNumber(itemNo)
         const formattedItemCount = i18n.formatNumber(itemCount)
 
         return `${formattedItemNo} / ${formattedItemCount}`
       },
 
-      ofXPages({ pageCount }, i18n) {
+      ofXPages: ({ pageCount }, i18n) => {
         const formattedPageCount = i18n.formatNumber(pageCount)
 
         return `of ${formattedPageCount}`

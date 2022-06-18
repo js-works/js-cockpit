@@ -82,12 +82,20 @@ type CockpitTranslation = {
       i18n: I18n
     ): string
 
-    itemXOfY(params: { itemNo: number; itemCount: number }, i18n: I18n): string
-
-    ofXPages( //
-      params: { pageCount: number },
+    itemXOfY: (
+      params: {
+        itemNo: number
+        itemCount: number
+      },
       i18n: I18n
-    ): string
+    ) => string
+
+    ofXPages: (
+      params: {
+        pageCount: number
+      },
+      i18n: I18n
+    ) => string
 
     page: string
     pageSize: string
