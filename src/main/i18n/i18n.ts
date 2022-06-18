@@ -88,7 +88,7 @@ function addToDict<T extends Translation>(
 // === local functions ===============================================
 
 function createLocalizeAdapter(): Adapter {
-  const elem: HTMLElement & ReactiveControllerHost = Object.assign(
+  const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
     document.createElement('div'),
     {
       addController() {},
@@ -98,12 +98,12 @@ function createLocalizeAdapter(): Adapter {
     }
   )
 
-  const localizeController = new LocalizeController(elem)
+  const localizeController = new LocalizeController(fakeElem)
 
   return {
     translate(locale, category, termKey, params, i18n) {
       const key = `${category}${categoryTermSeparator}${termKey}`
-      elem.lang = locale
+      fakeElem.lang = locale
 
       return localizeController.term(key, params, i18n)
     },

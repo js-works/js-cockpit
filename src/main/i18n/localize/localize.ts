@@ -14,15 +14,19 @@ import {
 export {
   Adapter,
   Category,
+  ComponentLocalizer,
+  DateFormat,
+  DayNameFormat,
   Direction,
   Locale,
+  Localizer,
+  MonthNameFormat,
+  NumberFormat,
+  RelativeTimeFormat,
+  RelativeTimeUnit,
   TermKey,
-  Translation,
-  ComponentLocalizer,
-  Localizer
+  Translation
 }
-
-const defaultLocale = 'en-US'
 
 type Locale = string
 type Category = string
