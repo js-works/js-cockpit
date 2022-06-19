@@ -1,18 +1,6 @@
 const path = require('path')
 
 module.exports = ({ config }) => {
-  /*
-  config.module.rules.push({
-    test: /\.(ts|tsx)$/,
-
-    use: [
-      {
-        loader: require.resolve('awesome-typescript-loader'),
-      },
-    ],
-  })
-  */
-
   config.module.rules = config.module.rules.filter(
     (it) => !it || !it.test || !it.test.toString().startsWith('/\\.css$/')
   )
