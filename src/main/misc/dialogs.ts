@@ -4,7 +4,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 
-import { CockpitTranslation, localize } from '../i18n/i18n'
+import { CockpitTranslation, Localizer } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -226,7 +226,7 @@ function showDialog<T = void>(
     document.body
 
   // TODO!!!!!!!!
-  const localizer = localize<CockpitTranslation>(
+  const localizer = new Localizer<CockpitTranslation>(
     () => target.lang || document.documentElement.lang
   )
 

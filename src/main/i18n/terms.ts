@@ -1,22 +1,12 @@
-import { Localizer, Translation } from './localize/localize'
+import { Localizer } from './i18n'
 
 type I18n = Localizer<CockpitTranslation>
 
-const x: I18n = null as any
-x.translate('jsCockpit.dataExplorer', 'loadingMessage')
+// === exports =======================================================
 
 export { CockpitTranslation }
 
-const xx = {
-  'jsCockpit.dialogs': {
-    ok: 'string',
-    cancel: 'string'
-  }
-}
-
-type X = {
-  a: number
-}
+// === CockpitTranslation ============================================
 
 type CockpitTranslation = {
   'jsCockpit.dialogs': {
