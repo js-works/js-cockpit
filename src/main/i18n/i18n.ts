@@ -1,6 +1,5 @@
 import {
   adaptLocalization,
-  Direction,
   PartialTranslations,
   Translation,
   Translations
@@ -19,12 +18,13 @@ import { ReactiveControllerHost } from 'lit'
 // === exports =======================================================
 
 export {
-  localize,
   registerTranslations,
   CockpitTranslation,
   CockpitTranslations,
-  I18nController,
+  Localizer,
   PartialCockpitTranslations,
+  Translation,
+  Translations
 }
 
 // === constants =====================================================
@@ -50,7 +50,7 @@ const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
 
 const fakeLocalizeController = new LocalizeController(fakeElem)
 
-const { registerTranslations, localize, localizerClass } = adaptLocalization({
+const { registerTranslations, localizerClass } = adaptLocalization({
   addTranslations(translations) {
     for (const locale of Object.keys(translations)) {
       const translation = translations[locale]
@@ -70,7 +70,7 @@ const { registerTranslations, localize, localizerClass } = adaptLocalization({
           ] = terms[termKey]
         }
       }
-      
+
       registerTranslation(convertedTranslation)
     }
   },
@@ -83,18 +83,4 @@ const { registerTranslations, localize, localizerClass } = adaptLocalization({
   }
 })
 
-class I18nController<T extends Translation = CockpitTranslation> extends localizerClass<T> { 
-  #localizeController: LocalizeController
-
-  constructor(element: HTMLElement & ReactiveControllerHost) {
-    super(() => this.#localizeController.lang())
-    this.#localizeController = new LocalizeController(element)
-  }
-
-  override getDirection(): Direction {
-    const ret = this.#localizeController.dir()
-
-    return ret === 'rtl' ? 'rtl' : 'ltr'
-  }
-}
-
+class Localizer<T extends Translation> extends localizerClass<T> {}
