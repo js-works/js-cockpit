@@ -1,5 +1,3 @@
-import type { ReactiveControllerHost } from 'lit'
-
 import {
   formatDate,
   formatNumber,
@@ -13,7 +11,9 @@ import {
 } from './localize-utils'
 
 export {
-  adaptLocalization,
+  createLocalizerClass,
+  validateTranslations,
+  Adapter,
   Category,
   DateFormat,
   DayNameFormat,
@@ -113,8 +113,6 @@ interface Localizer<T extends Translation = any> {
 // === local types ===================================================
 
 type Adapter = {
-  addTranslations(translations: Translations): void
-
   translate: (
     locale: Locale,
     category: Category,
@@ -131,20 +129,22 @@ const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
 // === exported functions ============================================
 
-function adaptLocalization(adapter: Adapter): {
-  registerTranslations: (translations: Translations) => void
-
-  localizerClass: {
-    new <T extends Translation>(getLocale: () => Locale): Localizer<T>
-  }
+function createLocalizerClass<T extends Translation>(
+  adapter: Adapter
+): {
+  new <U extends Translation = T>(getLocale: () => Locale): Localizer<T>
 } {
-  class LocalizerImpl extends AbstractLocalizer<any> {
+  return class extends AbstractLocalizer<any> {
     constructor(getLocale: () => Locale) {
       super(getLocale, adapter)
     }
   }
+}
 
-  function registerTranslations(translations: Translations): void {
+function validateTranslations(translations: Translations): null | Error {
+  let ret: null | Error = null
+
+  try {
     for (const locale of Object.keys(translations)) {
       const translation = translations[locale]
 
@@ -160,14 +160,11 @@ function adaptLocalization(adapter: Adapter): {
         }
       }
     }
-
-    adapter.addTranslations(translations)
+  } catch (error) {
+    ret = error as Error
   }
 
-  return {
-    registerTranslations,
-    localizerClass: LocalizerImpl
-  }
+  return ret
 }
 
 // === local stuff ===================================================

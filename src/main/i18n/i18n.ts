@@ -1,5 +1,7 @@
 import {
-  adaptLocalization,
+  createLocalizerClass,
+  validateTranslations,
+  Adapter,
   Localizer,
   PartialTranslations,
   Translation,
@@ -20,7 +22,6 @@ import { ReactiveControllerHost } from 'lit'
 
 export {
   registerTranslations,
-  AbstractLocalizer, // TODO!!!
   CockpitTranslation,
   CockpitTranslations,
   I18nFacade,
@@ -53,40 +54,44 @@ const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
 
 const fakeLocalizeController = new LocalizeController(fakeElem)
 
-const { registerTranslations, localizerClass: AbstractLocalizer } =
-  adaptLocalization({
-    addTranslations(translations) {
-      for (const locale of Object.keys(translations)) {
-        const translation = translations[locale]
+const adapter: Adapter = {
+  translate(locale, category, termKey, params, i18n) {
+    const key = `${category}${categoryTermSeparator}${termKey}`
+    fakeElem.lang = locale
 
-        const convertedTranslation: any = {
-          $code: locale,
-          $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
-          $dir: getDirection(locale)
-        }
-
-        for (const category of Object.keys(translation)) {
-          const terms = translation[category]
-
-          for (const termKey of Object.keys(terms)) {
-            convertedTranslation[
-              `${category}${categoryTermSeparator}${termKey}`
-            ] = terms[termKey]
-          }
-        }
-
-        registerTranslation(convertedTranslation)
-      }
-    },
-
-    translate(locale, category, termKey, params, i18n) {
-      const key = `${category}${categoryTermSeparator}${termKey}`
-      fakeElem.lang = locale
-
-      return fakeLocalizeController.term(key, params, i18n)
-    }
-  })
+    return fakeLocalizeController.term(key, params, i18n)
+  }
+}
 
 class I18nFacade<
   T extends Translation = CockpitTranslation
-> extends AbstractLocalizer<T> {}
+> extends createLocalizerClass(adapter) {}
+
+function registerTranslations(translations: Translations) {
+  const error = validateTranslations(translations)
+
+  if (error) {
+    throw error
+  }
+
+  for (const locale of Object.keys(translations)) {
+    const translation = translations[locale]
+
+    const convertedTranslation: any = {
+      $code: locale,
+      $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
+      $dir: getDirection(locale)
+    }
+
+    for (const category of Object.keys(translation)) {
+      const terms = translation[category]
+
+      for (const termKey of Object.keys(terms)) {
+        convertedTranslation[`${category}${categoryTermSeparator}${termKey}`] =
+          terms[termKey]
+      }
+    }
+
+    registerTranslation(convertedTranslation)
+  }
+}
