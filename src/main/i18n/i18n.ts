@@ -1,14 +1,9 @@
 import {
-  Adapter,
-  ComponentLocalizer,
-  Locale,
-  Localizer,
-  PartialTranslation,
+  adaptLocalization,
+  Direction,
   PartialTranslations,
   Translation,
-  Translations,
-  TermKey,
-  TermValue
+  Translations
 } from './localize/localize'
 
 import { getDirection } from './localize/localize-utils'
@@ -19,103 +14,87 @@ import {
 } from '@shoelace-style/localize'
 
 import { CockpitTranslation } from './terms'
-
-// always bundle the English translations
-import './translations/en'
 import { ReactiveControllerHost } from 'lit'
 
 // === exports =======================================================
 
 export {
-  addToDict,
-  localizeAdapter,
+  localize,
+  registerTranslations,
   CockpitTranslation,
   CockpitTranslations,
-  ComponentLocalizer,
-  Localizer,
+  I18nController,
   PartialCockpitTranslations,
-  PartialTranslation,
-  PartialTranslations,
-  Translation
 }
 
 // === constants =====================================================
 
-const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
-const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 const categoryTermSeparator = '/'
-
-// === exported values ===============================================
-
-const localizeAdapter = createLocalizeAdapter()
 
 // === exported types ================================================
 
 type CockpitTranslations = Translations<CockpitTranslation>
-
 type PartialCockpitTranslations = PartialTranslations<CockpitTranslation>
 
-// === exported functions ============================================
+// === misc ==========================================================
 
-function addToDict(translationsByLocale: Record<Locale, any>) {
-  for (const locale of Object.keys(translationsByLocale)) {
-    const translations: any = translationsByLocale[locale]
+const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
+  document.createElement('div'),
+  {
+    addController() {},
+    removeController() {},
+    requestUpdate() {},
+    updateComplete: Promise.resolve(true)
+  }
+)
 
-    const convertedTranslations: any = {
-      $code: locale,
-      $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
-      $dir: getDirection(locale)
-    }
+const fakeLocalizeController = new LocalizeController(fakeElem)
 
-    for (const category of Object.keys(translations)) {
-      if (!category.match(regexCategory)) {
-        throw Error(`Illegal translations category name "${category}"`)
+const { registerTranslations, localize, localizerClass } = adaptLocalization({
+  addTranslations(translations) {
+    for (const locale of Object.keys(translations)) {
+      const translation = translations[locale]
+
+      const convertedTranslation: any = {
+        $code: locale,
+        $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
+        $dir: getDirection(locale)
       }
 
-      for (const termKey of Object.keys(translations[category])) {
-        if (!termKey.match(regexTermKey)) {
-          throw Error(`Illegal translation key "${termKey}"`)
+      for (const category of Object.keys(translation)) {
+        const terms = translation[category]
+
+        for (const termKey of Object.keys(terms)) {
+          convertedTranslation[
+            `${category}${categoryTermSeparator}${termKey}`
+          ] = terms[termKey]
         }
-
-        convertedTranslations[`${category}${categoryTermSeparator}${termKey}`] =
-          translations[category][termKey]
       }
+      
+      registerTranslation(convertedTranslation)
     }
+  },
 
-    registerTranslation(convertedTranslations)
+  translate(locale, category, termKey, params, i18n) {
+    const key = `${category}${categoryTermSeparator}${termKey}`
+    fakeElem.lang = locale
+
+    return fakeLocalizeController.term(key, params, i18n)
+  }
+})
+
+class I18nController<T extends Translation = CockpitTranslation> extends localizerClass<T> { 
+  #localizeController: LocalizeController
+
+  constructor(element: HTMLElement & ReactiveControllerHost) {
+    super(() => this.#localizeController.lang())
+    this.#localizeController = new LocalizeController(element)
+  }
+
+  override getDirection(): Direction {
+    const ret = this.#localizeController.dir()
+
+    return ret === 'rtl' ? 'rtl' : 'ltr'
   }
 }
 
-// === local functions ===============================================
-
-function createLocalizeAdapter(): Adapter {
-  const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
-    document.createElement('div'),
-    {
-      addController() {},
-      removeController() {},
-      requestUpdate() {},
-      updateComplete: Promise.resolve(true)
-    }
-  )
-
-  const localizeController = new LocalizeController(fakeElem)
-
-  return {
-    translate(locale, category, termKey, params, i18n) {
-      const key = `${category}${categoryTermSeparator}${termKey}`
-      fakeElem.lang = locale
-
-      return localizeController.term(key, params, i18n)
-    },
-
-    observeComponent(element) {
-      const ctrl = new LocalizeController(element)
-
-      return {
-        getLocale: () => ctrl.lang(),
-        getDirection: () => (ctrl.dir() === 'rtl' ? 'rtl' : 'ltr')
-      }
-    }
-  }
-}

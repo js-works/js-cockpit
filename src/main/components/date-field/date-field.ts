@@ -79,7 +79,7 @@ class DateField extends Component {
 
       setTimeout(() => {
         this._datepicker = createDatepicker({
-          getLocale: this._i18n.getLocale,
+          getLocale: this._i18n.getLocale.bind(this._i18n),
           slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
           pickerContainer: shadowRoot.querySelector('.picker-container')!,
           namespace: this.localName

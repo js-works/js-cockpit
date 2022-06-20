@@ -1,4 +1,4 @@
-import { addToDict, CockpitTranslations } from '../i18n'
+import { registerTranslations, CockpitTranslations } from '../i18n'
 
 const translations: CockpitTranslations = {
   de: {
@@ -23,8 +23,10 @@ const translations: CockpitTranslations = {
       failedRegistrationSubmit: 'Data could not be submitted',
       forgotPassword: 'Forgot password?',
       forgotPasswordIntroHeadline: 'Forgot password?',
+
       forgotPasswordIntroText:
         "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
+
       forgotPasswordSubmitText: 'Request password reset',
       goToLogin: 'Go to login form',
       goToRegistration: 'Need account?',
@@ -39,13 +41,17 @@ const translations: CockpitTranslations = {
       processingResetPasswordSubmit: 'Submitting...',
       processingRegistrationSubmit: 'Submitting...',
       registrationIntroHeadline: 'Registration',
+
       registrationIntroText:
         'Please fill out the form and press the submit button to register',
+
       registrationSubmitText: 'Register',
       rememberLogin: 'Remember login',
       resetPasswordIntroHeadline: 'Reset password',
+
       resetPasswordIntroText:
         'Please fill out and submit the form to reset your password',
+
       resetPasswordSubmitText: 'Reset password',
       securityCode: 'Security code',
       successfulLoginSubmit: 'You have been successfully logged in',
@@ -60,7 +66,7 @@ const translations: CockpitTranslations = {
     },
 
     'jsCockpit.paginationBar': {
-      itemsXToYOfZ: ({ firstItemNo, lastItemNo, itemCount }, i18n) => {
+      itemsXToYOfZ({ firstItemNo, lastItemNo, itemCount }, i18n) {
         const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
         const formattedLastItemNo = i18n.formatNumber(lastItemNo)
         const formattedItemCount = i18n.formatNumber(itemCount)
@@ -68,14 +74,14 @@ const translations: CockpitTranslations = {
         return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
       },
 
-      itemXOfY: ({ itemNo, itemCount }, i18n) => {
+      itemXOfY({ itemNo, itemCount }, i18n) {
         const formattedItemNo = i18n.formatNumber(itemNo)
         const formattedItemCount = i18n.formatNumber(itemCount)
 
         return `${formattedItemNo} / ${formattedItemCount}`
       },
 
-      ofXPages: ({ pageCount }, i18n) => {
+      ofXPages({ pageCount }, i18n) {
         const formattedPageCount = i18n.formatNumber(pageCount)
 
         return `of ${formattedPageCount}`
@@ -99,4 +105,4 @@ const translations: CockpitTranslations = {
   }
 }
 
-addToDict(translations)
+registerTranslations(translations)

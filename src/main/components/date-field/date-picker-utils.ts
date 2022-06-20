@@ -1,5 +1,5 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { Localizer } from '../../i18n/i18n'
+import { localize } from '../../i18n/i18n'
 import { autoUpdate, computePosition, flip } from '@floating-ui/dom'
 
 // @ts-ignore
@@ -64,7 +64,7 @@ function initPopup(slInput: SlInput, datepicker: DatepickerInstance) {
 }
 
 function createLocalization(locale: string) {
-  const localizer = new Localizer(() => locale)
+  const localizer = localize(() => locale)
   let daysShort = localizer.getDayNames('short')
 
   if (daysShort.some((it) => it.length > 4)) {
@@ -80,11 +80,11 @@ function createLocalization(locale: string) {
     weekStart: localizer.getFirstDayOfWeek(),
     weekendDays: localizer.getWeekendDays(),
     titleFormat: 'MM y',
-    getCalendarWeek: localizer.getCalendarWeek,
+    getCalendarWeek: localizer.getCalendarWeek.bind(localizer),
 
     format: {
-      toValue: localizer.parseDate,
-      toDisplay: localizer.formatDate
+      toValue: localizer.parseDate.bind(localizer),
+      toDisplay: localizer.formatDate.bind(localizer)
     }
   }
 }

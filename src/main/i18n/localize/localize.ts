@@ -5,6 +5,7 @@ import {
   formatNumber,
   formatRelativeTime,
   getCalendarWeek,
+  getDirection,
   getFirstDayOfWeek,
   getWeekendDays,
   parseDate,
@@ -12,9 +13,8 @@ import {
 } from './localize-utils'
 
 export {
-  Adapter,
+  adaptLocalization,
   Category,
-  ComponentLocalizer,
   DateFormat,
   DayNameFormat,
   Direction,
@@ -44,7 +44,7 @@ type Translation = {
   }
 }
 
-type Translations<T extends Translation> = Record<Locale, T>
+type Translations<T extends Translation = any> = Record<Locale, T>
 
 type PartialTranslation<T extends Translation> = {
   [C in keyof T]?: {
@@ -63,22 +63,121 @@ type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 type DayNameFormat = 'long' | 'short' | 'narrow'
 type MonthNameFormat = 'long' | 'short' | 'narrow'
 
-interface Adapter {
+interface Localizer<T extends Translation = any> {
+  getLocale(): Locale
+  getDirection(): Direction
+
+  translate<U extends Translation>(): <C extends keyof U, K extends keyof U[C]>(
+    category: C,
+    termKey: K,
+    params?: FirstArgument<U[C][K]>
+  ) => string
+
+  translate<C extends keyof T>(
+    category: C
+  ): <K extends keyof T[C]>(
+    termKey: K,
+    params?: FirstArgument<T[C][K]>
+  ) => string
+
+  translate<C extends keyof T, K extends keyof T[C]>(
+    category: C,
+    termKey: keyof T[C],
+    params?: FirstArgument<T[C][K]>
+  ): string
+
+  parseNumber(numberString: string): number | null
+  parseDate(dateString: string): Date | null
+  formatNumber(value: number, format?: NumberFormat): string
+  formatDate(value: Date, format?: DateFormat | null): string
+
+  formatRelativeTime(
+    value: number,
+    unit: RelativeTimeUnit,
+    format?: RelativeTimeFormat
+  ): string
+
+  // 0 to 6, 0 means Sunday
+  getFirstDayOfWeek(): number
+
+  // array of integer form 0 to 6
+  getWeekendDays(): Readonly<number[]>
+
+  getCalendarWeek(date: Date): number // 1 to 53
+  getDayName(index: number, format?: DayNameFormat): string
+  getDayNames(format?: DayNameFormat): string[]
+  getMonthName(index: number, format?: MonthNameFormat): string
+  getMonthNames(format?: MonthNameFormat): string[]
+}
+
+// === local types ===================================================
+
+type Adapter = {
+  addTranslations(translations: Translations): void
+
   translate: (
     locale: Locale,
     category: Category,
     termKey: TermKey,
     params?: Record<string, any>,
-    i18n?: Localizer<any>
+    i18n?: Localizer
   ) => string
+}
 
-  observeComponent(element: HTMLElement & ReactiveControllerHost): {
-    getLocale(): Locale
-    getDirection(): Direction
+// === constants =====================================================
+
+const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
+const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
+
+// === exported functions ============================================
+
+function adaptLocalization(adapter: Adapter): {
+  registerTranslations: (translations: Translations) => void
+
+  localize: <T extends Translation>(getLocale: () => Locale) => Localizer<T>
+
+  localizerClass: {
+    new <T extends Translation>(getLocale: () => Locale): Localizer<T>
+  }
+} {
+  class LocalizerImpl extends AbstractLocalizer<any> {
+    constructor(getLocale: () => Locale) {
+      super(getLocale, adapter)
+    }
+  }
+
+  function registerTranslations(translations: Translations): void {
+    for (const locale of Object.keys(translations)) {
+      const translation = translations[locale]
+
+      for (const category of Object.keys(translation)) {
+        if (!category.match(regexCategory)) {
+          throw Error(`Illegal translations category name "${category}"`)
+        }
+
+        for (const termKey of Object.keys(translation[category])) {
+          if (!termKey.match(regexTermKey)) {
+            throw Error(`Illegal translation key "${termKey}"`)
+          }
+        }
+      }
+    }
+
+    adapter.addTranslations(translations)
+  }
+
+  return {
+    registerTranslations,
+    localize: (getLocale) => new LocalizerImpl(getLocale),
+    localizerClass: LocalizerImpl
   }
 }
 
-abstract class Localizer<T extends Translation> {
+// === local stuff ===================================================
+
+abstract class AbstractLocalizer<T extends Translation>
+  implements Localizer<T>
+{
   #getLocale: () => Locale
   #adapter: Adapter
 
@@ -89,6 +188,10 @@ abstract class Localizer<T extends Translation> {
 
   getLocale(): Locale {
     return this.#getLocale()
+  }
+
+  getDirection(): Direction {
+    return getDirection(this.#getLocale())
   }
 
   translate<U extends Translation>(): <C extends keyof U, K extends keyof U[C]>(
@@ -123,7 +226,7 @@ abstract class Localizer<T extends Translation> {
       category as string,
       termKey as string,
       (params as any) || null,
-      this
+      this as any // TODO!!!
     )
   }
 
@@ -200,24 +303,6 @@ abstract class Localizer<T extends Translation> {
     }
 
     return arr
-  }
-}
-
-abstract class ComponentLocalizer<T extends Translation> extends Localizer<T> {
-  #element: HTMLElement
-  #getDirection: () => Direction
-
-  constructor(element: HTMLElement & ReactiveControllerHost, adapter: Adapter) {
-    const { getLocale, getDirection } = adapter.observeComponent(element)
-    super(getLocale, adapter)
-    this.#element = element
-    this.#getDirection = getDirection
-  }
-
-  getDirection(): Direction {
-    const ret = this.#getDirection()
-
-    return ret === 'rtl' ? 'rtl' : 'ltr'
   }
 }
 
