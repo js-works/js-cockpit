@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "allowJs": false,
-    "target": "ESNext",
-    "module": "ES2020",
+    "target": "ES2022",
+    "module": "ES2022",
     "moduleResolution": "node",
     "strict": true,
     "useDefineForClassFields": false,

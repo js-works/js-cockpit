@@ -35,11 +35,15 @@ export { LogoutEvent } from './events/logout-event'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
+// i18n
+export { I18nFacade } from './i18n/i18n'
+export { I18nController } from './controllers/i18n-controller'
+
 // misc
 export * from './misc/dialogs'
 export * from './misc/theming'
 
 // translations
 import './misc/validation'
-import './i18n/translations/en' // TODO!!!!
+import './i18n/translations/en'
 import './i18n/translations/de' // TODO!!!!!
