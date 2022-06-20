@@ -11,8 +11,8 @@ import {
 } from './localize-utils'
 
 export {
-  createLocalizerClass,
   validateTranslations,
+  AbstractLocalizer,
   Adapter,
   Category,
   DateFormat,
@@ -128,16 +128,6 @@ const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
 const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
 // === exported functions ============================================
-
-function createLocalizerClass(adapter: Adapter): {
-  new (getLocale: () => Locale): Localizer
-} {
-  return class extends AbstractLocalizer<any> {
-    constructor(getLocale: () => Locale) {
-      super(getLocale, adapter)
-    }
-  }
-}
 
 function validateTranslations(translations: Translations): null | Error {
   let ret: null | Error = null

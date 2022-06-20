@@ -1,6 +1,6 @@
 import {
-  createLocalizerClass,
   validateTranslations,
+  AbstractLocalizer,
   Adapter,
   Localizer,
   PartialTranslations,
@@ -63,9 +63,13 @@ const adapter: Adapter = {
   }
 }
 
-class I18nFacade<T extends Translations = CockpitTranslation>
-  extends createLocalizerClass(adapter)
-  implements Localizer<T> {}
+class I18nFacade<
+  T extends Translations = CockpitTranslation
+> extends AbstractLocalizer<T> {
+  constructor(getLocale: () => string) {
+    super(getLocale, adapter)
+  }
+}
 
 function registerTranslations(translations: Translations) {
   const error = validateTranslations(translations)
