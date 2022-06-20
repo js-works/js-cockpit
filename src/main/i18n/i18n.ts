@@ -63,9 +63,9 @@ const adapter: Adapter = {
   }
 }
 
-class I18nFacade<
-  T extends Translation = CockpitTranslation
-> extends createLocalizerClass(adapter) {}
+class I18nFacade<T extends Translations = CockpitTranslation>
+  extends createLocalizerClass(adapter)
+  implements Localizer<T> {}
 
 function registerTranslations(translations: Translations) {
   const error = validateTranslations(translations)

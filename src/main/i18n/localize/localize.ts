@@ -129,10 +129,8 @@ const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
 // === exported functions ============================================
 
-function createLocalizerClass<T extends Translation>(
-  adapter: Adapter
-): {
-  new <U extends Translation = T>(getLocale: () => Locale): Localizer<T>
+function createLocalizerClass(adapter: Adapter): {
+  new (getLocale: () => Locale): Localizer
 } {
   return class extends AbstractLocalizer<any> {
     constructor(getLocale: () => Locale) {
