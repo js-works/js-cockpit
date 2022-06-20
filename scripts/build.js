@@ -30,7 +30,12 @@ async function build() {
       sourcemap: true,
       format,
       loader: { '.svg': 'dataurl' /*, '.css': 'text'*/ },
-      external: ['lit', '@shoelace-style/shoelace/*'],
+      external: [
+        'lit',
+        '@floating-ui/dom',
+        '@shoelace-style/localize',
+        '@shoelace-style/shoelace/*'
+      ],
       define: {
         'process.env.NODE_ENV': '"production"'
       },

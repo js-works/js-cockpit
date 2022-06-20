@@ -1,5 +1,5 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { Localizer } from '../../i18n/i18n'
+import { I18nFacade } from '../../i18n/i18n'
 import { autoUpdate, computePosition, flip } from '@floating-ui/dom'
 
 // @ts-ignore
@@ -64,7 +64,7 @@ function initPopup(slInput: SlInput, datepicker: DatepickerInstance) {
 }
 
 function createLocalization(locale: string) {
-  const localizer = new Localizer(() => locale)
+  const localizer = new I18nFacade(() => locale)
   let daysShort = localizer.getDayNames('short')
 
   if (daysShort.some((it) => it.length > 4)) {

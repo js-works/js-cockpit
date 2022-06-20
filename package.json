@@ -54,13 +54,13 @@
     "terser": "^5.14.1",
     "ts-loader": "8.3.0",
     "typescript": "4.6.4",
+    "vanillajs-datepicker": "github:mymth/vanillajs-datepicker#b20f93e",
     "webpack": "^5.73.0"
   },
   "dependencies": {
     "@floating-ui/dom": "^0.5.3",
     "@shoelace-style/localize": "^3.0.0",
     "@shoelace-style/shoelace": "^2.0.0-beta.76",
-    "lit": "^2.2.6",
-    "vanillajs-datepicker": "github:mymth/vanillajs-datepicker#b20f93e"
+    "lit": "^2.2.6"
   }
 }

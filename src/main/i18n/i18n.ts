@@ -1,5 +1,6 @@
 import {
   adaptLocalization,
+  Localizer,
   PartialTranslations,
   Translation,
   Translations
@@ -21,6 +22,7 @@ export {
   registerTranslations,
   CockpitTranslation,
   CockpitTranslations,
+  I18nFacade,
   Localizer,
   PartialCockpitTranslations,
   Translation,
@@ -83,4 +85,6 @@ const { registerTranslations, localizerClass } = adaptLocalization({
   }
 })
 
-class Localizer<T extends Translation> extends localizerClass<T> {}
+class I18nFacade<
+  T extends Translation = CockpitTranslation
+> extends localizerClass<T> {}
