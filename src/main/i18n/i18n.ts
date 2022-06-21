@@ -42,26 +42,28 @@ type PartialCockpitTranslations = PartialTranslations<CockpitTranslation>
 
 // === misc ==========================================================
 
-const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
-  document.createElement('div'),
-  {
-    addController() {},
-    removeController() {},
-    requestUpdate() {},
-    updateComplete: Promise.resolve(true)
+const adapter: Adapter = (() => {
+  const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
+    document.createElement('div'),
+    {
+      addController() {},
+      removeController() {},
+      requestUpdate() {},
+      updateComplete: Promise.resolve(true)
+    }
+  )
+
+  const fakeLocalizeController = new LocalizeController(fakeElem)
+
+  return {
+    translate(locale, category, termKey, params, i18n) {
+      const key = `${category}${categoryTermSeparator}${termKey}`
+      fakeElem.lang = locale
+
+      return fakeLocalizeController.term(key, params, i18n)
+    }
   }
-)
-
-const fakeLocalizeController = new LocalizeController(fakeElem)
-
-const adapter: Adapter = {
-  translate(locale, category, termKey, params, i18n) {
-    const key = `${category}${categoryTermSeparator}${termKey}`
-    fakeElem.lang = locale
-
-    return fakeLocalizeController.term(key, params, i18n)
-  }
-}
+})()
 
 class I18nFacade<
   T extends Translations = CockpitTranslation

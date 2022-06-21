@@ -56,6 +56,7 @@ type PartialTranslations<T extends Translation> = Record<
   Locale,
   PartialTranslation<T>
 >
+
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
 type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
@@ -110,8 +111,6 @@ interface Localizer<T extends Translation = any> {
   getMonthNames(format?: MonthNameFormat): string[]
 }
 
-// === local types ===================================================
-
 type Adapter = {
   translate: (
     locale: Locale,
@@ -122,12 +121,18 @@ type Adapter = {
   ) => string
 }
 
+// === local types ===================================================
+
+type FirstArgument<T> = T extends (firstArg: infer A, ...rest: any[]) => any
+  ? A
+  : never
+
 // === constants =====================================================
 
 const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
 const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
-// === exported functions ============================================
+// === validateTranslations ==========================================
 
 function validateTranslations(translations: Translations): null | Error {
   let ret: null | Error = null
@@ -155,7 +160,7 @@ function validateTranslations(translations: Translations): null | Error {
   return ret
 }
 
-// === local stuff ===================================================
+// === AbstractLocalizer =============================================
 
 abstract class AbstractLocalizer<T extends Translation>
   implements Localizer<T>
@@ -287,7 +292,3 @@ abstract class AbstractLocalizer<T extends Translation>
     return arr
   }
 }
-
-type FirstArgument<T> = T extends (firstArg: infer A, ...rest: any[]) => any
-  ? A
-  : never
