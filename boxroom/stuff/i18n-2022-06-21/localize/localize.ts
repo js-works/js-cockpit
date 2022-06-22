@@ -22,26 +22,21 @@ export {
   Localizer,
   MonthNameFormat,
   NumberFormat,
-  PartialTranslationsOf,
   RelativeTimeFormat,
   RelativeTimeUnit,
   TermKey,
   TermValue,
   Translation,
-  Translations
-}
-
-declare global {
-  namespace Localize {
-    interface Translations {}
-  }
+  Translations,
+  PartialTranslation,
+  PartialTranslations
 }
 
 type Locale = string
 type Category = string
 type TermKey = string
 type Direction = 'ltr' | 'rtl'
-type TermValue = string | ((params: any, localizer: Localizer) => string)
+type TermValue = string | ((params: any, localizer: Localizer<any>) => string)
 
 type Translation = {
   [C: Category]: {
@@ -49,15 +44,18 @@ type Translation = {
   }
 }
 
-type Translations = Record<Locale, Translation>
+type Translations<T extends Translation = any> = Record<Locale, T>
 
-type PartialTranslationsOf<T extends Translation> = {
-  [L: Locale]: {
-    [C in keyof T]?: {
-      [K in keyof T[C]]?: T[C][K]
-    }
+type PartialTranslation<T extends Translation> = {
+  [C in keyof T]?: {
+    [K in keyof T[C]]?: T[C][K]
   }
 }
+
+type PartialTranslations<T extends Translation> = Record<
+  Locale,
+  PartialTranslation<T>
+>
 
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
@@ -66,14 +64,14 @@ type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 type DayNameFormat = 'long' | 'short' | 'narrow'
 type MonthNameFormat = 'long' | 'short' | 'narrow'
 
-interface Localizer<T extends Translation = Localize.Translations> {
+interface Localizer<T extends Translation = any> {
   getLocale(): Locale
   getDirection(): Direction
 
-  translate<C extends keyof T, K extends keyof T[C]>(): (
+  translate<U extends Translation>(): <C extends keyof U, K extends keyof U[C]>(
     category: C,
     termKey: K,
-    params?: FirstArgument<T[C][K]>
+    params?: FirstArgument<U[C][K]>
   ) => string
 
   translate<C extends keyof T>(
@@ -136,25 +134,21 @@ const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
 // === validateTranslations ==========================================
 
-function validateTranslations(
-  translations: PartialTranslationsOf<Localize.Translations>
-): null | Error {
+function validateTranslations(translations: Translations): null | Error {
   let ret: null | Error = null
 
   try {
     for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as any // TODO!!!!!
+      const translation = translations[locale]
 
       for (const category of Object.keys(translation)) {
         if (!category.match(regexCategory)) {
           throw Error(`Illegal translations category name "${category}"`)
         }
 
-        if (translation[category]) {
-          for (const termKey of Object.keys(translation[category])) {
-            if (!termKey.match(regexTermKey)) {
-              throw Error(`Illegal translation key "${termKey}"`)
-            }
+        for (const termKey of Object.keys(translation[category])) {
+          if (!termKey.match(regexTermKey)) {
+            throw Error(`Illegal translation key "${termKey}"`)
           }
         }
       }
@@ -168,7 +162,7 @@ function validateTranslations(
 
 // === AbstractLocalizer =============================================
 
-abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
+abstract class AbstractLocalizer<T extends Translation>
   implements Localizer<T>
 {
   #getLocale: () => Locale

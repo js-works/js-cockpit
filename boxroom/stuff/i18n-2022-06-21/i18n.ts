@@ -2,27 +2,27 @@ import {
   validateTranslations,
   AbstractLocalizer,
   Adapter,
-  Locale,
   Localizer,
-  PartialTranslationsOf,
+  PartialTranslations,
   Translation,
   Translations
 } from './localize/localize'
 
 import { getDirection } from './localize/localize-utils'
-import { CockpitTranslation } from './terms'
 
 import {
   registerTranslation,
   LocalizeController
 } from '@shoelace-style/localize'
 
+import { CockpitTranslation } from './terms'
 import { ReactiveControllerHost } from 'lit'
 
 // === exports =======================================================
 
 export {
   registerTranslations,
+  CockpitTranslation,
   CockpitTranslations,
   I18nFacade,
   Localizer,
@@ -37,13 +37,8 @@ const categoryTermSeparator = '/'
 
 // === exported types ================================================
 
-type CockpitTranslations = Record<Locale, CockpitTranslation>
-
-type PartialCockpitTranslations = {
-  [L: Locale]: {
-    [C in keyof CockpitTranslation]?: Partial<CockpitTranslation[C]>
-  }
-}
+type CockpitTranslations = Translations<CockpitTranslation>
+type PartialCockpitTranslations = PartialTranslations<CockpitTranslation>
 
 // === misc ==========================================================
 
@@ -71,43 +66,38 @@ const adapter: Adapter = (() => {
 })()
 
 class I18nFacade<
-  T extends Translation = Localize.Translations
+  T extends Translations = CockpitTranslation
 > extends AbstractLocalizer<T> {
   constructor(getLocale: () => string) {
     super(getLocale, adapter)
   }
 }
 
-function registerTranslations(
-  ...translationsList: PartialTranslationsOf<Localize.Translations>[]
-) {
-  for (const translations of translationsList) {
-    const error = validateTranslations(translations)
+function registerTranslations(translations: Translations) {
+  const error = validateTranslations(translations)
 
-    if (error) {
-      throw error
+  if (error) {
+    throw error
+  }
+
+  for (const locale of Object.keys(translations)) {
+    const translation = translations[locale]
+
+    const convertedTranslation: any = {
+      $code: locale,
+      $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
+      $dir: getDirection(locale)
     }
 
-    for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as any // TODO
+    for (const category of Object.keys(translation)) {
+      const terms = translation[category]
 
-      const convertedTranslation: any = {
-        $code: locale,
-        $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
-        $dir: getDirection(locale)
+      for (const termKey of Object.keys(terms)) {
+        convertedTranslation[`${category}${categoryTermSeparator}${termKey}`] =
+          terms[termKey]
       }
-
-      for (const category of Object.keys(translation)) {
-        const terms = translation[category]
-
-        for (const termKey of Object.keys(terms)) {
-          convertedTranslation[
-            `${category}${categoryTermSeparator}${termKey}`
-          ] = terms[termKey]
-        }
-      }
-
-      registerTranslation(convertedTranslation)
     }
+
+    registerTranslation(convertedTranslation)
   }
 }

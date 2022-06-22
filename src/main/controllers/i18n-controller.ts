@@ -1,5 +1,5 @@
 import { ReactiveControllerHost } from 'lit'
-import { CockpitTranslation, I18nFacade, Translation } from '../i18n/i18n'
+import { I18nFacade } from '../i18n/i18n'
 import { LocalizeController } from '@shoelace-style/localize'
 
 // === exports =======================================================
@@ -8,7 +8,7 @@ export { I18nController }
 
 // === I18nController ================================================
 
-class I18nController<T extends Translation = CockpitTranslation> extends I18nFacade<T> { 
+class I18nController extends I18nFacade { 
   #localizeController: LocalizeController
 
   constructor(element: HTMLElement & ReactiveControllerHost) {

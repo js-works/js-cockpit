@@ -4,7 +4,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 
-import { CockpitTranslation, I18nFacade } from '../i18n/i18n'
+import { I18nFacade } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -216,7 +216,9 @@ const showInputDialog = createDialogFn<
 function showDialog<T = void>(
   parent: HTMLElement | null,
   init: (
-    translate: (textId: keyof CockpitTranslation['jsCockpit.dialogs']) => string
+    translate: (
+      textId: keyof Localize.Translations['jsCockpit.dialogs']
+    ) => string
   ) => DialogConfig<T>
 ): Promise<T> {
   const target =
@@ -230,8 +232,9 @@ function showDialog<T = void>(
     () => target.lang || document.documentElement.lang
   )
 
-  const translate = (textId: keyof CockpitTranslation['jsCockpit.dialogs']) =>
-    i18nFacade.translate('jsCockpit.dialogs', textId)
+  const translate = (
+    textId: keyof Localize.Translations['jsCockpit.dialogs']
+  ) => i18nFacade.translate('jsCockpit.dialogs', textId)
 
   const params = init(translate)
   const container = document.createElement('div')

@@ -5,6 +5,7 @@
     "module": "ES2022",
     "moduleResolution": "node",
     "strict": true,
+    "exactOptionalPropertyTypes": true,
     "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,

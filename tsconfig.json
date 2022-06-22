@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "strict": true,
     "useDefineForClassFields": false,
+    "exactOptionalPropertyTypes": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,

@@ -1,7 +1,7 @@
 import { registerTranslations, CockpitTranslations } from '../i18n'
 
 const translations: CockpitTranslations = {
-  en: {
+  de: {
     'jsCockpit.dialogs': {
       ok: 'OK',
       cancel: 'Cancel',
