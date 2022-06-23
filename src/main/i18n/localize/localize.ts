@@ -132,13 +132,13 @@ interface Localizer<T extends Translation = Localize.Translations> {
   getMonthNames(format?: MonthNameFormat): string[]
 }
 
-type LocalizeAdapter = {
-  translate: (
+type LocalizeAdapter<T extends Translation = Localize.Translations> = {
+  translate: <C extends keyof T, K extends keyof T[C]>(
     locale: Locale,
-    category: Category,
-    termKey: TermKey,
-    params?: Record<string, any>,
-    i18n?: Localizer
+    category: C & Category,
+    termKey: K & TermKey,
+    params: FirstArgument<T[C][K]>,
+    i18n: Localizer<T>
   ) => string
 }
 
@@ -235,8 +235,8 @@ abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
 
     return this.#adapter.translate(
       this.#getLocale(),
-      category as string,
-      termKey as string,
+      category as any,
+      termKey as any,
       (params as any) || null,
       this as any // TODO!!!
     )

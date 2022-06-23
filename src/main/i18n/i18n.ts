@@ -48,7 +48,7 @@ const adapter: LocalizeAdapter = (() => {
 
   return {
     translate(locale, category, termKey, params, i18n) {
-      const key = `${category}${categoryTermSeparator}${termKey}`
+      const key = `${category}${categoryTermSeparator}${termKey}` // TODO!!!
       fakeElem.lang = locale
 
       return fakeLocalizeController.term(key, params, i18n)
