@@ -1,6 +1,6 @@
-import { registerTranslations, CockpitTranslations } from '../i18n'
+import { registerTranslations, FullTranslations } from '../i18n'
 
-const translations: CockpitTranslations = {
+const translations: FullTranslations<'jsCockpit'> = {
   en: {
     'jsCockpit.dialogs': {
       ok: 'OK',

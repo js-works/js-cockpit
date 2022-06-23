@@ -1,5 +1,4 @@
 import { Localizer } from './i18n'
-export { CockpitTranslation }
 
 // === CockpitTranslation ============================================
 

@@ -11,18 +11,19 @@ import {
 } from './localize-utils'
 
 export {
-  validateTranslations,
+  createRegisterTranslationsFn,
   AbstractLocalizer,
-  Adapter,
+  LocalizeAdapter,
   Category,
   DateFormat,
   DayNameFormat,
   Direction,
+  FullTranslations,
   Locale,
   Localizer,
   MonthNameFormat,
   NumberFormat,
-  PartialTranslationsOf,
+  PartialTranslations,
   RelativeTimeFormat,
   RelativeTimeUnit,
   TermKey,
@@ -56,6 +57,24 @@ type PartialTranslationsOf<T extends Translation> = {
     [C in keyof T]?: {
       [K in keyof T[C]]?: T[C][K]
     }
+  }
+}
+
+type FullTranslations<
+  B extends string,
+  T extends Translation = Localize.Translations
+> = {
+  [L: string]: {
+    [C in keyof T]: C extends `${B}.${string}` ? T[C] : never
+  }
+}
+
+type PartialTranslations<
+  B extends string,
+  T extends Translation = Localize.Translations
+> = {
+  [L: string]: {
+    [C in keyof T]?: C extends `${B}.${string}` ? Partial<T[C]> : never
   }
 }
 
@@ -113,7 +132,7 @@ interface Localizer<T extends Translation = Localize.Translations> {
   getMonthNames(format?: MonthNameFormat): string[]
 }
 
-type Adapter = {
+type LocalizeAdapter = {
   translate: (
     locale: Locale,
     category: Category,
@@ -172,9 +191,9 @@ abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
   implements Localizer<T>
 {
   #getLocale: () => Locale
-  #adapter: Adapter
+  #adapter: LocalizeAdapter
 
-  constructor(getLocale: () => Locale, adapter: Adapter) {
+  constructor(getLocale: () => Locale, adapter: LocalizeAdapter) {
     this.#getLocale = getLocale
     this.#adapter = adapter
   }
@@ -296,5 +315,23 @@ abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
     }
 
     return arr
+  }
+}
+
+function createRegisterTranslationsFn<
+  T extends Translation = Localize.Translations
+>(handleRegistration: (translationsList: PartialTranslationsOf<T>[]) => void) {
+  return (
+    ...translationsList: PartialTranslationsOf<Localize.Translations>[]
+  ) => {
+    for (const translations of translationsList) {
+      const error = validateTranslations(translations)
+
+      if (error) {
+        throw error
+      }
+    }
+
+    handleRegistration(translationsList as any) // TODO!!!
   }
 }

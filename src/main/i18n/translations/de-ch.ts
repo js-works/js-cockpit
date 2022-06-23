@@ -1,6 +1,6 @@
-import { registerTranslations, PartialCockpitTranslations } from '../i18n'
+import { registerTranslations, PartialTranslations } from '../i18n'
 
-const translations: PartialCockpitTranslations = {
+const translations: PartialTranslations<'jsCockpit'> = {
   de: {}
 }
 
