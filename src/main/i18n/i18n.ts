@@ -5,8 +5,7 @@ import {
   Locale,
   Localizer,
   PartialTranslationsOf,
-  Translation,
-  Translations
+  Translation
 } from './localize/localize'
 
 import { getDirection } from './localize/localize-utils'
@@ -26,9 +25,7 @@ export {
   CockpitTranslations,
   I18nFacade,
   Localizer,
-  PartialCockpitTranslations,
-  Translation,
-  Translations
+  PartialCockpitTranslations
 }
 
 // === constants =====================================================
@@ -38,14 +35,9 @@ const categoryTermSeparator = '/'
 // === exported types ================================================
 
 type CockpitTranslations = Record<Locale, CockpitTranslation>
+type PartialCockpitTranslations = PartialTranslationsOf<CockpitTranslation>
 
-type PartialCockpitTranslations = {
-  [L: Locale]: {
-    [C in keyof CockpitTranslation]?: Partial<CockpitTranslation[C]>
-  }
-}
-
-// === misc ==========================================================
+// === adaption ======================================================
 
 const adapter: Adapter = (() => {
   const fakeElem: HTMLElement & ReactiveControllerHost = Object.assign(
@@ -89,7 +81,7 @@ function registerTranslations(
     }
 
     for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as any // TODO
+      const translation = translations[locale] as Translation
 
       const convertedTranslation: any = {
         $code: locale,
