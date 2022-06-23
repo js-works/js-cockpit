@@ -1,9 +1,8 @@
 import {
-  createRegisterTranslationsFn,
-  AbstractLocalizer,
-  LocalizeAdapter,
+  Dictionary,
   FullTranslations,
   Localizer,
+  LocalizeAdapter,
   PartialTranslations,
   Translation
 } from './localize/localize'
@@ -47,24 +46,7 @@ const adapter: LocalizeAdapter = (() => {
   const fakeLocalizeController = new LocalizeController(fakeElem)
 
   return {
-    translate(locale, category, termKey, params, i18n) {
-      const key = `${category}${categoryTermSeparator}${termKey}` // TODO!!!
-      fakeElem.lang = locale
-
-      return fakeLocalizeController.term(key, params, i18n)
-    }
-  }
-})()
-
-class I18nFacade extends AbstractLocalizer {
-  constructor(getLocale: () => string) {
-    super(getLocale, adapter)
-  }
-}
-
-const registerTranslations = createRegisterTranslationsFn(
-  (translationsList) => {
-    for (const translations of translationsList) {
+    registerTranslations: (translations) => {
       for (const locale of Object.keys(translations)) {
         const translation = translations[locale] as Translation
 
@@ -86,6 +68,22 @@ const registerTranslations = createRegisterTranslationsFn(
 
         registerTranslation(convertedTranslation)
       }
+    },
+
+    translate(locale, category, termKey, params, i18n) {
+      const key = `${category}${categoryTermSeparator}${termKey}` // TODO!!!
+      fakeElem.lang = locale
+
+      return fakeLocalizeController.term(key, params, i18n)
     }
   }
-)
+})()
+
+class I18nFacade extends Localizer {
+  constructor(getLocale: () => string) {
+    super(getLocale, adapter)
+  }
+}
+
+const dictionary = new Dictionary(adapter)
+const registerTranslations = dictionary.registerTranslations.bind(dictionary)

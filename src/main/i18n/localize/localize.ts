@@ -10,9 +10,11 @@ import {
   parseNumber
 } from './localize-utils'
 
-export {
-  createRegisterTranslationsFn,
-  AbstractLocalizer,
+// == exports ========================================================
+
+export { Dictionary, Localizer }
+
+export type {
   LocalizeAdapter,
   Category,
   DateFormat,
@@ -20,7 +22,6 @@ export {
   Direction,
   FullTranslations,
   Locale,
-  Localizer,
   MonthNameFormat,
   NumberFormat,
   PartialTranslations,
@@ -31,6 +32,8 @@ export {
   Translation,
   Translations
 }
+
+// === exported types ================================================
 
 declare global {
   namespace Localize {
@@ -85,54 +88,9 @@ type RelativeTimeUnit = Intl.RelativeTimeFormatUnit
 type DayNameFormat = 'long' | 'short' | 'narrow'
 type MonthNameFormat = 'long' | 'short' | 'narrow'
 
-interface Localizer<T extends Translation = Localize.Translations> {
-  getLocale(): Locale
-  getDirection(): Direction
-
-  translate<C extends keyof T, K extends keyof T[C]>(): (
-    category: C,
-    termKey: K,
-    params?: FirstArgument<T[C][K]>
-  ) => string
-
-  translate<C extends keyof T>(
-    category: C
-  ): <K extends keyof T[C]>(
-    termKey: K,
-    params?: FirstArgument<T[C][K]>
-  ) => string
-
-  translate<C extends keyof T, K extends keyof T[C]>(
-    category: C,
-    termKey: keyof T[C],
-    params?: FirstArgument<T[C][K]>
-  ): string
-
-  parseNumber(numberString: string): number | null
-  parseDate(dateString: string): Date | null
-  formatNumber(value: number, format?: NumberFormat): string
-  formatDate(value: Date, format?: DateFormat | null): string
-
-  formatRelativeTime(
-    value: number,
-    unit: RelativeTimeUnit,
-    format?: RelativeTimeFormat
-  ): string
-
-  // 0 to 6, 0 means Sunday
-  getFirstDayOfWeek(): number
-
-  // array of integer form 0 to 6
-  getWeekendDays(): Readonly<number[]>
-
-  getCalendarWeek(date: Date): number // 1 to 53
-  getDayName(index: number, format?: DayNameFormat): string
-  getDayNames(format?: DayNameFormat): string[]
-  getMonthName(index: number, format?: MonthNameFormat): string
-  getMonthNames(format?: MonthNameFormat): string[]
-}
-
 type LocalizeAdapter<T extends Translation = Localize.Translations> = {
+  registerTranslations(translations: PartialTranslationsOf<T>): void
+
   translate: <C extends keyof T, K extends keyof T[C]>(
     locale: Locale,
     category: C & Category,
@@ -153,43 +111,68 @@ type FirstArgument<T> = T extends (firstArg: infer A, ...rest: any[]) => any
 const regexCategory = /^[a-z][a-zA-Z0-9\.]*$/
 const regexTermKey = /^[a-z][a-zA-Z0-9]*$/
 
-// === validateTranslations ==========================================
+// === Dictionary ====================================================
 
-function validateTranslations(
-  translations: PartialTranslationsOf<Localize.Translations>
-): null | Error {
-  let ret: null | Error = null
+class Dictionary<T extends Translation = Localize.Translations> {
+  #adapter: LocalizeAdapter
+  #localizerByLocale = new Map<Locale, Localizer<T>>()
 
-  try {
-    for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as any // TODO!!!!!
+  constructor(adapter: LocalizeAdapter) {
+    this.#adapter = adapter
+  }
 
-      for (const category of Object.keys(translation)) {
-        if (!category.match(regexCategory)) {
-          throw Error(`Illegal translations category name "${category}"`)
-        }
+  registerTranslations(...translationsList: PartialTranslationsOf<T>[]): void {
+    for (const translations of translationsList) {
+      for (const locale of Object.keys(translations)) {
+        const translation: Translation = translations[locale as any] as any // TODO!!!!!
 
-        if (translation[category]) {
-          for (const termKey of Object.keys(translation[category])) {
-            if (!termKey.match(regexTermKey)) {
-              throw Error(`Illegal translation key "${termKey}"`)
+        for (const category of Object.keys(translation)) {
+          if (!category.match(regexCategory)) {
+            throw Error(`Illegal translations category name "${category}"`)
+          }
+
+          if (translation[category]) {
+            for (const termKey of Object.keys(translation[category])) {
+              if (!termKey.match(regexTermKey)) {
+                throw Error(
+                  `Illegal ${locale}, ${category} translation key "${termKey}"`
+                )
+              }
             }
           }
         }
       }
+
+      this.#adapter.registerTranslations(translations)
     }
-  } catch (error) {
-    ret = error as Error
   }
 
-  return ret
+  translate<C extends keyof T, K extends keyof T[C]>(
+    locale: Locale,
+    category: C & Category,
+    termKey: K & TermKey,
+    params: FirstArgument<T[C][K]>
+  ) {
+    let localizer = this.#localizerByLocale.get(locale)
+
+    if (!localizer) {
+      localizer = new Localizer(() => locale, this.#adapter)
+      this.#localizerByLocale.set(locale, localizer)
+    }
+
+    return this.#adapter.translate(
+      locale,
+      category as any, // TODO!!!
+      termKey as any, // TODO!!!,
+      params as any, // TODO!!!,
+      localizer as any // TODO!!!
+    ) // TODO!!!!!!!
+  }
 }
 
 // === AbstractLocalizer =============================================
 
-abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
-  implements Localizer<T>
-{
+class Localizer<T extends Translation = Localize.Translations> {
   #getLocale: () => Locale
   #adapter: LocalizeAdapter
 
@@ -315,23 +298,5 @@ abstract class AbstractLocalizer<T extends Translation = Localize.Translations>
     }
 
     return arr
-  }
-}
-
-function createRegisterTranslationsFn<
-  T extends Translation = Localize.Translations
->(handleRegistration: (translationsList: PartialTranslationsOf<T>[]) => void) {
-  return (
-    ...translationsList: PartialTranslationsOf<Localize.Translations>[]
-  ) => {
-    for (const translations of translationsList) {
-      const error = validateTranslations(translations)
-
-      if (error) {
-        throw error
-      }
-    }
-
-    handleRegistration(translationsList as any) // TODO!!!
   }
 }
