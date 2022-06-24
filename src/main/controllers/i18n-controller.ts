@@ -44,17 +44,11 @@ class I18nController extends I18nFacade {
         updateComplete: Promise.resolve(true) // TODO!!!
       }
 
-      const proxy = new Proxy(arg.element as HTMLElement, {
-        get(target, prop, receiver) {
-          if (Object.hasOwn(host, prop)) {
-            return (host as any)[prop]
-          }
-
-          if (prop === 'lang' || prop === 'dir') {
-            return arg.element[prop]
-          }
-
-          return Reflect.get(target, prop, receiver)
+      const proxy = new Proxy(arg.element, {
+        get(target, prop) {
+          return Object.hasOwn(host, prop)
+            ? (host as any)[prop]
+            : (target as any)[prop]
         }
       }) as HTMLElement & ReactiveControllerHost
 
