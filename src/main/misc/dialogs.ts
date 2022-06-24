@@ -254,7 +254,7 @@ function showDialog<T = void>(
   containerShadow.innerHTML = `
     <style>
     </style>
-    <form class="form">
+    <form class="form" dir=${i18nFacade.getDirection()}>
       <focus-trap>
         <sl-dialog open class="dialog">
           <div slot="label" class="header">
