@@ -16,6 +16,7 @@ import inputIcon from '../icons/keyboard.svg'
 
 //styles
 import dialogStyles from './dialogs.css'
+import { I18nController } from '../controllers/i18n-controller'
 
 // === exports =======================================================
 
@@ -227,10 +228,8 @@ function showDialog<T = void>(
     document.querySelector('#root') ||
     document.body
 
-  // TODO!!!!!!!!
-  const i18nFacade = new I18nFacade(
-    () => target.lang || document.documentElement.lang
-  )
+  const lang = new I18nController({ element: target }).getLocale()
+  const i18nFacade = new I18nFacade(() => lang)
 
   const translate = (
     textId: keyof Localize.Translations['jsCockpit.dialogs']

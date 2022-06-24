@@ -13,7 +13,7 @@
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "sourceMap": true,
-    "lib": ["ES2021", "dom"],
+    "lib": ["ES2022", "dom"],
     "esModuleInterop": true,
     "baseUrl": "./src/main",
     "skipLibCheck": true,
