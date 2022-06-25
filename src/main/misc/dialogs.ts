@@ -230,10 +230,7 @@ function showDialog<T = void>(
 
   const lang = new I18nController({ element: target }).getLocale()
   const i18nFacade = new I18nFacade(() => lang)
-
-  const translate = (
-    textId: keyof Localize.Translations['jsCockpit.dialogs']
-  ) => i18nFacade.translate('jsCockpit.dialogs', textId)
+  const translate = i18nFacade.translate('jsCockpit.dialogs')
 
   const params = init(translate)
   const container = document.createElement('div')
