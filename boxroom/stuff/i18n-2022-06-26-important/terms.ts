@@ -1,12 +1,12 @@
-import { I18nFacade } from './i18n'
+import { Localizer } from './i18n'
+
+// === CockpitTranslation ============================================
 
 declare global {
   namespace Localize {
     interface Translations extends CockpitTranslation {}
   }
 }
-
-// === CockpitTranslation ============================================
 
 type CockpitTranslation = {
   'jsCockpit.dialogs': {
@@ -69,7 +69,7 @@ type CockpitTranslation = {
   'jsCockpit.paginationBar': {
     itemsXToYOfZ(
       params: { firstItemNo: number; lastItemNo: number; itemCount: number },
-      i18n: I18nFacade
+      i18n: Localizer
     ): string
 
     itemXOfY: (
@@ -77,14 +77,14 @@ type CockpitTranslation = {
         itemNo: number
         itemCount: number
       },
-      i18n: I18nFacade
+      i18n: Localizer
     ) => string
 
     ofXPages: (
       params: {
         pageCount: number
       },
-      i18n: I18nFacade
+      i18n: Localizer
     ) => string
 
     page: string
