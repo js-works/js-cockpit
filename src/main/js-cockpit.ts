@@ -35,9 +35,11 @@ export { LogoutEvent } from './events/logout-event'
 export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
-// i18n
-export { I18nFacade } from './i18n/i18n'
+// controllers
 export { I18nController } from './controllers/i18n-controller'
+
+// i18n
+export * from './i18n/i18n'
 
 // misc
 export * from './misc/dialogs'
