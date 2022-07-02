@@ -19,7 +19,7 @@ import { ReactiveControllerHost } from 'lit'
 
 // === exports =======================================================
 
-export { createTranslations, registerTranslations, I18nFacade }
+export { defineTerms, addToDict, I18nFacade }
 
 export type {
   DateFormat,
@@ -29,7 +29,8 @@ export type {
   NumberFormat,
   PartialTranslations,
   RelativeTimeFormat,
-  RelativeTimeUnit
+  RelativeTimeUnit,
+  TermsOf
 }
 
 // === exported types ================================================
@@ -40,23 +41,22 @@ declare global {
   }
 }
 
-type FullTranslations<
-  B extends string,
-  T extends Translation = Localize.Translations
-> = {
+type FullTranslations<B extends string> = {
   [L: string]: {
-    [C in keyof T]: C extends `${B}.${string}` ? T[C] : never
+    [C in keyof Localize.Translations &
+      `${B}.${string}`]: Localize.Translations[C]
   }
 }
 
-type PartialTranslations<
-  B extends string,
-  T extends Translation = Localize.Translations
-> = {
+type PartialTranslations<B extends string> = {
   [L: string]: {
-    [C in keyof T]?: C extends `${B}.${string}` ? Partial<T[C]> : never
+    [C in keyof Localize.Translations & `${B}.${string}`]?: Partial<
+      Localize.Translations[C]
+    >
   }
 }
+
+type TermsOf<T extends Record<'en', Translation>> = T['en']
 
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
@@ -81,10 +81,10 @@ type Translation = {
 
 type Translations = Record<Locale, Translation>
 
-type PartialTranslationsOf<T extends Translation> = {
+type AllowedTranslations = {
   [L: Locale]: {
-    [C in keyof T]?: {
-      [K in keyof T[C]]?: T[C][K]
+    [C in keyof Localize.Translations]?: {
+      [K in keyof Localize.Translations[C]]?: Localize.Translations[C][K]
     }
   }
 }
@@ -261,13 +261,11 @@ class I18nFacade {
   }
 }
 
-function createTranslations<T extends Translations>(t: T): T {
-  return t
+function defineTerms<T extends Record<'en', Translation>>(translations: T): T {
+  return translations
 }
 
-function registerTranslations(
-  ...translationsList: PartialTranslationsOf<Localize.Translations>[]
-): void {
+function addToDict(...translationsList: AllowedTranslations[]): void {
   for (const translations of translationsList) {
     for (const locale of Object.keys(translations)) {
       const translation = translations[locale] as Translation

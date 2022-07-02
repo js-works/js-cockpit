@@ -1,7 +1,9 @@
-import { registerTranslations, PartialTranslations } from '../i18n'
+import { addToDict, PartialTranslations } from '../i18n'
 
 const translations: PartialTranslations<'jsCockpit'> = {
-  de: {}
+  de: {
+    'jsCockpit.dataExplorer': {}
+  }
 }
 
-registerTranslations(translations)
+addToDict(translations)

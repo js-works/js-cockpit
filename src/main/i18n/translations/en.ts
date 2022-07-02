@@ -1,4 +1,4 @@
-import { registerTranslations, FullTranslations } from '../i18n'
+import { addToDict, FullTranslations } from '../i18n'
 
 const translations: FullTranslations<'jsCockpit'> = {
   en: {
@@ -105,4 +105,4 @@ const translations: FullTranslations<'jsCockpit'> = {
   }
 }
 
-registerTranslations(translations)
+addToDict(translations)
