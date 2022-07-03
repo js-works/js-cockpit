@@ -4,7 +4,8 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 
-import { I18nFacade } from '../i18n/i18n'
+import { I18nController } from '../controllers/i18n-controller'
+import { addToDict, defineTerms, I18nFacade, TermsOf } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -14,9 +15,8 @@ import confirmationIcon from '../icons/question-circle.svg'
 import approvalIcon from '../icons/question-diamond.svg'
 import inputIcon from '../icons/keyboard.svg'
 
-//styles
+// styles
 import dialogStyles from './dialogs.css'
-import { I18nController } from '../controllers/i18n-controller'
 
 // === exports =======================================================
 
@@ -50,7 +50,32 @@ type DialogConfig<T> = {
   mapResult?: (data: Record<string, string>) => T
 }
 
-// === styles ========================================================
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface Translations extends TermsOf<typeof translations> {}
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.dialogs': {
+      ok: 'OK',
+      cancel: 'Cancel',
+      information: 'Information',
+      warning: 'Warning',
+      error: 'Error',
+      input: 'Input',
+      confirmation: 'Confirmation',
+      approval: 'Approval'
+    }
+  }
+})
+
+addToDict(translations)
+
+// --- functions -----------------------------------------------------
 
 function createDialogFn<P extends Record<string, any>, R = void>(
   logic: (parent: HTMLElement | null, params: P) => Promise<R>

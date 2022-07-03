@@ -13,6 +13,7 @@ import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
 import { I18nController } from '../../controllers/i18n-controller'
+import { addToDict, defineTerms, TermsOf } from '../../i18n/i18n'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'
@@ -76,6 +77,24 @@ namespace DataExplorer {
     totalItemCount: number
   }>
 }
+
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface Translations extends TermsOf<typeof translations> {}
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.dataExplorer': {
+      loadingMessage: 'Loading...'
+    }
+  }
+})
+
+addToDict(translations)
 
 // === DataExplorer ==================================================
 

@@ -1,4 +1,5 @@
 import { I18nController } from '../../controllers/i18n-controller'
+import { addToDict, defineTerms, TermsOf } from '../../i18n/i18n'
 
 import {
   bind,
@@ -52,6 +53,22 @@ namespace SideMenu {
     action?: string
   }
 }
+
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface Translations extends TermsOf<typeof translations> {}
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.sideMenu': {}
+  }
+})
+
+addToDict(translations)
 
 // === SideMenu ======================================================
 

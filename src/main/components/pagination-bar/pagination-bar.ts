@@ -1,4 +1,5 @@
 import { I18nController } from '../../controllers/i18n-controller'
+import { addToDict, defineTerms, TermsOf } from '../../i18n/i18n'
 
 import {
   bind,
@@ -56,6 +57,52 @@ type AuxData = {
   lastShownItemIndex: number
   shownItemsCount: number
 }
+
+// === translations ==================================================
+
+declare global {
+  namespace Localize {
+    interface Translations extends TermsOf<typeof translations> {}
+  }
+}
+
+const translations = defineTerms({
+  en: {
+    'jsCockpit.paginationBar': {
+      itemsXToYOfZ(
+        params: { firstItemNo: number; lastItemNo: number; itemCount: number },
+        i18n
+      ) {
+        const { firstItemNo, lastItemNo, itemCount } = params
+        const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
+        const formattedLastItemNo = i18n.formatNumber(lastItemNo)
+        const formattedItemCount = i18n.formatNumber(itemCount)
+
+        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
+      },
+
+      itemXOfY(params: { itemNo: number; itemCount: number }, i18n) {
+        const { itemNo, itemCount } = params
+        const formattedItemNo = i18n.formatNumber(itemNo)
+        const formattedItemCount = i18n.formatNumber(itemCount)
+
+        return `${formattedItemNo} / ${formattedItemCount}`
+      },
+
+      ofXPages(params: { pageCount: number }, i18n) {
+        const { pageCount } = params
+        const formattedPageCount = i18n.formatNumber(pageCount)
+
+        return `of ${formattedPageCount}`
+      },
+
+      page: 'Page',
+      pageSize: 'Items/Page'
+    }
+  }
+})
+
+addToDict(translations)
 
 // === Paginator =====================================================
 
