@@ -5,7 +5,7 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 
 import { I18nController } from '../controllers/i18n-controller'
-import { addToDict, defineTerms, I18nFacade, TermsOf } from '../i18n/i18n'
+import { I18nFacade } from '../i18n/i18n'
 
 // icons
 import infoIcon from '../icons/info-circle.svg'
@@ -49,31 +49,6 @@ type DialogConfig<T> = {
   content?: HTMLElement | null
   mapResult?: (data: Record<string, string>) => T
 }
-
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface Translations extends TermsOf<typeof translations> {}
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.dialogs': {
-      ok: 'OK',
-      cancel: 'Cancel',
-      information: 'Information',
-      warning: 'Warning',
-      error: 'Error',
-      input: 'Input',
-      confirmation: 'Confirmation',
-      approval: 'Approval'
-    }
-  }
-})
-
-addToDict(translations)
 
 // --- functions -----------------------------------------------------
 

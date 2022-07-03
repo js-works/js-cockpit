@@ -46,5 +46,5 @@ export * from './misc/dialogs'
 export * from './misc/theming'
 
 // translations
-import './misc/validation'
+import './i18n/translations/en' // TODO
 import './i18n/translations/de' // TODO!!!!!

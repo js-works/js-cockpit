@@ -10,7 +10,6 @@ import {
 
 import { html } from '../../utils/lit'
 import { I18nController } from '../../controllers/i18n-controller'
-import { addToDict, defineTerms, TermsOf } from '../../i18n/i18n'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
@@ -29,25 +28,6 @@ import userMenuStyles from './user-menu.css'
 // === exports =======================================================
 
 export { UserMenu }
-
-// === translations ==================================================
-
-declare global {
-  namespace Localize {
-    interface Translations extends TermsOf<typeof translations> {}
-  }
-}
-
-const translations = defineTerms({
-  en: {
-    'jsCockpit.userMenu': {
-      anonymous: 'Anonymous',
-      logOut: 'Log out'
-    }
-  }
-})
-
-addToDict(translations)
 
 // === UserMenu ======================================================
 

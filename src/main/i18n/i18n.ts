@@ -19,7 +19,7 @@ import { ReactiveControllerHost } from 'lit'
 
 // === exports =======================================================
 
-export { defineTerms, addToDict, I18nFacade }
+export { addToDict, I18nFacade }
 
 export type {
   DateFormat,
@@ -30,7 +30,7 @@ export type {
   PartialTranslations,
   RelativeTimeFormat,
   RelativeTimeUnit,
-  TermsOf
+  TermsDefinition
 }
 
 // === exported types ================================================
@@ -56,7 +56,7 @@ type PartialTranslations<B extends string> = {
   }
 }
 
-type TermsOf<T extends Record<'en', Translation>> = T['en']
+type TermsDefinition<T extends Record<TermKey, TermValue>> = T
 
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
@@ -259,10 +259,6 @@ class I18nFacade {
 
     return arr
   }
-}
-
-function defineTerms<T extends Record<'en', Translation>>(translations: T): T {
-  return translations
 }
 
 function addToDict(...translationsList: AllowedTranslations[]): void {
