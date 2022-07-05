@@ -1,14 +1,14 @@
-import type { TermsDefinition } from '../i18n/i18n'
+import type { Translations } from '../i18n/i18n'
 
-type Terms = TermsDefinition<{
-  fieldRequired: string
-  formInvalid: string
+type Terms = Translations<{
+  'jsCockpit.validation': {
+    fieldRequired: string
+    formInvalid: string
+  }
 }>
 
 declare global {
   namespace Localize {
-    interface Translations {
-      'jsCockpit.validation': Terms
-    }
+    interface Translations extends Terms {}
   }
 }

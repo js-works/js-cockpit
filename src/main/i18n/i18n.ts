@@ -30,7 +30,7 @@ export type {
   PartialTranslations,
   RelativeTimeFormat,
   RelativeTimeUnit,
-  TermsDefinition
+  Translations
 }
 
 // === exported types ================================================
@@ -56,8 +56,6 @@ type PartialTranslations<B extends string> = {
   }
 }
 
-type TermsDefinition<T extends Record<TermKey, TermValue>> = T
-
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
 type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
@@ -73,13 +71,12 @@ type TermKey = string
 type Direction = 'ltr' | 'rtl'
 type TermValue = string | ((params: any, localizer: I18nFacade) => string)
 
-type Translation = {
-  [C: Category]: {
-    [K: TermKey]: TermValue
-  }
-}
-
-type Translations = Record<Locale, Translation>
+type Translations<
+  T extends Record<Category, Record<TermKey, TermValue>> = Record<
+    Category,
+    Record<TermKey, TermValue>
+  >
+> = T
 
 type AllowedTranslations = {
   [L: Locale]: {
@@ -146,7 +143,10 @@ class I18nFacade {
     return getDirection(this.#getLocale())
   }
 
-  translate<U extends Translation>(): <C extends keyof U, K extends keyof U[C]>(
+  translate<U extends Translations>(): <
+    C extends keyof U,
+    K extends keyof U[C]
+  >(
     category: C,
     termKey: K,
     params?: FirstArgument<U[C][K]>
@@ -264,7 +264,7 @@ class I18nFacade {
 function addToDict(...translationsList: AllowedTranslations[]): void {
   for (const translations of translationsList) {
     for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as Translation
+      const translation = translations[locale] as Translations
 
       const convertedTranslation: any = {
         $code: locale,

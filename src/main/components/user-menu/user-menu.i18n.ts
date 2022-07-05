@@ -1,14 +1,14 @@
-import type { TermsDefinition } from '../../i18n/i18n'
+import type { Translations } from '../../i18n/i18n'
 
-type Terms = TermsDefinition<{
-  anonymous: string
-  logOut: string
+type Terms = Translations<{
+  'jsCockpit.userMenu': {
+    anonymous: string
+    logOut: string
+  }
 }>
 
 declare global {
   namespace Localize {
-    interface Translations {
-      'jsCockpit.userMenu': Terms
-    }
+    interface Translations extends Terms {}
   }
 }

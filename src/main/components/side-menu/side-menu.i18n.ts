@@ -1,11 +1,11 @@
-import type { TermsDefinition } from '../../i18n/i18n'
+import type { Translations } from '../../i18n/i18n'
 
-type Terms = TermsDefinition<{}>
+type Terms = Translations<{
+  'jsCockpit.sideMenu': {}
+}>
 
 declare global {
   namespace Localize {
-    interface Translations {
-      'jsCockpit.sideMenu': Terms
-    }
+    interface Translations extends Terms {}
   }
 }

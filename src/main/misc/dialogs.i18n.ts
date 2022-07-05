@@ -1,20 +1,20 @@
-import type { I18nFacade, TermsDefinition } from '../i18n/i18n'
+import type { Translations } from '../i18n/i18n'
 
-type Terms = TermsDefinition<{
-  ok: string
-  cancel: string
-  information: string
-  warning: string
-  error: string
-  input: string
-  confirmation: string
-  approval: string
+type Terms = Translations<{
+  'jsCockpit.dialogs': {
+    ok: string
+    cancel: string
+    information: string
+    warning: string
+    error: string
+    input: string
+    confirmation: string
+    approval: string
+  }
 }>
 
 declare global {
   namespace Localize {
-    interface Translations {
-      'jsCockpit.dialogs': Terms
-    }
+    interface Translations extends Terms {}
   }
 }
