@@ -15,17 +15,18 @@ import {
   LocalizeController
 } from '@shoelace-style/localize'
 
-import { ReactiveControllerHost } from 'lit'
+import type { ReactiveController, ReactiveControllerHost } from 'lit'
 
 // === exports =======================================================
 
-export { addToDict, I18nFacade }
+export { addToDict, I18nFacade, I18nController }
 
 export type {
   DateFormat,
   DayNameFormat,
   FullTranslations,
   MonthNameFormat,
+  Localizer,
   NumberFormat,
   PartialTranslations,
   RelativeTimeFormat,
@@ -56,6 +57,55 @@ type PartialTranslations<B extends string> = {
   }
 }
 
+interface Localizer {
+  getLocale(): Locale
+  getDirection(): Direction
+
+  translate<U extends Translations>(): <
+    C extends keyof U,
+    K extends keyof U[C]
+  >(
+    category: C,
+    termKey: K,
+    params?: FirstArgument<U[C][K]>
+  ) => string
+
+  translate<C extends keyof Localize.Translations>(
+    category: C
+  ): <K extends keyof Localize.Translations[C]>(
+    termKey: K,
+    params?: FirstArgument<Localize.Translations[C][K]>
+  ) => string
+
+  translate<
+    C extends keyof Localize.Translations,
+    K extends keyof Localize.Translations[C]
+  >(
+    category: C,
+    termKey: keyof Localize.Translations[C],
+    params?: FirstArgument<Localize.Translations[C][K]>
+  ): string
+
+  parseNumber(numberString: string): number | null
+  parseDate(dateString: string): Date | null
+  formatNumber(value: number, format?: NumberFormat): string
+  formatDate(value: Date, format?: DateFormat | null): string
+
+  formatRelativeTime(
+    value: number,
+    unit: RelativeTimeUnit,
+    format?: RelativeTimeFormat
+  ): string
+
+  getFirstDayOfWeek(): number // 0 to 6, 0 means Sunday
+  getWeekendDays(): Readonly<number[]> // array of integer form 0 to 6
+  getCalendarWeek(date: Date): number // 1 to 53
+  getDayName(index: number, format?: DayNameFormat): string
+  getDayNames(format?: DayNameFormat): string[]
+  getMonthName(index: number, format?: MonthNameFormat): string
+  getMonthNames(format?: MonthNameFormat): string[]
+}
+
 interface NumberFormat extends Intl.NumberFormatOptions {}
 interface DateFormat extends Intl.DateTimeFormatOptions {}
 type RelativeTimeFormat = Intl.RelativeTimeFormatOptions
@@ -69,7 +119,7 @@ type Locale = string
 type Category = string
 type TermKey = string
 type Direction = 'ltr' | 'rtl'
-type TermValue = string | ((params: any, localizer: I18nFacade) => string)
+type TermValue = string | ((params: any, i18n: Localizer) => string)
 
 type Translations<
   T extends Record<Category, Record<TermKey, TermValue>> = Record<
@@ -119,7 +169,7 @@ const translate = (() => {
     category: C & Category,
     termKey: K & TermKey,
     params: FirstArgument<Localize.Translations[C][K]>,
-    i18n: I18nFacade
+    i18n: Localizer
   ) => {
     const key = `${category}${categoryTermSeparator}${termKey}` // TODO!!!
     fakeElem.lang = locale
@@ -128,10 +178,53 @@ const translate = (() => {
   }
 })()
 
-class I18nFacade {
+function addToDict(...translationsList: AllowedTranslations[]): void {
+  for (const translations of translationsList) {
+    for (const locale of Object.keys(translations)) {
+      const translation = translations[locale] as Translations
+
+      const convertedTranslation: any = {
+        $code: locale,
+        $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
+        $dir: getDirection(locale)
+      }
+
+      for (const category of Object.keys(translation)) {
+        if (!category.match(regexCategory)) {
+          throw Error(`Illegal translations category name "${category}"`)
+        }
+
+        if (translation[category]) {
+          const terms = translation[category]
+
+          for (const termKey of Object.keys(translation[category])) {
+            if (!termKey.match(regexTermKey)) {
+              throw Error(
+                `Illegal ${locale}, ${category} translation key "${termKey}"`
+              )
+            }
+            convertedTranslation[
+              `${category}${categoryTermSeparator}${termKey}`
+            ] = terms[termKey]
+          }
+        }
+      }
+
+      registerTranslation(convertedTranslation)
+    }
+  }
+}
+
+abstract class AbstractLocalizer implements Localizer {
   #getLocale: () => Locale
 
   constructor(getLocale: () => Locale) {
+    if (this.constructor === AbstractLocalizer) {
+      throw new Error(
+        'Class AbstractLocalizer is abstract and cannot be instantiated'
+      )
+    }
+
     this.#getLocale = getLocale
   }
 
@@ -261,39 +354,59 @@ class I18nFacade {
   }
 }
 
-function addToDict(...translationsList: AllowedTranslations[]): void {
-  for (const translations of translationsList) {
-    for (const locale of Object.keys(translations)) {
-      const translation = translations[locale] as Translations
+class I18nFacade extends AbstractLocalizer {}
 
-      const convertedTranslation: any = {
-        $code: locale,
-        $name: new Intl.DisplayNames(locale, { type: 'language' }).of(locale),
-        $dir: getDirection(locale)
-      }
+class I18nController extends AbstractLocalizer {
+  #localizeController: LocalizeController
 
-      for (const category of Object.keys(translation)) {
-        if (!category.match(regexCategory)) {
-          throw Error(`Illegal translations category name "${category}"`)
-        }
+  constructor(element: HTMLElement & ReactiveControllerHost)
 
-        if (translation[category]) {
-          const terms = translation[category]
+  constructor(params: { element: HTMLElement })
 
-          for (const termKey of Object.keys(translation[category])) {
-            if (!termKey.match(regexTermKey)) {
-              throw Error(
-                `Illegal ${locale}, ${category} translation key "${termKey}"`
-              )
-            }
-            convertedTranslation[
-              `${category}${categoryTermSeparator}${termKey}`
-            ] = terms[termKey]
+  constructor(params: {
+    element: HTMLElement
+    onConnect: (action: () => void) => void
+    onDisconnect: (action: () => void) => void
+    update: () => void
+  })
+
+  constructor(arg: any) {
+    super(() => this.#localizeController.lang())
+
+    if ('addController' in arg) {
+      this.#localizeController = new LocalizeController(arg)
+    } else {
+      const host: ReactiveControllerHost = {
+        addController(controller: ReactiveController) {
+          if (arg.onConnect && controller.hostConnected) {
+            arg.onConnect(() => controller.hostConnected!())
           }
-        }
+
+          if (arg.onDisconnect && controller.hostDisconnected) {
+            arg.onDisconnect(() => controller.hostDisconnected!())
+          }
+        },
+
+        removeController: () => {},
+        requestUpdate: () => arg?.update(),
+        updateComplete: Promise.resolve(true) // TODO!!!
       }
 
-      registerTranslation(convertedTranslation)
+      const proxy = new Proxy(arg.element, {
+        get(target, prop) {
+          return Object.hasOwn(host, prop)
+            ? (host as any)[prop]
+            : (target as any)[prop]
+        }
+      }) as HTMLElement & ReactiveControllerHost
+
+      this.#localizeController = new LocalizeController(proxy)
     }
+  }
+
+  override getDirection() {
+    const ret = this.#localizeController.dir()
+
+    return ret === 'rtl' ? 'rtl' : 'ltr'
   }
 }

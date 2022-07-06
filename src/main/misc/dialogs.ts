@@ -4,7 +4,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
 import { FocusTrap } from '@a11y/focus-trap'
 
-import { I18nController } from '../controllers/i18n-controller'
+import { I18nController } from '../i18n/i18n'
 import { I18nFacade } from '../i18n/i18n'
 
 // icons

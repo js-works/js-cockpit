@@ -36,7 +36,7 @@ export { PageChangeEvent } from './events/page-change-event'
 export { PageSizeChangeEvent } from './events/page-size-change-event'
 
 // controllers
-export { I18nController } from './controllers/i18n-controller'
+export { FormFieldController } from './controllers/form-field-controller'
 
 // i18n
 export * from './i18n/i18n'

@@ -9,7 +9,7 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { I18nController } from '../../controllers/i18n-controller'
+import { I18nController } from '../../i18n/i18n'
 import { FormFieldController } from '../../controllers/form-field-controller'
 
 // custom elements

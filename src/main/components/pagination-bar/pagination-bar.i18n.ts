@@ -1,4 +1,4 @@
-import type { I18nFacade, Translations } from '../../i18n/i18n'
+import type { Localizer, Translations } from '../../i18n/i18n'
 
 type Terms = Translations<{
   'jsCockpit.paginationBar': {
@@ -8,7 +8,7 @@ type Terms = Translations<{
         lastItemNo: number
         itemCount: number
       },
-      i18n: I18nFacade
+      i18n: Localizer
     ): string
 
     itemXOfY(
@@ -16,14 +16,14 @@ type Terms = Translations<{
         itemNo: number
         itemCount: number
       },
-      i18n: I18nFacade
+      i18n: Localizer
     ): string
 
     ofXPages(
       params: {
         pageCount: number
       },
-      i18n: I18nFacade
+      i18n: Localizer
     ): string
 
     page: string

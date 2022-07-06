@@ -64,27 +64,27 @@ function initPopup(slInput: SlInput, datepicker: DatepickerInstance) {
 }
 
 function createLocalization(locale: string) {
-  const i18nFacade = new I18nFacade(() => locale)
-  let daysShort = i18nFacade.getDayNames('short')
+  const i18n = new I18nFacade(() => locale)
+  let daysShort = i18n.getDayNames('short')
 
   if (daysShort.some((it) => it.length > 4)) {
-    daysShort = i18nFacade.getDayNames('narrow')
+    daysShort = i18n.getDayNames('narrow')
   }
 
   return {
-    days: i18nFacade.getDayNames('long'),
+    days: i18n.getDayNames('long'),
     daysShort,
     daysMin: daysShort,
-    months: i18nFacade.getMonthNames('long'),
-    monthsShort: i18nFacade.getMonthNames('short'),
-    weekStart: i18nFacade.getFirstDayOfWeek(),
-    weekendDays: i18nFacade.getWeekendDays(),
+    months: i18n.getMonthNames('long'),
+    monthsShort: i18n.getMonthNames('short'),
+    weekStart: i18n.getFirstDayOfWeek(),
+    weekendDays: i18n.getWeekendDays(),
     titleFormat: 'MM y',
-    getCalendarWeek: i18nFacade.getCalendarWeek.bind(i18nFacade),
+    getCalendarWeek: i18n.getCalendarWeek.bind(i18n),
 
     format: {
-      toValue: i18nFacade.parseDate.bind(i18nFacade),
-      toDisplay: i18nFacade.formatDate.bind(i18nFacade)
+      toValue: i18n.parseDate.bind(i18n),
+      toDisplay: i18n.formatDate.bind(i18n)
     }
   }
 }

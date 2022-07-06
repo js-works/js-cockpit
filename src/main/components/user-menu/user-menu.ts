@@ -9,7 +9,7 @@ import {
 } from '../../utils/components'
 
 import { html } from '../../utils/lit'
-import { I18nController } from '../../controllers/i18n-controller'
+import { I18nController } from '../../i18n/i18n'
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'

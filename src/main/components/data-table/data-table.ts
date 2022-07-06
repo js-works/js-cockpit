@@ -15,7 +15,7 @@ import {
 } from '../../utils/components'
 
 import { classMap, createRef, html, ref, TemplateResult } from '../../utils/lit'
-import { I18nController } from '../../controllers/i18n-controller'
+import { I18nController } from '../../i18n/i18n'
 
 // custom elements
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'

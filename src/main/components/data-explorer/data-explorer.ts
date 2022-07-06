@@ -12,7 +12,7 @@ import { createRef, html, classMap, ref } from '../../utils/lit'
 import { ActionBar } from '../action-bar/action-bar'
 import { DataTable } from '../data-table/data-table'
 import { PaginationBar } from '../pagination-bar/pagination-bar'
-import { I18nController } from '../../controllers/i18n-controller'
+import { I18nController } from '../../i18n/i18n'
 
 // events
 import { SelectionChangeEvent } from '../../events/selection-change-event'

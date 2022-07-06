@@ -1,4 +1,4 @@
-import { I18nController } from '../../controllers/i18n-controller'
+import { I18nController } from '../../i18n/i18n'
 
 import {
   bind,
