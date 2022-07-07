@@ -206,17 +206,15 @@ function addToDict(...translationsList: AllowedTranslations[]): void {
   }
 }
 
-abstract class AbstractLocalizer implements Localizer {
+class BaseLocalizer implements Localizer {
   #getLocale: () => Locale
+  #i18n: Localizer
 
   constructor(getLocale: () => Locale) {
-    if (this.constructor === AbstractLocalizer) {
-      throw new Error(
-        'Class AbstractLocalizer is abstract and cannot be instantiated'
-      )
-    }
-
     this.#getLocale = getLocale
+
+    this.#i18n =
+      this.constructor === BaseLocalizer ? this : new BaseLocalizer(getLocale)
   }
 
   getLocale(): Locale {
@@ -262,10 +260,10 @@ abstract class AbstractLocalizer implements Localizer {
 
     return translate(
       this.#getLocale(),
-      category as any,
-      termKey as any,
-      (params as any) || null,
-      this as any // TODO!!!
+      category,
+      termKey,
+      params || null,
+      this.#i18n
     )
   }
 
@@ -348,45 +346,42 @@ abstract class AbstractLocalizer implements Localizer {
   }
 }
 
-class I18nFacade extends AbstractLocalizer {}
+class I18nFacade extends BaseLocalizer {}
 
-class I18nController extends AbstractLocalizer {
+class I18nController extends BaseLocalizer {
   #localizeController: LocalizeController
 
   constructor(element: HTMLElement & ReactiveControllerHost)
 
-  constructor(params: { element: HTMLElement })
+  constructor(
+    element: HTMLElement,
+    params: null | {
+      onConnect: (action: () => void) => void
+      onDisconnect: (action: () => void) => void
+      update: () => void
+    }
+  )
 
-  constructor(params: {
-    element: HTMLElement
-    onConnect: (action: () => void) => void
-    onDisconnect: (action: () => void) => void
-    update: () => void
-  })
-
-  constructor(arg: any) {
+  constructor(arg1: any, arg2?: any) {
     super(() => this.#localizeController.lang())
 
-    if ('addController' in arg) {
-      this.#localizeController = new LocalizeController(arg)
+    if (arg2 === undefined) {
+      this.#localizeController = new LocalizeController(arg1)
     } else {
       const host: ReactiveControllerHost = {
         addController(controller: ReactiveController) {
-          if (arg.onConnect && controller.hostConnected) {
-            arg.onConnect(() => controller.hostConnected!())
-          }
-
-          if (arg.onDisconnect && controller.hostDisconnected) {
-            arg.onDisconnect(() => controller.hostDisconnected!())
+          if (arg2) {
+            arg2.onConnect(() => controller.hostConnected!())
+            arg2.onDisconnect(() => controller.hostDisconnected!())
           }
         },
 
         removeController: () => {},
-        requestUpdate: () => arg?.update(),
+        requestUpdate: () => arg2?.update(),
         updateComplete: Promise.resolve(true) // TODO!!!
       }
 
-      const proxy = new Proxy(arg.element, {
+      const proxy = new Proxy(arg1, {
         get(target, prop) {
           return Object.hasOwn(host, prop)
             ? (host as any)[prop]
