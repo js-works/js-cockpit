@@ -229,8 +229,8 @@ function showDialog<T = void>(
     document.body
 
   const lang = new I18nController(target, null).getLocale()
-  const i18nFacade = new I18nFacade(() => lang)
-  const translate = i18nFacade.translate('jsCockpit.dialogs')
+  const i18n = new I18nFacade(() => lang)
+  const translate = i18n.translate('jsCockpit.dialogs')
 
   const params = init(translate)
   const container = document.createElement('div')
@@ -251,7 +251,7 @@ function showDialog<T = void>(
   containerShadow.innerHTML = `
     <style>
     </style>
-    <form class="form" dir=${i18nFacade.getDirection()}>
+    <form class="form" dir=${i18n.getDirection()}>
       <focus-trap>
         <sl-dialog open class="dialog">
           <div slot="label" class="header">
