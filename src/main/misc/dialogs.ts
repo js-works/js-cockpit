@@ -228,8 +228,8 @@ function showDialog<T = void>(
     document.querySelector('#root') ||
     document.body
 
-  const lang = new I18nController(target, null).getLocale()
-  const i18n = new I18nFacade(() => lang)
+  const locale = new I18nController(target, null).getLocale()
+  const i18n = new I18nFacade(() => locale)
   const translate = i18n.translate('jsCockpit.dialogs')
 
   const params = init(translate)
