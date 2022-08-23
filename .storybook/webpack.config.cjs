@@ -15,13 +15,6 @@ module.exports = ({ config }) => {
 
     return ret
   })
-  /*
-  config.module.rules.push({
-    test: /\.(ts|tsx)$/,
-    include: path.resolve(__dirname, '../src'),
-    loader: require.resolve('ts-loader')
-  })
-  */
 
   config.module.rules.push({
     test: /\.css$/,
