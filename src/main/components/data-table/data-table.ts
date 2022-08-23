@@ -252,8 +252,6 @@ class DataTable extends Component {
   }
 
   render() {
-    const tbody = this._renderTableBody()
-
     return html`
       <div class="base">
         <div

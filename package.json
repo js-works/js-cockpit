@@ -2,10 +2,10 @@
   "name": "js-cockpit",
   "version": "0.0.34",
   "description": "",
+  "type": "module",
   "main": "./dist/js-cockpit.cjs.js",
   "module": "./dist/js-cockpit.esm.js",
   "types": "./dist/types/js-cockpit.d.ts",
-  "type": "module",
   "files": [
     "dist"
   ],
@@ -49,7 +49,8 @@
     "sass-loader": "10.2.1",
     "svg-url-loader": "^7.1.1",
     "terser": "^5.15.0",
-    "typescript": "4.7.4",
+    "ts-loader": "8.3.0",
+    "typescript": "4.6.4",
     "vanillajs-datepicker": "github:mymth/vanillajs-datepicker#b20f93e",
     "webpack": "^5.74.0"
   },

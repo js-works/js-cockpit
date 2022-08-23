@@ -5,6 +5,12 @@ module.exports = ({ config }) => {
     (it) => !it || !it.test || !it.test.toString().startsWith('/\\.css$/')
   )
 
+  config.module.rules.push({
+    test: /\.(ts|tsx)$/,
+    include: path.resolve(__dirname, '../src'),
+    loader: require.resolve('ts-loader')
+  })
+
   config.module.rules = config.module.rules.map((it) => {
     let ret = it
 
@@ -40,7 +46,7 @@ module.exports = ({ config }) => {
 
   alias['js-cockpit$'] = path.resolve(__dirname, '../src/main/js-cockpit.ts')
   config.resolve.alias = alias
-  config.resolve.extensions.push('.ts', '.tsx')
+  //config.resolve.extensions.push('.ts', '.tsx')
 
   return config
 }

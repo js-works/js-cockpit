@@ -7,9 +7,6 @@ module.exports = {
   core: {
     disableTelemetry: true
   },
-  features: {
-    storyStoreV7: true
-  },
   webpackFinal: async (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

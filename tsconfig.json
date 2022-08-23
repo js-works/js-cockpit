@@ -5,10 +5,11 @@
     "module": "ES2022",
     "moduleResolution": "node",
     "strict": true,
-    "useDefineForClassFields": false,
-    "exactOptionalPropertyTypes": true,
-    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
+    "exactOptionalPropertyTypes": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "downlevelIteration": true,
@@ -17,7 +18,6 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "skipLibCheck": true,
-    "experimentalDecorators": true,
     "paths": {
       "js-cockpit": ["./src/main/js-cockpit.ts"]
     },

@@ -176,6 +176,7 @@ class DataExplorer extends Component {
       this._dataTableRef.value!.sortField = this._sortField
       this._dataTableRef.value!.sortDir = this._sortDir
       this._dataTableRef.value!.data = this._data
+      console.log(this._dataTableRef.value!.data)
 
       if (this._timeoutId) {
         clearTimeout(this._timeoutId)
