@@ -4,15 +4,19 @@ const sidebarMinWidth = $('16rem');
 const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');
-const backColor = $('rgb(52, 52, 58)');
+const backColor = $('rgb(50, 50, 56)');
 //const backColor = $('#282a2f');
 const brandFontSize = $('110%');
 const brandTextColor = $('var(--sl-color-neutral-0)');
 const brandBackColor = $('transparent');
 //const brandBackColor = $('var(--sl-color-primary-600)');
 const hoverBackColor = $('var(--sl-color-neutral-800)');
-const selectionBackColor = $('var(--sl-color-neutral-800)');
-const activeBackColor = $('var(--sl-color-primary-800)');
+const selectionColor = $('white');
+const selectionBackColor = $('var(--sl-color-primary-700)');
+const selectionBorderColor = $('var(--sl-color-primary-700)');
+const selectionBorderRadius = $('4px');
+const selectionMargin = $('0 4px');
+const activeBackColor = $('var(--sl-color-primary-700)');
 
 export default css`
   .base {
@@ -179,11 +183,14 @@ export default css`
   }
 
   .main-menu-item--active {
-    color: ${textColor};
+    font-weight: 600;
+    color: ${selectionColor};
     background-color: ${selectionBackColor};
-    border: 0 solid var(--sl-color-primary-600);
+    border: 0 solid ${selectionBorderColor};
     border-width: 0 0 0 2px;
     padding: 0.5rem 1rem 0.5rem calc(1rem - 2px);
+    margin: ${selectionMargin};
+    border-radius: ${selectionBorderRadius};
     box-sizing: border-box;
   }
 
@@ -192,7 +199,7 @@ export default css`
   }
 
   .main-menu-item--active .main-menu-item-icon {
-    color: var(--sl-color-primary-700);
+    color: ${selectionColor};
   }
 
   .main-menu-group-header {
@@ -261,19 +268,23 @@ export default css`
     color: var(--sl-light, ${textColor})
       var(--sl-dark, var(--sl-color-neutral-1000));
 
-    background-color: var(--sl-light, ${selectionBackColor})
+    background-color: var(--sl-light, ${hoverBackColor})
       var(--sl-dark, var(--sl-color-neutral-200));
+
+    margin: ${selectionMargin};
+    border-radius: ${selectionBorderRadius};
 
     cursor: pointer;
   }
 
   .main-menu-subitem--active {
-    border: 0 solid var(--sl-color-primary-600);
+    font-weight: 600;
+    border: 0 solid ${selectionBorderColor};
     border-width: var(--sl-light, 0 0 0 2px) var(--sl-dark, 0);
     padding: 0.5rem 1rem 0.5rem calc(3.5rem - 2px);
     box-sizing: border-box;
 
-    color: var(--sl-light, ${textColor})
+    color: var(--sl-light, ${selectionColor})
       var(--sl-dark, var(--sl-color-primary-800));
 
     background-color: var(--sl-light, ${selectionBackColor})

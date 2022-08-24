@@ -14,6 +14,12 @@ import transactionsIcon from 'bootstrap-icons/icons/table.svg';
 import reportsIcon from 'bootstrap-icons/icons/file-earmark-text.svg';
 import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg';
 
+export default {
+  title: 'basic-cockpit'
+};
+
+export const basicCockpit = () => h('basic-cockpit-demo');
+
 @elem({
   tag: 'basic-cockpit-demo',
   uses: [BasicCockpit, SharedDataExplorer, SharedDataForm]
@@ -64,7 +70,7 @@ function getCockpitConfig(): BasicCockpit.Config {
 
     mainMenu: {
       kind: 'items',
-      activeItem: 'user-groups',
+      activeItem: 'sales',
 
       items: [
         {
@@ -141,9 +147,3 @@ function getCockpitConfig(): BasicCockpit.Config {
     }
   };
 }
-
-export default {
-  title: 'basic-cockpit'
-};
-
-export const basicCockpit = () => h('basic-cockpit-demo');
