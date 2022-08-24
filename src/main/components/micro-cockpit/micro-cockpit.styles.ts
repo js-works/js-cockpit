@@ -1,11 +1,12 @@
-import { css, unsafeCSS as $ } from 'lit'
+import { css, unsafeCSS as $ } from 'lit';
 
-const textColor = $('var(--sl-color-neutral-200)')
-const secondaryTextColor = $('var(--sl-color-neutral-400)')
-const backColor = $('var(--sl-color-neutral-700)') // $('rgb(70 78 90)')
-const hoverBackColor = $('var(--sl-color-primary-500)')
-const selectionBackColor = $('rgb(54 62 70)')
-const activeBackColor = $('var(--sl-color-primary-700)')
+const textColor = $('var(--sl-color-neutral-0)');
+const secondaryTextColor = $('var(--sl-color-neutral-300)');
+const backColor = $('var(--sl-color-neutral-800)');
+const brandBackColor = $('var(--sl-color-primary-800)'); // $('rgb(70 78 90)')
+const hoverBackColor = $('var(--sl-color-neutral-700)');
+const selectionBackColor = $('var(--sl-color-neutral-700)');
+const activeBackColor = $('var(--sl-color-primary-800)');
 
 export default css`
   .base {
@@ -61,10 +62,10 @@ export default css`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0.625em 1rem;
-    margin: 0 0 0.75rem 0;
-    xxmargin: 0 0 1.25rem 0;
-    xxxbackground-color: var(--sl-color-primary-800);
+    padding: 0.75rem 1rem;
+    margin: 0 0 1.25rem 0;
+    width: 100%;
+    background-color: ${brandBackColor};
   }
 
   .brand-title {
@@ -154,7 +155,7 @@ export default css`
     color: var(--sl-light, ${textColor})
       var(--sl-dark, var(--sl-color-neutral-1000));
 
-    background-color: var(--sl-light, ${selectionBackColor})
+    background-color: var(--sl-light, ${hoverBackColor})
       var(--sl-dark, var(--sl-color-neutral-200));
 
     cursor: pointer;
@@ -164,7 +165,7 @@ export default css`
     color: var(--sl-light, ${textColor})
       var(--sl-dark, var(--sl-color-neutral-700));
 
-    background-color: var(--sl-light, var(---active-back-color))
+    background-color: var(--sl-light, ${activeBackColor})
       var(--sl-dark, var(--sl-color-primary-200));
   }
 
@@ -200,6 +201,8 @@ export default css`
   .main-menu-group:not(.main-menu-group--active) .main-menu-group-header:hover {
     color: var(--sl-light, ${textColor})
       var(--sl-dark, var(--sl-color-neutral-1000));
+
+    background-color: ${hoverBackColor};
   }
 
   .main-menu-group-header-icon {
@@ -272,7 +275,7 @@ export default css`
     color: var(--sl-light, ${textColor})
       var(--sl-dark, var(--sl-color-neutral-700));
 
-    background-color: var(--sl-light, var(--sl-color-primary-700))
+    background-color: var(--sl-light, ${activeBackColor})
       var(--sl-dark, var(--sl-color-primary-200));
   }
-`
+`;
