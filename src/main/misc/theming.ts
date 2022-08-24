@@ -4,11 +4,11 @@
 
 // === exports =======================================================
 
-export { loadTheme, ColorScheme, ColorSchemes, Theme, ThemeTokens, ThemeMods }
+export { loadTheme, ColorScheme, ColorSchemes, Theme, ThemeTokens, ThemeMods };
 
 // === constants =====================================================
 
-const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
 const colorLuminances = [
   0.95, // 50
@@ -22,7 +22,7 @@ const colorLuminances = [
   0.1, // 800
   0.05, // 900
   0.02 // 950
-]
+];
 
 const semanticColors = [
   'primary',
@@ -30,7 +30,7 @@ const semanticColors = [
   'warning',
   'danger',
   'neutral'
-] as const
+] as const;
 
 const paletteColors = [
   'amber',
@@ -51,103 +51,103 @@ const paletteColors = [
   'teal',
   'violet',
   'yellow'
-] as const
+] as const;
 
-const allColors = new Set([...semanticColors, ...paletteColors])
+const allColors = new Set([...semanticColors, ...paletteColors]);
 
 // === types =========================================================
 
-type ThemeTokens = typeof lightThemeTokens
+type ThemeTokens = typeof lightThemeTokens;
 
 type ColorScheme = {
-  primaryColor?: string
-  successColor?: string
-  warningColor?: string
-  dangerColor?: string
-  neutralColor?: string
-}
+  primaryColor?: string;
+  successColor?: string;
+  warningColor?: string;
+  dangerColor?: string;
+  neutralColor?: string;
+};
 
 // === Theme ==========================================================
 
 class Theme {
-  #themeTokens: ThemeTokens
-  #css: string | null = null
+  #themeTokens: ThemeTokens;
+  #css: string | null = null;
 
-  static #default: Theme | undefined
+  static #default: Theme | undefined;
 
   static get default() {
     if (!this.#default) {
-      this.#default = new Theme({})
+      this.#default = new Theme({});
     }
 
-    return this.#default
+    return this.#default;
   }
 
-  constructor(tokens: Partial<ThemeTokens>)
-  constructor(modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>)
-  constructor(modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[])
+  constructor(tokens: Partial<ThemeTokens>);
+  constructor(modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>);
+  constructor(modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[]);
 
   constructor(
     base: Theme,
     modifier: (tokens: ThemeTokens) => Partial<ThemeTokens>
-  )
+  );
 
   constructor(
     base: Theme,
     modifiers: ((tokens: ThemeTokens) => Partial<ThemeTokens>)[]
-  )
+  );
 
   constructor(arg1: any, arg2?: any) {
     this.#themeTokens =
-      arg1 instanceof Theme ? { ...arg1.getTokens() } : { ...lightThemeTokens }
+      arg1 instanceof Theme ? { ...arg1.getTokens() } : { ...lightThemeTokens };
 
     if (arg1 instanceof Theme) {
-      arg1 = arg2
+      arg1 = arg2;
     }
 
     if (typeof arg1 === 'function') {
-      Object.assign(this.#themeTokens, arg1(this.#themeTokens))
+      Object.assign(this.#themeTokens, arg1(this.#themeTokens));
     } else if (Array.isArray(arg1)) {
       arg1.forEach((modifier: Function) => {
-        Object.assign(this.#themeTokens, modifier(this.#themeTokens))
-      })
+        Object.assign(this.#themeTokens, modifier(this.#themeTokens));
+      });
     } else if (arg1 && typeof arg1 === 'object') {
-      Object.assign(this.#themeTokens, arg1)
+      Object.assign(this.#themeTokens, arg1);
     } else {
-      throw new TypeError('Illegal argument for Theme constructor')
+      throw new TypeError('Illegal argument for Theme constructor');
     }
   }
 
   getTokens() {
-    return this.#themeTokens
+    return this.#themeTokens;
   }
 
   toCss(selector = ':root, :host'): string {
-    let css = this.#css
+    let css = this.#css;
 
     if (css) {
-      return css
+      return css;
     }
 
     const lines: string[] = [
       `${selector} {`, //
       '  --on: inherit;',
       '  --off: ;'
-    ]
+    ];
 
     Object.entries(this.#themeTokens).forEach(([key, value]) => {
-      lines.push(`  --sl-${key}: ${value};`)
-    })
+      lines.push(`  --sl-${key}: ${value};`);
+    });
 
-    lines.push('}\n')
-    css = lines.join('\n')
-    this.#css = css
+    lines.push('}\n');
+    css = lines.join('\n');
+    this.#css = css;
 
-    return css
+    return css;
   }
 
   isDark() {
-    return this.#themeTokens['dark'] === 'var(--on)'
+    return this.#themeTokens['dark'] === 'var(--on)';
   }
 }
 
@@ -156,66 +156,66 @@ function calcColorShades(
   colorHex: string,
   dark = false
 ): Record<`color-${string}-${string}`, string> {
-  const ret: any = {}
+  const ret: any = {};
 
   colorLuminances.forEach((luminance, idx) => {
     if (dark) {
-      idx = 1000 - idx
+      idx = 1000 - idx;
     }
 
     ret[`color-${colorName}-${COLOR_SHADES[idx]}`] =
-      'rgb(' + calcColor(colorHex, luminance).join(' ') + ')'
-  })
+      'rgb(' + calcColor(colorHex, luminance).join(' ') + ')';
+  });
 
-  return ret
+  return ret;
 }
 
 const ThemeMods = {
   colors(colorScheme: ColorScheme) {
     return (tokens: ThemeTokens): Partial<ThemeTokens> => {
-      const ret: Partial<ThemeTokens> = {}
+      const ret: Partial<ThemeTokens> = {};
 
       for (const semanticColor of semanticColors) {
-        const colorHex = colorScheme[`${semanticColor}Color`]
+        const colorHex = colorScheme[`${semanticColor}Color`];
 
         if (colorHex) {
           Object.assign(ret, {
             ...calcColorShades(semanticColor, colorHex)
-          })
+          });
         }
       }
 
-      return ret
-    }
+      return ret;
+    };
   },
 
   dark(veryDark: boolean = false) {
     return (tokens: ThemeTokens): Partial<ThemeTokens> => {
       if (tokens['dark'] === 'var(--on)') {
-        return {}
+        return {};
       }
 
-      const darkTokens: Record<string, string> = Object.assign({}, tokens)
+      const darkTokens: Record<string, string> = Object.assign({}, tokens);
 
       darkTokens['light'] =
-        tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
+        tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)';
 
       darkTokens['dark'] =
-        tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)'
+        tokens['dark'] === 'var(--off)' ? 'var(--on)' : 'var(--off)';
 
       allColors.forEach((color) => {
         if (tokens[`color-${color}-500`].includes('var(')) {
-          return
+          return;
         }
 
         for (let i = 0; i < 5; ++i) {
-          const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`
-          const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`
+          const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`;
+          const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`;
 
-          darkTokens[key1] = (tokens as any)[key2]
-          darkTokens[key2] = (tokens as any)[key1]
+          darkTokens[key1] = (tokens as any)[key2];
+          darkTokens[key2] = (tokens as any)[key1];
         }
-      })
+      });
 
       if (!veryDark) {
         Object.assign(darkTokens, {
@@ -233,7 +233,7 @@ const ThemeMods = {
           'color-neutral-900': 'rgb(249 249 250)',
           'color-neutral-950': 'rgb(252 252 253)',
           'color-neutral-1000': 'rgb(255 255 255)'
-        })
+        });
       } else {
         Object.assign(darkTokens, {
           'color-neutral-0': 'rgb(30 30 33)',
@@ -249,7 +249,7 @@ const ThemeMods = {
           'color-neutral-900': 'rgb(249 249 250)',
           'color-neutral-950': 'rgb(252 252 253)',
           'color-neutral-1000': 'rgb(255 255 255)'
-        })
+        });
       }
 
       Object.assign(darkTokens, {
@@ -265,10 +265,10 @@ const ThemeMods = {
         'focus-ring-alpha': '45%',
         'overlay-background-color': 'hsl(0 0% 0% / 43%)',
         'panel-background-color': 'var(--sl-color-neutral-50)'
-      })
+      });
 
-      return darkTokens
-    }
+      return darkTokens;
+    };
   },
 
   modern() {
@@ -292,8 +292,8 @@ const ThemeMods = {
         'input-border-color': 'var(--sl-color-neutral-400)',
         'input-border-color-hover': 'var(--sl-color-neutral-600)',
         'input-border-color-focus': 'var(--sl-color-primary-700)'
-      }
-    }
+      };
+    };
   },
 
   compact() {
@@ -304,19 +304,19 @@ const ThemeMods = {
         'input-height-small': '1.85rem',
         'input-height-medium': '1.95rem',
         'input-height-large': '2.5rem'
-      }
-    }
+      };
+    };
   }
-}
+};
 
 // === public functions ==============================================
 
 function loadTheme(theme: Theme, selector?: string) {
-  const elem = document.createElement('style')
-  elem.append(document.createTextNode(theme.toCss(selector)))
-  document.head.append(elem)
+  const elem = document.createElement('style');
+  elem.append(document.createTextNode(theme.toCss(selector)));
+  document.head.append(elem);
 
-  return () => elem.remove()
+  return () => elem.remove();
 }
 
 // === predefined color schemes ======================================
@@ -364,7 +364,7 @@ const ColorSchemes = Object.freeze({
     primaryColor: '#DD5A8C'
   },
 
-  turqoiseBlue: {
+  turquoiseBlue: {
     primaryColor: '#47E3EB'
   },
 
@@ -439,69 +439,69 @@ const ColorSchemes = Object.freeze({
   turquoise: {
     primaryColor: '#40e0d0'
   }
-})
+});
 
 // === color utility functions =======================================
 
 function calcColor(hex: string, lum: number): [number, number, number] {
-  let [r, g, b] = hexToRgb(hex)
-  let iter = 0
-  let l = luminanceOfRgb(r, g, b)
-  let rmin = 0
-  let gmin = 0
-  let bmin = 0
-  let rmax = 255
-  let gmax = 255
-  let bmax = 255
+  let [r, g, b] = hexToRgb(hex);
+  let iter = 0;
+  let l = luminanceOfRgb(r, g, b);
+  let rmin = 0;
+  let gmin = 0;
+  let bmin = 0;
+  let rmax = 255;
+  let gmax = 255;
+  let bmax = 255;
 
   while (++iter <= 20 && Math.abs(l - lum) > 1e-7) {
     if (l < lum) {
-      rmin = r
-      gmin = g
-      bmin = b
+      rmin = r;
+      gmin = g;
+      bmin = b;
     } else {
-      rmax = r
-      gmax = g
-      bmax = b
+      rmax = r;
+      gmax = g;
+      bmax = b;
     }
 
-    r = (rmin + rmax) / 2
-    g = (gmin + gmax) / 2
-    b = (bmin + bmax) / 2
-    l = luminanceOfRgb(r, g, b)
+    r = (rmin + rmax) / 2;
+    g = (gmin + gmax) / 2;
+    b = (bmin + bmax) / 2;
+    l = luminanceOfRgb(r, g, b);
   }
 
-  return [Math.round(r), Math.round(g), Math.round(b)]
+  return [Math.round(r), Math.round(g), Math.round(b)];
 }
 
 function hexToRgb(hex: string): [number, number, number] {
-  const value = parseInt(hex.substr(1), 16)
+  const value = parseInt(hex.substr(1), 16);
 
   if (isNaN(value) || hex[0] !== '#' || hex.length !== 7) {
-    throw new Error(`Illegal color '${hex}'. Required hex format: #rrggbb`)
+    throw new Error(`Illegal color '${hex}'. Required hex format: #rrggbb`);
   }
 
-  const r = (value >> 16) % 256
-  const g = (value >> 8) % 256
-  const b = value % 256
+  const r = (value >> 16) % 256;
+  const g = (value >> 8) % 256;
+  const b = value % 256;
 
-  return [r, g, b]
+  return [r, g, b];
 }
 
 function luminanceOfRgb(r: number, g: number, b: number): number {
   // relative luminance
   // see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
-  const lr = luminanceOfValue(r)
-  const lg = luminanceOfValue(g)
-  const lb = luminanceOfValue(b)
+  const lr = luminanceOfValue(r);
+  const lg = luminanceOfValue(g);
+  const lb = luminanceOfValue(b);
 
-  return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb
+  return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
 }
 
 function luminanceOfValue(x: number): number {
-  const v = x / 255
+  const v = x / 255;
 
-  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 }
 
 // === Shoelace original light theme =================================
@@ -1046,4 +1046,4 @@ const lightThemeTokens = {
   'z-index-dropdown': '900',
   'z-index-toast': '950',
   'z-index-tooltip': '1000'
-}
+};

@@ -4,7 +4,7 @@ const sidebarMinWidth = $('16rem');
 const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');
-const backColor = $('rgb(50, 50, 56)');
+const backColor = $('rgb(53, 53, 59)');
 //const backColor = $('#282a2f');
 const brandFontSize = $('110%');
 const brandTextColor = $('var(--sl-color-neutral-0)');
@@ -14,9 +14,9 @@ const hoverBackColor = $('var(--sl-color-neutral-800)');
 const selectionColor = $('white');
 const selectionBackColor = $('var(--sl-color-primary-700)');
 const selectionBorderColor = $('var(--sl-color-primary-700)');
-const selectionBorderRadius = $('4px');
+const selectionBorderRadius = $('3px');
 const selectionMargin = $('0 4px');
-const activeBackColor = $('var(--sl-color-primary-700)');
+const activeBackColor = $('var(--sl-color-neutral-600)');
 
 export default css`
   .base {
@@ -94,7 +94,7 @@ export default css`
   .default-avatar-icon {
     font-size: 250%;
 
-    color: var(--sl-light, var(--sl-color-primary-400))
+    color: var(--sl-light, var(--sl-color-primary-500))
       var(--sl-dark, var(--sl-color-primary-700));
 
     background-color: var(--sl-color-neutral-600);
@@ -271,7 +271,6 @@ export default css`
     background-color: var(--sl-light, ${hoverBackColor})
       var(--sl-dark, var(--sl-color-neutral-200));
 
-    margin: ${selectionMargin};
     border-radius: ${selectionBorderRadius};
 
     cursor: pointer;
