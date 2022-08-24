@@ -7,169 +7,169 @@ import {
   Attrs,
   Listener,
   Component
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, html, repeat } from '../../utils/lit'
-import { ActionEvent } from '../../events/action-event'
+import { classMap, html, repeat } from '../../utils/lit';
+import { ActionEvent } from '../../events/action-event';
 
 import {
   runOpenVerticalTransition,
   runCloseVerticalTransition
-} from '../../misc/transitions'
+} from '../../misc/transitions';
 
 // components
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
-import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu'
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
+import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 
 // icons
-import avatarIcon from '../../icons/person-fill.svg'
-import chevronDownIcon from '../../icons/chevron-down.svg'
+import avatarIcon from '../../icons/person-fill.svg';
+import chevronDownIcon from '../../icons/chevron-down.svg';
 
 // styles
-import microCockpitStyles from './micro-cockpit.styles'
-import scrollbarStyles from '../../shared/css/scrollbar.css'
+import basicCockpitStyles from './basic-cockpit.styles';
+import scrollbarStyles from '../../shared/css/scrollbar.css';
 
 // === exports =======================================================
 
-export { MicroCockpit }
+export { BasicCockpit };
 
 // === types =========================================================
 
-namespace MicroCockpit {
+namespace BasicCockpit {
   export type Brand = {
-    title: string
-    subtitle?: string
-  }
+    title: string;
+    subtitle?: string;
+  };
 
   export type User = {
-    displayName: string
-  }
+    displayName: string;
+  };
 
   export type UserMenu = {
-    kind: 'items'
+    kind: 'items';
 
     items: {
-      text: string
-      action: string
-    }[]
-  }
+      text: string;
+      action: string;
+    }[];
+  };
 
   export type MainMenu = {
-    kind: 'items'
-    activeItem?: string
-    items: (MainMenuItem | MainMenuGroup)[]
-  }
+    kind: 'items';
+    activeItem?: string;
+    items: (MainMenuItem | MainMenuGroup)[];
+  };
 
   export type MainMenuItem = {
-    kind: 'item'
-    icon: string
-    text: string
-    itemId: string
-    action?: string
-  }
+    kind: 'item';
+    icon: string;
+    text: string;
+    itemId: string;
+    action?: string;
+  };
 
   export type MainMenuGroup = {
-    kind: 'group'
-    groupId: string
-    icon: string
-    text: string
-    subitems: MainMenuSubitem[]
-  }
+    kind: 'group';
+    groupId: string;
+    icon: string;
+    text: string;
+    subitems: MainMenuSubitem[];
+  };
 
   export type MainMenuSubitem = {
-    kind: 'subitem'
-    text: string
-    itemId: string
-    action?: string
-  }
+    kind: 'subitem';
+    text: string;
+    itemId: string;
+    action?: string;
+  };
 
   export type Config = {
-    brand: Brand
-    user: User
-    userMenu: UserMenu
-    mainMenu: MainMenu
-  }
+    brand: Brand;
+    user: User;
+    userMenu: UserMenu;
+    mainMenu: MainMenu;
+  };
 }
 
-// === MicroCockpit ===================================================
+// === BasicCockpit ===================================================
 
 @elem({
-  tag: 'c-micro-cockpit',
-  styles: [microCockpitStyles, scrollbarStyles],
+  tag: 'c-basic-cockpit',
+  styles: [basicCockpitStyles, scrollbarStyles],
   uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
-class MicroCockpit extends Component {
+class BasicCockpit extends Component {
   @prop
-  config?: MicroCockpit.Config
+  config?: BasicCockpit.Config;
 
   @prop
-  onAction?: Listener<ActionEvent>
+  onAction?: Listener<ActionEvent>;
 
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
-  private _openGroups: Set<string> = new Set()
-  private _timeoutId: number | null = null
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
+  private _openGroups: Set<string> = new Set();
+  private _timeoutId: number | null = null;
 
   constructor() {
-    super()
+    super();
 
     afterInit(this, () => {
-      const mainMenu = this.config?.mainMenu
-      const activeItem = mainMenu?.activeItem
+      const mainMenu = this.config?.mainMenu;
+      const activeItem = mainMenu?.activeItem;
 
       if (!activeItem) {
-        return
+        return;
       }
 
       for (const item of mainMenu.items) {
         if (item.kind !== 'group') {
-          continue
+          continue;
         }
 
         if (item.subitems.some((it) => it.itemId === activeItem)) {
-          this._openGroups.add(item.groupId)
+          this._openGroups.add(item.groupId);
         }
       }
-    })
+    });
   }
 
   @bind
   private _onGroupToggle(ev: Event) {
-    const node = <HTMLElement>(<HTMLElement>ev.currentTarget).parentNode!
-    const groupId = node.getAttribute('data-group')!
-    const open = this._openGroups.has(groupId)
+    const node = <HTMLElement>(<HTMLElement>ev.currentTarget).parentNode!;
+    const groupId = node.getAttribute('data-group')!;
+    const open = this._openGroups.has(groupId);
 
     const contentNode = node.querySelector(
       '.main-menu-group-subitems'
-    )! as HTMLElement
+    )! as HTMLElement;
 
     if (open) {
-      this._openGroups.delete(groupId)
-      runCloseVerticalTransition(contentNode, 'var(--sl-transition-medium)')
-      node.classList.add('main-menu-group--closed')
-      node.classList.remove('main-menu-group--open')
+      this._openGroups.delete(groupId);
+      runCloseVerticalTransition(contentNode, 'var(--sl-transition-medium)');
+      node.classList.add('main-menu-group--closed');
+      node.classList.remove('main-menu-group--open');
     } else {
-      this._openGroups.add(groupId)
-      runOpenVerticalTransition(contentNode, 'var(--sl-transition-medium)')
-      node.classList.add('main-menu-group--open')
-      node.classList.remove('main-menu-group--closed')
+      this._openGroups.add(groupId);
+      runOpenVerticalTransition(contentNode, 'var(--sl-transition-medium)');
+      node.classList.add('main-menu-group--open');
+      node.classList.remove('main-menu-group--closed');
     }
   }
 
   @bind
   private _onItemClick(ev: MouseEvent) {
-    const target = <HTMLElement>ev.currentTarget
-    const action = target.getAttribute('data-action')!
+    const target = <HTMLElement>ev.currentTarget;
+    const action = target.getAttribute('data-action')!;
 
-    this._emitAction({ action })
+    this._emitAction({ action });
   }
 
   render() {
     if (!this.config) {
-      return null
+      return null;
     }
 
     return html`
@@ -190,36 +190,36 @@ class MicroCockpit extends Component {
           <slot name="content"></slot>
         </div>
       </div>
-    `
+    `;
   }
 
   private _renderBrand() {
-    const config = this.config!
-    const brand = config.brand
+    const config = this.config!;
+    const brand = config.brand;
 
-    const title = !brand.subtitle ? '' : brand.title
-    const subtitle = brand.subtitle || brand.title
+    const title = !brand.subtitle ? '' : brand.title;
+    const subtitle = brand.subtitle || brand.title;
 
     if (!title && !subtitle) {
-      return null
+      return null;
     }
 
     const titleContent = title
       ? html`<div class="brand-title">${title}</div>`
-      : null
+      : null;
 
     return html`
       <div class="brand">
         ${titleContent}
         <div class="brand-subtitle">${subtitle}</div>
       </div>
-    `
+    `;
   }
 
   private _renderUserMenu() {
-    const config = this.config!
-    const user = config.user
-    const displayName = user.displayName || 'Anonymous' // TODO
+    const config = this.config!;
+    const user = config.user;
+    const displayName = user.displayName || 'Anonymous'; // TODO
 
     const userMenuItems = html`
       ${repeat(
@@ -231,7 +231,7 @@ class MicroCockpit extends Component {
             >${it.text}</sl-menu-item
           >`
       )}
-    `
+    `;
 
     return html`
       <sl-dropdown class="user-menu" placement="bottom" distance="10">
@@ -252,33 +252,33 @@ class MicroCockpit extends Component {
           </sl-menu-item>
         </sl-menu>
       </drop-down>
-    `
+    `;
   }
 
   private _renderMainMenu() {
-    const mainMenu = this.config!.mainMenu
-    const items = mainMenu.items
+    const mainMenu = this.config!.mainMenu;
+    const items = mainMenu.items;
 
     const menuItems = html`
       ${repeat(items, (it, idx) => {
         return it.kind === 'group'
           ? this._renderMainMenuGroup(it)
-          : this._renderMainMenuItem(it)
+          : this._renderMainMenuItem(it);
       })}
-    `
+    `;
 
-    return html`<div class="main-menu">${menuItems}</div>`
+    return html`<div class="main-menu">${menuItems}</div>`;
   }
 
-  _renderMainMenuItem(item: MicroCockpit.MainMenuItem) {
-    const config = this.config!
-    const mainMenu = config.mainMenu
-    const activeItem = mainMenu.activeItem
+  _renderMainMenuItem(item: BasicCockpit.MainMenuItem) {
+    const config = this.config!;
+    const mainMenu = config.mainMenu;
+    const activeItem = mainMenu.activeItem;
 
     const className = classMap({
       'main-menu-item': true,
       'main-menu-item--active': !!activeItem && activeItem === item.itemId
-    })
+    });
 
     return html`
       <a
@@ -291,22 +291,22 @@ class MicroCockpit extends Component {
         </div>
         <div class="main-menu-item-text">${item.text}</div>
       </a>
-    `
+    `;
   }
 
-  _renderMainMenuGroup(group: MicroCockpit.MainMenuGroup) {
+  _renderMainMenuGroup(group: BasicCockpit.MainMenuGroup) {
     const active = group.subitems.some(
       (it) => it.itemId && it.itemId === this.config!.mainMenu.activeItem
-    )
+    );
 
-    const open = this._openGroups.has(group.groupId)
+    const open = this._openGroups.has(group.groupId);
 
     const className = classMap({
       'main-menu-group': true,
       'main-menu-group--open': open,
       'main-menu-group--closed': !open,
       'main-menu-group--active': active
-    })
+    });
 
     return html`
       <div class=${className} data-group=${group.groupId}>
@@ -321,28 +321,28 @@ class MicroCockpit extends Component {
         </div>
         <div class="main-menu-group-subitems">
           ${repeat(group.subitems, (it) => {
-            return this._renderMainManuSubitem(it)
+            return this._renderMainManuSubitem(it);
           })}
         </div>
       </div>
-    `
+    `;
   }
 
-  private _renderMainManuSubitem(subitem: MicroCockpit.MainMenuSubitem) {
-    const mainMenu = this.config!.mainMenu
-    const action = subitem.action || subitem.itemId
+  private _renderMainManuSubitem(subitem: BasicCockpit.MainMenuSubitem) {
+    const mainMenu = this.config!.mainMenu;
+    const action = subitem.action || subitem.itemId;
 
     const className = classMap({
       'main-menu-subitem': true,
 
       'main-menu-subitem--active':
         subitem.itemId && subitem.itemId === mainMenu.activeItem
-    })
+    });
 
     return html`
       <a data-action=${action} class=${className} @click=${this._onItemClick}
         >${subitem.text}</a
       >
-    `
+    `;
   }
 }

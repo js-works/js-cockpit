@@ -4,11 +4,14 @@ const sidebarMinWidth = $('16rem');
 const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');
-const backColor = $('#282a2f');
+const backColor = $('rgb(52, 52, 58)');
+//const backColor = $('#282a2f');
+const brandFontSize = $('110%');
 const brandTextColor = $('var(--sl-color-neutral-0)');
-const brandBackColor = $('var(--sl-color-primary-800)');
-const hoverBackColor = $('var(--sl-color-neutral-700)');
-const selectionBackColor = $('var(--sl-color-neutral-700)');
+const brandBackColor = $('transparent');
+//const brandBackColor = $('var(--sl-color-primary-600)');
+const hoverBackColor = $('var(--sl-color-neutral-800)');
+const selectionBackColor = $('var(--sl-color-neutral-800)');
 const activeBackColor = $('var(--sl-color-primary-800)');
 
 export default css`
@@ -66,10 +69,11 @@ export default css`
     align-items: center;
     flex-wrap: wrap;
     padding: 0.7rem 1rem;
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 ${String(brandBackColor) === 'transparent' ? 1 : 1.25}rem 0;
     width: 100%;
     box-sizing: border-box;
     color: ${brandTextColor};
+    font-size: ${brandFontSize};
     background-color: ${brandBackColor};
   }
 

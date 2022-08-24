@@ -1,42 +1,42 @@
-import { afterConnect, bind, elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { sharedTheme } from './shared/shared-theme'
-import { SharedDataExplorer } from './shared/shared-data-explorer'
-import { SharedDataForm } from './shared/shared-data-form'
-import { MicroCockpit, SideMenu, ThemeProvider } from 'js-cockpit'
-import { ActionEvent } from '../main/events/action-event'
+import { afterConnect, bind, elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { sharedTheme } from './shared/shared-theme';
+import { SharedDataExplorer } from './shared/shared-data-explorer';
+import { SharedDataForm } from './shared/shared-data-form';
+import { BasicCockpit, SideMenu, ThemeProvider } from 'js-cockpit';
+import { ActionEvent } from '../main/events/action-event';
 
 // icons
-import dashboardIcon from 'bootstrap-icons/icons/house-door.svg'
-import salesIcon from 'bootstrap-icons/icons/graph-up-arrow.svg'
-import transactionsIcon from 'bootstrap-icons/icons/table.svg'
-import reportsIcon from 'bootstrap-icons/icons/file-earmark-text.svg'
-import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg'
+import dashboardIcon from 'bootstrap-icons/icons/house-door.svg';
+import salesIcon from 'bootstrap-icons/icons/graph-up-arrow.svg';
+import transactionsIcon from 'bootstrap-icons/icons/table.svg';
+import reportsIcon from 'bootstrap-icons/icons/file-earmark-text.svg';
+import scheduleIcon from 'bootstrap-icons/icons/calendar-week.svg';
 
 @elem({
-  tag: 'micro-cockpit-demo',
-  uses: [MicroCockpit, SharedDataExplorer, SharedDataForm]
+  tag: 'basic-cockpit-demo',
+  uses: [BasicCockpit, SharedDataExplorer, SharedDataForm]
 })
-class MicroCockpitDemo extends Component {
+class BasicCockpitDemo extends Component {
   @bind
   private _onAction(ev: ActionEvent) {
-    alert(ev.detail.action)
+    alert(ev.detail.action);
   }
 
   render() {
     return html`
-      <c-micro-cockpit
+      <c-basic-cockpit
         .config=${getCockpitConfig()}
         @c-action=${this._onAction}
       >
         <shared-data-explorer slot="content"></shared-data-explorer>
-      </c-micro-cockpit>
-    `
+      </c-basic-cockpit>
+    `;
   }
 }
 
-function getCockpitConfig(): MicroCockpit.Config {
+function getCockpitConfig(): BasicCockpit.Config {
   return {
     brand: {
       title: 'My Company',
@@ -139,11 +139,11 @@ function getCockpitConfig(): MicroCockpit.Config {
         }
       ]
     }
-  }
+  };
 }
 
 export default {
-  title: 'micro-cockpit'
-}
+  title: 'basic-cockpit'
+};
 
-export const microCockpit = () => h('micro-cockpit-demo')
+export const basicCockpit = () => h('basic-cockpit-demo');
