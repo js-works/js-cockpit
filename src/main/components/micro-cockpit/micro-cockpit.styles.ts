@@ -1,9 +1,12 @@
 import { css, unsafeCSS as $ } from 'lit';
 
+const sidebarMinWidth = $('16rem');
+const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');
-const backColor = $('var(--sl-color-neutral-800)');
-const brandBackColor = $('var(--sl-color-primary-800)'); // $('rgb(70 78 90)')
+const backColor = $('#282a2f');
+const brandTextColor = $('var(--sl-color-neutral-0)');
+const brandBackColor = $('var(--sl-color-primary-800)');
 const hoverBackColor = $('var(--sl-color-neutral-700)');
 const selectionBackColor = $('var(--sl-color-neutral-700)');
 const activeBackColor = $('var(--sl-color-primary-800)');
@@ -33,8 +36,8 @@ export default css`
 
     background-color: var(--sl-light, ${backColor}) var(--sl-dark, ${textColor});
 
-    min-width: 15rem;
-    max-width: 20rem;
+    min-width: ${sidebarMinWidth};
+    max-width: ${sidebarMaxWidth};
     user-select: none;
     overflow: auto;
   }
@@ -62,9 +65,11 @@ export default css`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0.75rem 1rem;
+    padding: 0.7rem 1rem;
     margin: 0 0 1.25rem 0;
     width: 100%;
+    box-sizing: border-box;
+    color: ${brandTextColor};
     background-color: ${brandBackColor};
   }
 
@@ -81,20 +86,20 @@ export default css`
   .default-avatar-icon {
     font-size: 250%;
 
-    color: var(--sl-light, var(--sl-color-primary-300))
+    color: var(--sl-light, var(--sl-color-primary-400))
       var(--sl-dark, var(--sl-color-primary-700));
 
-    background-color: var(--sl-color-neutral-500);
+    background-color: var(--sl-color-neutral-600);
     border-radius: 50%;
     padding: 0.5rem;
     opacity: 75%;
   }
 
   .user-menu-trigger:hover .default-avatar-icon {
-    color: var(--sl-light, ${hoverBackColor})
+    color: var(--sl-light, var(--sl-color-primary-200))
       var(--sl-dark, var(--sl-color-primary-700));
 
-    background-color: var(--sl-light, var(--sl-color-primary-200))
+    background-color: var(--sl-light, var(--sl-color-primary-600))
       var(--sl-dark, ${secondaryTextColor});
   }
 

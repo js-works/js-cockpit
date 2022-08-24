@@ -1,7 +1,6 @@
 :host {
   display: flex;
   flex-grow: 1;
-  xheight: 275px;
 }
 
 .base {
