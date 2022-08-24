@@ -104,7 +104,13 @@ function bind<T extends Function>(
 
 function elem<E extends Component>(params: {
   tag: string
-  styles?: string | string[] | (() => string | string[])
+
+  styles?:
+    | string
+    | CSSResult
+    | (string | CSSResult)[]
+    | (() => string | CSSResult | (string | CSSResult)[])
+
   uses?: any[]
 }): (clazz: new () => E) => any {
   return (clazz) => {
@@ -114,7 +120,9 @@ function elem<E extends Component>(params: {
           typeof params.styles === 'function' ? params.styles() : params.styles
 
         if (Array.isArray(styles)) {
-          styles = styles.map((it) => it.trim()).join('\n\n/*******/\n\n')
+          styles = styles
+            .map((it) => it.toString().trim())
+            .join('\n\n/*******/\n\n')
         }
 
         if (!styles) {
