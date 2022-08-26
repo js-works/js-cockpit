@@ -17,7 +17,8 @@ namespace Calendar {
   export type Options = {
     locale: string;
     selectionMode: SelectionMode;
-    onSelect: (selection: Date[]) => void;
+    highlightWeekend: boolean;
+    onSelection: (selection: Date[]) => void;
   };
 
   export type SelectionMode =
@@ -39,7 +40,8 @@ const defaultLocale = 'en-US';
 const defaultOptions: Calendar.Options = {
   locale: 'en',
   selectionMode: 'date',
-  onSelect: () => {}
+  highlightWeekend: true,
+  onSelection: () => {}
 };
 
 const airLocaleDataCache = new Map<string, AirDatepickerLocale>();
@@ -60,6 +62,27 @@ class Calendar {
       user-select: none;
     }
 
+    .air-datepicker {
+      --adp-padding: 0;
+      --adp-border-radius: 0;
+      --adp-cell-border-radius: 0;
+      --adp-background-color-highlight: #fafafa;
+    }
+
+    .air-datepicker-nav--title i {
+      color: var(--adp-nav-color);
+    }
+
+    .air-datepicker-body--day-names {
+      margin: 0;
+    }
+    
+    .air-datepicker-body--day-name {
+      padding: 0.3rem 0;
+    }
+
+    
+
     .adp-date-input {
       position: absolute;
       opacity: 0;
@@ -70,6 +93,15 @@ class Calendar {
       border: none;
       z-index: -32000;
     }
+    
+    .air-datepicker-body--day-name {
+      text-transform: none;
+    }
+    
+    .-weekend- {
+      background-color: var(--adp-background-color-highlight);
+    }
+    
   `;
 
   constructor(options?: Partial<Calendar.Options>) {
@@ -141,8 +173,8 @@ function convertOptions(
 
   ret.locale = getAirLocaleData(options.locale || defaultLocale);
 
-  if (options.onSelect) {
-    const onSelect = options.onSelect;
+  if (options.onSelection) {
+    const onSelect = options.onSelection;
     ret.onSelect = ({ date }) => onSelect(Array.isArray(date) ? date : [date]);
   }
 
@@ -199,6 +231,12 @@ function convertOptions(
       ret.view = 'years';
       ret.minView = 'years';
       break;
+  }
+
+  if (options.highlightWeekend) {
+    ret.weekends = new I18nFacade(() => options.locale).getWeekendDays() as any;
+  } else {
+    ret.weekends = [-1, -1];
   }
 
   return ret;
