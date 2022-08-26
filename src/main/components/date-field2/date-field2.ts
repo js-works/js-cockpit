@@ -45,7 +45,9 @@ export class DateField2 extends Component {
       console.log('selection: ', sel);
     }, getDatepickerStyles());
 
+    this.#calendar.setSelectionMode('date');
     this.#calendar.setLocale(this.#i18n.getLocale());
+    this.#calendar.setSelection([new Date(2022, 0, 1)]);
   }
 
   render() {

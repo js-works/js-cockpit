@@ -151,6 +151,12 @@ class Calendar {
     this.#update(options);
   }
 
+  setSelection(selection: Date | Date[]) {
+    this.#update({
+      selectedDates: Array.isArray(selection) ? selection : [selection]
+    });
+  }
+
   setSelectionMode(selectionMode: Calendar.SelectionMode) {
     if (this.#selectionMode === selectionMode) {
       return;
@@ -234,7 +240,7 @@ class Calendar {
       this.#picker.destroy();
       (this.#options.container as HTMLElement).innerHTML = '';
     }
-
+    console.log(this.#options);
     this.#picker = new AirDatepicker(this.#input, this.#options);
 
     this.#picker.$datepicker.addEventListener('click', () => {
