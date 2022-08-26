@@ -132,7 +132,8 @@ class Theme {
     const lines: string[] = [
       `${selector} {`, //
       '  --on: inherit;',
-      '  --off: ;'
+      '  --off: ;',
+      '  --theme: light;'
     ];
 
     Object.entries(this.#themeTokens).forEach(([key, value]) => {
@@ -197,6 +198,7 @@ const ThemeMods = {
 
       const darkTokens: Record<string, string> = Object.assign({}, tokens);
 
+      darkTokens['theme'] = 'dark';
       darkTokens['light'] =
         tokens['light'] === 'var(--off)' ? 'var(--on)' : 'var(--off)';
 
@@ -287,7 +289,6 @@ const ThemeMods = {
           '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)',
 
         'focus-ring-width': '1px',
-        'focus-ring-alpha': '100%',
 
         'input-border-color': 'var(--sl-color-neutral-400)',
         'input-border-color-hover': 'var(--sl-color-neutral-600)',
@@ -525,12 +526,6 @@ const lightThemeTokens = {
 
   // other new tokens
   'label-font-weight': 'var(--sl-font-weight-normal)',
-
-  /*
-   * Color Primitives
-   */
-
-  /* Gray */
   'color-gray-50': 'hsl(0 0% 97.5%)',
   'color-gray-100': 'hsl(240 4.8% 95.9%)',
   'color-gray-200': 'hsl(240 5.9% 90%)',
@@ -542,8 +537,6 @@ const lightThemeTokens = {
   'color-gray-800': 'hsl(240 3.7% 15.9%)',
   'color-gray-900': 'hsl(240 5.9% 10%)',
   'color-gray-950': 'hsl(240 7.3% 8%)',
-
-  /* Red */
   'color-red-50': 'hsl(0 85.7% 97.3%)',
   'color-red-100': 'hsl(0 93.3% 94.1%)',
   'color-red-200': 'hsl(0 96.3% 89.4%)',
@@ -555,8 +548,6 @@ const lightThemeTokens = {
   'color-red-800': 'hsl(0 70% 35.3%)',
   'color-red-900': 'hsl(0 62.8% 30.6%)',
   'color-red-950': 'hsl(0 60% 19.6%)',
-
-  /* Orange */
   'color-orange-50': 'hsl(33.3 100% 96.5%)',
   'color-orange-100': 'hsl(34.3 100% 91.8%)',
   'color-orange-200': 'hsl(32.1 97.7% 83.1%)',
@@ -568,8 +559,6 @@ const lightThemeTokens = {
   'color-orange-800': 'hsl(15 79.1% 33.7%)',
   'color-orange-900': 'hsl(15.3 74.6% 27.8%)',
   'color-orange-950': 'hsl(15.2 69.1% 19%)',
-
-  /* Amber */
   'color-amber-50': 'hsl(48 100% 96.1%)',
   'color-amber-100': 'hsl(48 96.5% 88.8%)',
   'color-amber-200': 'hsl(48 96.6% 76.7%)',
@@ -581,8 +570,6 @@ const lightThemeTokens = {
   'color-amber-800': 'hsl(22.7 82.5% 31.4%)',
   'color-amber-900': 'hsl(21.7 77.8% 26.5%)',
   'color-amber-950': 'hsl(22.9 74.1% 16.7%)',
-
-  /* Yellow */
   'color-yellow-50': 'hsl(54.5 91.7% 95.3%)',
   'color-yellow-100': 'hsl(54.9 96.7% 88%)',
   'color-yellow-200': 'hsl(52.8 98.3% 76.9%)',
@@ -594,8 +581,6 @@ const lightThemeTokens = {
   'color-yellow-800': 'hsl(31.8 81% 28.8%)',
   'color-yellow-900': 'hsl(28.4 72.5% 25.7%)',
   'color-yellow-950': 'hsl(33.1 69% 13.9%)',
-
-  /* Lime */
   'color-lime-50': 'hsl(78.3 92% 95.1%)',
   'color-lime-100': 'hsl(79.6 89.1% 89.2%)',
   'color-lime-200': 'hsl(80.9 88.5% 79.6%)',
@@ -607,8 +592,6 @@ const lightThemeTokens = {
   'color-lime-800': 'hsl(86.3 69% 22.7%)',
   'color-lime-900': 'hsl(87.6 61.2% 20.2%)',
   'color-lime-950': 'hsl(86.5 60.6% 13.9%)',
-
-  /* Green */
   'color-green-50': 'hsl(138.5 76.5% 96.7%)',
   'color-green-100': 'hsl(140.6 84.2% 92.5%)',
   'color-green-200': 'hsl(141 78.9% 85.1%)',
@@ -620,8 +603,6 @@ const lightThemeTokens = {
   'color-green-800': 'hsl(142.8 64.2% 24.1%)',
   'color-green-900': 'hsl(143.8 61.2% 20.2%)',
   'color-green-950': 'hsl(144.3 60.7% 12%)',
-
-  /* Emerald */
   'color-emerald-50': 'hsl(151.8 81% 95.9%)',
   'color-emerald-100': 'hsl(149.3 80.4% 90%)',
   'color-emerald-200': 'hsl(152.4 76% 80.4%)',
@@ -633,8 +614,6 @@ const lightThemeTokens = {
   'color-emerald-800': 'hsl(163.1 88.1% 19.8%)',
   'color-emerald-900': 'hsl(164.2 85.7% 16.5%)',
   'color-emerald-950': 'hsl(164.3 87.5% 9.4%)',
-
-  /* Teal */
   'color-teal-50': 'hsl(166.2 76.5% 96.7%)',
   'color-teal-100': 'hsl(167.2 85.5% 89.2%)',
   'color-teal-200': 'hsl(168.4 83.8% 78.2%)',
@@ -646,8 +625,6 @@ const lightThemeTokens = {
   'color-teal-800': 'hsl(176.1 69.4% 21.8%)',
   'color-teal-900': 'hsl(175.9 60.8% 19%)',
   'color-teal-950': 'hsl(176.5 58.6% 11.4%)',
-
-  /* Cyan */
   'color-cyan-50': 'hsl(183.2 100% 96.3%)',
   'color-cyan-100': 'hsl(185.1 95.9% 90.4%)',
   'color-cyan-200': 'hsl(186.2 93.5% 81.8%)',
@@ -659,8 +636,6 @@ const lightThemeTokens = {
   'color-cyan-800': 'hsl(194.4 69.6% 27.1%)',
   'color-cyan-900': 'hsl(196.4 63.6% 23.7%)',
   'color-cyan-950': 'hsl(196.8 61% 16.1%)',
-
-  /* Sky */
   'color-sky-50': 'hsl(204 100% 97.1%)',
   'color-sky-100': 'hsl(204 93.8% 93.7%)',
   'color-sky-200': 'hsl(200.6 94.4% 86.1%)',
@@ -672,8 +647,6 @@ const lightThemeTokens = {
   'color-sky-800': 'hsl(201 90% 27.5%)',
   'color-sky-900': 'hsl(202 80.3% 23.9%)',
   'color-sky-950': 'hsl(202.3 73.8% 16.5%)',
-
-  /* Blue */
   'color-blue-50': 'hsl(213.8 100% 96.9%)',
   'color-blue-100': 'hsl(214.3 94.6% 92.7%)',
   'color-blue-200': 'hsl(213.3 96.9% 87.3%)',
@@ -685,8 +658,6 @@ const lightThemeTokens = {
   'color-blue-800': 'hsl(225.9 70.7% 40.2%)',
   'color-blue-900': 'hsl(224.4 64.3% 32.9%)',
   'color-blue-950': 'hsl(226.2 55.3% 18.4%)',
-
-  /* Indigo */
   'color-indigo-50': 'hsl(225.9 100% 96.7%)',
   'color-indigo-100': 'hsl(226.5 100% 93.9%)',
   'color-indigo-200': 'hsl(228 96.5% 88.8%)',
@@ -698,8 +669,6 @@ const lightThemeTokens = {
   'color-indigo-800': 'hsl(243.7 54.5% 41.4%)',
   'color-indigo-900': 'hsl(242.2 47.4% 34.3%)',
   'color-indigo-950': 'hsl(243.5 43.6% 22.9%)',
-
-  /* Violet */
   'color-violet-50': 'hsl(250 100% 97.6%)',
   'color-violet-100': 'hsl(251.4 91.3% 95.5%)',
   'color-violet-200': 'hsl(250.5 95.2% 91.8%)',
@@ -711,8 +680,6 @@ const lightThemeTokens = {
   'color-violet-800': 'hsl(263.4 69.3% 42.2%)',
   'color-violet-900': 'hsl(263.5 67.4% 34.9%)',
   'color-violet-950': 'hsl(265.1 61.5% 21.4%)',
-
-  /* Purple */
   'color-purple-50': 'hsl(270 100% 98%)',
   'color-purple-100': 'hsl(268.7 100% 95.5%)',
   'color-purple-200': 'hsl(268.6 100% 91.8%)',
@@ -724,8 +691,6 @@ const lightThemeTokens = {
   'color-purple-800': 'hsl(272.9 67.2% 39.4%)',
   'color-purple-900': 'hsl(273.6 65.6% 32%)',
   'color-purple-950': 'hsl(276 59.5% 16.5%)',
-
-  /* Fuchsia */
   'color-fuchsia-50': 'hsl(289.1 100% 97.8%)',
   'color-fuchsia-100': 'hsl(287 100% 95.5%)',
   'color-fuchsia-200': 'hsl(288.3 95.8% 90.6%)',
@@ -737,8 +702,6 @@ const lightThemeTokens = {
   'color-fuchsia-800': 'hsl(295.4 70.2% 32.9%)',
   'color-fuchsia-900': 'hsl(296.7 63.6% 28%)',
   'color-fuchsia-950': 'hsl(297.1 56.8% 14.5%)',
-
-  /* Pink */
   'color-pink-50': 'hsl(327.3 73.3% 97.1%)',
   'color-pink-100': 'hsl(325.7 77.8% 94.7%)',
   'color-pink-200': 'hsl(325.9 84.6% 89.8%)',
@@ -750,8 +713,6 @@ const lightThemeTokens = {
   'color-pink-800': 'hsl(335.8 74.4% 35.3%)',
   'color-pink-900': 'hsl(335.9 69% 30.4%)',
   'color-pink-950': 'hsl(336.2 65.4% 15.9%)',
-
-  /* Rose */
   'color-rose-50': 'hsl(355.7 100% 97.3%)',
   'color-rose-100': 'hsl(355.6 100% 94.7%)',
   'color-rose-200': 'hsl(352.7 96.1% 90%)',
@@ -763,12 +724,6 @@ const lightThemeTokens = {
   'color-rose-800': 'hsl(343.4 79.7% 34.7%)',
   'color-rose-900': 'hsl(341.5 75.5% 30.4%)',
   'color-rose-950': 'hsl(341.3 70.1% 17.1%)',
-
-  /*
-   * Theme Tokens
-   */
-
-  /* Primary */
   'color-primary-50': 'var(--sl-color-sky-50)',
   'color-primary-100': 'var(--sl-color-sky-100)',
   'color-primary-200': 'var(--sl-color-sky-200)',
@@ -780,8 +735,6 @@ const lightThemeTokens = {
   'color-primary-800': 'var(--sl-color-sky-800)',
   'color-primary-900': 'var(--sl-color-sky-900)',
   'color-primary-950': 'var(--sl-color-sky-950)',
-
-  /* Success */
   'color-success-50': 'var(--sl-color-green-50)',
   'color-success-100': 'var(--sl-color-green-100)',
   'color-success-200': 'var(--sl-color-green-200)',
@@ -793,8 +746,6 @@ const lightThemeTokens = {
   'color-success-800': 'var(--sl-color-green-800)',
   'color-success-900': 'var(--sl-color-green-900)',
   'color-success-950': 'var(--sl-color-green-950)',
-
-  /* Warning */
   'color-warning-50': 'var(--sl-color-amber-50)',
   'color-warning-100': 'var(--sl-color-amber-100)',
   'color-warning-200': 'var(--sl-color-amber-200)',
@@ -806,8 +757,6 @@ const lightThemeTokens = {
   'color-warning-800': 'var(--sl-color-amber-800)',
   'color-warning-900': 'var(--sl-color-amber-900)',
   'color-warning-950': 'var(--sl-color-amber-950)',
-
-  /* Danger */
   'color-danger-50': 'var(--sl-color-red-50)',
   'color-danger-100': 'var(--sl-color-red-100)',
   'color-danger-200': 'var(--sl-color-red-200)',
@@ -819,8 +768,6 @@ const lightThemeTokens = {
   'color-danger-800': 'var(--sl-color-red-800)',
   'color-danger-900': 'var(--sl-color-red-900)',
   'color-danger-950': 'var(--sl-color-red-950)',
-
-  /* Neutral */
   'color-neutral-50': 'var(--sl-color-gray-50)',
   'color-neutral-100': 'var(--sl-color-gray-100)',
   'color-neutral-200': 'var(--sl-color-gray-200)',
@@ -832,122 +779,74 @@ const lightThemeTokens = {
   'color-neutral-800': 'var(--sl-color-gray-800)',
   'color-neutral-900': 'var(--sl-color-gray-900)',
   'color-neutral-950': 'var(--sl-color-gray-950)',
-
-  /* Neutral one-offs */
   'color-neutral-0': 'hsl(0, 0%, 100%)',
   'color-neutral-1000': 'hsl(0, 0%, 0%)',
-
-  /*
-   * Border radii
-   */
-
-  'border-radius-small': '0.1875rem' /* 3px */,
-  'border-radius-medium': '0.25rem' /* 4px */,
-  'border-radius-large': '0.5rem' /* 8px */,
-  'border-radius-x-large': '1rem' /* 16px */,
-
+  'border-radius-small': '0.1875rem',
+  'border-radius-medium': '0.25rem',
+  'border-radius-large': '0.5rem',
+  'border-radius-x-large': '1rem',
   'border-radius-circle': '50%',
   'border-radius-pill': '9999px',
-
-  /*
-   * Elevations
-   */
-
   'shadow-x-small': '0 1px 2px hsl(240 3.8% 46.1% / 6%)',
   'shadow-small': '0 1px 2px hsl(240 3.8% 46.1% / 12%)',
   'shadow-medium': '0 2px 4px hsl(240 3.8% 46.1% / 12%)',
   'shadow-large': '0 2px 8px hsl(240 3.8% 46.1% / 12%)',
   'shadow-x-large': '0 4px 16px hsl(240 3.8% 46.1% / 12%)',
-
-  /*
-   * Spacings
-   */
-
-  'spacing-3x-small': '0.125rem' /* 2px */,
-  'spacing-2x-small': '0.25rem' /* 4px */,
-  'spacing-x-small': '0.5rem' /* 8px */,
-  'spacing-small': '0.75rem' /* 12px */,
-  'spacing-medium': '1rem' /* 16px */,
-  'spacing-large': '1.25rem' /* 20px */,
-  'spacing-x-large': '1.75rem' /* 28px */,
-  'spacing-2x-large': '2.25rem' /* 36px */,
-  'spacing-3x-large': '3rem' /* 48px */,
-  'spacing-4x-large': '4.5rem' /* 72px */,
-
-  /*
-   * Transitions
-   */
-
+  'spacing-3x-small': '0.125rem',
+  'spacing-2x-small': '0.25rem',
+  'spacing-x-small': '0.5rem',
+  'spacing-small': '0.75rem',
+  'spacing-medium': '1rem',
+  'spacing-large': '1.25rem',
+  'spacing-x-large': '1.75rem',
+  'spacing-2x-large': '2.25rem',
+  'spacing-3x-large': '3rem',
+  'spacing-4x-large': '4.5rem',
   'transition-x-slow': '1000ms',
   'transition-slow': '500ms',
   'transition-medium': '250ms',
   'transition-fast': '150ms',
   'transition-x-fast': '50ms',
-
-  /*
-   * Typography
-   */
-
-  /* Fonts */
   'font-mono': "SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace",
-
   'font-sans':
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif," +
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" +
     "'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-
-  'font-serif': "Georgia, 'Times New Roman', serif",
-
-  /* Font sizes */
-  'font-size-2x-small': '0.625rem' /* 10px */,
-  'font-size-x-small': '0.75rem' /* 12px */,
-  'font-size-small': '0.875rem' /* 14px */,
-  'font-size-medium': '1rem' /* 16px */,
-  'font-size-large': '1.25rem' /* 20px */,
-  'font-size-x-large': '1.5rem' /* 24px */,
-  'font-size-2x-large': '2.25rem' /* 36px */,
-  'font-size-3x-large': '3rem' /* 48px */,
-  'font-size-4x-large': '4.5rem' /* 72px */,
-
-  /* Font weights */
+  'font-serif': "Georgia, 'Times New Roman', serif'",
+  'font-size-2x-small': '0.625rem',
+  'font-size-x-small': '0.75rem',
+  'font-size-small': '0.875rem',
+  'font-size-medium': '1rem',
+  'font-size-large': '1.25rem',
+  'font-size-x-large': '1.5rem',
+  'font-size-2x-large': '2.25rem',
+  'font-size-3x-large': '3rem',
+  'font-size-4x-large': '4.5rem',
   'font-weight-light': '300',
   'font-weight-normal': '400',
   'font-weight-semibold': '500',
   'font-weight-bold': '700',
-
-  /* Letter spacings */
   'letter-spacing-denser': '-0.03em',
   'letter-spacing-dense': '-0.015em',
   'letter-spacing-normal': 'normal',
   'letter-spacing-loose': '0.075em',
   'letter-spacing-looser': '0.15em',
-
-  /* Line heights */
   'line-height-denser': '1',
   'line-height-dense': '1.4',
   'line-height-normal': '1.8',
   'line-height-loose': '2.2',
   'line-height-looser': '2.6',
-
-  /*
-   * Forms
-   */
-
-  /* Focus rings */
-  'focus-ring-alpha': '40%',
+  'focus-ring-color': 'var(--sl-color-primary-600)',
+  'focus-ring-style': 'solid',
   'focus-ring-width': '3px',
   'focus-ring':
-    '0 0 0 var(--sl-focus-ring-width) hsl(198.6 88.7% 48.4% / var(--sl-focus-ring-alpha))',
-
-  /* Buttons */
+    'var(--sl-focus-ring-style) var(--sl-focus-ring-width) var(--sl-focus-ring-color)',
+  'focus-ring-offset': '1px',
   'button-font-size-small': 'var(--sl-font-size-x-small)',
   'button-font-size-medium': 'var(--sl-font-size-small)',
   'button-font-size-large': 'var(--sl-font-size-medium)',
-
-  /* Inputs */
-  'input-height-small': '1.875rem' /* 30px */,
-  'input-height-medium': '2.5rem' /* 40px */,
-  'input-height-large': '3.125rem' /* 50px */,
-
+  'input-height-small': '1.875rem',
+  'input-height-medium': '2.5rem',
+  'input-height-large': '3.125rem',
   'input-background-color': 'var(--sl-color-neutral-0)',
   'input-background-color-hover': 'var(--sl-input-background-color)',
   'input-background-color-focus': 'var(--sl-input-background-color)',
@@ -957,18 +856,17 @@ const lightThemeTokens = {
   'input-border-color-focus': 'var(--sl-color-primary-500)',
   'input-border-color-disabled': 'var(--sl-color-neutral-300)',
   'input-border-width': '1px',
-
+  'input-required-content': "'*'",
+  'input-required-content-offset': '-2px',
   'input-border-radius-small': 'var(--sl-border-radius-medium)',
   'input-border-radius-medium': 'var(--sl-border-radius-medium)',
   'input-border-radius-large': 'var(--sl-border-radius-medium)',
-
   'input-font-family': 'var(--sl-font-sans)',
   'input-font-weight': 'var(--sl-font-weight-normal)',
   'input-font-size-small': 'var(--sl-font-size-small)',
   'input-font-size-medium': 'var(--sl-font-size-medium)',
   'input-font-size-large': 'var(--sl-font-size-large)',
   'input-letter-spacing': 'var(--sl-letter-spacing-normal)',
-
   'input-color': 'var(--sl-color-neutral-700)',
   'input-color-hover': 'var(--sl-color-neutral-700)',
   'input-color-focus': 'var(--sl-color-neutral-700)',
@@ -981,51 +879,29 @@ const lightThemeTokens = {
   'input-spacing-small': 'var(--sl-spacing-small)',
   'input-spacing-medium': 'var(--sl-spacing-medium)',
   'input-spacing-large': 'var(--sl-spacing-large)',
-
   'input-filled-background-color': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-hover': 'var(--sl-color-neutral-100)',
-  'input-filled-background-color-focus': 'var(--sl-color-neutral-0)',
+  'input-filled-background-color-focus': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-disabled': 'var(--sl-color-neutral-100)',
   'input-filled-color': 'var(--sl-color-neutral-800)',
   'input-filled-color-hover': 'var(--sl-color-neutral-800)',
   'input-filled-color-focus': 'var(--sl-color-neutral-700)',
   'input-filled-color-disabled': 'var(--sl-color-neutral-800)',
-
-  /* Labels */
+  'input-focus-ring-color': 'hsl(198.6 88.7% 48.4% / 40%)',
+  'input-focus-ring-offset': '0',
   'input-label-font-size-small': 'var(--sl-font-size-small)',
   'input-label-font-size-medium': 'var(--sl-font-size-medium)',
   'input-label-font-size-large': 'var(--sl-font-size-large)',
-
   'input-label-color': 'inherit',
-
-  /* Help text */
   'input-help-text-font-size-small': 'var(--sl-font-size-x-small)',
   'input-help-text-font-size-medium': 'var(--sl-font-size-small)',
   'input-help-text-font-size-large': 'var(--sl-font-size-medium)',
-
   'input-help-text-color': 'var(--sl-color-neutral-500)',
-
-  /* Toggles (checkboxes, radios, switches) */
   'toggle-size': '1rem',
-
-  /*
-   * Overlays
-   */
-
   'overlay-background-color': 'hsl(240 3.8% 46.1% / 33%)',
-
-  /*
-   * Panels
-   */
-
   'panel-background-color': 'var(--sl-color-neutral-0)',
   'panel-border-color': 'var(--sl-color-neutral-200)',
   'panel-border-width': '1px',
-
-  /*
-   * Tooltips
-   */
-
   'tooltip-border-radius': 'var(--sl-border-radius-medium)',
   'tooltip-background-color': 'var(--sl-color-neutral-800)',
   'tooltip-color': 'var(--sl-color-neutral-0)',
@@ -1034,13 +910,7 @@ const lightThemeTokens = {
   'tooltip-font-size': 'var(--sl-font-size-small)',
   'tooltip-line-height': 'var(--sl-line-height-dense)',
   'tooltip-padding': 'var(--sl-spacing-2x-small) var(--sl-spacing-x-small)',
-  'tooltip-arrow-size': '5px',
-  'tooltip-arrow-start-end-offset': '8px',
-
-  /*
-   * Z-indexes
-   */
-
+  'tooltip-arrow-size': '4px',
   'z-index-drawer': '700',
   'z-index-dialog': '800',
   'z-index-dropdown': '900',

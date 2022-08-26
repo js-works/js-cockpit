@@ -1,4 +1,4 @@
-import { I18nController } from '../../i18n/i18n'
+import { I18nController } from '../../i18n/i18n';
 
 import {
   bind,
@@ -8,49 +8,49 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, html, repeat } from '../../utils/lit'
-import { ActionEvent } from '../../events/action-event'
+import { classMap, html, repeat } from '../../utils/lit';
+import { ActionEvent } from '../../events/action-event';
 
 // custom elements
-import SlDetails from '@shoelace-style/shoelace/dist/components/details/details'
-import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu'
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
+import SlDetails from '@shoelace-style/shoelace/dist/components/details/details';
+import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 
 // styles
-import sideMenuStyles from './side-menu.css'
+import sideMenuStyles from './side-menu.css';
 
 // icons
-import headerIcon from './assets/menu-header-icon.svg'
+import headerIcon from './assets/menu-header-icon.svg';
 
 // === exports =======================================================
 
-export { SideMenu }
+export { SideMenu };
 
 // === types =========================================================
 
 namespace SideMenu {
-  export type Menu = Groups | null
+  export type Menu = Groups | null;
 
   export type Groups = {
-    kind: 'groups'
-    groups: Group[]
-  }
+    kind: 'groups';
+    groups: Group[];
+  };
 
   export type Group = {
-    kind: 'group'
-    groupId: string
-    text: string
-    items: Item[]
-  }
+    kind: 'group';
+    groupId: string;
+    text: string;
+    items: Item[];
+  };
 
   export type Item = {
-    kind: 'item'
-    itemId: string
-    text: string
-    action?: string
-  }
+    kind: 'item';
+    itemId: string;
+    text: string;
+    action?: string;
+  };
 }
 
 // === SideMenu ======================================================
@@ -62,34 +62,34 @@ namespace SideMenu {
 })
 class SideMenu extends Component {
   @prop({ attr: Attrs.string })
-  headerText?: string
+  headerText?: string;
 
   @prop
-  menu: SideMenu.Menu = null
+  menu: SideMenu.Menu = null;
 
   @prop({ attr: Attrs.string })
-  collapseMode?: 'none' | 'manual'
+  collapseMode?: 'none' | 'manual';
 
   @prop({ attr: Attrs.string })
-  activeItem: string | null = null
+  activeItem: string | null = null;
 
   @prop
-  onAction?: Listener<ActionEvent>
+  onAction?: Listener<ActionEvent>;
 
-  private _i18n = new I18nController(this)
-  private _t = this._i18n.translate('jsCockpit.sideMenu')
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
+  private _i18n = new I18nController(this);
+  private _t = this._i18n.translate('jsCockpit.sideMenu');
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
 
   @bind
   private _onItemClick(ev: MouseEvent) {
-    const item = ev.currentTarget
+    const item = ev.currentTarget;
 
     const action = !(item instanceof HTMLElement)
       ? null
-      : item.getAttribute('data-action')
+      : item.getAttribute('data-action');
 
     if (action !== null && action !== '') {
-      this._emitAction({ action })
+      this._emitAction({ action });
     }
   }
 
@@ -101,12 +101,12 @@ class SideMenu extends Component {
           <div class="scrollpane">${this._renderMenu(this.menu)}</div>
         </div>
       </div>
-    `
+    `;
   }
 
   private _renderHeader() {
     if (!this.headerText) {
-      return null
+      return null;
     }
 
     return html`
@@ -116,19 +116,19 @@ class SideMenu extends Component {
           <div class="menu-header-text">${this.headerText}</div>
         </div>
       </div>
-    `
+    `;
   }
 
   private _renderMenu(menu: SideMenu.Menu) {
-    return !menu ? null : this._renderGroups(menu!)
+    return !menu ? null : this._renderGroups(menu!);
   }
 
   private _renderGroups(groups: SideMenu.Groups) {
-    let content: any
-    const collapsible = this.collapseMode === 'manual'
+    let content: any;
+    const collapsible = this.collapseMode === 'manual';
 
     if (collapsible) {
-      let activeGroupIdx = -1
+      let activeGroupIdx = -1;
 
       if (this.activeItem) {
         for (
@@ -138,8 +138,8 @@ class SideMenu extends Component {
         ) {
           for (let j = 0; j < groups.groups[i].items.length; ++j) {
             if (groups.groups[i].items[j].itemId === this.activeItem) {
-              activeGroupIdx = i
-              break
+              activeGroupIdx = i;
+              break;
             }
           }
         }
@@ -153,9 +153,9 @@ class SideMenu extends Component {
             <sl-details summary=${group.text} ?open=${idx === activeGroupIdx}>
               ${this._renderItems(group.items)}
             </sl-details>
-          `
+          `;
         }
-      )
+      );
     } else {
       content = repeat(
         groups.groups,
@@ -164,16 +164,16 @@ class SideMenu extends Component {
           return html`
             <div class="group-header">${group.text}</div>
             ${this._renderItems(group.items)}
-          `
+          `;
         }
-      )
+      );
     }
 
     return html`
       <div class=${classMap({ collapsible, uncollapsible: !collapsible })}>
         ${content}
       </div>
-    `
+    `;
   }
 
   private _renderItems(items: SideMenu.Item[]) {
@@ -183,7 +183,7 @@ class SideMenu extends Component {
           items,
           (_, idx) => idx,
           (item) => {
-            let action = item.action !== undefined ? item.action : item.itemId
+            let action = item.action !== undefined ? item.action : item.itemId;
 
             return html`<div
               class="item ${classMap({
@@ -193,10 +193,10 @@ class SideMenu extends Component {
               @click=${this._onItemClick}
             >
               <span>${item.text}</span>
-            </div>`
+            </div>`;
           }
         )}
       </div>
-    `
+    `;
   }
 }

@@ -1270,10 +1270,10 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.1.tgz#a6eda8ae29ac32fb59df50f3db14652a23f492c9"
   integrity sha512-nmv1syJ3ormbGq29GsuxGRK6BFq7Jhx+kVFyuuozz0Pckkvk1SGk2vpZZcdnj2vRZCETvlVB7KYgakUwgGmn+A==
 
-"@shoelace-style/shoelace@^2.0.0-beta.81":
-  version "2.0.0-beta.81"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.81.tgz#6d3175960a0634346229ec05e00f18ac0f745b35"
-  integrity sha512-mHxE450EiPnZeDGwJ8Dn0pXUz9U5nkjHJhXZ6REewq4RFeRFadaxlc7j/ic076U7Vdx/0PXWeubZOnWWXrMw4w==
+"@shoelace-style/shoelace@^2.0.0-beta.82":
+  version "2.0.0-beta.82"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.82.tgz#119d0556039d2836dea1b73083069553c39880d8"
+  integrity sha512-ckX/1p7TjPfcM0vnf7XVebHOBIvSx60bLTzFnRFu7tFtR2VuCCRbLbhy0bzZ/9T0Di/jOXJfdjqF2bLIImZ2gA==
   dependencies:
     "@floating-ui/dom" "^1.0.1"
     "@lit-labs/react" "^1.0.7"
@@ -2370,6 +2370,11 @@ aggregate-error@^4.0.0:
   dependencies:
     clean-stack "^4.0.0"
     indent-string "^5.0.0"
+
+air-datepicker@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/air-datepicker/-/air-datepicker-3.2.0.tgz#fc4196c70e61444a5afc21b3334005d4bb56b395"
+  integrity sha512-PHHkY0DKh0VqBp8VqnKCERoxKLwurUBMPLHJwBdq1m/f/Jsl7baDRRXsVPN8j7GV+T0eTcBnEDYg5tv5nRXJLA==
 
 airbnb-js-shims@^2.2.1:
   version "2.2.1"
