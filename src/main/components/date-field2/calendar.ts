@@ -235,20 +235,14 @@ class Calendar {
       this.#minuteSlider?.addEventListener('blur', this.#handleBlur);
     }
 
-    const preventInputBlur = (ev: Event) => {
+    this.#picker.$datepicker.addEventListener('mousedown', (ev: Event) => {
       if (ev.target instanceof HTMLInputElement) {
         return;
       }
 
       ev.preventDefault();
       this.#input.focus();
-    };
-
-    this.#picker.$datepicker
-      .querySelectorAll(
-        '.air-datepicker-nav, .air-datepicker--content, .air-datepicker-time'
-      )
-      .forEach((elem) => elem.addEventListener('mousedown', preventInputBlur));
+    });
   };
 }
 
