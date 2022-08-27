@@ -45,15 +45,18 @@ class Calendar {
   #locale = defaultLocale;
   #selectionMode: Calendar.SelectionMode = 'date';
   #highlightWeekends = false;
+  #showWeekNumbers = false;
   #onBlur: (() => void) | null = null;
 
   #i18n = new I18nFacade(() => this.#locale);
 
   constructor({
+    className,
     styles: customStyles,
     onSelection,
     onBlur
   }: {
+    className?: string;
     styles?: string;
     onSelection?: (selection: Date[]) => void;
     onBlur?: () => void;
@@ -73,7 +76,7 @@ class Calendar {
       pickerContainerElem
     );
 
-    this.#elem.className = 'adp-base';
+    this.#elem.className = className || '';
     datepickerStyleElem.innerText = datepickerStyles + '\n' + getStyles();
     customStyleElem.innerText = customStyles || '';
     inputElem.className = 'adp-date-input';
@@ -90,6 +93,10 @@ class Calendar {
       keyboardNav: true,
       locale: getAirLocaleData(defaultLocale),
       weekends: noWeekends,
+
+      onChangeViewDate: (params) => {
+        this.#refresh();
+      },
 
       onSelect: !onSelection
         ? noop
@@ -182,6 +189,16 @@ class Calendar {
     this.#update(options);
   }
 
+  setShowWeekNumbers(value: boolean) {
+    if (value === this.#showWeekNumbers) {
+      return;
+    }
+
+    this.#showWeekNumbers = true;
+
+    this.#refresh();
+  }
+
   setHighlightWeekends(value: boolean) {
     if (value === this.#highlightWeekends) {
       return;
@@ -243,6 +260,50 @@ class Calendar {
       ev.preventDefault();
       this.#input.focus();
     });
+  };
+
+  #refresh = () => {
+    const dp = this.#picker.$datepicker;
+
+    if (!this.#showWeekNumbers) {
+      dp.classList.remove('-show-week-numbers-');
+    } else {
+      dp.classList.add('-show-week-numbers-');
+
+      const header = dp.querySelector('.air-datepicker-body--day-names');
+
+      if (!header) {
+        return;
+      }
+
+      if (header.firstElementChild!.localName !== 'span') {
+        header.prepend(document.createElement('span'));
+      }
+
+      requestAnimationFrame(() => {
+        const cellsContainer = dp.querySelector('.air-datepicker-body--cells')!;
+        const cellCount = cellsContainer.childElementCount;
+
+        if (cellsContainer.firstElementChild!.localName !== 'span') {
+          for (let i = 0; i < Math.floor(cellCount / 7); ++i) {
+            const weekStartCell = cellsContainer.children[i * 8];
+            const newCell = document.createElement('span');
+
+            // very ugly workaround!!!
+            (newCell as any).adpCell = { isDisabled: true };
+
+            const day = parseInt(weekStartCell.getAttribute('data-date')!);
+            const month = parseInt(weekStartCell.getAttribute('data-month')!);
+            const year = parseInt(weekStartCell.getAttribute('data-year')!);
+            const date = new Date(year, month, day);
+
+            newCell.innerText = String(this.#i18n.getCalendarWeek(date));
+            newCell.className = 'air-datepicker-cell -week-number-';
+            cellsContainer.insertBefore(newCell, weekStartCell);
+          }
+        }
+      });
+    }
   };
 }
 
@@ -327,5 +388,23 @@ function getStyles() {
     .-weekend- {
       background-color: var(--adp-background-color-highlight);
     }
+
+
+    .-show-week-numbers- .air-datepicker-body--day-names {
+      grid-template-columns: repeat(8, var(--adp-day-cell-width));
+    }
+
+    .-show-week-numbers- .air-datepicker-body--cells.-days- {
+      grid-template-columns: repeat(8, var(--adp-day-cell-width));
+    }
+
+    .air-datepicker-cell.-week-number- {
+      padding-top: 0.1em;
+      font-size: 80%;
+      opacity: 70%;
+      font-style: italic;
+      background-color: #f4f4f4;
+    }
+
   `;
 }

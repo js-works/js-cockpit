@@ -36,14 +36,17 @@ import arrowRightIcon from '../../icons/arrow-right.svg';
   styles: getComponentStyles()
 })
 export class DateField2 extends Component {
-  #calendar: Calendar;
-  #i18n = new I18nController(this);
+  private _calendar: Calendar;
+  private _i18n = new I18nController(this);
 
   @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'dateTime';
+  selectionMode: Calendar.SelectionMode = 'date';
 
   @prop(Attrs.boolean, true)
   highlightWeekends = false;
+
+  @prop(Attrs.boolean, true)
+  showWeekNumbers = false;
 
   @state
   private _pickerVisible = false;
@@ -51,16 +54,18 @@ export class DateField2 extends Component {
   constructor() {
     super();
 
-    this.#calendar = new Calendar({
+    this._calendar = new Calendar({
+      className: 'picker',
       styles: getDatepickerStyles(),
       onSelection: (dates) => console.log('selection', dates),
       onBlur: () => void (this._pickerVisible = false)
     });
 
     const updateCalendar = () => {
-      this.#calendar.setLocale(this.#i18n.getLocale());
-      this.#calendar.setSelectionMode(this.selectionMode);
-      this.#calendar.setHighlightWeekends(this.highlightWeekends);
+      this._calendar.setLocale(this._i18n.getLocale());
+      this._calendar.setSelectionMode(this.selectionMode);
+      this._calendar.setHighlightWeekends(this.highlightWeekends);
+      this._calendar.setShowWeekNumbers(true || this.showWeekNumbers);
     };
 
     afterInit(this, updateCalendar);
@@ -69,7 +74,7 @@ export class DateField2 extends Component {
       updateCalendar();
 
       if (this._pickerVisible) {
-        this.#calendar.focus();
+        this._calendar.focus();
       }
     });
   }
@@ -96,8 +101,9 @@ export class DateField2 extends Component {
       </div>
 
       <sl-popup
+        class="popup"
         placement=${'bottom-start'}
-        ?active=${this._pickerVisible}
+        ?active=${true || this._pickerVisible}
         distance=${8}
         skidding=${0}
         ?flip=${true}
@@ -117,7 +123,7 @@ export class DateField2 extends Component {
           </sl-icon-button>
           <div slot="label" class="label">Date of birth</div>
         </sl-input>
-        ${this.#calendar.getElement()}
+        ${this._calendar.getElement()}
       </sl-popup>
       <div class="base"></div>
     `;
@@ -128,7 +134,7 @@ export class DateField2 extends Component {
 
     if (key === 'ArrowDown') {
       this._pickerVisible = true;
-      this.#calendar.focus();
+      this._calendar.focus();
     }
   };
 
@@ -141,8 +147,12 @@ export class DateField2 extends Component {
 
 function getComponentStyles() {
   return `
-    sl-popup::part(arrow) {
+    .popup::part(arrow) {
       background-color: var(--sl-color-neutral-300);
+    }
+
+    .picker {
+      box-shadow: var(--sl-shadow-medium);
     }
   `;
 }
@@ -154,7 +164,7 @@ function getDatepickerStyles() {
       --adp-font-size: 14px;
       --adp-width: 246px;
       --adp-z-index: 100;
-      --adp-padding: 4px;
+      --adp-padding: 0;
       --adp-grid-areas: 'nav' 'body' 'timepicker' 'buttons';
       --adp-transition-duration: .3s;
       --adp-transition-ease: ease-out;
