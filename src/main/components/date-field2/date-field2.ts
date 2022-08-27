@@ -32,14 +32,15 @@ import arrowRightIcon from '../../icons/arrow-right.svg';
 
 @elem({
   tag: 'c-date-field2',
-  uses: [SlIcon, SlIconButton, SlInput, SlPopup]
+  uses: [SlIcon, SlIconButton, SlInput, SlPopup],
+  styles: getComponentStyles()
 })
 export class DateField2 extends Component {
   #calendar: Calendar;
   #i18n = new I18nController(this);
 
   @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'date';
+  selectionMode: Calendar.SelectionMode = 'dateTime';
 
   @prop(Attrs.boolean, true)
   highlightWeekends = false;
@@ -97,11 +98,16 @@ export class DateField2 extends Component {
       <sl-popup
         placement=${'bottom-start'}
         ?active=${this._pickerVisible}
-        distance=${1}
+        distance=${8}
         skidding=${0}
         ?flip=${true}
+        ?arrow=${true}
       >
-        <sl-input slot="anchor" style="width: 150px;">
+        <sl-input
+          slot="anchor"
+          style="width: 150px;"
+          @keydown=${this._onKeyDown}
+        >
           <sl-icon-button
             slot="suffix"
             class="calendar-icon"
@@ -117,9 +123,28 @@ export class DateField2 extends Component {
     `;
   }
 
-  private _onTriggerClick = () => {
-    this._pickerVisible = !this._pickerVisible;
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    const key = ev.key;
+
+    if (key === 'ArrowDown') {
+      this._pickerVisible = true;
+      this.#calendar.focus();
+    }
   };
+
+  private _onTriggerClick = () => {
+    if (!this._pickerVisible) {
+      this._pickerVisible = true;
+    }
+  };
+}
+
+function getComponentStyles() {
+  return `
+    sl-popup::part(arrow) {
+      background-color: var(--sl-color-neutral-300);
+    }
+  `;
 }
 
 function getDatepickerStyles() {
@@ -152,7 +177,7 @@ function getDatepickerStyles() {
       --adp-border-color: #dbdbdb;
       --adp-border-color-inner: #efefef;
       --adp-border-radius: 0;
-      --adp-border-color-inline: #d7d7d7;
+      --adp-border-color-inline: var(--sl-color-neutral-300);
       --adp-nav-height: 32px;
       --adp-nav-arrow-color: var(--adp-color-secondary);
       --adp-nav-action-size: 32px;

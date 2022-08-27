@@ -16,7 +16,6 @@ export { Calendar };
 namespace Calendar {
   export type SelectionMode =
     | 'date'
-    | 'dates'
     | 'time'
     | 'dateTime'
     | 'dateRange'
@@ -39,66 +38,16 @@ class Calendar {
   #elem = document.createElement('div');
   #input: HTMLInputElement;
   #picker!: AirDatepicker;
+  #hourSlider: HTMLElement | null = null;
+  #minuteSlider: HTMLElement | null = null;
 
   #options: Partial<AirDatepickerOptions> = {};
   #locale = defaultLocale;
   #selectionMode: Calendar.SelectionMode = 'date';
   #highlightWeekends = false;
+  #onBlur: (() => void) | null = null;
 
   #i18n = new I18nFacade(() => this.#locale);
-
-  static #styles = `
-    :host {
-      display: inline-block;
-      position: relative;
-      user-select: none;
-    }
-
-    .air-datepicker {
-      --adp-padding: 0;
-      --adp-border-radius: 0;
-      --adp-cell-border-radius: 0;
-      --adp-background-color-highlight: #fafafa;
-    }
-
-    .air-datepicker-nav--title i {
-      color: var(--adp-nav-color);
-    }
-
-    .air-datepicker-body--day-names {
-      margin: 0;
-    }
-    
-    .air-datepicker-body--day-name {
-      padding: 0.3rem 0;
-    }
-
-    .adp-date-input {
-      position: absolute;
-      opacity: 0;
-      outline: none;
-      max-width: 0;
-      max-height: 0;
-      overflow: hidden;
-      border: none;
-      z-index: -32000;
-    }
-    
-    .air-datepicker-nav--title,
-    .air-datepicker-body--day-name,
-    .air-datepicker-cell.-month- {
-      text-transform: capitalize;
-    }
-
-    .air-datepicker-time--current-hours.-focus-::after,
-    .air-datepicker-time--current-minutes.-focus-::after {
-      background-color: transparent;
-    }
-    
-    .-weekend- {
-      background-color: var(--adp-background-color-highlight);
-    }
-  `;
 
   constructor({
     styles: customStyles,
@@ -125,18 +74,14 @@ class Calendar {
     );
 
     this.#elem.className = 'adp-base';
-    datepickerStyleElem.innerText = datepickerStyles;
-    customStyleElem.innerText = Calendar.#styles + '\n' + customStyles;
+    datepickerStyleElem.innerText = datepickerStyles + '\n' + getStyles();
+    customStyleElem.innerText = customStyles || '';
     inputElem.className = 'adp-date-input';
 
     if (onBlur) {
-      this.#input.addEventListener('blur', () => {
-        //setTimeout(() => {
-        //  if (!this.#input.matches(':focus')) {
-        onBlur();
-        //  }
-        //}, 500);
-      });
+      this.#onBlur = onBlur;
+
+      this.#input.addEventListener('blur', this.#handleBlur);
     }
 
     this.#update({
@@ -189,14 +134,6 @@ class Calendar {
     switch (selectionMode) {
       case 'date':
         options.multipleDates = false;
-        options.view = 'days';
-        options.timepicker = false;
-        options.onlyTimepicker = false;
-        options.minView = 'days';
-        break;
-
-      case 'dates':
-        options.multipleDates = true;
         options.view = 'days';
         options.timepicker = false;
         options.onlyTimepicker = false;
@@ -261,21 +198,56 @@ class Calendar {
     setTimeout(() => void this.#input.focus(), 0);
   }
 
+  #handleBlur = () => {
+    setTimeout(() => {
+      if (
+        this.#onBlur &&
+        !this.#input.matches(':focus') &&
+        !this.#hourSlider?.matches(':focus') &&
+        !this.#minuteSlider?.matches(':focus')
+      ) {
+        this.#onBlur();
+      }
+    }, 0);
+  };
+
   #update = (options: Partial<AirDatepickerOptions>) => {
     this.#options = { ...this.#options, ...options };
 
     if (this.#picker) {
+      this.#hourSlider = null;
+      this.#minuteSlider = null;
       this.#picker.destroy();
     }
 
     this.#picker = new AirDatepicker(this.#input, this.#options);
 
+    if (this.#selectionMode === 'dateTime' || this.#selectionMode === 'time') {
+      this.#hourSlider = this.#picker.$datepicker.querySelector(
+        'input[type=range][name=hours]'
+      );
+
+      this.#minuteSlider = this.#picker.$datepicker.querySelector(
+        'input[type=range][name=minutes]'
+      );
+
+      this.#hourSlider?.addEventListener('blur', this.#handleBlur);
+      this.#minuteSlider?.addEventListener('blur', this.#handleBlur);
+    }
+
     const preventInputBlur = (ev: Event) => {
+      if (ev.target instanceof HTMLInputElement) {
+        return;
+      }
+
       ev.preventDefault();
+      this.#input.focus();
     };
 
     this.#picker.$datepicker
-      .querySelectorAll('.air-datepicker-nav, .air-datepicker--content')
+      .querySelectorAll(
+        '.air-datepicker-nav, .air-datepicker--content, .air-datepicker-time'
+      )
       .forEach((elem) => elem.addEventListener('mousedown', preventInputBlur));
   };
 }
@@ -307,4 +279,59 @@ function getAirLocaleData(locale: string): AirDatepickerLocale {
   airLocaleDataCache.set(locale, airLocaleData);
 
   return airLocaleData;
+}
+
+function getStyles() {
+  return `
+    :host {
+      display: inline-block;
+      position: relative;
+      user-select: none;
+    }
+
+    .air-datepicker {
+      --adp-padding: 0;
+      --adp-border-radius: 0;
+      --adp-cell-border-radius: 0;
+      --adp-background-color-highlight: #fafafa;
+    }
+
+    .air-datepicker-nav--title i {
+      color: var(--adp-nav-color);
+    }
+
+    .air-datepicker-body--day-names {
+      margin: 0;
+    }
+    
+    .air-datepicker-body--day-name {
+      padding: 0.3rem 0;
+    }
+
+    .adp-date-input {
+      position: absolute;
+      opacity: 0;
+      outline: none;
+      max-width: 0;
+      max-height: 0;
+      overflow: hidden;
+      border: none;
+      z-index: -32000;
+    }
+    
+    .air-datepicker-nav--title,
+    .air-datepicker-body--day-name,
+    .air-datepicker-cell.-month- {
+      text-transform: capitalize;
+    }
+
+    .air-datepicker-time--current-hours.-focus-::after,
+    .air-datepicker-time--current-minutes.-focus-::after {
+      background-color: transparent;
+    }
+    
+    .-weekend- {
+      background-color: var(--adp-background-color-highlight);
+    }
+  `;
 }
