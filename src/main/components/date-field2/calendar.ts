@@ -14,12 +14,6 @@ export { Calendar };
 // === exported types ================================================
 
 namespace Calendar {
-  export type Options = {
-    locale: string;
-    selectionMode: SelectionMode;
-    highlightWeekend: boolean;
-  };
-
   export type SelectionMode =
     | 'date'
     | 'dates'
@@ -35,6 +29,7 @@ namespace Calendar {
 // === local data ====================================================
 
 const defaultLocale = 'en-US';
+const noop = () => {};
 const noWeekends: [number, number] = [-1, -1];
 const airLocaleDataCache = new Map<string, AirDatepickerLocale>();
 
@@ -48,6 +43,8 @@ class Calendar {
   #options: Partial<AirDatepickerOptions> = {};
   #locale = defaultLocale;
   #selectionMode: Calendar.SelectionMode = 'date';
+  #highlightWeekends = false;
+
   #i18n = new I18nFacade(() => this.#locale);
 
   static #styles = `
@@ -87,8 +84,15 @@ class Calendar {
       z-index: -32000;
     }
     
-    .air-datepicker-body--day-name {
-      text-transform: none;
+    .air-datepicker-nav--title,
+    .air-datepicker-body--day-name,
+    .air-datepicker-cell.-month- {
+      text-transform: capitalize;
+    }
+
+    .air-datepicker-time--current-hours.-focus-::after,
+    .air-datepicker-time--current-minutes.-focus-::after {
+      background-color: transparent;
     }
     
     .-weekend- {
@@ -96,12 +100,17 @@ class Calendar {
     }
   `;
 
-  constructor(
-    onSelection: (selection: Date[]) => void,
-    customStyles: string = ''
-  ) {
+  constructor({
+    styles: customStyles,
+    onSelection,
+    onBlur
+  }: {
+    styles?: string;
+    onSelection?: (selection: Date[]) => void;
+    onBlur?: () => void;
+  }) {
     const datepickerStyleElem = document.createElement('style');
-    const auxStyleElem = document.createElement('style');
+    const customStyleElem = document.createElement('style');
     const inputElem = document.createElement('input');
     const pickerContainerElem = document.createElement('div');
 
@@ -110,15 +119,25 @@ class Calendar {
 
     this.#elem.shadowRoot!.append(
       datepickerStyleElem,
-      auxStyleElem,
+      customStyleElem,
       inputElem,
       pickerContainerElem
     );
 
     this.#elem.className = 'adp-base';
     datepickerStyleElem.innerText = datepickerStyles;
-    auxStyleElem.innerText = Calendar.#styles + '\n' + customStyles;
+    customStyleElem.innerText = Calendar.#styles + '\n' + customStyles;
     inputElem.className = 'adp-date-input';
+
+    if (onBlur) {
+      this.#input.addEventListener('blur', () => {
+        //setTimeout(() => {
+        //  if (!this.#input.matches(':focus')) {
+        onBlur();
+        //  }
+        //}, 500);
+      });
+    }
 
     this.#update({
       inline: true,
@@ -127,10 +146,13 @@ class Calendar {
       locale: getAirLocaleData(defaultLocale),
       weekends: noWeekends,
 
-      onSelect: ({ date }) =>
-        onSelection(
-          Array.isArray(date) ? date : date === undefined ? [] : [date]
-        )
+      onSelect: !onSelection
+        ? noop
+        : ({ date }) => {
+            onSelection(
+              Array.isArray(date) ? date : date === undefined ? [] : [date]
+            );
+          }
     });
   }
 
@@ -139,7 +161,7 @@ class Calendar {
   }
 
   setLocale(locale: string) {
-    if (this.#locale !== locale) {
+    if (this.#locale === locale) {
       return;
     }
 
@@ -224,13 +246,19 @@ class Calendar {
   }
 
   setHighlightWeekends(value: boolean) {
-    if (value === false && this.#options.weekends === noWeekends) {
+    if (value === this.#highlightWeekends) {
       return;
     }
+
+    this.#highlightWeekends = value;
 
     this.#update({
       weekends: (value ? this.#i18n.getWeekendDays() : noWeekends) as any
     });
+  }
+
+  focus() {
+    setTimeout(() => void this.#input.focus(), 0);
   }
 
   #update = (options: Partial<AirDatepickerOptions>) => {
@@ -238,14 +266,17 @@ class Calendar {
 
     if (this.#picker) {
       this.#picker.destroy();
-      (this.#options.container as HTMLElement).innerHTML = '';
     }
-    console.log(this.#options);
+
     this.#picker = new AirDatepicker(this.#input, this.#options);
 
-    this.#picker.$datepicker.addEventListener('click', () => {
-      this.#input.focus();
-    });
+    const preventInputBlur = (ev: Event) => {
+      ev.preventDefault();
+    };
+
+    this.#picker.$datepicker
+      .querySelectorAll('.air-datepicker-nav, .air-datepicker--content')
+      .forEach((elem) => elem.addEventListener('mousedown', preventInputBlur));
   };
 }
 

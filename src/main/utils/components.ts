@@ -5,10 +5,10 @@ import {
   LitElement,
   PropertyDeclaration,
   PropertyValues
-} from 'lit'
+} from 'lit';
 
-import { property } from 'lit/decorators/property.js'
-import { state as litState } from 'lit/decorators/state.js'
+import { property } from 'lit/decorators/property.js';
+import { state as litState } from 'lit/decorators/state.js';
 
 // === exports =======================================================
 
@@ -27,35 +27,35 @@ export {
   Attrs,
   Listener,
   Component
-}
+};
 
 // === local data ====================================================
 
-const properlyDecoratedComponentClasses = new WeakSet<Function>()
+const properlyDecoratedComponentClasses = new WeakSet<Function>();
 
 // === types =========================================================
 
-type Listener<T> = (v: T) => void
-type Cleanup = (() => void) | undefined | null | void
+type Listener<T> = (v: T) => void;
+type Cleanup = (() => void) | undefined | null | void;
 
 // === public ========================================================
 
 abstract class Component extends LitElement {
   constructor() {
-    super()
+    super();
 
     if (!properlyDecoratedComponentClasses.has(this.constructor)) {
       throw new Error(
         `Class "${this.constructor.name}" has not been decorated by @elem`
-      )
+      );
     }
 
-    const self: any = this
-    self.__isInitialized = false
-    self.__afterInitActions = [] as (() => void)[]
+    const self: any = this;
+    self.__isInitialized = false;
+    self.__afterInitActions = [] as (() => void)[];
   }
 
-  protected abstract render(): void
+  protected abstract render(): void;
 }
 
 const Attrs = {
@@ -74,7 +74,7 @@ const Attrs = {
     toAttribute: (it: boolean | null) => (!it ? null : ''),
     fromAttribute: (it: string | null) => (it === null ? false : true)
   }
-}
+};
 
 function bind<T extends Function>(
   target: object,
@@ -84,106 +84,117 @@ function bind<T extends Function>(
   if (!descriptor || typeof descriptor.value !== 'function') {
     throw new TypeError(
       `Only methods can be decorated with @bind. <${propertyKey}> is not a method!`
-    )
+    );
   }
 
   return {
     configurable: true,
 
     get(this: T): T {
-      const bound: T = descriptor.value!.bind(this)
+      const bound: T = descriptor.value!.bind(this);
 
       Object.defineProperty(this, propertyKey, {
         value: bound
-      })
+      });
 
-      return bound
+      return bound;
     }
-  }
+  };
 }
 
 function elem<E extends Component>(params: {
-  tag: string
+  tag: string;
 
   styles?:
     | string
     | CSSResult
     | (string | CSSResult)[]
-    | (() => string | CSSResult | (string | CSSResult)[])
+    | (() => string | CSSResult | (string | CSSResult)[]);
 
-  uses?: any[]
+  uses?: any[];
 }): (clazz: new () => E) => any {
   return (clazz) => {
     const newClass: any = class extends (clazz as any) {
       static get styles(): CSSResult {
         let styles =
-          typeof params.styles === 'function' ? params.styles() : params.styles
+          typeof params.styles === 'function' ? params.styles() : params.styles;
 
         if (Array.isArray(styles)) {
           styles = styles
             .map((it) => it.toString().trim())
-            .join('\n\n/*******/\n\n')
+            .join('\n\n/*******/\n\n');
         }
 
         if (!styles) {
-          styles = ''
+          styles = '';
         }
 
-        const cssResult = unsafeCSS(styles)
+        const cssResult = unsafeCSS(styles);
 
         Object.defineProperty(newClass, 'styles', {
           value: cssResult
-        })
+        });
 
-        return cssResult
+        return cssResult;
       }
 
       constructor() {
-        super()
+        super();
       }
 
       protected shouldUpdate(changedProperties: PropertyValues): boolean {
         if (!this.__initialized) {
-          this.__isInitialized = true
-          this.__afterInitActions.forEach((it: () => void) => it())
-          this.__afterInitActions.length = 0
+          this.__isInitialized = true;
+          this.__afterInitActions.forEach((it: () => void) => it());
+          this.__afterInitActions.length = 0;
         }
 
-        return super.shouldUpdate(changedProperties)
+        return super.shouldUpdate(changedProperties);
       }
-    }
+    };
 
-    properlyDecoratedComponentClasses.add(newClass)
-    registerElement(params.tag, newClass)
+    properlyDecoratedComponentClasses.add(newClass);
+    registerElement(params.tag, newClass);
 
-    return newClass
-  }
+    return newClass;
+  };
 }
 
-function prop<T>(proto: HTMLElement, propName: string): void
+function prop<T>(proto: HTMLElement, propName: string): void;
+
+function prop<T>(
+  attr: {
+    toAttribute(value: T): string | null;
+    fromAttribute(value: string | null): T;
+  },
+
+  refl?: boolean
+): (proto: Component, propName: string) => void;
 
 function prop<T>(params?: {
   attr: {
-    toAttribute(value: T): string | null
-    fromAttribute(value: string | null): T
-  }
-  refl?: boolean
-}): (proto: Component, propName: string) => void
+    toAttribute(value: T): string | null;
+    fromAttribute(value: string | null): T;
+  };
+  refl?: boolean;
+}): (proto: Component, propName: string) => void;
 
 function prop(arg1?: any, arg2?: any): any {
   if (typeof arg2 === 'string') {
-    return prop()(arg1, arg2)
+    return prop()(arg1, arg2);
+  } else if (arg1 && typeof arg1.toAttribute === 'function') {
+    return prop({ attr: arg1, refl: !!arg2 });
   }
 
-  const params = arg1
+  const params = arg1;
 
   const {
     attr,
     refl: reflect
   }: {
-    attr?: ComplexAttributeConverter
-    refl?: boolean
-  } = params || {}
+    attr?: ComplexAttributeConverter;
+    refl?: boolean;
+  } = params || {};
 
   return (proto: Component, propName: string) => {
     const options: PropertyDeclaration = attr
@@ -194,20 +205,22 @@ function prop(arg1?: any, arg2?: any): any {
         }
       : {
           attribute: false
-        }
+        };
 
-    return property(options)(proto, propName)
-  }
+    return property(options)(proto, propName);
+  };
 }
 
 function state<T>(proto: Component, propName: string): void {
-  return litState()(proto, propName)
+  return litState()(proto, propName);
 }
 
 // === helpers =======================================================
 
 function propNameToAttrName(propName: string) {
-  return propName.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+  return propName
+    .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+    .toLowerCase();
 }
 
 // TODO!!!!
@@ -216,125 +229,125 @@ function registerElement(
   elementClass: CustomElementConstructor
 ): void {
   if (customElements.get(tagName)) {
-    console.clear()
-    console.log(`Custom element ${tagName} already defined -> reloading...`)
+    console.clear();
+    console.log(`Custom element ${tagName} already defined -> reloading...`);
 
     setTimeout(() => {
-      console.clear()
-      location.reload()
-    }, 1000)
+      console.clear();
+      location.reload();
+    }, 1000);
   } else {
-    customElements.define(tagName, elementClass)
+    customElements.define(tagName, elementClass);
   }
 }
 
 function afterInit(component: Component, action: () => void): void {
-  const compo = component as any
+  const compo = component as any;
 
   if (!compo.__isInitialized) {
-    compo.__afterInitActions.push(action)
+    compo.__afterInitActions.push(action);
   }
 }
 
 function afterConnect(component: Component, action: () => Cleanup): void {
-  let cleanup: Cleanup
+  let cleanup: Cleanup;
 
   component.addController({
     hostConnected() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = action()
+      cleanup = action();
     },
 
     hostDisconnected() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = null
+      cleanup = null;
     }
-  })
+  });
 }
 
 function afterDisconnect(component: Component, action: () => void): void {
   component.addController({
     hostDisconnected: action
-  })
+  });
 }
 
 function beforeUpdate(component: Component, action: () => Cleanup): void {
-  let cleanup: Cleanup
+  let cleanup: Cleanup;
 
   component.addController({
     hostUpdate() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = action()
+      cleanup = action();
     },
 
     hostDisconnected() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = null
+      cleanup = null;
     }
-  })
+  });
 }
 
 function afterFirstUpdate(component: Component, action: () => void): void {
   if (component.hasUpdated) {
-    return
+    return;
   }
 
   const controller = {
     hostUpdated() {
-      action()
-      component.removeController(controller)
+      action();
+      component.removeController(controller);
     }
-  }
+  };
 
-  component.addController(controller)
+  component.addController(controller);
 }
 
 function afterUpdate(component: Component, action: () => Cleanup): void {
-  let cleanup: Cleanup
+  let cleanup: Cleanup;
 
   component.addController({
     hostUpdated() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = action()
+      cleanup = action();
     },
 
     hostDisconnected() {
       if (typeof cleanup === 'function') {
-        cleanup()
+        cleanup();
       }
 
-      cleanup = null
+      cleanup = null;
     }
-  })
+  });
 }
 
-function createEmitter(host: Component): (ev: CustomEvent<any>) => void
+function createEmitter(host: Component): (ev: CustomEvent<any>) => void;
 
 function createEmitter<D = void>(
   host: Component,
   type: string
-): (detail: D) => void
+): (detail: D) => void;
 
 function createEmitter<T extends string, D>(
   host: Component,
   type: T,
   getEventProp: () => Listener<CustomEvent<D> & { type: T }> | undefined
-): (detail: D) => void
+): (detail: D) => void;
 
 function createEmitter(
   host: Component,
@@ -342,25 +355,25 @@ function createEmitter(
   getEventProp?: Function
 ) {
   if (arguments.length > 0 && typeof type !== 'string') {
-    throw new Error('[useEmitter] Invalid type of first argument')
+    throw new Error('[useEmitter] Invalid type of first argument');
   }
 
   if (type === undefined) {
-    return (ev: CustomEvent<any>) => host.dispatchEvent(ev)
+    return (ev: CustomEvent<any>) => host.dispatchEvent(ev);
   }
 
   if (getEventProp) {
     const eventListener = (ev: Event) => {
-      const eventProp = getEventProp()
+      const eventProp = getEventProp();
 
-      eventProp && eventProp(ev)
-    }
+      eventProp && eventProp(ev);
+    };
 
     afterConnect(host, () => {
-      host.addEventListener(type, eventListener)
+      host.addEventListener(type, eventListener);
 
-      return () => host.removeEventListener(type, eventListener)
-    })
+      return () => host.removeEventListener(type, eventListener);
+    });
   }
 
   return <D>(detail: D, options?: CustomEventInit<D>) => {
@@ -370,8 +383,8 @@ function createEmitter(
       cancelable: true,
       ...options,
       detail
-    })
+    });
 
-    host.dispatchEvent(ev)
-  }
+    host.dispatchEvent(ev);
+  };
 }

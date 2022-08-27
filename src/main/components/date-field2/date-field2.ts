@@ -1,8 +1,9 @@
 import {
-  elem,
-  prop,
   afterInit,
   afterUpdate,
+  elem,
+  prop,
+  state,
   Attrs,
   Component
 } from '../../utils/components';
@@ -15,6 +16,7 @@ import { Calendar } from './calendar';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
+import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
 
 // icons
 import dateIcon from '../../icons/calendar3.svg';
@@ -29,25 +31,46 @@ import arrowRightIcon from '../../icons/arrow-right.svg';
 // === types =========================================================
 
 @elem({
-  tag: 'c-date-field2'
+  tag: 'c-date-field2',
+  uses: [SlIcon, SlIconButton, SlInput, SlPopup]
 })
 export class DateField2 extends Component {
   #calendar: Calendar;
   #i18n = new I18nController(this);
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string, true)
   selectionMode: Calendar.SelectionMode = 'date';
+
+  @prop(Attrs.boolean, true)
+  highlightWeekends = false;
+
+  @state
+  private _pickerVisible = false;
 
   constructor() {
     super();
 
-    this.#calendar = new Calendar((sel) => {
-      console.log('selection: ', sel);
-    }, getDatepickerStyles());
+    this.#calendar = new Calendar({
+      styles: getDatepickerStyles(),
+      onSelection: (dates) => console.log('selection', dates),
+      onBlur: () => void (this._pickerVisible = false)
+    });
 
-    this.#calendar.setSelectionMode('date');
-    this.#calendar.setLocale(this.#i18n.getLocale());
-    this.#calendar.setSelection([new Date(2022, 0, 1)]);
+    const updateCalendar = () => {
+      this.#calendar.setLocale(this.#i18n.getLocale());
+      this.#calendar.setSelectionMode(this.selectionMode);
+      this.#calendar.setHighlightWeekends(this.highlightWeekends);
+    };
+
+    afterInit(this, updateCalendar);
+
+    afterUpdate(this, () => {
+      updateCalendar();
+
+      if (this._pickerVisible) {
+        this.#calendar.focus();
+      }
+    });
   }
 
   render() {
@@ -65,21 +88,38 @@ export class DateField2 extends Component {
       <div class="base">
         <div class="field-wrapper">
           <div class="control">
-            <sl-input>
-              <sl-icon slot="suffix" class="calendar-icon" src=${icon}>
-              </sl-icon>
-              <div slot="label" class="label">Date of birth</div>
-            </sl-input>
             <div class="error"></div>
             <div class="picker-container"></div>
           </div>
         </div>
       </div>
-      <div class="base">
-        <div>${this.#calendar.getElement()}</div>
-      </div>
+
+      <sl-popup
+        placement=${'bottom-start'}
+        ?active=${this._pickerVisible}
+        distance=${1}
+        skidding=${0}
+        ?flip=${true}
+      >
+        <sl-input slot="anchor" style="width: 150px;">
+          <sl-icon-button
+            slot="suffix"
+            class="calendar-icon"
+            src=${icon}
+            @click=${this._onTriggerClick}
+          >
+          </sl-icon-button>
+          <div slot="label" class="label">Date of birth</div>
+        </sl-input>
+        ${this.#calendar.getElement()}
+      </sl-popup>
+      <div class="base"></div>
     `;
   }
+
+  private _onTriggerClick = () => {
+    this._pickerVisible = !this._pickerVisible;
+  };
 }
 
 function getDatepickerStyles() {
@@ -111,7 +151,7 @@ function getDatepickerStyles() {
       --adp-color-other-month-hover: #c5c5c5;
       --adp-border-color: #dbdbdb;
       --adp-border-color-inner: #efefef;
-      --adp-border-radius: 4px;
+      --adp-border-radius: 0;
       --adp-border-color-inline: #d7d7d7;
       --adp-nav-height: 32px;
       --adp-nav-arrow-color: var(--adp-color-secondary);
