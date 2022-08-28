@@ -14,6 +14,7 @@ export { Calendar };
 namespace Calendar {
   export type SelectionMode =
     | 'date'
+    | 'dates'
     | 'time'
     | 'dateTime'
     | 'dateRange'
@@ -39,6 +40,7 @@ namespace Calendar {
 const defaultLocale = 'en-US';
 const noop = () => {};
 const noWeekends: [number, number] = [-1, -1];
+const localeSettingsCache = new Map<string, Calendar.LocaleSettings>();
 const airLocaleDataCache = new Map<string, AirDatepickerLocale>();
 
 // === class Calendar ================================================
@@ -67,10 +69,10 @@ class Calendar {
     onBlur
   }: {
     getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
+    onSelection: (selection: Date[], mode: Calendar.SelectionMode) => void;
+    onBlur?: () => void;
     className?: string;
     styles?: string;
-    onSelection?: (selection: Date[]) => void;
-    onBlur?: () => void;
   }) {
     const datepickerStyleElem = document.createElement('style');
     const customStyleElem = document.createElement('style');
@@ -78,7 +80,10 @@ class Calendar {
     const pickerContainerElem = document.createElement('div');
 
     this.#getLocaleSettings = getLocaleSettings;
-    this.#localeSettings = getLocaleSettings(defaultLocale);
+    this.#localeSettings = getLocaleSettingsCached(
+      defaultLocale,
+      getLocaleSettings
+    );
 
     this.#input = inputElem;
     this.#elem.attachShadow({ mode: 'open' });
@@ -108,7 +113,13 @@ class Calendar {
       locale: getAirLocaleData(this.#locale, this.#localeSettings),
       weekends: noWeekends,
 
-      onChangeViewDate: (params) => {
+      navTitles: {
+        days: '<span>MMMM</span> &nbsp; <i>yyyy</i>',
+        months: 'yyyy',
+        years: 'yyyy1 - yyyy2'
+      },
+
+      onChangeViewDate: () => {
         this.#refresh();
       },
 
@@ -116,7 +127,8 @@ class Calendar {
         ? noop
         : ({ date }) => {
             onSelection(
-              Array.isArray(date) ? date : date === undefined ? [] : [date]
+              Array.isArray(date) ? date : date === undefined ? [] : [date],
+              this.#selectionMode
             );
           }
     });
@@ -132,7 +144,11 @@ class Calendar {
     }
 
     this.#locale = locale;
-    this.#localeSettings = this.#getLocaleSettings(locale);
+
+    this.#localeSettings = getLocaleSettingsCached(
+      locale,
+      this.#getLocaleSettings
+    );
 
     const options = {
       locale: getAirLocaleData(locale, this.#localeSettings)
@@ -157,6 +173,14 @@ class Calendar {
     switch (selectionMode) {
       case 'date':
         options.multipleDates = false;
+        options.view = 'days';
+        options.timepicker = false;
+        options.onlyTimepicker = false;
+        options.minView = 'days';
+        break;
+
+      case 'dates':
+        options.multipleDates = true;
         options.view = 'days';
         options.timepicker = false;
         options.onlyTimepicker = false;
@@ -334,6 +358,21 @@ class Calendar {
 }
 
 // === helpers =======================================================
+
+function getLocaleSettingsCached(
+  locale: string,
+  getLocaleSettings: (locale: string) => Calendar.LocaleSettings
+): Calendar.LocaleSettings {
+  let localeSettings = localeSettingsCache.get(locale);
+
+  if (!localeSettings) {
+    localeSettings = getLocaleSettings(locale);
+
+    localeSettingsCache.set(locale, localeSettings);
+  }
+
+  return localeSettings;
+}
 
 function getAirLocaleData(
   locale: string,

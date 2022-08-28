@@ -8,7 +8,7 @@ import {
   Component
 } from '../../utils/components';
 
-import { html, classMap } from '../../utils/lit';
+import { html, createRef, ref } from '../../utils/lit';
 import { I18nController, I18nFacade } from '../../i18n/i18n';
 import { Calendar } from './calendar';
 
@@ -38,6 +38,7 @@ import arrowRightIcon from '../../icons/arrow-right.svg';
 export class DateField2 extends Component {
   private _calendar: Calendar;
   private _i18n = new I18nController(this);
+  private _inputRef = createRef<SlInput>();
 
   @prop(Attrs.string, true)
   selectionMode: Calendar.SelectionMode = 'date';
@@ -58,7 +59,18 @@ export class DateField2 extends Component {
       getLocaleSettings,
       className: 'picker',
       styles: getDatepickerStyles(),
-      onSelection: (dates) => console.log('selection', dates),
+
+      onSelection: (selection, selectionMode) => {
+        this._inputRef.value!.value = this._formatSelection(
+          selection,
+          selectionMode
+        );
+
+        if (selectionMode === 'date') {
+          this._pickerVisible = false;
+        }
+      },
+
       onBlur: () => void (this._pickerVisible = false)
     });
 
@@ -103,17 +115,18 @@ export class DateField2 extends Component {
 
       <sl-popup
         class="popup"
-        placement=${'bottom-start'}
+        placement="bottom-start"
         ?active=${this._pickerVisible}
         distance=${8}
-        skidding=${0}
+        skidding=${8}
         ?flip=${true}
         ?arrow=${true}
       >
         <sl-input
           slot="anchor"
-          style="width: 150px;"
+          style="width: 350px;"
           @keydown=${this._onKeyDown}
+          ${ref(this._inputRef)}
         >
           <sl-icon-button
             slot="suffix"
@@ -144,13 +157,105 @@ export class DateField2 extends Component {
       this._pickerVisible = true;
     }
   };
+
+  private _formatSelection(
+    selection: Date[],
+    selectionMode: Calendar.SelectionMode
+  ): string {
+    if (selection.length === 0) {
+      return '';
+    }
+
+    switch (selectionMode) {
+      case 'date':
+        return this._i18n.formatDate(selection[0], {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        });
+
+      case 'dates': {
+        const tokens: string[] = [];
+
+        for (const date of [...selection].sort((a, b) =>
+          a.getTime() < b.getTime() ? -1 : 1
+        )) {
+          tokens.push(
+            this._i18n.formatDate(date, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric'
+            })
+          );
+        }
+
+        return tokens.join(', ');
+      }
+
+      case 'dateRange': {
+        return selection
+          .slice(0, 2)
+          .map((date) =>
+            this._i18n.formatDate(date, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric'
+            })
+          )
+          .join(' - ');
+      }
+
+      case 'dateTime': {
+        const date = selection[0];
+
+        const formattedDay = this._i18n.formatDate(date, {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        });
+
+        const formattedTime = this._i18n.formatDate(date, {
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+
+        return `${formattedDay} ${formattedTime}`;
+      }
+
+      case 'time':
+        return this._i18n.formatDate(selection[0], {
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+
+      case 'month':
+        return this._i18n.formatDate(selection[0], {
+          month: '2-digit',
+          year: 'numeric'
+        });
+
+      case 'year':
+        return this._i18n.formatDate(selection[0], {
+          year: 'numeric'
+        });
+
+      default:
+        throw new Error('Illegal selection mode');
+    }
+  }
 }
 
 function getLocaleSettings(locale: string): Calendar.LocaleSettings {
   const i18n = new I18nFacade(() => locale);
 
+  let days = i18n.getDayNames('short');
+
+  if (days.some((day) => day.length > 5)) {
+    days = i18n.getDayNames('narrow');
+  }
+
   return {
-    daysShort: i18n.getDayNames('short'),
+    daysShort: days,
     months: i18n.getMonthNames('long'),
     monthsShort: i18n.getMonthNames('short'),
     firstDayOfWeek: i18n.getFirstDayOfWeek() as Calendar.Weekday,
@@ -164,7 +269,6 @@ function getComponentStyles() {
     .popup::part(arrow) {
       background-color: var(--sl-color-neutral-300);
     }
-
   `;
 }
 
@@ -242,6 +346,10 @@ function getDatepickerStyles() {
     .air-datepicker.-only-timepicker- {
       position: relative;
       top: -14px;
+    }
+
+    .air-datepicker-nav--title {
+      padding: 0 0.8rem;
     }
   `;
 }
