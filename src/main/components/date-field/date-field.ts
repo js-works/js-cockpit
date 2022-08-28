@@ -5,39 +5,39 @@ import {
   afterUpdate,
   Attrs,
   Component
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { html, classMap } from '../../utils/lit'
-import { I18nController } from '../../i18n/i18n'
+import { html, classMap } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
 
 import {
   getLocalization,
   initPopup,
   DatepickerInstance
-} from './date-picker-utils'
+} from './date-picker-utils';
 
 // @ts-ignore
-import { Datepicker } from 'vanillajs-datepicker'
+import { Datepicker } from 'vanillajs-datepicker';
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 
 // icons
-import calendarIcon from '../../icons/calendar3.svg'
+import calendarIcon from '../../icons/calendar3.svg';
 
 // styles
-import dateFieldStyles from './date-field.css'
+import dateFieldStyles from './date-field.css';
 //import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
 
 //import datePickerCustomStyles from './date-picker-custom.css'
-import controlStyles from '../../shared/css/control.css'
-import datePickerStyles from './date-picker.scss'
+import controlStyles from '../../shared/css/control.styles';
+import datePickerStyles from './date-picker.scss';
 
 // === exports ====================================================
 
-export { DateField }
+export { DateField };
 
 // === DateField ==================================================
 
@@ -54,28 +54,28 @@ export { DateField }
 })
 class DateField extends Component {
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   @prop()
-  value: Date | null = null
+  value: Date | null = null;
 
   @prop({ attr: Attrs.string })
-  error = ''
+  error = '';
 
   @prop({ attr: Attrs.boolean })
-  disabled = false
+  disabled = false;
 
   @prop({ attr: Attrs.boolean })
-  required = false
+  required = false;
 
-  private _i18n = new I18nController(this)
-  private _datepicker: DatepickerInstance | null = null
+  private _i18n = new I18nController(this);
+  private _datepicker: DatepickerInstance | null = null;
 
   constructor() {
-    super()
+    super();
 
     afterInit(this, () => {
-      const shadowRoot = this.shadowRoot!
+      const shadowRoot = this.shadowRoot!;
 
       setTimeout(() => {
         this._datepicker = createDatepicker({
@@ -83,22 +83,22 @@ class DateField extends Component {
           slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
           pickerContainer: shadowRoot.querySelector('.picker-container')!,
           namespace: this.localName
-        })
-      })
-    })
+        });
+      });
+    });
 
     afterUpdate(this, () => {
-      const locale = this._i18n.getLocale()
-      const localization = getLocalization(locale, this.localName)
+      const locale = this._i18n.getLocale();
+      const localization = getLocalization(locale, this.localName);
 
       if (this._datepicker) {
         this._datepicker.setOptions({
           language: `${this.localName}::${locale}`,
           weekStart: localization.weekStart,
           format: localization.format
-        })
+        });
       }
-    })
+    });
   }
 
   render() {
@@ -116,34 +116,34 @@ class DateField extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }
 
 // === locals ========================================================
 
 function createDatepicker(params: {
-  slInput: SlInput
-  pickerContainer: Element
-  getLocale: () => string
-  namespace: string
+  slInput: SlInput;
+  pickerContainer: Element;
+  getLocale: () => string;
+  namespace: string;
 }): DatepickerInstance {
-  let datepicker: any
-  const { slInput, pickerContainer: container, getLocale } = params
-  const input = (slInput as any).shadowRoot!.querySelector('input')!
-  const locale = getLocale()
-  const localization = getLocalization(getLocale(), params.namespace)
+  let datepicker: any;
+  const { slInput, pickerContainer: container, getLocale } = params;
+  const input = (slInput as any).shadowRoot!.querySelector('input')!;
+  const locale = getLocale();
+  const localization = getLocalization(getLocale(), params.namespace);
 
-  container.addEventListener('mousedown', (ev) => ev.preventDefault())
+  container.addEventListener('mousedown', (ev) => ev.preventDefault());
 
   input.addEventListener('hide', () => {
-    slInput.readonly = false
-    slInput.value = input!.value
-  })
+    slInput.readonly = false;
+    slInput.value = input!.value;
+  });
 
   input.addEventListener('show', () => {
-    slInput.readonly = true
-  })
+    slInput.readonly = true;
+  });
 
   datepicker = new Datepicker(input, {
     calendarWeeks: true,
@@ -160,9 +160,9 @@ function createDatepicker(params: {
     weekStart: localization.weekStart,
     format: localization.format,
     getCalendarWeek: localization.getCalendarWeek
-  })
+  });
 
-  initPopup(slInput, datepicker)
+  initPopup(slInput, datepicker);
 
-  return datepicker
+  return datepicker;
 }

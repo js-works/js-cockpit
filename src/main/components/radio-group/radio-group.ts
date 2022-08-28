@@ -5,21 +5,21 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // custom elements
-import SlRadio from '@shoelace-style/shoelace/dist/components/radio/radio'
-import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group'
+import SlRadio from '@shoelace-style/shoelace/dist/components/radio/radio';
+import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 
 // styles
-import radioGroupStyles from './radio-group.css'
-import controlStyles from '../../shared/css/control.css'
+import radioGroupStyles from './radio-group.css';
+import controlStyles from '../../shared/css/control.styles';
 
 // === exports =======================================================
 
-export { RadioGroup }
+export { RadioGroup };
 
 // === RadioGroup ===================================================
 
@@ -30,7 +30,7 @@ export { RadioGroup }
 })
 class RadioGroup extends Component {
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   render() {
     return html`
@@ -46,6 +46,6 @@ class RadioGroup extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

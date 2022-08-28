@@ -8,20 +8,20 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // custom elements
-import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea'
+import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea';
 
 // styles
-import controlStyles from '../../shared/css/control.css'
-import textAreaStyles from './text-area.css'
+import controlStyles from '../../shared/css/control.styles';
+import textAreaStyles from './text-area.css';
 
 // === exports =======================================================
 
-export { TextArea }
+export { TextArea };
 
 // === types =========================================================
 
@@ -34,22 +34,22 @@ export { TextArea }
 })
 class TextArea extends Component {
   @prop({ attr: Attrs.string })
-  value = ''
+  value = '';
 
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   @prop({ attr: Attrs.number })
-  rows = 4
+  rows = 4;
 
   @prop({ attr: Attrs.boolean })
-  disabled = false
+  disabled = false;
 
   @prop({ attr: Attrs.boolean })
-  required = false
+  required = false;
 
   @prop({ attr: Attrs.string })
-  error = ''
+  error = '';
 
   reset() {}
 
@@ -68,6 +68,6 @@ class TextArea extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

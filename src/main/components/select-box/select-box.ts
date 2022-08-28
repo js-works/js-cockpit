@@ -6,22 +6,22 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // custom elements
-import SlSelect from '@shoelace-style/shoelace/dist/components/select/select'
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item'
-import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
+import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 
 // styles
-import controlStyles from '../../shared/css/control.css'
-import selectBoxStyles from './select-box.css'
+import controlStyles from '../../shared/css/control.styles';
+import selectBoxStyles from './select-box.css';
 
 // === exports =======================================================
 
-export { SelectBox }
+export { SelectBox };
 
 // === types =========================================================
 
@@ -34,19 +34,19 @@ export { SelectBox }
 })
 class SelectBox extends Component {
   @prop({ attr: Attrs.string })
-  value = ''
+  value = '';
 
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   @prop({ attr: Attrs.boolean })
-  disabled = false
+  disabled = false;
 
   @prop({ attr: Attrs.boolean })
-  required = false
+  required = false;
 
   @prop({ attr: Attrs.string })
-  error = ''
+  error = '';
 
   reset() {}
 
@@ -68,6 +68,6 @@ class SelectBox extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

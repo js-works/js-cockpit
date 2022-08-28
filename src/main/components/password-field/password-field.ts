@@ -6,22 +6,22 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { I18nController } from '../../i18n/i18n'
-import { FormFieldController } from '../../controllers/form-field-controller'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
+import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import controlStyles from '../../shared/css/control.css'
-import passwordFieldStyles from './password-field.css'
+import controlStyles from '../../shared/css/control.styles';
+import passwordFieldStyles from './password-field.css';
 
 // === exports =======================================================
 
-export { PasswordField }
+export { PasswordField };
 
 // === types =========================================================
 
@@ -34,21 +34,21 @@ export { PasswordField }
 })
 class PasswordField extends Component {
   @prop({ attr: Attrs.string })
-  name = ''
+  name = '';
 
   @prop({ attr: Attrs.string })
-  value = ''
+  value = '';
 
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   @prop({ attr: Attrs.boolean })
-  disabled = false
+  disabled = false;
 
   @prop({ attr: Attrs.boolean })
-  required = false
+  required = false;
 
-  private _i18n = new I18nController(this)
+  private _i18n = new I18nController(this);
 
   private _formField: FormFieldController<string> = new FormFieldController(
     this,
@@ -63,36 +63,36 @@ class PasswordField extends Component {
               'fieldRequired'
             ),
             anchor: this._slInputRef.value!
-          }
+          };
         }
 
-        return null
+        return null;
       }
     }
-  )
+  );
 
   @bind
   private _onInput() {
-    this.value = this._slInputRef.value!.value
-    this._formField.signalInput()
+    this.value = this._slInputRef.value!.value;
+    this._formField.signalInput();
   }
 
   @bind
   private _onChange() {
-    this._formField.signalUpdate()
+    this._formField.signalUpdate();
   }
 
   @bind
   private _onFocus() {
-    this._formField.signalFocus()
+    this._formField.signalFocus();
   }
 
   @bind
   private _onBlur() {
-    this._formField.signalBlur()
+    this._formField.signalBlur();
   }
 
-  private _slInputRef = createRef<SlInput>()
+  private _slInputRef = createRef<SlInput>();
 
   reset() {}
 
@@ -123,6 +123,6 @@ class PasswordField extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

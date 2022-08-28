@@ -110,6 +110,8 @@ class Calendar {
       inline: true,
       container: pickerContainerElem,
       keyboardNav: true,
+      prevHtml: '&#x1F860;',
+      nextHtml: '&#x1F862;',
       locale: getAirLocaleData(this.#locale, this.#localeSettings),
       weekends: noWeekends,
 
@@ -322,6 +324,11 @@ class Calendar {
   #refresh = () => {
     const dp = this.#picker.$datepicker;
 
+    // TODO - why is dp undefined some times?
+    if (!dp) {
+      return;
+    }
+
     if (!this.#showWeekNumbers) {
       dp.classList.remove('-show-week-numbers-');
     } else {
@@ -425,6 +432,8 @@ function getStyles() {
       --adp-padding: 0;
       --adp-border-radius: 0;
       --adp-cell-border-radius: 0;
+
+      /* custom adp theme token!!! */
       --adp-background-color-highlight: #fafafa;
     }
 

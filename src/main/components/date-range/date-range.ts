@@ -5,38 +5,38 @@ import {
   afterUpdate,
   Attrs,
   Component
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { html, classMap } from '../../utils/lit'
-import { I18nController } from '../../i18n/i18n'
+import { html, classMap } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
 
 // @ts-ignore
-import { DateRangePicker } from 'vanillajs-datepicker'
+import { DateRangePicker } from 'vanillajs-datepicker';
 
 import {
   getLocalization,
   initPopup,
   DatepickerInstance,
   DateRangePickerInstance
-} from '../date-field/date-picker-utils'
+} from '../date-field/date-picker-utils';
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 
 // icons
-import calendarIcon from '../../icons/calendar-range.svg'
-import arrowRightIcon from '../../icons/arrow-right.svg'
+import calendarIcon from '../../icons/calendar-range.svg';
+import arrowRightIcon from '../../icons/arrow-right.svg';
 
 // styles
-import dateRangeStyles from './date-range.css'
-import datePickerStyles from '../date-field/date-picker.scss'
-import controlStyles from '../../shared/css/control.css'
+import dateRangeStyles from './date-range.css';
+import datePickerStyles from '../date-field/date-picker.scss';
+import controlStyles from '../../shared/css/control.styles';
 
 // === exports =======================================================
 
-export { DateRange }
+export { DateRange };
 
 // === Cockpit ===================================================
 
@@ -47,26 +47,26 @@ export { DateRange }
 })
 class DateRange extends Component {
   @prop({ attr: Attrs.string })
-  label = ''
+  label = '';
 
   @prop({ attr: Attrs.string })
-  error = ''
+  error = '';
 
   @prop({ attr: Attrs.boolean })
-  disabled = false
+  disabled = false;
 
   @prop({ attr: Attrs.boolean })
-  required = false
+  required = false;
 
-  private _i18n = new I18nController(this)
-  private _datepicker: DateRangePickerInstance | null = null
+  private _i18n = new I18nController(this);
+  private _datepicker: DateRangePickerInstance | null = null;
 
   constructor() {
-    super()
+    super();
 
     afterInit(this, () => {
-      const getLocale = () => this._i18n.getLocale()
-      const shadowRoot = this.shadowRoot!
+      const getLocale = () => this._i18n.getLocale();
+      const shadowRoot = this.shadowRoot!;
 
       setTimeout(() => {
         this._datepicker = createDateRangePicker({
@@ -76,9 +76,9 @@ class DateRange extends Component {
           slInput2: shadowRoot.querySelector('.input2')! as any as SlInput,
           pickerContainer: shadowRoot.querySelector('.picker-container')!,
           namespace: this.localName
-        })
-      }, 0)
-    })
+        });
+      }, 0);
+    });
   }
 
   render() {
@@ -105,17 +105,17 @@ class DateRange extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }
 
 function createDateRangePicker(params: {
-  range: HTMLElement
-  slInput1: SlInput
-  slInput2: SlInput
-  pickerContainer: HTMLElement
-  getLocale: () => string
-  namespace: string
+  range: HTMLElement;
+  slInput1: SlInput;
+  slInput2: SlInput;
+  pickerContainer: HTMLElement;
+  getLocale: () => string;
+  namespace: string;
 }): DatepickerInstance {
   const {
     range,
@@ -123,25 +123,25 @@ function createDateRangePicker(params: {
     slInput2,
     pickerContainer: container,
     getLocale
-  } = params
+  } = params;
 
-  const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!
-  const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!
-  let dateRangePicker: any
+  const input1 = (slInput1 as any).shadowRoot!.querySelector('input')!;
+  const input2 = (slInput2 as any).shadowRoot!.querySelector('input')!;
+  let dateRangePicker: any;
 
-  container.addEventListener('mousedown', (ev) => ev.preventDefault())
+  container.addEventListener('mousedown', (ev) => ev.preventDefault());
 
   setTimeout(() => {
-    const locale = getLocale()
-    const localization = getLocalization(getLocale(), params.namespace)
+    const locale = getLocale();
+    const localization = getLocalization(getLocale(), params.namespace);
 
     input1.addEventListener('hide', () => {
-      slInput1.value = input1!.value
-    })
+      slInput1.value = input1!.value;
+    });
 
     input2.addEventListener('hide', () => {
-      slInput2.value = input2.value
-    })
+      slInput2.value = input2.value;
+    });
 
     dateRangePicker = new DateRangePicker(range, {
       inputs: [input1, input2],
@@ -158,9 +158,9 @@ function createDateRangePicker(params: {
       language: `${params.namespace}::${locale}`,
       weekStart: localization.weekStart,
       format: localization.format
-    })
+    });
 
-    initPopup(slInput1, dateRangePicker.datepickers[0])
-    initPopup(slInput2, dateRangePicker.datepickers[1])
-  }, 0)
+    initPopup(slInput1, dateRangePicker.datepickers[0]);
+    initPopup(slInput2, dateRangePicker.datepickers[1]);
+  }, 0);
 }

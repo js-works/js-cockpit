@@ -18,6 +18,10 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
 
+// styles
+import dateFieldStyles from './date-field.styles';
+import datePickerStyles from './date-picker.styles';
+
 // icons
 import dateIcon from '../../icons/calendar3.svg';
 import datesIcon from '../../icons/calendar3.svg';
@@ -32,7 +36,7 @@ import yearIcon from '../../icons/calendar.svg';
 @elem({
   tag: 'c-date-field2',
   uses: [SlIcon, SlIconButton, SlInput, SlPopup],
-  styles: getComponentStyles()
+  styles: dateFieldStyles
 })
 export class DateField2 extends Component {
   private _calendar: Calendar;
@@ -40,13 +44,25 @@ export class DateField2 extends Component {
   private _inputRef = createRef<SlInput>();
 
   @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'dates';
+  name = '';
+
+  @prop(Attrs.string, true)
+  label = '';
+
+  @prop(Attrs.string, true)
+  required = true;
+
+  @prop(Attrs.boolean, true)
+  disabled = false;
+
+  @prop(Attrs.string, true)
+  selectionMode: Calendar.SelectionMode = 'dateTime';
 
   @prop
   selection: Date[] = [];
 
   @prop(Attrs.boolean, true)
-  highlightWeekends = false;
+  highlightWeekends = true;
 
   @prop(Attrs.boolean, true)
   showWeekNumbers = false;
@@ -60,8 +76,7 @@ export class DateField2 extends Component {
     this._calendar = new Calendar({
       getLocaleSettings,
       className: 'picker',
-      styles: getDatepickerStyles(),
-
+      styles: datePickerStyles.cssText,
       onBlur: () => void (this._pickerVisible = false)
     });
 
@@ -125,42 +140,36 @@ export class DateField2 extends Component {
     }[this.selectionMode];
 
     return html`
-      <div class="base">
-        <div class="field-wrapper">
-          <div class="control">
-            <div class="error"></div>
-            <div class="picker-container"></div>
-          </div>
-        </div>
-      </div>
-
-      <sl-popup
-        class="popup"
-        placement="bottom-start"
-        ?active=${true || this._pickerVisible}
-        distance=${8}
-        skidding=${6}
-        ?flip=${true}
-        ?arrow=${true}
-      >
-        <sl-input
-          slot="anchor"
-          style="width: 350px;"
-          @keydown=${this._onKeyDown}
-          ${ref(this._inputRef)}
+      <div class="base" style="border: 1px green red">
+        <sl-popup
+          class="popup"
+          placement="bottom-start"
+          ?active=${this._pickerVisible}
+          distance=${8}
+          skidding=${6}
+          ?flip=${true}
+          ?arrow=${true}
         >
-          <sl-icon-button
-            slot="suffix"
-            class="calendar-icon"
-            src=${icon}
-            @click=${this._onTriggerClick}
+          <sl-input
+            slot="anchor"
+            class="control"
+            ?required=${this.required}
+            ?disabled=${this.disabled}
+            @keydown=${this._onKeyDown}
+            ${ref(this._inputRef)}
           >
-          </sl-icon-button>
-          <div slot="label" class="label">Date of birth</div>
-        </sl-input>
-        ${this._calendar.getElement()}
-      </sl-popup>
-      <div class="base"></div>
+            <sl-icon-button
+              slot="suffix"
+              class="calendar-icon"
+              src=${icon}
+              @click=${this._onTriggerClick}
+            >
+            </sl-icon-button>
+            <span slot="label" class="label">${this.label}</span>
+          </sl-input>
+          ${this._calendar.getElement()}
+        </sl-popup>
+      </div>
     `;
   }
 
@@ -283,112 +292,4 @@ function getLocaleSettings(locale: string): Calendar.LocaleSettings {
     weekendDays: i18n.getWeekendDays() as Calendar.Weekday[],
     getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date)
   };
-}
-
-function getComponentStyles() {
-  return `
-    .popup::part(arrow) {
-      background-color: var(--sl-color-neutral-300);
-    }
-  `;
-}
-
-function getDatepickerStyles() {
-  return `
-    .air-datepicker {
-      --adp-font-family: var(--sl-font-sans);
-      --adp-font-size: 14px;
-      --adp-width: 246px;
-      --adp-z-index: 100;
-      --adp-padding: 0;
-      --adp-grid-areas: 'nav' 'body' 'timepicker' 'buttons';
-      --adp-transition-duration: .3s;
-      --adp-transition-ease: ease-out;
-      --adp-transition-offset: 8px;
-      --adp-background-color: #fff;
-      --adp-background-color-hover: var(--sl-color-neutral-200);
-      --adp-background-color-active: #eaeaea;
-      --adp-background-color-in-range: rgba(92, 196, 239, .1);
-      --adp-background-color-in-range-focused: rgba(92, 196, 239, .2);
-      --adp-background-color-selected-other-month-focused: #8ad5f4;
-      --adp-background-color-selected-other-month: #a2ddf6;
-      --adp-color: #4a4a4a;
-      --adp-color-secondary: #9c9c9c;
-      --adp-accent-color: var(--sl-color-neutral-500);
-      --adp-color-current-date: var(--adp-accent-color);
-      --adp-color-other-month: #dedede;
-      --adp-color-disabled: #aeaeae;
-      --adp-color-disabled-in-range: #939393;
-      --adp-color-other-month-hover: #c5c5c5;
-      --adp-border-color: var(--sl-color-neutral-400);
-      --adp-border-color-inner: var(--sl-color-neutral-200);
-      --adp-border-radius: 0;
-      --adp-border-color-inline: var(--sl-color-neutral-300);
-      --adp-nav-height: 32px;
-      --adp-nav-arrow-color: var(--adp-color-secondary);
-      --adp-nav-action-size: 32px;
-      --adp-nav-color-secondary: var(--adp-color-secondary);
-      --adp-day-name-color: var(--sl-color-neutral-500);
-      --adp-day-name-color-hover: #8ad5f4;
-      --adp-day-cell-width: 1fr;
-      --adp-day-cell-height: 32px;
-      --adp-month-cell-height: 42px;
-      --adp-year-cell-height: 56px;
-      --adp-pointer-size: 10px;
-      --adp-poiner-border-radius: 2px;
-      --adp-pointer-offset: 14px;
-      --adp-cell-border-radius: 0px;
-      --adp-cell-background-color-selected: #5cc4ef;
-      --adp-cell-background-color-selected-hover: #45bced;
-      --adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);
-      --adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);
-      --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
-      --adp-btn-height: calc(var(--sl-font-size-medium) + 12px);
-      --adp-btn-color: var(--adp-accent-color);
-      --adp-btn-color-hover: var(--adp-color);
-    }
-
-    .air-datepicker-nav {
-      background-color: var(--sl-color-neutral-50);
-      border: 0 solid var(--sl-color-neutral-200);
-      border-bottom-width: 1px;
-      padding: 0;
-    }
-    
-    .air-datepicker-cell.-current- {
-      color: var(--adp-color);
-      font-weight: 600;
-    }
-
-    .air-datepicker {
-      box-shadow: var(--sl-shadow-medium) !important;
-    }
-
-    .air-datepicker.-only-timepicker- {
-      position: relative;
-      top: -14px;
-    }
-
-    .air-datepicker-nav--title {
-      padding: 0 0.8rem;
-    }
-
-    .air-datepicker-button {
-      padding: 0rem 1rem;
-      border: 0 solid var(--adp-border-color-inner);
-      border-left-width: 1px;
-    }
-    
-    .air-datepicker-button:hover {
-      background-color: var(--sl-color-neutral-100);
-    }
-    
-    .air-datepicker-button:active {
-      background-color: var(--sl-color-neutral-200);
-    }
-
-    .air-datepicker-button:first-child {
-      border: none;
-    }
-  `;
 }
