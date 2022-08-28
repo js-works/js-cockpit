@@ -212,7 +212,13 @@ class Calendar {
   }
 
   focus() {
-    setTimeout(() => void this.#input.focus(), 0);
+    setTimeout(() => {
+      if (this.#selectionMode !== 'time') {
+        this.#input.focus();
+      } else if (!this.#minuteSlider!.matches(':focus')) {
+        this.#hourSlider!.focus();
+      }
+    }, 0);
   }
 
   #handleBlur = () => {
@@ -277,7 +283,9 @@ class Calendar {
       }
 
       if (header.firstElementChild!.localName !== 'span') {
-        header.prepend(document.createElement('span'));
+        const newCell = document.createElement('span');
+        newCell.className = 'air-datepicker-body--week-numbers';
+        header.prepend(newCell);
       }
 
       requestAnimationFrame(() => {
@@ -398,13 +406,16 @@ function getStyles() {
       grid-template-columns: repeat(8, var(--adp-day-cell-width));
     }
 
+    .air-datepicker-body--week-numbers,
     .air-datepicker-cell.-week-number- {
       padding-top: 0.1em;
       font-size: 80%;
       opacity: 70%;
       font-style: italic;
-      background-color: #f4f4f4;
+      border: 0 solid var(--adp-border-color-inner);
+      border-right-width: 1px;
+      border-style: solid;
+      cursor: default;
     }
-
   `;
 }

@@ -65,7 +65,7 @@ export class DateField2 extends Component {
       this._calendar.setLocale(this._i18n.getLocale());
       this._calendar.setSelectionMode(this.selectionMode);
       this._calendar.setHighlightWeekends(this.highlightWeekends);
-      this._calendar.setShowWeekNumbers(true || this.showWeekNumbers);
+      this._calendar.setShowWeekNumbers(this.showWeekNumbers);
     };
 
     afterInit(this, updateCalendar);
@@ -103,7 +103,7 @@ export class DateField2 extends Component {
       <sl-popup
         class="popup"
         placement=${'bottom-start'}
-        ?active=${true || this._pickerVisible}
+        ?active=${this._pickerVisible}
         distance=${8}
         skidding=${0}
         ?flip=${true}
@@ -151,9 +151,6 @@ function getComponentStyles() {
       background-color: var(--sl-color-neutral-300);
     }
 
-    .picker {
-      box-shadow: var(--sl-shadow-medium);
-    }
   `;
 }
 
@@ -184,8 +181,8 @@ function getDatepickerStyles() {
       --adp-color-disabled: #aeaeae;
       --adp-color-disabled-in-range: #939393;
       --adp-color-other-month-hover: #c5c5c5;
-      --adp-border-color: #dbdbdb;
-      --adp-border-color-inner: #efefef;
+      --adp-border-color: var(--sl-color-neutral-400);
+      --adp-border-color-inner: var(--sl-color-neutral-200);
       --adp-border-radius: 0;
       --adp-border-color-inline: var(--sl-color-neutral-300);
       --adp-nav-height: 32px;
@@ -201,7 +198,7 @@ function getDatepickerStyles() {
       --adp-pointer-size: 10px;
       --adp-poiner-border-radius: 2px;
       --adp-pointer-offset: 14px;
-      /* --adp-cell-border-radius: 4px; */
+      --adp-cell-border-radius: 0px;
       --adp-cell-background-color-selected: #5cc4ef;
       --adp-cell-background-color-selected-hover: #45bced;
       --adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);
@@ -210,6 +207,27 @@ function getDatepickerStyles() {
       --adp-btn-height: 32px;
       --adp-btn-color: var(--adp-accent-color);
       --adp-btn-color-hover: var(--adp-color);
-    };
+    }
+
+    .air-datepicker-nav {
+      background-color: var(--sl-color-neutral-50);
+      border: 0 solid var(--sl-color-neutral-200);
+      border-bottom-width: 1px;
+      padding: 0;
+    }
+    
+    .air-datepicker-cell.-current- {
+      color: var(--adp-color);
+      font-weight: 600;
+    }
+
+    .air-datepicker {
+      box-shadow: var(--sl-shadow-medium) !important;
+    }
+
+    .air-datepicker.-only-timepicker- {
+      position: relative;
+      top: -14px;
+    }
   `;
 }
