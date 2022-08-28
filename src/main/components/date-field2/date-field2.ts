@@ -9,7 +9,7 @@ import {
 } from '../../utils/components';
 
 import { html, classMap } from '../../utils/lit';
-import { I18nController } from '../../i18n/i18n';
+import { I18nController, I18nFacade } from '../../i18n/i18n';
 import { Calendar } from './calendar';
 
 // custom elements
@@ -55,6 +55,7 @@ export class DateField2 extends Component {
     super();
 
     this._calendar = new Calendar({
+      getLocaleSettings,
       className: 'picker',
       styles: getDatepickerStyles(),
       onSelection: (dates) => console.log('selection', dates),
@@ -142,6 +143,19 @@ export class DateField2 extends Component {
     if (!this._pickerVisible) {
       this._pickerVisible = true;
     }
+  };
+}
+
+function getLocaleSettings(locale: string): Calendar.LocaleSettings {
+  const i18n = new I18nFacade(() => locale);
+
+  return {
+    daysShort: i18n.getDayNames('short'),
+    months: i18n.getMonthNames('long'),
+    monthsShort: i18n.getMonthNames('short'),
+    firstDayOfWeek: i18n.getFirstDayOfWeek() as Calendar.Weekday,
+    weekendDays: i18n.getWeekendDays() as Calendar.Weekday[],
+    getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date)
   };
 }
 

@@ -1,5 +1,3 @@
-import { I18nFacade } from '../../i18n/i18n';
-
 import AirDatepicker, {
   AirDatepickerLocale,
   AirDatepickerOptions
@@ -21,6 +19,17 @@ namespace Calendar {
     | 'dateRange'
     | 'month'
     | 'year';
+
+  export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+  export type LocaleSettings = {
+    daysShort: string[];
+    months: string[];
+    monthsShort: string[];
+    firstDayOfWeek: Weekday;
+    weekendDays: Weekday[];
+    getCalendarWeek: (date: Date) => number;
+  };
 }
 
 // === local types ===================================================
@@ -43,19 +52,21 @@ class Calendar {
 
   #options: Partial<AirDatepickerOptions> = {};
   #locale = defaultLocale;
+  #getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
+  #localeSettings: Calendar.LocaleSettings;
   #selectionMode: Calendar.SelectionMode = 'date';
   #highlightWeekends = false;
   #showWeekNumbers = false;
   #onBlur: (() => void) | null = null;
 
-  #i18n = new I18nFacade(() => this.#locale);
-
   constructor({
+    getLocaleSettings,
     className,
     styles: customStyles,
     onSelection,
     onBlur
   }: {
+    getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
     className?: string;
     styles?: string;
     onSelection?: (selection: Date[]) => void;
@@ -65,6 +76,9 @@ class Calendar {
     const customStyleElem = document.createElement('style');
     const inputElem = document.createElement('input');
     const pickerContainerElem = document.createElement('div');
+
+    this.#getLocaleSettings = getLocaleSettings;
+    this.#localeSettings = getLocaleSettings(defaultLocale);
 
     this.#input = inputElem;
     this.#elem.attachShadow({ mode: 'open' });
@@ -91,7 +105,7 @@ class Calendar {
       inline: true,
       container: pickerContainerElem,
       keyboardNav: true,
-      locale: getAirLocaleData(defaultLocale),
+      locale: getAirLocaleData(this.#locale, this.#localeSettings),
       weekends: noWeekends,
 
       onChangeViewDate: (params) => {
@@ -117,11 +131,13 @@ class Calendar {
       return;
     }
 
+    this.#locale = locale;
+    this.#localeSettings = this.#getLocaleSettings(locale);
+
     const options = {
-      locale: getAirLocaleData(locale)
+      locale: getAirLocaleData(locale, this.#localeSettings)
     };
 
-    this.#locale = locale;
     this.#update(options);
   }
 
@@ -207,7 +223,7 @@ class Calendar {
     this.#highlightWeekends = value;
 
     this.#update({
-      weekends: (value ? this.#i18n.getWeekendDays() : noWeekends) as any
+      weekends: (value ? this.#localeSettings.weekendDays : noWeekends) as any
     });
   }
 
@@ -305,7 +321,9 @@ class Calendar {
             const year = parseInt(weekStartCell.getAttribute('data-year')!);
             const date = new Date(year, month, day);
 
-            newCell.innerText = String(this.#i18n.getCalendarWeek(date));
+            newCell.innerText = String(
+              this.#localeSettings.getCalendarWeek(date)
+            );
             newCell.className = 'air-datepicker-cell -week-number-';
             cellsContainer.insertBefore(newCell, weekStartCell);
           }
@@ -317,26 +335,27 @@ class Calendar {
 
 // === helpers =======================================================
 
-function getAirLocaleData(locale: string): AirDatepickerLocale {
+function getAirLocaleData(
+  locale: string,
+  localeSettings: Calendar.LocaleSettings
+): AirDatepickerLocale {
   let airLocaleData = airLocaleDataCache.get(locale);
 
   if (airLocaleData) {
     return airLocaleData;
   }
 
-  const i18n = new I18nFacade(() => locale);
-
   airLocaleData = {
-    days: i18n.getDayNames('long'),
-    daysShort: i18n.getDayNames('short'),
-    daysMin: i18n.getDayNames('short'),
-    months: i18n.getMonthNames('long'),
-    monthsShort: i18n.getMonthNames('short'),
+    days: localeSettings.daysShort,
+    daysShort: localeSettings.daysShort,
+    daysMin: localeSettings.daysShort,
+    months: localeSettings.months,
+    monthsShort: localeSettings.monthsShort,
     today: '', // not needed
     clear: '', // not needed
     dateFormat: 'yyyy-MM-dd',
     timeFormat: 'HH:mm',
-    firstDay: i18n.getFirstDayOfWeek() as 0 | 1 | 2 | 3 | 4 | 5 | 6
+    firstDay: localeSettings.firstDayOfWeek
   };
 
   airLocaleDataCache.set(locale, airLocaleData);
