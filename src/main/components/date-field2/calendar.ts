@@ -69,10 +69,10 @@ class Calendar {
     onBlur
   }: {
     getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
-    onSelection: (selection: Date[], mode: Calendar.SelectionMode) => void;
-    onBlur?: () => void;
     className?: string;
     styles?: string;
+    onSelection?: (selection: Date[], mode: Calendar.SelectionMode) => void;
+    onBlur?: () => void;
   }) {
     const datepickerStyleElem = document.createElement('style');
     const customStyleElem = document.createElement('style');
@@ -168,58 +168,41 @@ class Calendar {
       return;
     }
 
-    const options: Partial<AirDatepickerOptions> = {};
+    const options: Partial<AirDatepickerOptions> = {
+      multipleDates: false,
+      timepicker: false,
+      onlyTimepicker: false,
+      view: 'days',
+      minView: 'days'
+    };
 
     switch (selectionMode) {
       case 'date':
-        options.multipleDates = false;
-        options.view = 'days';
-        options.timepicker = false;
-        options.onlyTimepicker = false;
-        options.minView = 'days';
         break;
 
       case 'dates':
         options.multipleDates = true;
-        options.view = 'days';
-        options.timepicker = false;
-        options.onlyTimepicker = false;
-        options.minView = 'days';
         break;
 
       case 'time':
-        options.multipleDates = false;
         options.timepicker = true;
         options.onlyTimepicker = true;
         break;
 
       case 'dateTime':
-        options.multipleDates = false;
-        options.view = 'days';
         options.timepicker = true;
-        options.onlyTimepicker = false;
-        options.minView = 'days';
         break;
 
       case 'dateRange':
-        options.multipleDates = false;
         options.range = true;
-        options.view = 'days';
-        options.timepicker = false;
-        options.onlyTimepicker = false;
-        options.minView = 'days';
         break;
 
       case 'month':
-        options.timepicker = false;
-        options.onlyTimepicker = false;
         options.minView = 'months';
         options.view = 'months';
         break;
 
       case 'year':
-        options.timepicker = false;
-        options.onlyTimepicker = false;
         options.view = 'years';
         options.minView = 'years';
         break;
@@ -235,7 +218,6 @@ class Calendar {
     }
 
     this.#showWeekNumbers = true;
-
     this.#refresh();
   }
 
@@ -249,6 +231,30 @@ class Calendar {
     this.#update({
       weekends: (value ? this.#localeSettings.weekendDays : noWeekends) as any
     });
+  }
+
+  setButtons(
+    buttons: {
+      text: string;
+      onClick: (calendar: Calendar, selection: Date[]) => void;
+    }[]
+  ) {
+    this.#update({
+      buttons: buttons.map((it) => ({
+        content: it.text,
+        onClick: () => {
+          it.onClick(this, this.#picker.selectedDates);
+        }
+      }))
+    });
+  }
+
+  getSelection(): Date[] {
+    return [...this.#picker.selectedDates];
+  }
+
+  clear() {
+    this.#picker.clear();
   }
 
   focus() {
@@ -298,8 +304,13 @@ class Calendar {
       this.#minuteSlider?.addEventListener('blur', this.#handleBlur);
     }
 
-    this.#picker.$datepicker.addEventListener('mousedown', (ev: Event) => {
-      if (ev.target instanceof HTMLInputElement) {
+    this.#picker.$datepicker.addEventListener('mousedown', (ev: MouseEvent) => {
+      if (
+        ev.target instanceof HTMLInputElement ||
+        ev.target instanceof HTMLButtonElement ||
+        (ev.target instanceof HTMLSpanElement &&
+          ev.target.parentElement instanceof HTMLButtonElement)
+      ) {
         return;
       }
 
@@ -455,7 +466,6 @@ function getStyles() {
       background-color: var(--adp-background-color-highlight);
     }
 
-
     .-show-week-numbers- .air-datepicker-body--day-names {
       grid-template-columns: repeat(8, var(--adp-day-cell-width));
     }
@@ -474,6 +484,11 @@ function getStyles() {
       border-right-width: 1px;
       border-style: solid;
       cursor: default;
+    }
+    
+    .air-datepicker.-only-timepicker- .air-datepicker--time {
+      padding: 1rem 0rem;
+      border: none;
     }
   `;
 }

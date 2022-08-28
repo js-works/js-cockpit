@@ -26,7 +26,6 @@ import dateTimeIcon from '../../icons/calendar3.svg';
 import dateRangeIcon from '../../icons/calendar-range.svg';
 import monthIcon from '../../icons/calendar.svg';
 import yearIcon from '../../icons/calendar.svg';
-import arrowRightIcon from '../../icons/arrow-right.svg';
 
 // === types =========================================================
 
@@ -41,7 +40,10 @@ export class DateField2 extends Component {
   private _inputRef = createRef<SlInput>();
 
   @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'date';
+  selectionMode: Calendar.SelectionMode = 'dates';
+
+  @prop
+  selection: Date[] = [];
 
   @prop(Attrs.boolean, true)
   highlightWeekends = false;
@@ -60,25 +62,44 @@ export class DateField2 extends Component {
       className: 'picker',
       styles: getDatepickerStyles(),
 
-      onSelection: (selection, selectionMode) => {
-        this._inputRef.value!.value = this._formatSelection(
-          selection,
-          selectionMode
-        );
-
-        if (selectionMode === 'date') {
-          this._pickerVisible = false;
-        }
-      },
-
       onBlur: () => void (this._pickerVisible = false)
     });
+
+    this._calendar.setButtons([
+      {
+        text: 'Clear',
+        onClick: () => this._calendar.clear()
+      },
+      {
+        text: 'Cancel',
+        onClick: () => {
+          this._calendar.setSelection(this.selection);
+        }
+      },
+      {
+        text: 'OK',
+        onClick: () => {
+          const newSelection = this._calendar.getSelection();
+          this.selection = newSelection;
+
+          this._inputRef.value!.value = this._formatSelection(
+            newSelection,
+            this.selectionMode
+          );
+
+          if (this.selectionMode === 'date') {
+            this._pickerVisible = false;
+          }
+        }
+      }
+    ]);
 
     const updateCalendar = () => {
       this._calendar.setLocale(this._i18n.getLocale());
       this._calendar.setSelectionMode(this.selectionMode);
       this._calendar.setHighlightWeekends(this.highlightWeekends);
       this._calendar.setShowWeekNumbers(this.showWeekNumbers);
+      this._calendar.setSelection(this.selection);
     };
 
     afterInit(this, updateCalendar);
@@ -116,9 +137,9 @@ export class DateField2 extends Component {
       <sl-popup
         class="popup"
         placement="bottom-start"
-        ?active=${this._pickerVisible}
+        ?active=${true || this._pickerVisible}
         distance=${8}
-        skidding=${8}
+        skidding=${6}
         ?flip=${true}
         ?arrow=${true}
       >
@@ -285,7 +306,7 @@ function getDatepickerStyles() {
       --adp-transition-ease: ease-out;
       --adp-transition-offset: 8px;
       --adp-background-color: #fff;
-      --adp-background-color-hover: #f0f0f0;
+      --adp-background-color-hover: var(--sl-color-neutral-200);
       --adp-background-color-active: #eaeaea;
       --adp-background-color-in-range: rgba(92, 196, 239, .1);
       --adp-background-color-in-range-focused: rgba(92, 196, 239, .2);
@@ -293,7 +314,7 @@ function getDatepickerStyles() {
       --adp-background-color-selected-other-month: #a2ddf6;
       --adp-color: #4a4a4a;
       --adp-color-secondary: #9c9c9c;
-      --adp-accent-color: var(--sl-color-primary-500);
+      --adp-accent-color: var(--sl-color-neutral-500);
       --adp-color-current-date: var(--adp-accent-color);
       --adp-color-other-month: #dedede;
       --adp-color-disabled: #aeaeae;
@@ -322,7 +343,7 @@ function getDatepickerStyles() {
       --adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);
       --adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);
       --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
-      --adp-btn-height: 32px;
+      --adp-btn-height: calc(var(--sl-font-size-medium) + 12px);
       --adp-btn-color: var(--adp-accent-color);
       --adp-btn-color-hover: var(--adp-color);
     }
@@ -350,6 +371,24 @@ function getDatepickerStyles() {
 
     .air-datepicker-nav--title {
       padding: 0 0.8rem;
+    }
+
+    .air-datepicker-button {
+      padding: 0rem 1rem;
+      border: 0 solid var(--adp-border-color-inner);
+      border-left-width: 1px;
+    }
+    
+    .air-datepicker-button:hover {
+      background-color: var(--sl-color-neutral-100);
+    }
+    
+    .air-datepicker-button:active {
+      background-color: var(--sl-color-neutral-200);
+    }
+
+    .air-datepicker-button:first-child {
+      border: none;
     }
   `;
 }
