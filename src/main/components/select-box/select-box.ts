@@ -16,8 +16,7 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 
 // styles
-import controlStyles from '../../shared/css/control.styles';
-import selectBoxStyles from './select-box.css';
+import selectBoxStyles from './select-box.styles';
 
 // === exports =======================================================
 
@@ -29,7 +28,7 @@ export { SelectBox };
 
 @elem({
   tag: 'c-select-box',
-  styles: [controlStyles, selectBoxStyles],
+  styles: selectBoxStyles,
   uses: [SlDivider, SlMenuItem, SlSelect]
 })
 class SelectBox extends Component {
@@ -53,20 +52,16 @@ class SelectBox extends Component {
   render() {
     return html`
       <div class="base ${classMap({ required: this.required })}">
-        <div class="field-wrapper">
-          <div class="control">
-            <sl-select size="small">
-              <div slot="label" class="label">${this.label}</div>
-              <sl-menu-item value="option-1">Option 1</sl-menu-item>
-              <sl-menu-item value="option-2">Option 2</sl-menu-item>
-              <sl-menu-item value="option-3">Option 3</sl-menu-item>
-              <sl-divider></sl-divider>
-              <sl-menu-item value="option-4">Option 4</sl-menu-item>
-              <sl-menu-item value="option-5">Option 5</sl-menu-item>
-              <sl-menu-item value="option-6">Option 6</sl-menu-item>
-            </sl-select>
-          </div>
-        </div>
+        <sl-select size="small" class="control">
+          <div slot="label" class="label">${this.label}</div>
+          <sl-menu-item value="option-1">Option 1</sl-menu-item>
+          <sl-menu-item value="option-2">Option 2</sl-menu-item>
+          <sl-menu-item value="option-3">Option 3</sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-item value="option-4">Option 4</sl-menu-item>
+          <sl-menu-item value="option-5">Option 5</sl-menu-item>
+          <sl-menu-item value="option-6">Option 6</sl-menu-item>
+        </sl-select>
       </div>
     `;
   }

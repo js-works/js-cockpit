@@ -63,7 +63,7 @@ export default css`
     color: white !important;
     border-bottom-width: 1px;
     margin: -1px;
-    padding: 0;
+    padding: 4px;
   }
 
   .air-datepicker-cell.-current- {
@@ -92,8 +92,14 @@ export default css`
     background-color: var(--sl-color-primary-700);
   }
 
+  .air-datepicker-nav--title:active,
+  .air-datepicker-nav--action:active {
+    border: 2px solid red !important;
+    background-color: var(--sl-color-primary-800);
+  }
+
   .air-datepicker-button {
-    padding: 0.75rem 0;
+    padding: 1.25rem 0;
     border: 0 solid var(--adp-border-color-inner);
     border-left-width: 1px;
   }

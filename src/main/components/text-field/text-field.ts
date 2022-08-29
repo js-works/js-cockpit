@@ -16,8 +16,7 @@ import { FormFieldController } from '../../controllers/form-field-controller';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import controlStyles from '../../shared/css/control.styles';
-import textFieldStyles from './text-field.css';
+import textFieldStyles from './text-field.styles';
 
 // === exports =======================================================
 
@@ -29,7 +28,7 @@ export { TextField };
 
 @elem({
   tag: 'c-text-field',
-  styles: [controlStyles, textFieldStyles],
+  styles: textFieldStyles,
   uses: [SlInput]
 })
 class TextField extends Component {
@@ -117,21 +116,18 @@ class TextField extends Component {
           'has-error': this._formField.hasError()
         })}"
       >
-        <div class="field-wrapper">
-          <div class="control">
-            <sl-input
-              class="input"
-              ${ref(this._slInputRef)}
-              @sl-input=${this._onInput}
-              @sl-change=${this._onChange}
-              @focus=${this._onFocus}
-              @blur=${this._onBlur}
-            >
-              <div slot="label" class="label">${this.label}</div>
-            </sl-input>
-            <div class="error">${this._formField.getErrorMsg()}</div>
-          </div>
-        </div>
+        <sl-input
+          class="input control"
+          ?required=${this.required}
+          ${ref(this._slInputRef)}
+          @sl-input=${this._onInput}
+          @sl-change=${this._onChange}
+          @focus=${this._onFocus}
+          @blur=${this._onBlur}
+        >
+          <span slot="label" class="control-label">${this.label}</span>
+        </sl-input>
+        <div class="error">${this._formField.getErrorMsg()}</div>
       </div>
     `;
   }

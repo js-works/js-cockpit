@@ -1,5 +1,5 @@
-import { bind, elem, Component } from '../../main/utils/components'
-import { html } from '../../main/utils/lit'
+import { bind, elem, Component } from '../../main/utils/components';
+import { html } from '../../main/utils/lit';
 
 import {
   Brand,
@@ -17,12 +17,13 @@ import {
   TextField,
   ThemeProvider,
   UserMenu
-} from 'js-cockpit'
+} from 'js-cockpit';
 
 @elem({
   tag: 'shared-data-form',
   uses: [
     DataForm,
+    DateField,
     Fieldset,
     RadioGroup,
     FormSection,
@@ -66,7 +67,6 @@ export class SharedDataForm extends Component {
                 label="Day of birth"
                 value="2017-01-01"
                 required
-                lang="en-US"
               ></c-date-field>
               <!--
               <c-date-range label="Date range" required></c-date-range>
@@ -89,6 +89,6 @@ export class SharedDataForm extends Component {
           </c-form-section>
         </c-data-form>
       </div>
-    `
+    `;
   }
 }

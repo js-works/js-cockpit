@@ -16,8 +16,7 @@ import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea';
 
 // styles
-import controlStyles from '../../shared/css/control.styles';
-import textAreaStyles from './text-area.css';
+import textAreaStyles from './text-area.styles';
 
 // === exports =======================================================
 
@@ -29,7 +28,7 @@ export { TextArea };
 
 @elem({
   tag: 'c-text-area',
-  styles: [controlStyles, textAreaStyles],
+  styles: textAreaStyles,
   uses: [SlTextarea]
 })
 class TextArea extends Component {
@@ -56,17 +55,10 @@ class TextArea extends Component {
   render() {
     return html`
       <div class="base ${classMap({ required: this.required })}">
-        <div class="field-wrapper">
-          <div class="label">${this.label}</div>
-          <div class="control">
-            <sl-textarea
-              class="input"
-              size="small"
-              rows=${this.rows}
-            ></sl-textarea>
-            <div class="error">${this.error}</div>
-          </div>
-        </div>
+        <sl-textarea class="input control" size="small" rows=${this.rows}>
+          <span slot="label">${this.label}</span>
+        </sl-textarea>
+        <div class="error">${this.error}</div>
       </div>
     `;
   }

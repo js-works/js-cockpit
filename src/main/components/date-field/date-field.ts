@@ -1,168 +1,295 @@
 import {
-  elem,
-  prop,
   afterInit,
   afterUpdate,
+  elem,
+  prop,
+  state,
   Attrs,
   Component
 } from '../../utils/components';
 
-import { html, classMap } from '../../utils/lit';
-import { I18nController } from '../../i18n/i18n';
-
-import {
-  getLocalization,
-  initPopup,
-  DatepickerInstance
-} from './date-picker-utils';
-
-// @ts-ignore
-import { Datepicker } from 'vanillajs-datepicker';
+import { html, createRef, ref } from '../../utils/lit';
+import { I18nController, I18nFacade } from '../../i18n/i18n';
+import { Calendar } from './calendar';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
-
-// icons
-import calendarIcon from '../../icons/calendar3.svg';
+import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
 
 // styles
-import dateFieldStyles from './date-field.css';
-//import datePickerBaseStyles from '../../../../node_modules/vanillajs-datepicker/dist/css/datepicker-foundation.css'
+import dateFieldStyles from './date-field.styles';
+import datePickerStyles from './date-picker.styles';
 
-//import datePickerCustomStyles from './date-picker-custom.css'
-import controlStyles from '../../shared/css/control.styles';
-import datePickerStyles from './date-picker.scss';
+// icons
+import dateIcon from '../../icons/calendar3.svg';
+import datesIcon from '../../icons/calendar3.svg';
+import timeIcon from '../../icons/clock.svg';
+import dateTimeIcon from '../../icons/calendar3.svg';
+import dateRangeIcon from '../../icons/calendar-range.svg';
+import monthIcon from '../../icons/calendar.svg';
+import yearIcon from '../../icons/calendar.svg';
 
-// === exports ====================================================
-
-export { DateField };
-
-// === DateField ==================================================
+// === types =========================================================
 
 @elem({
   tag: 'c-date-field',
-  styles: [
-    // datePickerBaseStyles,
-    // datePickerCustomStyles,
-    datePickerStyles,
-    dateFieldStyles,
-    controlStyles
-  ],
-  uses: [SlIcon, SlIconButton, SlInput]
+  uses: [SlIcon, SlIconButton, SlInput, SlPopup],
+  styles: dateFieldStyles
 })
-class DateField extends Component {
-  @prop({ attr: Attrs.string })
+export class DateField extends Component {
+  private _calendar: Calendar;
+  private _i18n = new I18nController(this);
+  private _inputRef = createRef<SlInput>();
+
+  @prop(Attrs.string, true)
+  name = '';
+
+  @prop(Attrs.string, true)
   label = '';
 
-  @prop()
-  value: Date | null = null;
+  @prop(Attrs.string, true)
+  required = true;
 
-  @prop({ attr: Attrs.string })
-  error = '';
-
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean, true)
   disabled = false;
 
-  @prop({ attr: Attrs.boolean })
-  required = false;
+  @prop(Attrs.string, true)
+  selectionMode: Calendar.SelectionMode = 'dateTime';
 
-  private _i18n = new I18nController(this);
-  private _datepicker: DatepickerInstance | null = null;
+  @prop
+  selection: Date[] = [];
+
+  @prop(Attrs.boolean, true)
+  highlightWeekends = true;
+
+  @prop(Attrs.boolean, true)
+  showWeekNumbers = false;
+
+  @state
+  private _pickerVisible = false;
 
   constructor() {
     super();
 
-    afterInit(this, () => {
-      const shadowRoot = this.shadowRoot!;
-
-      setTimeout(() => {
-        this._datepicker = createDatepicker({
-          getLocale: this._i18n.getLocale.bind(this._i18n),
-          slInput: shadowRoot.querySelector<SlInput>('sl-input')!,
-          pickerContainer: shadowRoot.querySelector('.picker-container')!,
-          namespace: this.localName
-        });
-      });
+    this._calendar = new Calendar({
+      getLocaleSettings,
+      className: 'picker',
+      styles: datePickerStyles.cssText,
+      onBlur: () => void (this._pickerVisible = false)
     });
 
-    afterUpdate(this, () => {
-      const locale = this._i18n.getLocale();
-      const localization = getLocalization(locale, this.localName);
+    this._calendar.setButtons([
+      {
+        text: 'Clear',
+        onClick: () => this._calendar.clear()
+      },
+      {
+        text: 'Cancel',
+        onClick: () => {
+          this._calendar.setSelection(this.selection);
+        }
+      },
+      {
+        text: 'OK',
+        onClick: () => {
+          const newSelection = this._calendar.getSelection();
+          this.selection = newSelection;
 
-      if (this._datepicker) {
-        this._datepicker.setOptions({
-          language: `${this.localName}::${locale}`,
-          weekStart: localization.weekStart,
-          format: localization.format
-        });
+          this._inputRef.value!.value = this._formatSelection(
+            newSelection,
+            this.selectionMode
+          );
+
+          if (this.selectionMode === 'date') {
+            this._pickerVisible = false;
+          }
+        }
+      }
+    ]);
+
+    const updateCalendar = () => {
+      this._calendar.setLocale(this._i18n.getLocale());
+      this._calendar.setSelectionMode(this.selectionMode);
+      this._calendar.setHighlightWeekends(this.highlightWeekends);
+      this._calendar.setShowWeekNumbers(this.showWeekNumbers);
+      this._calendar.setSelection(this.selection);
+    };
+
+    afterInit(this, updateCalendar);
+
+    afterUpdate(this, () => {
+      updateCalendar();
+
+      if (this._pickerVisible) {
+        this._calendar.focus();
       }
     });
   }
 
   render() {
+    const icon = {
+      date: dateIcon,
+      dates: datesIcon,
+      dateRange: dateRangeIcon,
+      dateTime: dateTimeIcon,
+      time: timeIcon,
+      month: monthIcon,
+      year: yearIcon
+    }[this.selectionMode];
+
     return html`
-      <div class="base ${classMap({ required: this.required })}">
-        <div class="field-wrapper">
-          <div class="control">
-            <sl-input>
-              <sl-icon slot="suffix" class="calendar-icon" src=${calendarIcon}>
-              </sl-icon>
-              <div slot="label" class="label">${this.label}</div>
-            </sl-input>
-            <div class="error">${this.error}</div>
-            <div class="picker-container"></div>
-          </div>
-        </div>
+      <div class="base" style="border: 1px green red">
+        <sl-popup
+          class="popup"
+          placement="bottom"
+          ?active=${this._pickerVisible}
+          distance=${8}
+          skidding=${0}
+          ?flip=${true}
+          ?arrow=${true}
+        >
+          <sl-input
+            slot="anchor"
+            class="control"
+            ?required=${this.required}
+            ?disabled=${this.disabled}
+            @keydown=${this._onKeyDown}
+            ${ref(this._inputRef)}
+          >
+            <sl-icon-button
+              slot="suffix"
+              class="calendar-icon"
+              src=${icon}
+              @click=${this._onTriggerClick}
+            >
+            </sl-icon-button>
+            <span slot="label" class="label">${this.label}</span>
+          </sl-input>
+          ${this._calendar.getElement()}
+        </sl-popup>
       </div>
     `;
   }
+
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    const key = ev.key;
+
+    if (key === 'ArrowDown') {
+      this._pickerVisible = true;
+      this._calendar.focus();
+    }
+  };
+
+  private _onTriggerClick = () => {
+    if (!this._pickerVisible) {
+      this._pickerVisible = true;
+    }
+  };
+
+  private _formatSelection(
+    selection: Date[],
+    selectionMode: Calendar.SelectionMode
+  ): string {
+    if (selection.length === 0) {
+      return '';
+    }
+
+    switch (selectionMode) {
+      case 'date':
+        return this._i18n.formatDate(selection[0], {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        });
+
+      case 'dates': {
+        const tokens: string[] = [];
+
+        for (const date of [...selection].sort((a, b) =>
+          a.getTime() < b.getTime() ? -1 : 1
+        )) {
+          tokens.push(
+            this._i18n.formatDate(date, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric'
+            })
+          );
+        }
+
+        return tokens.join(', ');
+      }
+
+      case 'dateRange': {
+        return selection
+          .slice(0, 2)
+          .map((date) =>
+            this._i18n.formatDate(date, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric'
+            })
+          )
+          .join(' - ');
+      }
+
+      case 'dateTime': {
+        const date = selection[0];
+
+        const formattedDay = this._i18n.formatDate(date, {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        });
+
+        const formattedTime = this._i18n.formatDate(date, {
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+
+        return `${formattedDay} ${formattedTime}`;
+      }
+
+      case 'time':
+        return this._i18n.formatDate(selection[0], {
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+
+      case 'month':
+        return this._i18n.formatDate(selection[0], {
+          month: '2-digit',
+          year: 'numeric'
+        });
+
+      case 'year':
+        return this._i18n.formatDate(selection[0], {
+          year: 'numeric'
+        });
+
+      default:
+        throw new Error('Illegal selection mode');
+    }
+  }
 }
 
-// === locals ========================================================
+function getLocaleSettings(locale: string): Calendar.LocaleSettings {
+  const i18n = new I18nFacade(() => locale);
 
-function createDatepicker(params: {
-  slInput: SlInput;
-  pickerContainer: Element;
-  getLocale: () => string;
-  namespace: string;
-}): DatepickerInstance {
-  let datepicker: any;
-  const { slInput, pickerContainer: container, getLocale } = params;
-  const input = (slInput as any).shadowRoot!.querySelector('input')!;
-  const locale = getLocale();
-  const localization = getLocalization(getLocale(), params.namespace);
+  let days = i18n.getDayNames('short');
 
-  container.addEventListener('mousedown', (ev) => ev.preventDefault());
+  if (days.some((day) => day.length > 5)) {
+    days = i18n.getDayNames('narrow');
+  }
 
-  input.addEventListener('hide', () => {
-    slInput.readonly = false;
-    slInput.value = input!.value;
-  });
-
-  input.addEventListener('show', () => {
-    slInput.readonly = true;
-  });
-
-  datepicker = new Datepicker(input, {
-    calendarWeeks: true,
-    daysOfWeekHighlighted: localization.weekendDays,
-    prevArrow: '&#x1F860;',
-    nextArrow: '&#x1F862;',
-    autohide: true,
-    showOnFocus: false,
-    updateOnBlur: false,
-    todayHighlight: true,
-    container: container,
-    weeknumbers: true,
-    language: `${params.namespace}::${locale}`,
-    weekStart: localization.weekStart,
-    format: localization.format,
-    getCalendarWeek: localization.getCalendarWeek
-  });
-
-  initPopup(slInput, datepicker);
-
-  return datepicker;
+  return {
+    daysShort: days,
+    months: i18n.getMonthNames('long'),
+    monthsShort: i18n.getMonthNames('short'),
+    firstDayOfWeek: i18n.getFirstDayOfWeek() as Calendar.Weekday,
+    weekendDays: i18n.getWeekendDays() as Calendar.Weekday[],
+    getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date)
+  };
 }

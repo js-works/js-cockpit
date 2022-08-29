@@ -1,4 +1,4 @@
 :host {
-  --sl-label-vertical: var(--on);
-  --sl-label-horizontal: var(--off);
+  --label-align-vertical: var(--on);
+  --label-align-horizontal: var(--off);
 }

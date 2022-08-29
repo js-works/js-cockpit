@@ -16,8 +16,7 @@ import { FormFieldController } from '../../controllers/form-field-controller';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import controlStyles from '../../shared/css/control.styles';
-import passwordFieldStyles from './password-field.css';
+import passwordFieldStyles from './password-field.styles';
 
 // === exports =======================================================
 
@@ -29,7 +28,7 @@ export { PasswordField };
 
 @elem({
   tag: 'c-password-field',
-  styles: [controlStyles, passwordFieldStyles],
+  styles: passwordFieldStyles,
   uses: [SlInput]
 })
 class PasswordField extends Component {
@@ -104,24 +103,21 @@ class PasswordField extends Component {
           'has-error': this._formField.hasError()
         })}"
       >
-        <div class="field-wrapper">
-          <div class="control">
-            <sl-input
-              type="password"
-              name=${this.name}
-              toggle-password
-              class="input"
-              @sl-input=${this._onInput}
-              @sl-change=${this._onChange}
-              @focus=${this._onFocus}
-              @blur=${this._onBlur}
-              ${ref(this._slInputRef)}
-            >
-              <div slot="label" class="label">${this.label}</div>
-            </sl-input>
-            <div class="error">${this._formField.getErrorMsg()}</div>
-          </div>
-        </div>
+        <sl-input
+          type="password"
+          name=${this.name}
+          toggle-password
+          class="input control"
+          required=${this.required}
+          @sl-input=${this._onInput}
+          @sl-change=${this._onChange}
+          @focus=${this._onFocus}
+          @blur=${this._onBlur}
+          ${ref(this._slInputRef)}
+        >
+          <span slot="label" class="control-label">${this.label}</span>
+        </sl-input>
+        <div class="error">${this._formField.getErrorMsg()}</div>
       </div>
     `;
   }

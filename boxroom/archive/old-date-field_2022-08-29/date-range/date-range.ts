@@ -18,7 +18,7 @@ import {
   initPopup,
   DatepickerInstance,
   DateRangePickerInstance
-} from '../date-field/date-picker-utils';
+} from '../date-field3/date-picker-utils';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
