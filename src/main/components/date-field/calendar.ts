@@ -12,7 +12,7 @@ export { Calendar };
 // === exported types ================================================
 
 namespace Calendar {
-  export type SelectionMode =
+  export type Type =
     | 'date'
     | 'dates'
     | 'time'
@@ -56,7 +56,7 @@ class Calendar {
   #locale = defaultLocale;
   #getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
   #localeSettings: Calendar.LocaleSettings;
-  #selectionMode: Calendar.SelectionMode = 'date';
+  #type: Calendar.Type = 'date';
   #highlightWeekends = false;
   #showWeekNumbers = false;
   #onBlur: (() => void) | null = null;
@@ -71,7 +71,7 @@ class Calendar {
     getLocaleSettings: (locale: string) => Calendar.LocaleSettings;
     className?: string;
     styles?: string;
-    onSelection?: (selection: Date[], mode: Calendar.SelectionMode) => void;
+    onSelection?: (selection: Date[], mode: Calendar.Type) => void;
     onBlur?: () => void;
   }) {
     const datepickerStyleElem = document.createElement('style');
@@ -130,7 +130,7 @@ class Calendar {
         : ({ date }) => {
             onSelection(
               Array.isArray(date) ? date : date === undefined ? [] : [date],
-              this.#selectionMode
+              this.#type
             );
           }
     });
@@ -165,8 +165,8 @@ class Calendar {
     });
   }
 
-  setSelectionMode(selectionMode: Calendar.SelectionMode) {
-    if (this.#selectionMode === selectionMode) {
+  setSelectionMode(type: Calendar.Type) {
+    if (this.#type === type) {
       return;
     }
 
@@ -178,7 +178,7 @@ class Calendar {
       minView: 'days'
     };
 
-    switch (selectionMode) {
+    switch (type) {
       case 'date':
         break;
 
@@ -210,7 +210,7 @@ class Calendar {
         break;
     }
 
-    this.#selectionMode = selectionMode;
+    this.#type = type;
     this.#update(options);
   }
 
@@ -261,7 +261,7 @@ class Calendar {
 
   focus() {
     setTimeout(() => {
-      if (this.#selectionMode !== 'time') {
+      if (this.#type !== 'time') {
         this.#input.focus();
       } else if (!this.#minuteSlider!.matches(':focus')) {
         this.#hourSlider!.focus();
@@ -293,7 +293,7 @@ class Calendar {
 
     this.#picker = new AirDatepicker(this.#input, this.#options);
 
-    if (this.#selectionMode === 'dateTime' || this.#selectionMode === 'time') {
+    if (this.#type === 'dateTime' || this.#type === 'time') {
       this.#hourSlider = this.#picker.$datepicker.querySelector(
         'input[type=range][name=hours]'
       );

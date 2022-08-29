@@ -11,8 +11,7 @@ export default css`
     gap: 2px;
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    white-space: norwap;
-    user-select: none;
+    white-space: nowrap;
   }
 
   sl-button.filter-button::part(prefix) {
@@ -25,12 +24,14 @@ export default css`
 
   .popup {
     background-color: var(--sl-color-neutral-0);
-    border: 1px solid var(--sl-color-neutral-200);
+    border: 2px solid var(--sl-color-primary-600);
+    border-radius: 4px;
   }
 
   .filters-header {
-    font-size: 120%;
-    padding: 0.75rem 1rem 0 1rem;
+    padding: 0.2rem 0.6rem 0.3rem 0.6rem;
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-600);
   }
 
   .filters {

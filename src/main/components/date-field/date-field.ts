@@ -44,6 +44,9 @@ export class DateField extends Component {
   private _inputRef = createRef<SlInput>();
 
   @prop(Attrs.string, true)
+  type: Calendar.Type = 'date';
+
+  @prop(Attrs.string, true)
   name = '';
 
   @prop(Attrs.string, true)
@@ -54,9 +57,6 @@ export class DateField extends Component {
 
   @prop(Attrs.boolean, true)
   disabled = false;
-
-  @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'date';
 
   @prop
   selection: Date[] = [];
@@ -99,10 +99,10 @@ export class DateField extends Component {
 
           this._inputRef.value!.value = this._formatSelection(
             newSelection,
-            this.selectionMode
+            this.type
           );
 
-          if (this.selectionMode === 'date') {
+          if (this.type === 'date') {
             this._pickerVisible = false;
           }
         }
@@ -111,7 +111,7 @@ export class DateField extends Component {
 
     const updateCalendar = () => {
       this._calendar.setLocale(this._i18n.getLocale());
-      this._calendar.setSelectionMode(this.selectionMode);
+      this._calendar.setSelectionMode(this.type);
       this._calendar.setHighlightWeekends(this.highlightWeekends);
       this._calendar.setShowWeekNumbers(this.showWeekNumbers);
       this._calendar.setSelection(this.selection);
@@ -137,7 +137,7 @@ export class DateField extends Component {
       time: timeIcon,
       month: monthIcon,
       year: yearIcon
-    }[this.selectionMode];
+    }[this.type];
 
     return html`
       <div class="base" style="border: 1px green red">
@@ -188,15 +188,12 @@ export class DateField extends Component {
     }
   };
 
-  private _formatSelection(
-    selection: Date[],
-    selectionMode: Calendar.SelectionMode
-  ): string {
+  private _formatSelection(selection: Date[], type: Calendar.Type): string {
     if (selection.length === 0) {
       return '';
     }
 
-    switch (selectionMode) {
+    switch (type) {
       case 'date':
         return this._i18n.formatDate(selection[0], {
           year: 'numeric',

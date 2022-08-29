@@ -72,8 +72,7 @@ export default css`
   }
 
   .air-datepicker {
-    box-shadow: var(--sl-shadow-medium) !important;
-    border: 2px solid var(--sl-color-primary-600) !important;
+    border: 2px solid var(--sl-color-primary-600);
     border-radius: 4px;
   }
 
@@ -94,7 +93,6 @@ export default css`
 
   .air-datepicker-nav--title:active,
   .air-datepicker-nav--action:active {
-    border: 2px solid red !important;
     background-color: var(--sl-color-primary-800);
   }
 
