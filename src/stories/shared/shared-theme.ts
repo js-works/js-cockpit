@@ -2,7 +2,7 @@ import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit';
 import { initI18n } from 'js-localize';
 
 export const sharedTheme = new Theme([
-  ThemeMods.colors(ColorSchemes.pink),
+  ThemeMods.colors(ColorSchemes.horizon),
   ThemeMods.modern()
   //ThemeMods.compact()
   //ThemeMods.dark(true)
