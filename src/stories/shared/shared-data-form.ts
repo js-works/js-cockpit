@@ -65,8 +65,9 @@ export class SharedDataForm extends Component {
               <c-text-field label="Alias name"></c-text-field>
               <c-date-field
                 label="Day of birth"
-                value="2017-01-01"
+                value="1980-01-01"
                 required
+                selection-mode="date"
               ></c-date-field>
               <!--
               <c-date-range label="Date range" required></c-date-range>

@@ -56,7 +56,7 @@ export class DateField extends Component {
   disabled = false;
 
   @prop(Attrs.string, true)
-  selectionMode: Calendar.SelectionMode = 'dateTime';
+  selectionMode: Calendar.SelectionMode = 'date';
 
   @prop
   selection: Date[] = [];

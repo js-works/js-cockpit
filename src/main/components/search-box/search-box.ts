@@ -50,7 +50,7 @@ class SearchBox extends Component {
 
   render() {
     return html`
-      <div class="base">
+      <div class="base label-align-horizontal">
         <sl-input size="small" clearable placeholder="Search...">
           <sl-icon
             src=${searchIcon}

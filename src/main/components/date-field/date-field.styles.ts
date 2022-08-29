@@ -6,6 +6,10 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  .popup::part(popup) {
+    z-index: 32000;
+  }
+
   .popup::part(arrow) {
     background-color: var(--sl-color-primary-600);
   }

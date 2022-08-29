@@ -3,9 +3,9 @@ import { css } from 'lit';
 export default css`
   .air-datepicker {
     --adp-font-family: var(--sl-font-sans);
-    --adp-font-size: 14px;
-    --adp-width: 246px;
-    --adp-z-index: 100;
+    --adp-font-size: var(--sl-font-size-medium);
+    --adp-width: 18rem;
+    --adp-z-index: 30000;
     --adp-padding: 0;
     --adp-grid-areas: 'nav' 'body' 'timepicker' 'buttons';
     --adp-transition-duration: 0.3s;
@@ -30,16 +30,16 @@ export default css`
     --adp-border-color-inner: var(--sl-color-neutral-200);
     --adp-border-radius: 0;
     --adp-border-color-inline: var(--sl-color-neutral-300);
-    --adp-nav-height: 32px;
+    --adp-nav-height: 2rem;
     --adp-nav-arrow-color: var(--adp-color-secondary);
-    --adp-nav-action-size: 32px;
+    --adp-nav-action-size: 1.8rem;
     --adp-nav-color-secondary: var(--adp-color-secondary);
     --adp-day-name-color: var(--sl-color-neutral-500);
     --adp-day-name-color-hover: #8ad5f4;
     --adp-day-cell-width: 1fr;
-    --adp-day-cell-height: 32px;
-    --adp-month-cell-height: 42px;
-    --adp-year-cell-height: 56px;
+    --adp-day-cell-height: 2em;
+    --adp-month-cell-height: 3em;
+    --adp-year-cell-height: 4em;
     --adp-pointer-size: 10px;
     --adp-poiner-border-radius: 2px;
     --adp-pointer-offset: 14px;
@@ -72,9 +72,9 @@ export default css`
   }
 
   .air-datepicker {
-    position: relative;
-    z-index: 30000 !important;
     box-shadow: var(--sl-shadow-medium) !important;
+    border: 2px solid var(--sl-color-primary-600) !important;
+    border-radius: 4px;
   }
 
   .air-datepicker.-only-timepicker- {
