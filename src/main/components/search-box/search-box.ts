@@ -1,24 +1,23 @@
-import { bind, elem, Component } from '../../utils/components'
-import { createRef, html, ref } from '../../utils/lit'
+import { bind, elem, Component } from '../../utils/components';
+import { createRef, html, ref } from '../../utils/lit';
 
 // custom elements
-import { FocusTrap } from '@a11y/focus-trap'
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
+import { FocusTrap } from '@a11y/focus-trap';
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // icons
-import searchIcon from '../../icons/search.svg'
-import filterIcon from '../../icons/filter.svg'
+import searchIcon from '../../icons/search.svg';
+import filterIcon from '../../icons/filter.svg';
 
 // styles
-import searchBoxStyles from './search-box.css'
-import rightAlignedLabelsStyles from '../../shared/css/label-horizontal.css'
+import searchBoxStyles from './search-box.styles';
 
 // === exports =======================================================
 
-export { SearchBox }
+export { SearchBox };
 
 // === types =========================================================
 
@@ -26,27 +25,27 @@ export { SearchBox }
 
 @elem({
   tag: 'c-search-box',
-  styles: [searchBoxStyles, rightAlignedLabelsStyles],
+  styles: searchBoxStyles,
   uses: [FocusTrap, SlButton, SlDropdown, SlIcon, SlInput]
 })
 class SearchBox extends Component {
-  private _dropdownRef = createRef<SlDropdown>()
+  private _dropdownRef = createRef<SlDropdown>();
 
   @bind
   private _onKeyDown(ev: KeyboardEvent) {
     if (ev.key !== 'Escape') {
-      ev.stopPropagation()
+      ev.stopPropagation();
     }
   }
 
   @bind
   private _onCancelClick() {
-    this._dropdownRef.value!.hide()
+    this._dropdownRef.value!.hide();
   }
 
   @bind
   private _onApplyClick() {
-    this._dropdownRef.value!.hide()
+    this._dropdownRef.value!.hide();
   }
 
   render() {
@@ -97,6 +96,6 @@ class SearchBox extends Component {
           </div>
         </sl-dropdown>
       </div>
-    `
+    `;
   }
 }

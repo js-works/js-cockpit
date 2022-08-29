@@ -134,8 +134,8 @@ class Theme {
       '  --on: inherit;',
       '  --off: ;',
       '  --theme: light;',
-      '  --label-align-horizontal: var(--off);',
       '  --label-align-vertical: var(--on);',
+      '  --label-align-horizontal: var(--off);',
       '  --label-align-horizontal-width: 8rem;',
       '  --label-align-horizontal-gap: 0.8rem;'
     ];
@@ -525,11 +525,6 @@ const lightThemeTokens = {
   // used for conditional "light vs. dark" theming
   light: 'var(--on)' as 'var(--on)' | 'var(--off)',
   dark: 'var(--off)' as 'var(--on)' | 'var(--off)',
-
-  // used for conditional label alignment (vertical vs. horizontal)
-  'label-vertical': 'var(--on)',
-  'label-horizontal': 'var(--off)',
-  'label-horizontal-width': '8rem',
 
   // other new tokens
   'label-font-weight': 'var(--sl-font-weight-normal)',

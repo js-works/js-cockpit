@@ -1,25 +1,24 @@
-import { afterConnect, elem, prop, Component } from '../../utils/components'
-import { html } from '../../utils/lit'
-import { Theme, ThemeMods } from '../../misc/theming'
+import { afterConnect, elem, prop, Component } from '../../utils/components';
+import { html } from '../../utils/lit';
+import { Theme, ThemeMods } from '../../misc/theming';
 
 // styles
-import cockpitStyles from './cockpit.css'
-import scrollbarStyles from '../../shared/css/scrollbar.css'
+import cockpitStyles from './cockpit.styles';
 
 // === exports =======================================================
 
-export { Cockpit }
+export { Cockpit };
 
 // === Cockpit ===================================================
 
 @elem({
   tag: 'c-cockpit',
-  styles: [cockpitStyles, scrollbarStyles],
+  styles: cockpitStyles,
   uses: []
 })
 class Cockpit extends Component {
   @prop
-  theme = Theme.default
+  theme = Theme.default;
 
   render() {
     //const darkTheme = new Theme(this.theme, ThemeMods.dark())
@@ -73,6 +72,6 @@ class Cockpit extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

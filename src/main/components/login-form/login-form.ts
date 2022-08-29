@@ -9,62 +9,61 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { I18nController } from '../../i18n/i18n'
-import { hasSlot } from '../../utils/slots'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
+import { hasSlot } from '../../utils/slots';
 
 // custom elements
-import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation'
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner'
-import { FocusTrap } from '@a11y/focus-trap'
-import { MessageBar } from '../message-bar/message-bar'
-import { Form } from '../form/form'
-import { PasswordField } from '../password-field/password-field'
-import { TextField } from '../text-field/text-field'
+import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation';
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner';
+import { FocusTrap } from '@a11y/focus-trap';
+import { MessageBar } from '../message-bar/message-bar';
+import { Form } from '../form/form';
+import { PasswordField } from '../password-field/password-field';
+import { TextField } from '../text-field/text-field';
 
 // styles
-import loginFormStyles from './login-form.css'
-import topAlignedLabelsStyles from '../../shared/css/label-vertical.css'
+import loginFormStyles from './login-form.styles';
 
 // icons
-import loginIntroIcon from './assets/login.svg'
-import forgotPasswordIntroIcon from './assets/forgot-password.svg'
-import registrationIntroIcon from './assets/registration.svg'
-import resetPasswordIntroIcon from './assets/reset-password.svg'
+import loginIntroIcon from './assets/login.svg';
+import forgotPasswordIntroIcon from './assets/forgot-password.svg';
+import registrationIntroIcon from './assets/registration.svg';
+import resetPasswordIntroIcon from './assets/reset-password.svg';
 
 // === exports =======================================================
 
-export { LoginForm }
+export { LoginForm };
 
 // === types =========================================================
 
-type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword'
+type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword';
 
 namespace LoginForm {
   export type SubmitData =
     | {
-        view: 'login'
-        locale: string
-        rememberLogin: boolean
-        params: Record<string, any>
+        view: 'login';
+        locale: string;
+        rememberLogin: boolean;
+        params: Record<string, any>;
       }
     | {
-        view: 'forgotPassword' | 'resetPassword' | 'registration'
-        locale: string
-        params: Record<string, any>
-      }
+        view: 'forgotPassword' | 'resetPassword' | 'registration';
+        locale: string;
+        params: Record<string, any>;
+      };
 }
 
 // === Login form ====================================================
 
 @elem({
   tag: 'c-login-form',
-  styles: [loginFormStyles, topAlignedLabelsStyles],
+  styles: loginFormStyles,
   uses: [
     FocusTrap,
     Form,
@@ -80,71 +79,71 @@ namespace LoginForm {
 })
 class LoginForm extends Component {
   @prop({ attr: Attrs.string })
-  initialView?: View
+  initialView?: View;
 
   @prop({ attr: Attrs.boolean })
-  enableRememberLogin = false
+  enableRememberLogin = false;
 
   @prop({ attr: Attrs.boolean })
-  enableForgotPassword = false
+  enableForgotPassword = false;
 
   @prop({ attr: Attrs.boolean })
-  enableRegistration = false
+  enableRegistration = false;
 
   @prop({ attr: Attrs.boolean })
-  fullSize = false
+  fullSize = false;
 
   @prop
   processSubmit?: (
     data: LoginForm.SubmitData
-  ) => Promise<string | undefined | null>
+  ) => Promise<string | undefined | null>;
 
   @state
-  private _view: View = 'login'
+  private _view: View = 'login';
 
   @state
-  private _showInvalidFormError = false
+  private _showInvalidFormError = false;
 
   @state
-  private _successMessage = ''
+  private _successMessage = '';
 
   @state
-  private _errorMessage = ''
+  private _errorMessage = '';
 
   @state
-  private _messageFading = 'none' as 'none' | 'fadeOut'
+  private _messageFading = 'none' as 'none' | 'fadeOut';
 
   @state
-  private _isLoading = false
+  private _isLoading = false;
 
-  private _submitButtonRef = createRef<SlButton>()
-  private _animationRef = createRef<SlAnimation>()
-  private _formRef = createRef<Form>()
-  private _i18n = new I18nController(this)
-  private _t = this._i18n.translate('jsCockpit.loginForm')
+  private _submitButtonRef = createRef<SlButton>();
+  private _animationRef = createRef<SlAnimation>();
+  private _formRef = createRef<Form>();
+  private _i18n = new I18nController(this);
+  private _t = this._i18n.translate('jsCockpit.loginForm');
 
   @bind
   private _onForgotPasswordClick() {
-    this._changeView('forgotPassword')
+    this._changeView('forgotPassword');
   }
 
   @bind
   private _onGoToLoginClick() {
-    this._changeView('login')
+    this._changeView('login');
   }
 
   @bind
   private _onGoToRegistrationClick() {
-    this._changeView('registration')
+    this._changeView('registration');
   }
 
   @bind
   private _onSubmit(ev?: any) {
-    const form = this._formRef.value!
+    const form = this._formRef.value!;
 
     // TODO
     if (ev) {
-      ev.preventDefault()
+      ev.preventDefault();
     }
     /*
     if (!form.checkValidity()) {
@@ -194,41 +193,41 @@ class LoginForm extends Component {
 
   @bind
   private _onSubmitClick(ev: any) {
-    this._formRef.value!.submit()
+    this._formRef.value!.submit();
   }
 
   constructor() {
-    super()
+    super();
 
     this.addEventListener('mousedown', (ev) => {
       if (this._isLoading) {
-        ev.preventDefault()
+        ev.preventDefault();
       }
-    })
+    });
 
     afterInit(this, () => {
-      let view: View = 'login'
+      let view: View = 'login';
 
       if (this.enableForgotPassword && this.initialView === 'forgotPassword') {
-        view = 'forgotPassword'
+        view = 'forgotPassword';
       } else if (
         this.enableRegistration &&
         this.initialView === 'registration'
       ) {
-        view = 'registration'
+        view = 'registration';
       } else if (
         this.enableForgotPassword &&
         this.initialView === 'resetPassword'
       ) {
-        view = 'resetPassword'
+        view = 'resetPassword';
       }
 
-      this._view = view
+      this._view = view;
 
       this.addEventListener('input', () => {
-        this._clearMessages(true)
-      })
-    })
+        this._clearMessages(true);
+      });
+    });
   }
 
   private _clearMessages(delayed = false) {
@@ -238,45 +237,50 @@ class LoginForm extends Component {
       this._errorMessage
     ) {
       if (!delayed) {
-        ;(this._showInvalidFormError = false),
+        (this._showInvalidFormError = false),
           (this._successMessage = ''),
           (this._errorMessage = ''),
-          (this._messageFading = 'none')
+          (this._messageFading = 'none');
       } else {
-        this._messageFading = 'fadeOut'
-        setTimeout(() => this._clearMessages(), 500)
+        this._messageFading = 'fadeOut';
+        setTimeout(() => this._clearMessages(), 500);
       }
     }
   }
 
   private _changeView(view: View) {
-    const animation = this._animationRef.value!
-    animation.duration = 400
-    animation.easing = 'ease'
-    animation.iterations = 1
-    animation.name = view === 'login' ? 'fadeOutRight' : 'fadeOutLeft'
-    animation.play = true
+    const animation = this._animationRef.value!;
+    animation.duration = 400;
+    animation.easing = 'ease';
+    animation.iterations = 1;
+    animation.name = view === 'login' ? 'fadeOutRight' : 'fadeOutLeft';
+    animation.play = true;
 
     setTimeout(() => {
-      animation.style.visibility = 'hidden'
-    }, animation.duration - 50)
+      animation.style.visibility = 'hidden';
+    }, animation.duration - 50);
 
     const finishListener = () => {
-      this._view = view
-      this._isLoading = false
-      this._clearMessages()
-      setTimeout(() => (animation.style.visibility = 'visible'), 50)
-      animation.removeEventListener('sl-finish', finishListener)
-      animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight'
-      animation.play = true
-    }
+      this._view = view;
+      this._isLoading = false;
+      this._clearMessages();
+      setTimeout(() => (animation.style.visibility = 'visible'), 50);
+      animation.removeEventListener('sl-finish', finishListener);
+      animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight';
+      animation.play = true;
+    };
 
-    animation.addEventListener('sl-finish', finishListener)
+    animation.addEventListener('sl-finish', finishListener);
   }
 
   render() {
     return html`
-      <div class="base ${classMap({ 'full-size': this.fullSize })}">
+      <div
+        class="base ${classMap({
+          'label-align-vertical': true,
+          'full-size': this.fullSize
+        })}"
+      >
         ${!this._isLoading ? null : html`<div class="overlay"></div>`}
         <sl-animation ${ref(this._animationRef)}>
           <div class="container">
@@ -299,7 +303,6 @@ class LoginForm extends Component {
                 <c-form
                   class="column2"
                   @submit=${this._onSubmit}
-                  @xxx=${() => console.log('wooohoo')}
                   ${ref(this._formRef)}
                 >
                   <div class="column2-top">${this._renderFields()}</div>
@@ -376,7 +379,7 @@ class LoginForm extends Component {
           </div>
         </sl-animation>
       </div>
-    `
+    `;
   }
 
   private _renderIntro() {
@@ -389,7 +392,7 @@ class LoginForm extends Component {
               <p>${this._t('loginIntroText')}</p>
             </div>
           </slot>
-        `
+        `;
 
       case 'registration':
         return html`
@@ -399,7 +402,7 @@ class LoginForm extends Component {
               <p>${this._t('registrationIntroText')}</p>
             </div>
           </slot>
-        `
+        `;
 
       case 'forgotPassword':
         return html`
@@ -409,7 +412,7 @@ class LoginForm extends Component {
               <p>${this._t('forgotPasswordIntroText')}</p>
             </div>
           </slot>
-        `
+        `;
       case 'resetPassword':
         return html`
           <slot name="reset-password-intro">
@@ -418,7 +421,7 @@ class LoginForm extends Component {
               <p>${this._t('resetPasswordIntroText')}</p>
             </div>
           </slot>
-        `
+        `;
     }
   }
 
@@ -430,9 +433,9 @@ class LoginForm extends Component {
         ? forgotPasswordIntroIcon
         : this._view === 'resetPassword'
         ? resetPasswordIntroIcon
-        : loginIntroIcon
+        : loginIntroIcon;
 
-    return html`<sl-icon alt="" src=${icon} class="intro-icon" />`
+    return html`<sl-icon alt="" src=${icon} class="intro-icon" />`;
   }
 
   private _renderFields() {
@@ -452,7 +455,7 @@ class LoginForm extends Component {
                   label=${this._t('password')}
                   required
                 ></c-password-field>
-              `}`
+              `}`;
 
       case 'registration':
         return html`<slot name="registration-fields" class="fields-slot"></slot>
@@ -479,7 +482,7 @@ class LoginForm extends Component {
                   label=${this._t('email')}
                   required
                 ></c-email-field>
-              `}`
+              `}`;
 
       case 'forgotPassword':
         return html`<slot
@@ -500,7 +503,7 @@ class LoginForm extends Component {
                   label=${this._t('email')}
                   required
                 ></c-email-field>
-              `}`
+              `}`;
 
       case 'resetPassword':
         return html`<slot
@@ -525,7 +528,7 @@ class LoginForm extends Component {
                   label=${this._t('securityCode')}
                   required
                 ></c-text-field>
-              `}`
+              `}`;
     }
   }
 
@@ -537,16 +540,16 @@ class LoginForm extends Component {
             ${this._renderForgotPasswordLink()}
             ${this._renderGoToRegistrationLink()}
           </div>
-        `
+        `;
 
       case 'registration':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
 
       case 'forgotPassword':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
 
       case 'resetPassword':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `
+        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
     }
   }
 
@@ -561,7 +564,7 @@ class LoginForm extends Component {
             ${this._t('forgotPassword')}
           </sl-button>
         `
-      : ''
+      : '';
   }
 
   private _renderGoToLoginLink() {
@@ -573,7 +576,7 @@ class LoginForm extends Component {
       >
         ${this._t('goToLogin')}
       </sl-button>
-    `
+    `;
   }
 
   private _renderGoToRegistrationLink() {
@@ -587,37 +590,37 @@ class LoginForm extends Component {
             ${this._t('goToRegistration')}
           </sl-button>
         `
-      : ''
+      : '';
   }
 
   private _renderSubmitButtonText() {
     if (!this._isLoading) {
       switch (this._view) {
         case 'login':
-          return this._t('loginSubmitText')
+          return this._t('loginSubmitText');
 
         case 'registration':
-          return this._t('registrationSubmitText')
+          return this._t('registrationSubmitText');
 
         case 'forgotPassword':
-          return this._t('forgotPasswordSubmitText')
+          return this._t('forgotPasswordSubmitText');
 
         case 'resetPassword':
-          return this._t('resetPasswordSubmitText')
+          return this._t('resetPasswordSubmitText');
       }
     } else {
       switch (this._view) {
         case 'login':
-          return this._t('processingLoginSubmit')
+          return this._t('processingLoginSubmit');
 
         case 'forgotPassword':
-          return this._t('processingForgotPasswordSubmit')
+          return this._t('processingForgotPasswordSubmit');
 
         case 'resetPassword':
-          return this._t('processingResetPasswordSubmit')
+          return this._t('processingResetPasswordSubmit');
 
         case 'registration':
-          return this._t('processingRegistrationSubmit')
+          return this._t('processingRegistrationSubmit');
       }
     }
   }

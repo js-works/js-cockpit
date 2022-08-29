@@ -1,4 +1,5 @@
 import { css, unsafeCSS as $ } from 'lit';
+import scrollbarStyles from '../../styles/scrollbar.styles';
 
 const sidebarMinWidth = $('16rem');
 const sidebarMaxWidth = $('20rem');
@@ -19,6 +20,8 @@ const selectionMargin = $('0 4px');
 const activeBackColor = $('var(--sl-color-neutral-600)');
 
 export default css`
+  ${scrollbarStyles}
+
   .base {
     position: absolute;
     left: 0;

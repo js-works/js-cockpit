@@ -1,14 +1,12 @@
 import { css } from 'lit';
-import componentStyles from '../../shared/css/components.styles';
-import controlStyles from '../../shared/css/control.styles';
+import componentStyles from '../../styles/component.styles';
+import controlStyles from '../../styles/control.styles';
 
 export default css`
   ${componentStyles}
   ${controlStyles}
 
   .base {
-    position: relative;
-    display: flex;
   }
 
   .base.has-error sl-input::part(base) {

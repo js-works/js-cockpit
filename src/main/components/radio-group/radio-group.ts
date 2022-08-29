@@ -15,7 +15,7 @@ import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/r
 
 // styles
 import radioGroupStyles from './radio-group.css';
-import controlStyles from '../../shared/css/control.styles';
+import controlStyles from '../../styles/control.styles';
 
 // === exports =======================================================
 

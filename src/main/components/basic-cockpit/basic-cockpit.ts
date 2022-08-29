@@ -31,7 +31,6 @@ import chevronDownIcon from '../../icons/chevron-down.svg';
 
 // styles
 import basicCockpitStyles from './basic-cockpit.styles';
-import scrollbarStyles from '../../shared/css/scrollbar.css';
 
 // === exports =======================================================
 
@@ -99,7 +98,7 @@ namespace BasicCockpit {
 
 @elem({
   tag: 'c-basic-cockpit',
-  styles: [basicCockpitStyles, scrollbarStyles],
+  styles: basicCockpitStyles,
   uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })
 class BasicCockpit extends Component {

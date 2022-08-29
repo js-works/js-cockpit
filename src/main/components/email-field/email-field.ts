@@ -17,7 +17,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import controlStyles from '../../shared/css/control.styles';
+import controlStyles from '../../styles/control.styles';
 import emailFieldStyles from './email-field.css';
 
 // icons

@@ -1,33 +1,32 @@
-import { elem, prop, Attrs, Component } from '../../utils/components'
-import { html } from '../../utils/lit'
+import { elem, prop, Attrs, Component } from '../../utils/components';
+import { html } from '../../utils/lit';
 
 // custom elements
-import { ActionBar } from 'js-cockpit'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button'
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
+import { ActionBar } from 'js-cockpit';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 
 // styles
-import dataFormStyles from './data-form.css'
-import rightAlignedLabelsStyles from '../../shared/css/label-horizontal.css'
+import dataFormStyles from './data-form.styles';
 
 // icons
-import closeIcon from 'remixicon/icons/System/close-fill.svg'
+import closeIcon from 'remixicon/icons/System/close-fill.svg';
 
 // === exports =======================================================
 
-export { DataForm }
+export { DataForm };
 
 // === DataForm ===================================================
 
 @elem({
   tag: 'c-data-form',
-  styles: [dataFormStyles, rightAlignedLabelsStyles],
+  styles: dataFormStyles,
   uses: [ActionBar, SlIcon, SlIconButton]
 })
 class DataForm extends Component {
   @prop({ attr: Attrs.string })
-  headline = ''
+  headline = '';
 
   render() {
     // TODO!!!
@@ -52,10 +51,10 @@ class DataForm extends Component {
         actionId: 'delete',
         text: 'Delete'
       }
-    ]
+    ];
 
     return html`
-      <div class="base">
+      <div class="base label-align-horizontal">
         <div class="header">
           <div class="headline">${this.headline}</div>
           <div class="actions">
@@ -77,6 +76,6 @@ class DataForm extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }
