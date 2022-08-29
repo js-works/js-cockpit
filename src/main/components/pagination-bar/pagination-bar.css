@@ -50,6 +50,10 @@
   gap: 8px;
 }
 
+.page-size-select {
+  width: 5rem;
+}
+
 sl-menu-item::part(label) {
   min-width: 1.5rem;
   text-align: center;

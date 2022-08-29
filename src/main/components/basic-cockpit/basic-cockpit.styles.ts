@@ -5,7 +5,7 @@ const sidebarMinWidth = $('16rem');
 const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');
-const backColor = $('rgb(53, 53, 59)');
+const backColor = $('#121212'); //$('rgb(53, 53, 59)');
 //const backColor = $('#282a2f');
 const brandFontSize = $('110%');
 const brandTextColor = $('var(--sl-color-neutral-0)');
@@ -75,7 +75,7 @@ export default css`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0.7rem 1rem;
+    padding: 0.7rem 0.25rem;
     margin: 0 0 ${String(brandBackColor) === 'transparent' ? 1 : 1.25}rem 0;
     width: 100%;
     box-sizing: border-box;

@@ -47,7 +47,7 @@ export default css`
     justify-content: right;
     padding: 4px 10px 5px 10px;
     background-color: var(--sl-color-neutral-50);
-    border: 0 solid var(--sl-color-neutral-200);
+    border: 0 solid var(--sl-color-neutral-300);
     border-width: 1px 0 0 0;
   }
 

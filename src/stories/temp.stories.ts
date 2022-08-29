@@ -11,7 +11,7 @@ export const sideMenu2 = () => '<c-side-menu2></c-side-menu>';
 
 export const dateField2 = () => `
     <sl-card style="max-width: 600px; width: 800px">
-      <c-date-field label="Start date"></c-date-field>
+      <c-date-field label="Start date" show-week-numbers></c-date-field>
       <br/>
       <c-date-field label="End date"></c-date-field>
     </sl-card>

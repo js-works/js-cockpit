@@ -1,7 +1,7 @@
-import { bind, elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { sharedTheme } from './shared/shared-theme'
+import { bind, elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { sharedTheme } from './shared/shared-theme';
 
 import {
   Brand,
@@ -11,11 +11,11 @@ import {
   PasswordField,
   TextField,
   ThemeProvider
-} from 'js-cockpit'
+} from 'js-cockpit';
 
 export default {
   title: 'login-form'
-}
+};
 
 @elem({
   tag: 'login-form-demo',
@@ -40,14 +40,14 @@ class LoginFormDemo extends Component {
           enable-registration
           initial-view="login"
           .processSubmit=${(data: LoginForm.SubmitData) => {
-            console.log(JSON.stringify(data, null, 2))
+            console.log(JSON.stringify(data, null, 2));
 
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 //reject('This is just a demo. Forms cannot really be submitted')
-                resolve('xxx')
-              }, 2000)
-            })
+                resolve('xxx');
+              }, 2000);
+            });
           }}
         >
           <c-brand
@@ -96,8 +96,8 @@ class LoginFormDemo extends Component {
           <div slot="footer">&copy; 2021, my-company</div>
         </c-login-form>
       </c-theme-provider>
-    `
+    `;
   }
 }
 
-export const loginForm = () => h('login-form-demo')
+export const loginForm = () => h('login-form-demo');
