@@ -11,8 +11,6 @@ sl-button:not(:hover)::part(base) {
 
 sl-button::part(base) {
   font-size: var(--sl-font-size-medium);
-  xheight: 36px;
-  xpadding: 2px 5px 0 5px;
 }
 
 sl-icon {

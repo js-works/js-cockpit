@@ -1,7 +1,7 @@
-import { bind, elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { sharedTheme } from './shared/shared-theme'
+import { bind, elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { sharedTheme } from './shared/shared-theme';
 
 import {
   showApproveDialog,
@@ -11,11 +11,11 @@ import {
   showInputDialog,
   showWarnDialog,
   ThemeProvider
-} from 'js-cockpit'
+} from 'js-cockpit';
 
 export default {
   title: 'dialogs'
-}
+};
 
 const styles = `
   :host {
@@ -33,7 +33,7 @@ const styles = `
     width: 8rem;
     margin: 4px 2px;
   }
-`
+`;
 
 @elem({
   tag: 'dialogs-demo',
@@ -47,7 +47,7 @@ class DialogsDemo extends Component {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Thanks :-)'
-    })
+    });
   }
 
   @bind
@@ -56,7 +56,7 @@ class DialogsDemo extends Component {
       message: 'This is your last warning',
       title: 'Important!!!',
       okText: 'OK - I understand'
-    })
+    });
   }
 
   @bind
@@ -65,7 +65,7 @@ class DialogsDemo extends Component {
       message: 'The form could not be submitted',
       title: 'Form error',
       okText: 'OK - I understand'
-    })
+    });
   }
 
   @bind
@@ -77,9 +77,9 @@ class DialogsDemo extends Component {
       if (confirmed) {
         showInfoDialog(this, {
           message: "You've been logged out"
-        })
+        });
       }
-    })
+    });
   }
 
   @bind
@@ -92,9 +92,9 @@ class DialogsDemo extends Component {
       if (approved) {
         showInfoDialog(this, {
           message: 'Project has been deleted'
-        })
+        });
       }
-    })
+    });
   }
 
   @bind
@@ -107,16 +107,16 @@ class DialogsDemo extends Component {
       if (name !== null) {
         showInfoDialog(this, {
           message: `Hello, ${name || 'stranger'}!`
-        })
+        });
       }
-    })
+    });
   }
 
   @bind
   private async _onDestroyPlanet() {
     const confirmed = await showConfirmDialog(this, {
       message: 'Are you really sure that the planet shall be destroyed?'
-    })
+    });
 
     if (confirmed) {
       const approved = await showApproveDialog(this, {
@@ -126,14 +126,14 @@ class DialogsDemo extends Component {
 
         okText: 'Destroy!',
         cancelText: 'Abort'
-      })
+      });
 
       if (approved) {
         showErrorDialog(this, {
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
-        })
+        });
       }
     }
   }
@@ -162,7 +162,7 @@ class DialogsDemo extends Component {
         <br />
         <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>
       </div>
-    `
+    `;
   }
 }
 
@@ -171,4 +171,4 @@ export const dialogs = () =>
     'c-theme-provider',
     { theme: sharedTheme },
     h('dialogs-demo', { lang: 'en' })
-  )
+  );

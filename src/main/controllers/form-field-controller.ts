@@ -1,92 +1,82 @@
-import { LitElement, ReactiveController } from '../utils/lit'
+import {
+  LitElement,
+  ReactiveController,
+  ReactiveControllerHost
+} from '../utils/lit';
 
 // === exports =======================================================
 
-export { FormFieldController }
+export { FormFieldController, FieldBinder, handleFormFields };
+
+// === types =========================================================
+
+interface FormControl<T> extends HTMLElement, ReactiveControllerHost {
+  name: string;
+  required: boolean;
+  bind: FieldBinder<T>;
+}
+
+type FieldBinder<T> =
+  | null
+  | ((params: {
+      getElement(): HTMLElement & { name: string };
+      getValue(): string | null;
+      getRawValue(): T;
+      setErrorText(value: string): void;
+    }) => void);
 
 // === controllers ===================================================
 
 class FormFieldController<T> {
-  constructor(
-    component: LitElement,
+  #elem: FormControl<T>;
+  #prevFieldBinder: FieldBinder<T> | null;
 
-    params: {
-      //getName(): string
-      getValue(): T
-      validate(): {
-        message: string
-        anchor: HTMLElement
-      } | null
-      //reset(): void
-    }
-  ) {
-    const getLabel = () => (component as any).label
-    let hasRendered = false
+  constructor(params: {
+    element: FormControl<T>;
+    getValue: () => string | null;
+    getRawValue: () => T;
+    setErrorText: (text: string) => void;
+  }) {
+    this.#elem = params.element;
+    this.#prevFieldBinder = this.#elem.bind;
 
-    component.addController({
-      hostConnected() {
-        hasRendered = false
-        console.log(`host ${getLabel()},  ${component.localName} connected`)
-      },
+    this.#elem.addController({
+      hostUpdate: () => {
+        const bind = this.#elem.bind;
 
-      hostDisconnected() {},
+        if (bind !== this.#prevFieldBinder) {
+          this.#prevFieldBinder = bind;
 
-      hostUpdate() {
-        if (!hasRendered) {
-          hasRendered = true
-          console.log('dispatch')
-          component.dispatchEvent(
-            new CustomEvent('xxx', {
-              bubbles: true,
-              composed: true,
-
-              detail: {
-                kind: 'formField',
-
-                init(initParams: {
-                  submitForm: () => void //
-                  cancel: () => void
-                }): {
-                  //getName: () => string
-                  getValue: () => any
-                  validate: (data: Record<string, any>) => {
-                    message: string
-                    anchor: HTMLElement
-                  } | null
-                  //reset: () => void
-                } {
-                  return {
-                    //getName: () => params.getName(),
-                    getValue: () => params.getValue(),
-                    //reset: () => params.reset(),
-                    validate: () => params.validate()
-                  }
-
-                  return null as any // TODO
-                }
-              }
-            })
-          )
+          if (bind) {
+            bind({
+              getElement: () => this.#elem,
+              getValue: params.getValue,
+              getRawValue: params.getRawValue,
+              setErrorText: params.setErrorText
+            });
+          }
         }
-      },
-
-      hostUpdated() {}
-    })
+      }
+    });
   }
+}
 
-  signalInput(): void {}
+function handleFormFields<T extends Record<string, any>>(): [
+  bind: { [K in keyof T]: FieldBinder<T[K]> },
+  processSubmit: (handler: (data: T) => void) => () => void
+] {
+  const bind: { [K in keyof T]: FieldBinder<T[K]> } = new Proxy(
+    {},
+    {
+      get(target, key): FieldBinder<unknown> {
+        return (params) => {};
+      }
+    }
+  ) as any;
 
-  signalUpdate(): void {}
+  const processSubmit: any = (processor: Function) => {
+    return (ev: Event) => ev.preventDefault();
+  };
 
-  signalFocus(): void {}
-
-  signalBlur(): void {}
-
-  hasError(): boolean {
-    return false
-  }
-
-  getErrorMsg(): string | null {
-    return null
-  }
+  return [bind, processSubmit];
 }

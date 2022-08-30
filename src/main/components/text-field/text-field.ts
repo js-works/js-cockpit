@@ -10,7 +10,10 @@ import {
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
-import { FormFieldController } from '../../controllers/form-field-controller';
+import {
+  FormFieldController,
+  FieldBinder
+} from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -50,6 +53,9 @@ class TextField extends Component {
   @prop({ attr: Attrs.string })
   error = '';
 
+  @prop
+  bind: FieldBinder<string> = null;
+
   reset() {}
 
   focus() {
@@ -63,57 +69,35 @@ class TextField extends Component {
   private _i18n = new I18nController(this);
   private _error: string | null = null;
   private _slInputRef = createRef<SlInput>();
+  private _errorText = '';
 
-  private _formField: FormFieldController<string> =
-    new FormFieldController<string>(this, {
-      getValue: () => this.value,
-
-      validate: () => {
-        if (this.required && !this.value) {
-          return {
-            message: this._i18n.translate(
-              'jsCockpit.validation',
-              'fieldRequired'
-            ),
-            anchor: this._slInputRef.value!
-          };
-        }
-
-        return null;
-      }
-    });
+  private _formField: FormFieldController<string> = new FormFieldController({
+    element: this,
+    getValue: () => this.value,
+    getRawValue: () => this.value,
+    setErrorText: (value) => (this._errorText = value)
+  });
 
   constructor() {
     super();
   }
 
-  @bind
-  private _onInput() {
+  private _onInput = () => {
     this.value = this._slInputRef.value!.value; // TODO: prevent refresh
-    this._formField.signalInput();
-  }
+  };
 
-  @bind
-  private _onChange() {
-    this._formField.signalUpdate();
-  }
+  private _onChange = () => {};
 
-  @bind
-  _onFocus() {
-    this._formField.signalFocus();
-  }
+  _onFocus = () => {};
 
-  @bind
-  _onBlur() {
-    this._formField.signalBlur();
-  }
+  _onBlur = () => {};
 
   render() {
     return html`
       <div
         class="base ${classMap({
-          required: this.required,
-          'has-error': this._formField.hasError()
+          'required': this.required,
+          'has-error': !!this._errorText
         })}"
       >
         <sl-input
@@ -127,7 +111,7 @@ class TextField extends Component {
         >
           <span slot="label" class="control-label">${this.label}</span>
         </sl-input>
-        <div class="error">${this._formField.getErrorMsg()}</div>
+        <div class="error">${this._errorText}</div>
       </div>
     `;
   }
