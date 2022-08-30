@@ -20,33 +20,35 @@ export default {
 
 export const formValidation = () => h('form-validation');
 
-const [frm, processSubmit] = handleFormFields<{
-  firstName: string;
-  lastName: string;
-  dayOfBirth: Date;
-}>();
-
-const onSubmit = processSubmit((data) => {
-  alert(JSON.stringify(data, null, 2));
-});
-
 @elem({
   tag: 'form-validation',
   uses: []
 })
 class FormValidationDemo extends Component {
+  private _f = handleFormFields<{
+    firstName: string;
+    lastName: string;
+    dayOfBirth: Date;
+  }>();
+
   render() {
+    const [frm, processSubmit] = this._f;
+
+    const onSubmit = processSubmit((data) => {
+      alert(JSON.stringify(data, null, 2));
+    });
+
     return html`
       <form @submit=${onSubmit}>
         <c-text-field
           label="First name"
           required
-          bind=${frm.firstName}
+          .bind=${frm.firstName}
         ></c-text-field>
         <c-text-field
           label="Last name"
           required
-          bind=${frm.lastName}
+          .bind=${frm.lastName}
         ></c-text-field>
         <sl-button type="submit">Submit</sl-button>
       </form>

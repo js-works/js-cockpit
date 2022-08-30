@@ -16,14 +16,14 @@ interface FormControl<T> extends HTMLElement, ReactiveControllerHost {
   bind: FieldBinder<T>;
 }
 
-type FieldBinder<T> =
-  | null
-  | ((params: {
-      getElement(): HTMLElement & { name: string };
-      getValue(): string | null;
-      getRawValue(): T;
-      setErrorText(value: string): void;
-    }) => void);
+type FieldBinding<T> = {
+  getElement(): HTMLElement & { name: string };
+  getValue(): string | null;
+  getRawValue(): T;
+  setErrorText(value: string): void;
+};
+
+type FieldBinder<T> = null | ((binding: FieldBinding<T>) => void);
 
 // === controllers ===================================================
 
@@ -65,17 +65,31 @@ function handleFormFields<T extends Record<string, any>>(): [
   bind: { [K in keyof T]: FieldBinder<T[K]> },
   processSubmit: (handler: (data: T) => void) => () => void
 ] {
+  const fieldBinders = new Map<string, FieldBinding<unknown>>();
+
   const bind: { [K in keyof T]: FieldBinder<T[K]> } = new Proxy(
     {},
     {
-      get(target, key): FieldBinder<unknown> {
-        return (params) => {};
+      get(target, key: string): FieldBinder<unknown> {
+        return (binding) => {
+          fieldBinders.set(key, binding);
+        };
       }
     }
   ) as any;
 
   const processSubmit: any = (processor: Function) => {
-    return (ev: Event) => ev.preventDefault();
+    return (ev: Event) => {
+      ev.preventDefault();
+
+      const data: Record<string, unknown> = {};
+
+      for (const key of fieldBinders.keys()) {
+        data[key] = fieldBinders.get(key)!.getRawValue();
+      }
+
+      processor(data);
+    };
   };
 
   return [bind, processSubmit];
