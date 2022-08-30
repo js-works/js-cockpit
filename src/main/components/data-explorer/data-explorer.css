@@ -42,7 +42,7 @@
   font-family: var(--sl-font-sans);
   font-size: 1.6rem;
   font-weight: 400; //var(--sl-font-weight-light);
-  color: var(--sl-color-primary-1000);
+  color: var(--sl-color-neutral-800);
 }
 
 .actions {

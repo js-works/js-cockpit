@@ -44,8 +44,8 @@ export default css`
     --adp-poiner-border-radius: 2px;
     --adp-pointer-offset: 14px;
     --adp-cell-border-radius: 0px;
-    --adp-cell-background-color-selected: #5cc4ef;
-    --adp-cell-background-color-selected-hover: #45bced;
+    --adp-cell-background-color-selected: var(--sl-color-primary-500);
+    --adp-cell-background-color-selected-hover: var(--sl-color-primary-400);
     --adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);
     --adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);
     --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
