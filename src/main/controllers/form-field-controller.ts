@@ -6,18 +6,22 @@ import {
 
 // === exports =======================================================
 
-export { FormFieldController, FieldBinder, handleFormFields };
+export { FormFieldController, FormFieldsController, FieldBinder };
 
 // === types =========================================================
 
 interface FormControl<T> extends HTMLElement, ReactiveControllerHost {
   name: string;
   required: boolean;
+  disabled: boolean;
+  readonly invalid: boolean;
+  setCustomValidity(message: string): void;
+  reportValidity(): boolean;
   bind: FieldBinder<T>;
 }
 
 type FieldBinding<T> = {
-  getElement(): HTMLElement & { name: string };
+  getElement(): FormControl<T>;
   getValue(): string | null;
   getRawValue(): T;
   setErrorText(value: string): void;
@@ -61,36 +65,40 @@ class FormFieldController<T> {
   }
 }
 
-function handleFormFields<T extends Record<string, any>>(): [
-  bind: { [K in keyof T]: FieldBinder<T[K]> },
-  processSubmit: (handler: (data: T) => void) => () => void
-] {
-  const fieldBinders = new Map<string, FieldBinding<unknown>>();
+class FormFieldsController<T extends Record<string, unknown>> {
+  //binders: { [K in keyof T]: FieldBinder<T[K]> };
+  valid: () => boolean;
+  getData: () => T;
 
-  const bind: { [K in keyof T]: FieldBinder<T[K]> } = new Proxy(
-    {},
-    {
-      get(target, key: string): FieldBinder<unknown> {
-        return (binding) => {
-          fieldBinders.set(key, binding);
-        };
-      }
-    }
-  ) as any;
-
-  const processSubmit: any = (processor: Function) => {
-    return (ev: Event) => {
-      ev.preventDefault();
-
-      const data: Record<string, unknown> = {};
-
-      for (const key of fieldBinders.keys()) {
-        data[key] = fieldBinders.get(key)!.getRawValue();
-      }
-
-      processor(data);
+  bindTo = (key: keyof T) => {
+    return (binding: any) => {
+      this.#fieldBindings.set(key, binding) as any;
     };
   };
 
-  return [bind, processSubmit];
+  #fieldBindings: Map<keyof T, FieldBinding<T>>;
+
+  constructor() {
+    this.#fieldBindings = new Map();
+
+    this.valid = () => {
+      for (const binding of this.#fieldBindings.values()) {
+        if (binding.getElement().invalid) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    this.getData = () => {
+      const data: Record<string, unknown> = {};
+
+      for (const key of this.#fieldBindings.keys()) {
+        data[key as any] = this.#fieldBindings.get(key)!.getRawValue();
+      }
+
+      return data as T;
+    };
+  }
 }

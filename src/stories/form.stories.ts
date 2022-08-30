@@ -4,10 +4,10 @@ import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
 
 import {
-  handleFormFields,
   Brand,
   DateField,
   EmailField,
+  FormFieldsController,
   LoginForm,
   PasswordField,
   TextField,
@@ -18,39 +18,47 @@ export default {
   title: 'form'
 };
 
-export const formValidation = () => h('form-validation');
+export const formValidation = () =>
+  h('div', null, h('form-validation'), h('form-validation'));
 
 @elem({
   tag: 'form-validation',
   uses: []
 })
 class FormValidationDemo extends Component {
-  private _f = handleFormFields<{
+  private _formFields = new FormFieldsController<{
     firstName: string;
     lastName: string;
     dayOfBirth: Date;
   }>();
 
-  render() {
-    const [frm, processSubmit] = this._f;
+  private _onSubmit = (ev: Event) => {
+    //ev.preventDefault();
 
-    const onSubmit = processSubmit((data) => {
-      alert(JSON.stringify(data, null, 2));
-    });
+    if (!this._formFields.valid()) {
+      return;
+    }
+
+    // alert(JSON.stringify(this._formFields.getData(), null, 2));
+  };
+
+  render() {
+    const to = this._formFields.bindTo;
 
     return html`
-      <form @submit=${onSubmit}>
+      <form @submit=${this._onSubmit}>
+        <sl-input requiredxxx></sl-input>
         <c-text-field
           label="First name"
           required
-          .bind=${frm.firstName}
+          .bind=${to('firstName')}
         ></c-text-field>
         <c-text-field
           label="Last name"
           required
-          .bind=${frm.lastName}
+          .bind=${to('lastName')}
         ></c-text-field>
-        <sl-button type="submit">Submit</sl-button>
+        <button type="submit">Submit</button>
       </form>
     `;
   }

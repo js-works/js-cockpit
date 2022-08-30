@@ -39,8 +39,8 @@ export { PageSizeChangeEvent } from './events/page-size-change-event';
 // controllers
 export {
   FormFieldController,
-  FieldBinder,
-  handleFormFields
+  FormFieldsController,
+  FieldBinder
 } from './controllers/form-field-controller';
 
 // i18n

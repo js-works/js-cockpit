@@ -62,6 +62,19 @@ class TextField extends Component {
     this._slInputRef.value!.focus();
   }
 
+  get invalid() {
+    return this._slInputRef.value!.invalid;
+  }
+
+  setCustomValidity(message: string) {
+    return this._slInputRef.value!.setCustomValidity(message);
+  }
+
+  reportValidity() {
+    alert(1);
+    return this._slInputRef.value!.reportValidity();
+  }
+
   blur() {
     this._slInputRef.value!.blur();
   }
