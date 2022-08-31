@@ -99,7 +99,7 @@
   align-items: center;
   gap: 1.5rem;
 
-  background-color: var(--sl-light, var(--sl-color-neutral-600))
+  background-color: var(--sl-light, var(--sl-color-neutral-700))
     var(--sl-dark, var(--sl-color-neutral-300));
 
   padding: 1.7rem 2.7rem;
