@@ -55,7 +55,7 @@ export default css`
     color: var(--sl-color-neutral-1000);
   }
 
-  c-theme-provider.col1::part(base) {
+  jsc-theme-provider.col1::part(base) {
     height: 100%;
     display: flex;
     align-items: center;

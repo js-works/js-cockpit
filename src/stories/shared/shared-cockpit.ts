@@ -1,7 +1,7 @@
-import { h } from '../../main/utils/dom'
-import { sharedTheme } from '../shared/shared-theme'
-import { elem, Component } from '../../main/utils/components'
-import { html } from '../../main/utils/lit'
+import { h } from '../../main/utils/dom';
+import { sharedTheme } from '../shared/shared-theme';
+import { elem, Component } from '../../main/utils/components';
+import { html } from '../../main/utils/lit';
 
 import {
   showInfoDialog,
@@ -18,13 +18,13 @@ import {
   TextArea,
   TextField,
   UserMenu
-} from 'js-cockpit'
+} from 'js-cockpit';
 
 export default {
   title: 'cockpit'
-}
+};
 
-loadTheme(sharedTheme)
+loadTheme(sharedTheme);
 
 // ===============================================================================
 
@@ -112,19 +112,19 @@ export class SharedCockpit extends Component {
           ]
         }
       ]
-    }
+    };
 
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
-        <c-cockpit>
-          <c-brand
+      <cp-theme-provider .theme=${sharedTheme}>
+        <cp-cockpit>
+          <cp-brand
             slot="header-start"
             headline="my-company"
             text="Back Office"
             logo="default"
             multi-color
-          ></c-brand>
-          <c-nav-menu
+          ></cp-brand>
+          <cp-nav-menu
             slot="header"
             .items=${[
               {
@@ -146,25 +146,25 @@ export class SharedCockpit extends Component {
             ]}
             active-item="2"
             @c-action=${notImplementedHandler}
-          ></c-nav-menu>
-          <c-user-menu
+          ></cp-nav-menu>
+          <cp-user-menu
             slot="header-end"
             user-name="Jane Doe"
             @c-logout=${notImplementedHandler}
-          ></c-user-menu>
+          ></cp-user-menu>
           <div slot="sidebar" class="full-height">
-            <c-side-menu
+            <cp-side-menu
               header-text="User management"
               .menu=${menu}
               active-item="price-calculation"
               @c-action=${notImplementedHandler}
               collapse-mode="manual"
-            ></c-side-menu>
+            ></cp-side-menu>
           </div>
           <div slot="main" class="yellow full-height"><slot></slot></div>
-        </c-cockpit>
-      </c-theme-provider>
-    `
+        </cp-cockpit>
+      </cp-theme-provider>
+    `;
   }
 }
 
@@ -173,7 +173,7 @@ function notImplementedHandler() {
     title: 'Not implemented',
     message: 'This  is not implemented as this is just a very simple demo.',
     okText: 'Okay, I understand'
-  })
+  });
 }
 
-export const cockpit2 = () => h('cockpit-demo2')
+export const cockpit2 = () => h('cockpit-demo2');

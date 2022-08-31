@@ -20,7 +20,7 @@ export { Fieldset };
 // === Fieldset ===================================================
 
 @elem({
-  tag: 'c-fieldset',
+  tag: 'cp-fieldset',
   styles: fieldsetStyles
 })
 class Fieldset extends Component {

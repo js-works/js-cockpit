@@ -6,26 +6,26 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // styles
-import sectionStyles from './form-section.css'
+import sectionStyles from './form-section.css';
 
 // === exports =======================================================
 
-export { FormSection }
+export { FormSection };
 
 // === FormSection ===================================================
 
 @elem({
-  tag: 'c-form-section',
+  tag: 'cp-form-section',
   styles: sectionStyles
 })
 class FormSection extends Component {
   @prop({ attr: Attrs.string })
-  caption = ''
+  caption = '';
 
   render() {
     return html`
@@ -43,6 +43,6 @@ class FormSection extends Component {
           <slot></slot>
         </div>
       </div>
-    `
+    `;
   }
 }

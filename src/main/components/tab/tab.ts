@@ -6,32 +6,32 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // styles
-import tabStyles from './tab.css'
+import tabStyles from './tab.css';
 
 // === exports =======================================================
 
-export { Tab }
+export { Tab };
 
 // === Tab ===================================================
 
 @elem({
-  tag: 'c-tab',
+  tag: 'cp-tab',
   styles: tabStyles
 })
 class Tab extends Component {
   @prop({ attr: Attrs.string })
-  caption = ''
+  caption = '';
 
   render() {
     return html`
       <div class="base">
         <slot></slot>
       </div>
-    `
+    `;
   }
 }

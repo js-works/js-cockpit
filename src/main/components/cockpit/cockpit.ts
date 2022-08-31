@@ -12,7 +12,7 @@ export { Cockpit };
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'c-cockpit',
+  tag: 'cp-cockpit',
   styles: cockpitStyles,
   uses: []
 })
@@ -47,7 +47,7 @@ class Cockpit extends Component {
             <slot name="subheader-end"></slot>
           </div>
         </div>
-        <c-theme-provider class="col1" style="background-color: yellow">
+        <cp-theme-provider class="col1" style="background-color: yellow">
           <div class="sidebar-start">
             <slot name="sidebar-start"></slot>
           </div>
@@ -57,7 +57,7 @@ class Cockpit extends Component {
           <div class="sidebar-end">
             <slot name="sidebar-end"></slot>
           </div>
-        </c-theme-provider>
+        </cp-theme-provider>
         <div class="col2">
           <div class="main-start">
             <slot name="main-start"></slot>

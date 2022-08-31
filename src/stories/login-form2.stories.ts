@@ -34,9 +34,9 @@ export const loginForm = () => h('login-form2-demo');
 class LoginFormDemo extends Component {
   render() {
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
-        <c-login-form2> </c-login-form2>
-      </c-theme-provider>
+      <cp-theme-provider .theme=${sharedTheme}>
+        <cp-login-form2> </cp-login-form2>
+      </cp-theme-provider>
     `;
   }
 }

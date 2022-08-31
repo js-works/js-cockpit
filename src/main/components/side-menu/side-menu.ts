@@ -56,7 +56,7 @@ namespace SideMenu {
 // === SideMenu ======================================================
 
 @elem({
-  tag: 'c-side-menu',
+  tag: 'cp-side-menu',
   styles: sideMenuStyles,
   uses: [SlDetails, SlMenu, SlMenuItem]
 })

@@ -20,7 +20,7 @@ export { DataForm };
 // === DataForm ===================================================
 
 @elem({
-  tag: 'c-data-form',
+  tag: 'cp-data-form',
   styles: dataFormStyles,
   uses: [ActionBar, SlIcon, SlIconButton]
 })
@@ -58,7 +58,7 @@ class DataForm extends Component {
         <div class="header">
           <div class="headline">${this.headline}</div>
           <div class="actions">
-            <c-action-bar .actions=${actions}></c-action-bar>
+            <cp-action-bar .actions=${actions}></cp-action-bar>
           </div>
           <div>
             <sl-button class="close-button" size="small">

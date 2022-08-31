@@ -48,16 +48,16 @@ class FormValidationDemo extends Component {
     return html`
       <form @submit=${this._onSubmit}>
         <sl-input requiredxxx></sl-input>
-        <c-text-field
+        <cp-text-field
           label="First name"
           required
           .bind=${to('firstName')}
-        ></c-text-field>
-        <c-text-field
+        ></cp-text-field>
+        <cp-text-field
           label="Last name"
           required
           .bind=${to('lastName')}
-        ></c-text-field>
+        ></cp-text-field>
         <button type="submit">Submit</button>
       </form>
     `;

@@ -32,7 +32,7 @@ export { EmailField };
 // === EmailField =====================================================
 
 @elem({
-  tag: 'c-email-field',
+  tag: 'cp-email-field',
   styles: [controlStyles, emailFieldStyles],
   uses: [SlIcon, SlInput]
 })

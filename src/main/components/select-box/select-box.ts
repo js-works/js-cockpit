@@ -27,7 +27,7 @@ export { SelectBox };
 // === SelectBox =====================================================
 
 @elem({
-  tag: 'c-select-box',
+  tag: 'cp-select-box',
   styles: selectBoxStyles,
   uses: [SlDivider, SlMenuItem, SlSelect]
 })

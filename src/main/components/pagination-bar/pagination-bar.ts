@@ -60,7 +60,7 @@ type AuxData = {
 // === Paginator =====================================================
 
 @elem({
-  tag: 'c-pagination-bar',
+  tag: 'cp-pagination-bar',
   styles: paginationBarStyles,
   uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect]
 })

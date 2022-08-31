@@ -6,64 +6,64 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
-import { ActionEvent } from '../../events/action-event'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
+import { ActionEvent } from '../../events/action-event';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 
 // icons
-import menuSvg from './assets/menu.svg'
+import menuSvg from './assets/menu.svg';
 
 // styles
-import navMenuStyles from './nav-menu.css'
+import navMenuStyles from './nav-menu.css';
 
 // === exports =======================================================
 
-export { NavMenu }
+export { NavMenu };
 
 // === types =========================================================
 
 namespace NavMenu {
   export type Item = {
-    itemId: string
-    text: string
-    action?: string
-    disabled?: boolean
-  }
+    itemId: string;
+    text: string;
+    action?: string;
+    disabled?: boolean;
+  };
 }
 
 // === NavMenu ===================================================
 
 @elem({
-  tag: 'c-nav-menu',
+  tag: 'cp-nav-menu',
   styles: navMenuStyles,
   uses: [SlIcon]
 })
 class NavMenu extends Component {
   @prop
-  items?: NavMenu.Item[]
+  items?: NavMenu.Item[];
 
   @prop({ attr: Attrs.string })
-  activeItem?: string
+  activeItem?: string;
 
   @prop
-  onAction?: Listener<ActionEvent>
+  onAction?: Listener<ActionEvent>;
 
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction)
+  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
 
   @bind
   private _onItemClick(ev: MouseEvent) {
-    const item = ev.currentTarget
+    const item = ev.currentTarget;
 
     const action = !(item instanceof HTMLElement)
       ? null
-      : item.getAttribute('data-action')
+      : item.getAttribute('data-action');
 
     if (action !== null && action !== '') {
-      this._emitAction({ action })
+      this._emitAction({ action });
     }
   }
 
@@ -75,7 +75,7 @@ class NavMenu extends Component {
           this.items || [],
           (_, idx) => idx,
           (item) => {
-            let action = item.action !== undefined ? item.action : item.itemId
+            let action = item.action !== undefined ? item.action : item.itemId;
 
             return item.disabled
               ? null
@@ -89,10 +89,10 @@ class NavMenu extends Component {
                   >
                     <div class="text">${item.text}</div>
                   </div>
-                `
+                `;
           }
         )}
       </div>
-    `
+    `;
   }
 }

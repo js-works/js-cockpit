@@ -97,7 +97,7 @@ namespace BasicCockpit {
 // === BasicCockpit ===================================================
 
 @elem({
-  tag: 'c-basic-cockpit',
+  tag: 'cp-basic-cockpit',
   styles: basicCockpitStyles,
   uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
 })

@@ -1,22 +1,22 @@
-import { bind, elem, prop, Attrs, Component } from '../../utils/components'
+import { bind, elem, prop, Attrs, Component } from '../../utils/components';
 
-import { html } from '../../utils/lit'
+import { html } from '../../utils/lit';
 
 // components
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 
 // icons
-import infoIcon from '../../icons/info-circle.svg'
-import successIcon from '../../icons/check-circle.svg' // TODO
-import warningIcon from '../../icons/exclamation-circle.svg'
-import dangerIcon from '../../icons/exclamation-diamond.svg'
+import infoIcon from '../../icons/info-circle.svg';
+import successIcon from '../../icons/check-circle.svg'; // TODO
+import warningIcon from '../../icons/exclamation-circle.svg';
+import dangerIcon from '../../icons/exclamation-diamond.svg';
 
 // styles
-import messageBarStyles from './message-bar.css'
+import messageBarStyles from './message-bar.css';
 
 // === exports =======================================================
 
-export { MessageBar }
+export { MessageBar };
 
 // === constants =====================================================
 
@@ -25,7 +25,7 @@ const appearanceByVariant = new Map([
   ['success', { className: 'variant-success', icon: successIcon }],
   ['warning', { className: 'variant-warning', icon: warningIcon }],
   ['danger', { className: 'variant-danger', icon: dangerIcon }]
-])
+]);
 
 // === MessageBar ====================================================
 
@@ -33,28 +33,28 @@ const appearanceByVariant = new Map([
  * slots: default
  */
 @elem({
-  tag: 'c-message-bar',
+  tag: 'cp-message-bar',
   styles: messageBarStyles,
   uses: [SlIcon]
 })
 class MessageBar extends Component {
   @prop({ attr: Attrs.string })
-  variant: 'info' | 'success' | 'warning' | 'danger' = 'info'
+  variant: 'info' | 'success' | 'warning' | 'danger' = 'info';
 
   @prop({ attr: Attrs.boolean })
-  transparent?: boolean
+  transparent?: boolean;
 
   @prop({ attr: Attrs.boolean })
-  inheritColor?: boolean
+  inheritColor?: boolean;
 
   render() {
-    let appearance = appearanceByVariant.get(this.variant)
+    let appearance = appearanceByVariant.get(this.variant);
 
     if (!appearance) {
-      return null
+      return null;
     }
 
-    const { icon, className } = appearance
+    const { icon, className } = appearance;
 
     return html`
       <div class="base ${className} ${this.transparent ? 'transparent' : ''}">
@@ -67,6 +67,6 @@ class MessageBar extends Component {
           <slot></slot>
         </div>
       </div>
-    `
+    `;
   }
 }

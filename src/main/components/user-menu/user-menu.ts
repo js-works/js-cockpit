@@ -6,50 +6,50 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { html } from '../../utils/lit'
-import { I18nController } from '../../i18n/i18n'
+import { html } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip';
 
 // events
-import { LogoutEvent } from '../../events/logout-event'
+import { LogoutEvent } from '../../events/logout-event';
 
 // icons
-import defaultAvatarIcon from './assets/default-avatar.svg'
-import logoutIcon from './assets/logout.svg'
+import defaultAvatarIcon from './assets/default-avatar.svg';
+import logoutIcon from './assets/logout.svg';
 
 // styles
-import userMenuStyles from './user-menu.css'
+import userMenuStyles from './user-menu.css';
 
 // === exports =======================================================
 
-export { UserMenu }
+export { UserMenu };
 
 // === UserMenu ======================================================
 
 @elem({
-  tag: 'c-user-menu',
+  tag: 'cp-user-menu',
   styles: userMenuStyles,
   uses: [SlIcon, SlTooltip]
 })
 class UserMenu extends Component {
   @prop({ attr: Attrs.string })
-  userName: string = ''
+  userName: string = '';
 
   @prop
-  onLogout?: Listener<LogoutEvent>
+  onLogout?: Listener<LogoutEvent>;
 
-  private _i18n = new I18nController(this)
-  private _t = this._i18n.translate('jsCockpit.userMenu')
-  private _emitLogout = createEmitter(this, 'c-logout', () => this.onLogout)
+  private _i18n = new I18nController(this);
+  private _t = this._i18n.translate('jsCockpit.userMenu');
+  private _emitLogout = createEmitter(this, 'c-logout', () => this.onLogout);
 
   @bind
   private _onLogoutClick() {
-    this._emitLogout()
+    this._emitLogout();
   }
 
   render() {
@@ -67,6 +67,6 @@ class UserMenu extends Component {
           </a>
         </sl-tooltip>
       </div>
-    `
+    `;
   }
 }

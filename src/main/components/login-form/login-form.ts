@@ -62,7 +62,7 @@ namespace LoginForm {
 // === Login form ====================================================
 
 @elem({
-  tag: 'c-login-form',
+  tag: 'cp-login-form',
   styles: loginFormStyles,
   uses: [
     FocusTrap,
@@ -300,7 +300,7 @@ class LoginForm extends Component {
                   </div>
                   <div class="column1-bottom">${this._renderIntroIcon()}</div>
                 </div>
-                <c-form
+                <cp-form
                   class="column2"
                   @submit=${this._onSubmit}
                   ${ref(this._formRef)}
@@ -314,10 +314,10 @@ class LoginForm extends Component {
                         >`}
                     ${!this._showInvalidFormError
                       ? null
-                      : html`<c-message-bar
+                      : html`<cp-message-bar
                           variant="danger"
                           class=${classMap({
-                            message: true,
+                            'message': true,
                             'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
@@ -325,29 +325,29 @@ class LoginForm extends Component {
                             'jsCockpit.validation',
                             'formInvalid'
                           )}
-                        </c-message-bar>`}
+                        </cp-message-bar>`}
                     ${!this._successMessage
                       ? null
-                      : html`<c-message-bar
+                      : html`<cp-message-bar
                           variant="success"
                           class=${classMap({
-                            message: true,
+                            'message': true,
                             'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
                           ${this._successMessage}
-                        </c-message-bar>`}
+                        </cp-message-bar>`}
                     ${!this._errorMessage
                       ? null
-                      : html`<c-message-bar
+                      : html`<cp-message-bar
                           variant="danger"
                           class=${classMap({
-                            message: true,
+                            'message': true,
                             'fade-out': this._messageFading === 'fadeOut'
                           })}
                         >
                           ${this._errorMessage}
-                        </c-message-bar>`}
+                        </cp-message-bar>`}
                     <focus-trap .inactive=${!this._isLoading}>
                       <sl-button
                         variant="primary"
@@ -370,7 +370,7 @@ class LoginForm extends Component {
                     </focus-trap>
                     ${this._renderLinks()}
                   </div>
-                </c-form>
+                </cp-form>
               </div>
             </div>
             <div class="footer">
@@ -445,16 +445,16 @@ class LoginForm extends Component {
           ${hasSlot(this, 'login-fields')
             ? null
             : html`
-                <c-text-field
+                <cp-text-field
                   name="username"
                   label=${this._t('username')}
                   required
-                ></c-text-field>
-                <c-password-field
+                ></cp-text-field>
+                <cp-password-field
                   name="password"
                   label=${this._t('password')}
                   required
-                ></c-password-field>
+                ></cp-password-field>
               `}`;
 
       case 'registration':
@@ -462,26 +462,26 @@ class LoginForm extends Component {
           ${hasSlot(this, 'registration-fields')
             ? null
             : html`
-                <c-text-field
+                <cp-text-field
                   name="username-reg"
                   label=${this._t('username')}
                   required
-                ></c-text-field>
-                <c-text-field
+                ></cp-text-field>
+                <cp-text-field
                   name="firstName-reg"
                   label=${this._t('firstName')}
                   required
-                ></c-text-field>
-                <c-text-field
+                ></cp-text-field>
+                <cp-text-field
                   name="lastName-reg"
                   label=${this._t('lastName')}
                   required
-                ></c-text-field>
-                <c-email-field
+                ></cp-text-field>
+                <cp-email-field
                   name="email-reg"
                   label=${this._t('email')}
                   required
-                ></c-email-field>
+                ></cp-email-field>
               `}`;
 
       case 'forgotPassword':
@@ -492,17 +492,17 @@ class LoginForm extends Component {
           ${hasSlot(this, 'forgot-password-fields')
             ? null
             : html`
-                <c-text-field
+                <cp-text-field
                   name="username-fp"
                   label=${this._t('username')}
                   required
-                ></c-text-field>
+                ></cp-text-field>
 
-                <c-email-field
+                <cp-email-field
                   name="email-fp"
                   label=${this._t('email')}
                   required
-                ></c-email-field>
+                ></cp-email-field>
               `}`;
 
       case 'resetPassword':
@@ -513,21 +513,21 @@ class LoginForm extends Component {
           ${hasSlot(this, 'forgot-password-fields')
             ? null
             : html`
-                <c-text-field
+                <cp-text-field
                   name="username-rp"
                   label=${this._t('username')}
                   required
-                ></c-text-field>
-                <c-password-field
+                ></cp-text-field>
+                <cp-password-field
                   name="newPasswordRepeat-rp"
                   label=${this._t('newPasswordRepeat')}
                   required
-                ></c-password-field>
-                <c-text-field
+                ></cp-password-field>
+                <cp-text-field
                   name="securityCode-rp"
                   label=${this._t('securityCode')}
                   required
-                ></c-text-field>
+                ></cp-text-field>
               `}`;
     }
   }

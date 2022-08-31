@@ -65,7 +65,7 @@ namespace LoginForm {
 // === Login form ====================================================
 
 @elem({
-  tag: 'c-login-form2',
+  tag: 'cp-login-form2',
   styles: loginFormStyles,
   uses: [
     FocusTrap,

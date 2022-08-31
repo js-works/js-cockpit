@@ -28,7 +28,7 @@ export { SideMenu2 };
 // === SideMenu ======================================================
 
 @elem({
-  tag: 'c-side-menu2',
+  tag: 'cp-side-menu2',
   uses: [SlTree, SlTreeItem, SlCheckbox, SlIcon, SlSpinner],
   styles: ':host { --indent-guide-width: 10px }'
 })

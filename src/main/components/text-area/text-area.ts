@@ -27,7 +27,7 @@ export { TextArea };
 // === TextArea =====================================================
 
 @elem({
-  tag: 'c-text-area',
+  tag: 'cp-text-area',
   styles: textAreaStyles,
   uses: [SlTextarea]
 })

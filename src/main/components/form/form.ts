@@ -7,53 +7,53 @@ import {
   afterUpdate,
   Attrs,
   Component
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { FormSubmitEvent } from '../../events/form-submit-event'
+import { FormSubmitEvent } from '../../events/form-submit-event';
 
-import { classMap, createRef, html, ref } from '../../utils/lit'
+import { classMap, createRef, html, ref } from '../../utils/lit';
 
 // === exports =======================================================
 
-export { Form }
+export { Form };
 
 // === Form ==========================================================
 
 @elem({
-  tag: 'c-form'
+  tag: 'cp-form'
 })
 class Form extends Component {
   @prop
-  onFormSubmit?: () => void
+  onFormSubmit?: () => void;
 
   constructor() {
-    super()
+    super();
 
     this.addController({
       hostUpdate: () => {
-        console.log(`${this.localName} update`)
+        console.log(`${this.localName} update`);
       },
 
       hostUpdated: () => {
-        console.log(`${this.localName} updated`)
+        console.log(`${this.localName} updated`);
       }
-    })
+    });
 
     afterConnect(this, () => {
-      console.log('yyy')
-      console.log('c-form connected')
+      console.log('yyy');
+      console.log('c-form connected');
 
       this.addEventListener('xxx', (ev: any) => {
-        console.log('xxx event:', ev)
-      })
-    })
+        console.log('xxx event:', ev);
+      });
+    });
   }
 
   submit() {
-    alert('submitted')
+    alert('submitted');
   }
 
   render() {
-    return html`<slot></slot>`
+    return html`<slot></slot>`;
   }
 }

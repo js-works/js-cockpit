@@ -27,7 +27,7 @@ export { PasswordField };
 // === PasswordField =====================================================
 
 @elem({
-  tag: 'c-password-field',
+  tag: 'cp-password-field',
   styles: passwordFieldStyles,
   uses: [SlInput]
 })

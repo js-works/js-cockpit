@@ -1,17 +1,17 @@
-import { elem, Component } from '../../utils/components'
-import { html } from '../../utils/lit'
+import { elem, Component } from '../../utils/components';
+import { html } from '../../utils/lit';
 
 // styles
-import appLayoutStyles from './app-layout.css'
+import appLayoutStyles from './app-layout.css';
 
 // === exports =======================================================
 
-export { AppLayout }
+export { AppLayout };
 
 // === Cockpit ===================================================
 
 @elem({
-  tag: 'c-app-layout',
+  tag: 'cp-app-layout',
   styles: appLayoutStyles
 })
 class AppLayout extends Component {
@@ -87,6 +87,6 @@ class AppLayout extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

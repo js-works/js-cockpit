@@ -32,12 +32,12 @@ class BasicCockpitDemo extends Component {
 
   render() {
     return html`
-      <c-basic-cockpit
+      <cp-basic-cockpit
         .config=${getCockpitConfig()}
         @c-action=${this._onAction}
       >
         <shared-data-explorer slot="content"></shared-data-explorer>
-      </c-basic-cockpit>
+      </cp-basic-cockpit>
     `;
   }
 }

@@ -1,51 +1,51 @@
-import { elem, prop, Attrs, Component } from '../../utils/components'
-import { html, classMap } from '../../utils/lit'
+import { elem, prop, Attrs, Component } from '../../utils/components';
+import { html, classMap } from '../../utils/lit';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 
 // icons
-import defaultLogoSvg from './assets/default-logo.svg'
+import defaultLogoSvg from './assets/default-logo.svg';
 
 // styles
-import brandStyles from './brand.css'
+import brandStyles from './brand.css';
 
 // === exports =======================================================
 
-export { Brand }
+export { Brand };
 
 // === Brand ===================================================
 
 @elem({
-  tag: 'c-brand',
+  tag: 'cp-brand',
   styles: brandStyles,
   uses: [SlIcon]
 })
 class Brand extends Component {
   @prop({ attr: Attrs.string })
-  logo: String | null = null
+  logo: String | null = null;
 
   @prop({ attr: Attrs.string })
-  headline = ''
+  headline = '';
 
   @prop({ attr: Attrs.string })
-  text = ''
+  text = '';
 
   @prop({ attr: Attrs.string })
-  size: 'small' | 'medium' | 'large' | 'huge' = 'medium'
+  size: 'small' | 'medium' | 'large' | 'huge' = 'medium';
 
   @prop({ attr: Attrs.boolean })
-  multiColor = false
+  multiColor = false;
 
   render() {
-    const logo = this.logo === 'default' ? defaultLogoSvg : this.logo || null
-    const size = this.size || 'medium'
+    const logo = this.logo === 'default' ? defaultLogoSvg : this.logo || null;
+    const size = this.size || 'medium';
 
     return html`
       <div class="base">
         <div
           class=${classMap({
-            content: true,
+            'content': true,
             [size]: true,
             'multi-color': this.multiColor
           })}
@@ -57,6 +57,6 @@ class Brand extends Component {
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }

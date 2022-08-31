@@ -1,6 +1,6 @@
-import { h } from '../main/utils/dom'
-import { elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
+import { h } from '../main/utils/dom';
+import { elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
 
 import {
   Brand,
@@ -18,15 +18,15 @@ import {
   TextField,
   ThemeProvider,
   UserMenu
-} from 'js-cockpit'
+} from 'js-cockpit';
 
-import { SharedCockpit } from './shared/shared-cockpit'
-import { SharedDataExplorer } from './shared/shared-data-explorer'
-import { SharedDataForm } from './shared/shared-data-form'
+import { SharedCockpit } from './shared/shared-cockpit';
+import { SharedDataExplorer } from './shared/shared-data-explorer';
+import { SharedDataForm } from './shared/shared-data-form';
 
 export default {
   title: 'cockpit'
-}
+};
 
 const demo1Styles = `
   .orange {
@@ -63,7 +63,7 @@ const demo1Styles = `
     height: 100%;
     box-sizing: border-box;
   }
-`
+`;
 
 @elem({
   tag: 'cockpit-demo1',
@@ -73,7 +73,7 @@ const demo1Styles = `
 class CockpitDemo1 extends Component {
   render() {
     return html`
-      <c-cockpit>
+      <cp-cockpit>
         <div slot="header-start" class="orangered">header-start</div>
         <div slot="header" class="orange">header</div>
         <div slot="header-end" class="orangered">header-end</div>
@@ -86,12 +86,12 @@ class CockpitDemo1 extends Component {
         <div slot="main-start" class="gold">main-start</div>
         <div slot="main" class="yellow full-height">main</div>
         <div slot="main-end" class="gold">main-end</div>
-      </c-cockpit>
-    `
+      </cp-cockpit>
+    `;
   }
 }
 
-export const cockpit1 = () => h('cockpit-demo1')
+export const cockpit1 = () => h('cockpit-demo1');
 
 // ===============================================================================
 
@@ -120,11 +120,11 @@ class CockpitDemo2 extends Component {
       <shared-cockpit>
         <shared-data-explorer></shared-data-explorer>
       </shared-cockpit>
-    `
+    `;
   }
 }
 
-export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' })
+export const cockpit2 = () => h('cockpit-demo2', { lang: 'en-US' });
 
 @elem({
   tag: 'cockpit-demo3',
@@ -152,8 +152,8 @@ class CockpitDemo3 extends Component {
       <shared-cockpit>
         <shared-data-form></shared-data-form>
       </shared-cockpit>
-    `
+    `;
   }
 }
 
-export const cockpit3 = () => h('cockpit-demo3')
+export const cockpit3 = () => h('cockpit-demo3');

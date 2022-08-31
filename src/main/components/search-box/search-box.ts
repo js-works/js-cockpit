@@ -24,7 +24,7 @@ export { SearchBox };
 // === SearchBox =====================================================
 
 @elem({
-  tag: 'c-search-box',
+  tag: 'cp-search-box',
   styles: searchBoxStyles,
   uses: [FocusTrap, SlButton, SlDropdown, SlIcon, SlInput]
 })

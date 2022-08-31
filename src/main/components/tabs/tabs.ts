@@ -8,58 +8,58 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit'
+import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab'
-import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group'
-import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel'
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 
 // styles
-import tabsStyles from './tabs.css'
+import tabsStyles from './tabs.css';
 
 // === exports =======================================================
 
-export { Tabs }
+export { Tabs };
 
 // === Tabs ===================================================
 
 @elem({
-  tag: 'c-tabs',
+  tag: 'cp-tabs',
   styles: tabsStyles,
   uses: [SlIcon, SlTabGroup, SlTabPanel, SlTab]
 })
 class Tabs extends Component {
   @state
-  private _activeIdx = 0
-  private _tabGroup = document.createElement('sl-tab-group')
-  private _tabGroupRef = createRef<SlTabGroup>()
-  private _slotRef = createRef<HTMLSlotElement>()
-  private _hasUpdated = false
+  private _activeIdx = 0;
+  private _tabGroup = document.createElement('sl-tab-group');
+  private _tabGroupRef = createRef<SlTabGroup>();
+  private _slotRef = createRef<HTMLSlotElement>();
+  private _hasUpdated = false;
 
   @bind
   private _onTabChange(ev: any) {
-    const newActiveIdx = parseInt(ev.detail.name.substr(5))
+    const newActiveIdx = parseInt(ev.detail.name.substr(5));
 
     if (newActiveIdx !== this._activeIdx) {
-      this._activeIdx = newActiveIdx
+      this._activeIdx = newActiveIdx;
     }
   }
 
   constructor() {
-    super()
+    super();
 
     afterUpdate(this, () => {
-      this._hasUpdated = true
-    })
+      this._hasUpdated = true;
+    });
   }
 
   render() {
     if (!this._hasUpdated) {
-      this._tabGroup = document.createElement('sl-tab-group')
+      this._tabGroup = document.createElement('sl-tab-group');
 
       return html`
         <sl-tab-group
@@ -67,18 +67,18 @@ class Tabs extends Component {
           exportparts="base"
         ></sl-tab-group>
         <slot ${ref(this._slotRef)}></slot>
-      `
+      `;
     } else {
       setTimeout(
         () => this._tabGroupRef.value!.show(`panel${this._activeIdx}`),
         0
-      )
+      );
     }
 
     const pages = this._slotRef
       .value!.assignedElements()
       .filter((it: any) => it.localName === 'c-tab')
-      .map((it: any) => ({ caption: (it as any).caption }))
+      .map((it: any) => ({ caption: (it as any).caption }));
 
     return html`
       <div class="base">
@@ -109,6 +109,6 @@ class Tabs extends Component {
         </sl-tab-group>
         <div class="pages"><slot ${ref(this._slotRef)}></slot></div>
       </div>
-    `
+    `;
   }
 }

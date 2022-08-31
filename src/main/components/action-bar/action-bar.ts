@@ -38,7 +38,7 @@ namespace ActionBar {
 // === ActionBar =====================================================
 
 @elem({
-  tag: 'c-action-bar',
+  tag: 'cp-action-bar',
   styles: actionBarStyles,
   uses: [SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem]
 })

@@ -1,5 +1,5 @@
-import { bind, elem, Component } from '../../main/utils/components'
-import { html } from '../../main/utils/lit'
+import { bind, elem, Component } from '../../main/utils/components';
+import { html } from '../../main/utils/lit';
 
 import {
   AppLayout,
@@ -8,10 +8,10 @@ import {
   ThemeProvider,
   Theme,
   TextField
-} from 'js-cockpit'
+} from 'js-cockpit';
 
 // @ts-ignore
-import faker from 'faker'
+import faker from 'faker';
 
 const columns: DataExplorer.Column[] = [
   {
@@ -49,7 +49,7 @@ const columns: DataExplorer.Column[] = [
     sortable: true,
     width: 180
   }
-]
+];
 
 @elem({
   tag: 'shared-data-explorer',
@@ -65,14 +65,14 @@ const columns: DataExplorer.Column[] = [
       width: 100%;
     }
 
-    c-data-explorer {
+    jsc-data-explorer {
       flex-grow: 1 !important;
     }
   `
 })
 export class SharedDataExplorer extends Component {
   render() {
-    return html`<c-data-explorer
+    return html`<cp-data-explorer
       headline="Customer"
       .columns=${columns}
       .fetchItems=${fetchFakeItems}
@@ -119,23 +119,23 @@ export class SharedDataExplorer extends Component {
         }
       ]}
     >
-      <c-search-box slot="search">
-        <c-text-field label="First name"></c-text-field>
-        <c-text-field label="Last name"></c-text-field>
-        <c-text-field label="Zip code"></c-text-field>
-        <c-text-field label="City"></c-text-field>
-        <c-text-field label="Country"></c-text-field>
-        <c-date-field label="Date of birth"></c-date-range>
-      </c-search-box>
-    </c-data-explorer>
-  `
+      <cp-search-box slot="search">
+        <cp-text-field label="First name"></cp-text-field>
+        <cp-text-field label="Last name"></cp-text-field>
+        <cp-text-field label="Zip code"></cp-text-field>
+        <cp-text-field label="City"></cp-text-field>
+        <cp-text-field label="Country"></cp-text-field>
+        <cp-date-field label="Date of birth"></cp-date-range>
+      </cp-search-box>
+    </cp-data-explorer>
+  `;
   }
 }
 
-const totalItemCount = 3234
-let fakeItems: Record<string, string>[] = []
+const totalItemCount = 3234;
+let fakeItems: Record<string, string>[] = [];
 
-faker.seed(100)
+faker.seed(100);
 
 for (let i = 0; i < totalItemCount; ++i) {
   fakeItems.push({
@@ -145,25 +145,25 @@ for (let i = 0; i < totalItemCount; ++i) {
     zipCode: faker.address.zipCode(),
     city: faker.address.city(),
     country: faker.address.country()
-  })
+  });
 }
 
 const fetchFakeItems: DataExplorer.FetchItems = (params) => {
   return new Promise((resolve, reject) => {
-    let items = [...fakeItems]
+    let items = [...fakeItems];
 
     if (params.sortField) {
-      const sig = params.sortDir === 'desc' ? -1 : 1
+      const sig = params.sortDir === 'desc' ? -1 : 1;
 
       items.sort((a, b) =>
         a[params.sortField!] >= b[params.sortField!] ? sig : -sig
-      )
+      );
     }
 
-    items = items.slice(params.offset, params.offset + params.count)
+    items = items.slice(params.offset, params.offset + params.count);
 
     setTimeout(() => {
-      resolve({ items, totalItemCount })
-    }, 1000)
-  })
-}
+      resolve({ items, totalItemCount });
+    }, 1000);
+  });
+};

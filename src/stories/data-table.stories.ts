@@ -1,12 +1,12 @@
-import { elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { DataTable, ThemeProvider } from 'js-cockpit'
-import { sharedTheme } from './shared/shared-theme'
+import { elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { DataTable, ThemeProvider } from 'js-cockpit';
+import { sharedTheme } from './shared/shared-theme';
 
 export default {
   title: 'data-table'
-}
+};
 
 const columns: DataTable.Column[] = [
   {
@@ -55,7 +55,7 @@ const columns: DataTable.Column[] = [
       }
     ]
   }
-]
+];
 
 const data = [
   {
@@ -98,7 +98,7 @@ const data = [
     city: 'Sidney',
     country: 'Australia'
   }
-]
+];
 
 @elem({
   tag: 'data-table-demo',
@@ -107,17 +107,17 @@ const data = [
 class DataTableDemo extends Component {
   render() {
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
+      <cp-theme-provider .theme=${sharedTheme}>
         <div>
-          <c-data-table
+          <cp-data-table
             bordered
             .columns=${columns}
             .data=${[...data, ...data]}
-          ></c-data-table>
+          ></cp-data-table>
         </div>
-      </c-theme-provider>
-    `
+      </cp-theme-provider>
+    `;
   }
 }
 
-export const dataTable = () => h('data-table-demo')
+export const dataTable = () => h('data-table-demo');

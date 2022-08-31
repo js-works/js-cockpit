@@ -34,7 +34,7 @@ import yearIcon from '../../icons/calendar.svg';
 // === types =========================================================
 
 @elem({
-  tag: 'c-date-field',
+  tag: 'cp-date-field',
   uses: [SlIcon, SlIconButton, SlInput, SlPopup],
   styles: dateFieldStyles
 })

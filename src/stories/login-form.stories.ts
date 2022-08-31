@@ -32,8 +32,8 @@ export default {
 class LoginFormDemo extends Component {
   render() {
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
-        <c-login-form
+      <cp-theme-provider .theme=${sharedTheme}>
+        <cp-login-form
           full-size
           enable-remember-login
           enable-forgot-password
@@ -50,52 +50,52 @@ class LoginFormDemo extends Component {
             });
           }}
         >
-          <c-brand
+          <cp-brand
             slot="header"
             logo="default"
             headline="my-company"
             text="Back Office"
             size="large"
-          ></c-brand>
+          ></cp-brand>
           <!--
           <div slot="login-fields">
-            <c-text-field
+            <cp-text-field
               label="Username"
               name="usernamelll"
               required
-            ></c-text-field>
-            <c-password-field label="Password" required></c-password-field>
+            ></cp-text-field>
+            <cp-password-field label="Password" required></cp-password-field>
           </div>
 -->
           <div slot="registration-fields">
-            <c-text-field
+            <cp-text-field
               name="usernamerrr"
               label="Username"
               required
-            ></c-text-field>
-            <c-text-field
+            ></cp-text-field>
+            <cp-text-field
               name="firstNamerrr"
               label="First name"
               required
-            ></c-text-field>
-            <c-text-field
+            ></cp-text-field>
+            <cp-text-field
               name="lastNamerrr"
               label="Last name"
               required
-            ></c-text-field>
-            <c-email-field
+            ></cp-text-field>
+            <cp-email-field
               name="emailrrr"
               label="Email"
               required
-            ></c-email-field>
-            <c-date-field
+            ></cp-email-field>
+            <cp-date-field
               name="dayOfBirthrrr"
               label="Day of birth"
-            ></c-date-field>
+            ></cp-date-field>
           </div>
           <div slot="footer">&copy; 2021, my-company</div>
-        </c-login-form>
-      </c-theme-provider>
+        </cp-login-form>
+      </cp-theme-provider>
     `;
   }
 }

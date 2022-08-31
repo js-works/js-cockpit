@@ -1,11 +1,11 @@
-import { elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { AppLayout } from 'js-cockpit'
+import { elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { AppLayout } from 'js-cockpit';
 
 export default {
   title: 'app-layout'
-}
+};
 
 const styles = `
   .orange {
@@ -42,7 +42,7 @@ const styles = `
     height: 100%;
     box-sizing: border-box;
   }
-`
+`;
 
 @elem({
   tag: 'app-layout-demo',
@@ -52,7 +52,7 @@ const styles = `
 class AppLayoutDemo extends Component {
   render() {
     return html`
-      <c-app-layout>
+      <cp-app-layout>
         <div slot="header-start" class="orangered">header-start</div>
         <div slot="header" class="orange">header</div>
         <div slot="header-end" class="orangered">header-end</div>
@@ -71,9 +71,9 @@ class AppLayoutDemo extends Component {
         <div slot="footer-start" class="orangered">footer-start</div>
         <div slot="footer" class="orange">footer</div>
         <div slot="footer-end" class="orangered">footer-end</div>
-      </c-app-layout>
-    `
+      </cp-app-layout>
+    `;
   }
 }
 
-export const appLayout = () => h('app-layout-demo')
+export const appLayout = () => h('app-layout-demo');

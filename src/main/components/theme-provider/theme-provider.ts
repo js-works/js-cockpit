@@ -8,36 +8,36 @@ import {
   Attrs,
   Component,
   Listener
-} from '../../utils/components'
+} from '../../utils/components';
 
-import { html } from '../../utils/lit'
-import { Theme } from '../../misc/theming'
+import { html } from '../../utils/lit';
+import { Theme } from '../../misc/theming';
 
 // styles
-import themeProviderStyles from './theme-provider.css'
+import themeProviderStyles from './theme-provider.css';
 
 // === exports =======================================================
 
-export { ThemeProvider }
+export { ThemeProvider };
 
 // === ThemeProvider =================================================
 
 @elem({
-  tag: 'c-theme-provider',
+  tag: 'cp-theme-provider',
   styles: [themeProviderStyles]
 })
 class ThemeProvider extends Component {
   @prop()
-  theme?: Theme
+  theme?: Theme;
 
   render() {
-    let theme: Theme | null = null
+    let theme: Theme | null = null;
 
     if (
       this.theme ||
       !window.getComputedStyle(this).getPropertyValue('--sl-color-primary-500')
     ) {
-      theme = this.theme instanceof Theme ? this.theme : Theme.default
+      theme = this.theme instanceof Theme ? this.theme : Theme.default;
     }
 
     return html`
@@ -47,6 +47,6 @@ class ThemeProvider extends Component {
       <div class="base" part="base">
         <slot></slot>
       </div>
-    `
+    `;
   }
 }

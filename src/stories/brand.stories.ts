@@ -1,19 +1,19 @@
-import { Brand, Theme, ThemeProvider } from 'js-cockpit'
-import { elem, Component } from '../main/utils/components'
-import { html } from '../main/utils/lit'
-import { h } from '../main/utils/dom'
-import { sharedTheme } from './shared/shared-theme'
+import { Brand, Theme, ThemeProvider } from 'js-cockpit';
+import { elem, Component } from '../main/utils/components';
+import { html } from '../main/utils/lit';
+import { h } from '../main/utils/dom';
+import { sharedTheme } from './shared/shared-theme';
 
 export default {
   title: 'brand'
-}
+};
 
 const brandDemoStyles = `
   .brand-demo {
     display: flex;
     gap: 40px;
   }
-`
+`;
 
 @elem({
   tag: 'brand-demo',
@@ -23,81 +23,81 @@ const brandDemoStyles = `
 class BrandDemo extends Component {
   render() {
     return html`
-      <c-theme-provider .theme=${sharedTheme}>
+      <cp-theme-provider .theme=${sharedTheme}>
         <div class="brand-demo">
           <div>
-            <c-brand
+            <cp-brand
               headline="Size: small"
               text="Back Office"
               size="small"
               logo="default"
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: medium"
               text="Back Office"
               size="medium"
               logo="default"
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: large"
               text="Back Office"
               size="large"
               logo="default"
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: huge"
               text="Back Office"
               size="huge"
               logo="default"
-            ></c-brand>
+            ></cp-brand>
           </div>
 
           <div>
-            <c-brand
+            <cp-brand
               headline="Size: small"
               text="Back Office"
               size="small"
               logo="default"
               multi-color
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: medium"
               text="Back Office"
               size="medium"
               logo="default"
               multi-color
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: large"
               text="Back Office"
               size="large"
               logo="default"
               multi-color
-            ></c-brand>
+            ></cp-brand>
             <br />
             <br />
-            <c-brand
+            <cp-brand
               headline="Size: huge"
               text="Back Office"
               size="huge"
               logo="default"
               multi-color
-            ></c-brand>
+            ></cp-brand>
           </div>
         </div>
-      </c-theme-provider>
-    `
+      </cp-theme-provider>
+    `;
   }
 }
 
-export const brand = () => h('brand-demo')
+export const brand = () => h('brand-demo');
