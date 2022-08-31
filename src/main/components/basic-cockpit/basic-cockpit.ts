@@ -108,7 +108,7 @@ class BasicCockpit extends Component {
   @prop
   onAction?: Listener<ActionEvent>;
 
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
+  private _emitAction = createEmitter(this, 'cp-action', () => this.onAction);
   private _openGroups: Set<string> = new Set();
   private _timeoutId: number | null = null;
 

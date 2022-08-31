@@ -101,13 +101,13 @@ class PaginationBar extends Component {
 
   private _emitPageChange = createEmitter(
     this,
-    'c-page-change',
+    'cp-page-change',
     () => this.onPageChange
   );
 
   private _emitPageSizeChange = createEmitter(
     this,
-    'c-page-size-change',
+    'cp-page-size-change',
     () => this.onPageSizeChange
   );
 

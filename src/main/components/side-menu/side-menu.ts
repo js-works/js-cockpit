@@ -78,7 +78,7 @@ class SideMenu extends Component {
 
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.sideMenu');
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
+  private _emitAction = createEmitter(this, 'cp-action', () => this.onAction);
 
   @bind
   private _onItemClick(ev: MouseEvent) {

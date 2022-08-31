@@ -52,7 +52,7 @@ class NavMenu extends Component {
   @prop
   onAction?: Listener<ActionEvent>;
 
-  private _emitAction = createEmitter(this, 'c-action', () => this.onAction);
+  private _emitAction = createEmitter(this, 'cp-action', () => this.onAction);
 
   @bind
   private _onItemClick(ev: MouseEvent) {

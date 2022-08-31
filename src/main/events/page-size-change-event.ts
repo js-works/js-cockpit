@@ -1,7 +1,7 @@
 type PageSizeChangeDetail = {
-  pageSize: number
-}
+  pageSize: number;
+};
 
 export interface PageSizeChangeEvent extends CustomEvent<PageSizeChangeDetail> {
-  type: 'c-page-size-change'
+  type: 'cp-page-size-change';
 }

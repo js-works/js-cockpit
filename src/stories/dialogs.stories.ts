@@ -168,7 +168,7 @@ class DialogsDemo extends Component {
 
 export const dialogs = () =>
   h(
-    'c-theme-provider',
+    'cp-theme-provider',
     { theme: sharedTheme },
     h('dialogs-demo', { lang: 'en' })
   );

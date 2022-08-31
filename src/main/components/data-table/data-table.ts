@@ -124,13 +124,13 @@ class DataTable extends Component {
 
   private _emitSortChange = createEmitter(
     this,
-    'c-sort-change',
+    'cp-sort-change',
     () => this.onSortChange
   );
 
   private _emitSelectionChange = createEmitter(
     this,
-    'c-selection-change',
+    'cp-selection-change',
     () => this.onSelectionChange
   );
 

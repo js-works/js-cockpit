@@ -145,23 +145,23 @@ export class SharedCockpit extends Component {
               }
             ]}
             active-item="2"
-            @c-action=${notImplementedHandler}
+            @cp-action=${notImplementedHandler}
           ></cp-nav-menu>
           <cp-user-menu
             slot="header-end"
             user-name="Jane Doe"
-            @c-logout=${notImplementedHandler}
+            @cp-logout=${notImplementedHandler}
           ></cp-user-menu>
           <div slot="sidebar" class="full-height">
             <cp-side-menu
               header-text="User management"
               .menu=${menu}
               active-item="price-calculation"
-              @c-action=${notImplementedHandler}
+              @cp-action=${notImplementedHandler}
               collapse-mode="manual"
             ></cp-side-menu>
           </div>
-          <div slot="main" class="yellow full-height"><slot></slot></div>
+          <div slot="main" class="full-height"><slot></slot></div>
         </cp-cockpit>
       </cp-theme-provider>
     `;

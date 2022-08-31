@@ -34,7 +34,7 @@ class BasicCockpitDemo extends Component {
     return html`
       <cp-basic-cockpit
         .config=${getCockpitConfig()}
-        @c-action=${this._onAction}
+        @cp-action=${this._onAction}
       >
         <shared-data-explorer slot="content"></shared-data-explorer>
       </cp-basic-cockpit>

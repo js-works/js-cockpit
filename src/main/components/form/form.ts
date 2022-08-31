@@ -41,7 +41,7 @@ class Form extends Component {
 
     afterConnect(this, () => {
       console.log('yyy');
-      console.log('c-form connected');
+      console.log('cp-form connected');
 
       this.addEventListener('xxx', (ev: any) => {
         console.log('xxx event:', ev);

@@ -58,7 +58,7 @@ table.head-table > thead > tr > th {
   align-items: center;
   border: 1px solid var(--sl-color-primary-500);
   padding: 0.15rem 10px;
-  font-weight: var(--sl-font-weight-semibold);
+  font-weight: var(--sl-font-weight-normal);
   color: var(--sl-color-primary-950);
   background-color: var(--sl-color-primary-200);
   white-space: nowrap;

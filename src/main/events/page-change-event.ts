@@ -1,7 +1,7 @@
 type PageChangeDetail = {
-  pageIndex: number
-}
+  pageIndex: number;
+};
 
 export interface PageChangeEvent extends CustomEvent<PageChangeDetail> {
-  type: 'c-page-change'
+  type: 'cp-page-change';
 }

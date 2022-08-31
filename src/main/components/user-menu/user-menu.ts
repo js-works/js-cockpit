@@ -45,7 +45,7 @@ class UserMenu extends Component {
 
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.userMenu');
-  private _emitLogout = createEmitter(this, 'c-logout', () => this.onLogout);
+  private _emitLogout = createEmitter(this, 'cp-logout', () => this.onLogout);
 
   @bind
   private _onLogoutClick() {

@@ -77,7 +77,7 @@ class Tabs extends Component {
 
     const pages = this._slotRef
       .value!.assignedElements()
-      .filter((it: any) => it.localName === 'c-tab')
+      .filter((it: any) => it.localName === 'cp-tab')
       .map((it: any) => ({ caption: (it as any).caption }));
 
     return html`
