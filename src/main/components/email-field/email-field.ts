@@ -55,54 +55,17 @@ class EmailField extends Component {
   private _slInputRef = createRef<SlInput>();
   private _i18n = new I18nController(this);
 
-  private _formField: FormFieldController<string> = new FormFieldController(
-    this,
-    {
-      getValue: () => this.value,
-
-      validate: () => {
-        if (this.required && !this.value) {
-          return {
-            message: this._i18n.translate(
-              'jsCockpit.validation',
-              'fieldRequired'
-            ),
-            anchor: this._slInputRef.value!
-          };
-        }
-
-        return null;
-      }
-    }
-  );
-
   @bind
   private _onInput() {
     this.value = this._slInputRef.value!.value;
-    this._formField.signalInput();
-  }
-
-  @bind
-  private _onChange() {
-    this._formField.signalUpdate();
-  }
-
-  @bind
-  private _onFocus() {
-    this._formField.signalFocus();
-  }
-
-  @bind
-  private _onBlur() {
-    this._formField.signalBlur();
   }
 
   render() {
     return html`
       <div
         class="base ${classMap({
-          required: this.required,
-          'has-error': this._formField.hasError()
+          'required': this.required,
+          'has-error': false // TODO!!!
         })}"
       >
         <div class="field-wrapper">
@@ -113,9 +76,6 @@ class EmailField extends Component {
               toggle-email
               class="input"
               @sl-input=${this._onInput}
-              @sl-change=${this._onChange}
-              @focus=${this._onFocus}
-              @blur=${this._onBlur}
               ${ref(this._slInputRef)}
             >
               <div slot="label" class="label">${this.label}</div>
@@ -123,7 +83,7 @@ class EmailField extends Component {
                 <sl-icon src=${emailIcon} class="icon"></sl-icon>
               </div>
             </sl-input>
-            <div class="error">${this._formField.getErrorMsg()}</div>
+            <div class="error"></div>
           </div>
         </div>
       </div>

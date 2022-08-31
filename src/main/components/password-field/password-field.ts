@@ -49,46 +49,16 @@ class PasswordField extends Component {
 
   private _i18n = new I18nController(this);
 
-  private _formField: FormFieldController<string> = new FormFieldController(
-    this,
-    {
-      getValue: () => this.value,
-
-      validate: () => {
-        if (this.required && !this.value) {
-          return {
-            message: this._i18n.translate(
-              'jsCockpit.validation',
-              'fieldRequired'
-            ),
-            anchor: this._slInputRef.value!
-          };
-        }
-
-        return null;
-      }
-    }
-  );
+  private _formField: FormFieldController<string> = new FormFieldController({
+    element: this as any, // TODO!!!!
+    getValue: () => this.value,
+    getRawValue: () => this.value,
+    setErrorText: () => {} // TODO!!!
+  });
 
   @bind
   private _onInput() {
     this.value = this._slInputRef.value!.value;
-    this._formField.signalInput();
-  }
-
-  @bind
-  private _onChange() {
-    this._formField.signalUpdate();
-  }
-
-  @bind
-  private _onFocus() {
-    this._formField.signalFocus();
-  }
-
-  @bind
-  private _onBlur() {
-    this._formField.signalBlur();
   }
 
   private _slInputRef = createRef<SlInput>();
@@ -99,8 +69,8 @@ class PasswordField extends Component {
     return html`
       <div
         class="base ${classMap({
-          required: this.required,
-          'has-error': this._formField.hasError()
+          'required': this.required,
+          'has-error': false // TODO!!!
         })}"
       >
         <sl-input
@@ -110,14 +80,11 @@ class PasswordField extends Component {
           class="input control"
           required=${this.required}
           @sl-input=${this._onInput}
-          @sl-change=${this._onChange}
-          @focus=${this._onFocus}
-          @blur=${this._onBlur}
           ${ref(this._slInputRef)}
         >
           <span slot="label" class="control-label">${this.label}</span>
         </sl-input>
-        <div class="error">${this._formField.getErrorMsg()}</div>
+        <div class="error"></div>
       </div>
     `;
   }
