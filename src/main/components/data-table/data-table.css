@@ -56,11 +56,12 @@ table {
 
 table.head-table > thead > tr > th {
   align-items: center;
-  border: 1px solid var(--sl-color-primary-500);
+  border: 1px solid var(--sl-color-neutral-300);
+  border-bottom: 2px solid var(--sl-color-primary-500);
   padding: 0.15rem 10px;
-  font-weight: var(--sl-font-weight-normal);
+  font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-primary-950);
-  background-color: var(--sl-color-primary-200);
+  background-color: var(--sl-color-neutral-50);
   white-space: nowrap;
   box-sizing: border-box;
 }
