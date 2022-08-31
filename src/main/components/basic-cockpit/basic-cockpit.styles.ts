@@ -1,7 +1,7 @@
 import { css, unsafeCSS as $ } from 'lit';
 import scrollbarStyles from '../../styles/scrollbar.styles';
 
-const sidebarMinWidth = $('16rem');
+const sidebarMinWidth = $('15rem');
 const sidebarMaxWidth = $('20rem');
 const textColor = $('var(--sl-color-neutral-0)');
 const secondaryTextColor = $('var(--sl-color-neutral-300)');

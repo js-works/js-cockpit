@@ -4,7 +4,7 @@ import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
 import { SharedDataExplorer } from './shared/shared-data-explorer';
 import { SharedDataForm } from './shared/shared-data-form';
-import { BasicCockpit, SideMenu, ThemeProvider } from 'js-cockpit';
+import { showInfoDialog, BasicCockpit } from 'js-cockpit';
 import { ActionEvent } from '../main/events/action-event';
 
 // icons
@@ -27,7 +27,9 @@ export const basicCockpit = () => h('basic-cockpit-demo');
 class BasicCockpitDemo extends Component {
   @bind
   private _onAction(ev: ActionEvent) {
-    alert(ev.detail.action);
+    showInfoDialog({
+      message: `Selected action: ${ev.detail.action}`
+    });
   }
 
   render() {

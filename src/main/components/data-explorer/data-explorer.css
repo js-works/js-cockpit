@@ -73,7 +73,7 @@
 .footer {
   border: 0 solid var(--sl-color-neutral-300);
   border-width: 1px 0 0 0;
-  padding: 1px 0 2px 0;
+  padding: 3px 0 0px 0;
 }
 
 .overlay {
