@@ -56,12 +56,11 @@ table {
 
 table.head-table > thead > tr > th {
   align-items: center;
-  border: 1px solid var(--sl-color-neutral-300);
-  border-bottom-color: var(--sl-color-neutral-400);
-  padding: 0.2rem 10px;
-  font-weight: var(--sl-font-weight-normal);
-  color: var(--sl-color-neutral-1000);
-  background-color: var(--sl-color-neutral-50);
+  border: 1px solid var(--sl-color-primary-500);
+  padding: 0.15rem 10px;
+  font-weight: var(--sl-font-weight-semibold);
+  color: var(--sl-color-primary-950);
+  background-color: var(--sl-color-primary-200);
   white-space: nowrap;
   box-sizing: border-box;
 }
@@ -128,7 +127,6 @@ td.selector-column > sl-checkbox {
 
 thead > tr > th,
 tbody > tr > td {
-  xpadding: 0 15px;
   box-sizing: border-box;
 }
 
