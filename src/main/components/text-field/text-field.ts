@@ -9,11 +9,9 @@ import {
 } from '../../utils/components';
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
+import type { FieldBinder } from '../../forms/form-fields';
 import { I18nController } from '../../i18n/i18n';
-import {
-  FormFieldController,
-  FieldBinder
-} from '../../controllers/form-field-controller';
+import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';

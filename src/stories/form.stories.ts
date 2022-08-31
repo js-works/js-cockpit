@@ -7,7 +7,7 @@ import {
   Brand,
   DateField,
   EmailField,
-  FormFieldsController,
+  handleFormFields,
   LoginForm,
   PasswordField,
   TextField,
@@ -26,7 +26,7 @@ export const formValidation = () =>
   uses: []
 })
 class FormValidationDemo extends Component {
-  private _formFields = new FormFieldsController<{
+  private _formFields = handleFormFields<{
     firstName: string;
     lastName: string;
     dayOfBirth: Date;

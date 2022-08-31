@@ -1,33 +1,9 @@
-import {
-  LitElement,
-  ReactiveController,
-  ReactiveControllerHost
-} from '../utils/lit';
+import { ReactiveController, ReactiveControllerHost } from '../utils/lit';
+import { FieldBinder, FieldBinding, FormControl } from '../forms/form-fields';
 
 // === exports =======================================================
 
-export { FormFieldController, FormFieldsController, FieldBinder };
-
-// === types =========================================================
-
-interface FormControl<T> extends HTMLElement, ReactiveControllerHost {
-  name: string;
-  required: boolean;
-  disabled: boolean;
-  readonly invalid: boolean;
-  setCustomValidity(message: string): void;
-  reportValidity(): boolean;
-  bind: FieldBinder<T>;
-}
-
-type FieldBinding<T> = {
-  getElement(): FormControl<T>;
-  getValue(): string | null;
-  getRawValue(): T;
-  setErrorText(value: string): void;
-};
-
-type FieldBinder<T> = null | ((binding: FieldBinding<T>) => void);
+export { FormFieldController };
 
 // === controllers ===================================================
 
@@ -65,40 +41,38 @@ class FormFieldController<T> {
   }
 }
 
-class FormFieldsController<T extends Record<string, unknown>> {
-  //binders: { [K in keyof T]: FieldBinder<T[K]> };
-  valid: () => boolean;
-  getData: () => T;
+function handleFormFields<T extends Record<string, unknown>>(): {
+  bindTo(key: keyof T): (binding: FieldBinding<T>) => void;
+  valid(): boolean;
+  getData(): T;
+} {
+  const fieldBindings = new Map<keyof T, FieldBinding<T>>();
 
-  bindTo = (key: keyof T) => {
-    return (binding: any) => {
-      this.#fieldBindings.set(key, binding) as any;
-    };
-  };
+  return {
+    bindTo(key) {
+      return (binding: any) => {
+        fieldBindings.set(key, binding) as any;
+      };
+    },
 
-  #fieldBindings: Map<keyof T, FieldBinding<T>>;
-
-  constructor() {
-    this.#fieldBindings = new Map();
-
-    this.valid = () => {
-      for (const binding of this.#fieldBindings.values()) {
+    valid() {
+      for (const binding of fieldBindings.values()) {
         if (binding.getElement().invalid) {
           return false;
         }
       }
 
       return true;
-    };
+    },
 
-    this.getData = () => {
+    getData() {
       const data: Record<string, unknown> = {};
 
-      for (const key of this.#fieldBindings.keys()) {
-        data[key as any] = this.#fieldBindings.get(key)!.getRawValue();
+      for (const key of fieldBindings.keys()) {
+        data[key as any] = fieldBindings.get(key)!.getRawValue();
       }
 
       return data as T;
-    };
-  }
+    }
+  };
 }
