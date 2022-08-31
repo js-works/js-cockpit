@@ -56,7 +56,8 @@ table {
 
 table.head-table > thead > tr > th {
   align-items: center;
-  border: 0.8px solid var(--sl-color-neutral-400);
+  border: 0.8px solid var(--sl-color-neutral-300);
+  border-bottom: 1px solid var(--sl-color-primary-600);
   padding: 0.15rem 10px;
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-neutral-1000);
@@ -73,6 +74,7 @@ table.head-table > thead th.sortable:hover {
     var(--sl-dark, var(--sl-color-primary-50));
 
   background-color: var(--sl-color-primary-200);
+  border-color: var(--sl-color-primary-400);
 }
 
 table.head-table > thead th.sortable:active {
