@@ -56,14 +56,12 @@ table {
 
 table.head-table > thead > tr > th {
   align-items: center;
-  border: 1px solid var(--sl-color-neutral-0);
-  border-collapse: collapse;
+  border: 0.8px solid var(--sl-color-neutral-0);
   padding: 0.15rem 10px;
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-primary-950);
-  background-color: var(--sl-color-neutral-200);
+  background-color: var(--sl-color-neutral-300);
   white-space: nowrap;
-  box-sizing: border-box;
 }
 
 table.head-table > thead th.sortable:hover {
@@ -120,6 +118,10 @@ table.body-table > tbody > tr:nth-child(even) > td {
 
 th.selector-column > sl-checkbox {
   transform: translate(3px, 0);
+}
+
+th.selector-column > sl-checkbox::part(control) {
+  border: 1px solid var(--sl-color-neutral-600);
 }
 
 td.selector-column > sl-checkbox {
