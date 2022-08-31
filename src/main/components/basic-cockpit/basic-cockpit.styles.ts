@@ -13,10 +13,11 @@ const brandBackColor = $('transparent');
 //const brandBackColor = $('var(--sl-color-primary-600)');
 const hoverBackColor = $('var(--sl-color-neutral-800)');
 const selectionColor = $('white');
-const selectionBackColor = $('var(--sl-color-primary-700)');
+const selectionBackColor = $('var(--sl-color-neutral-700)'); //$('var(--sl-color-primary-700)');
 const selectionBorderColor = $('var(--sl-color-primary-700)');
-const selectionBorderRadius = $('3px');
-const selectionMargin = $('0 4px');
+const selectionBorderWidth = $('3px');
+const selectionBorderRadius = $('0px');
+const selectionMargin = $('0');
 const activeBackColor = $('var(--sl-color-neutral-600)');
 
 export default css`
@@ -190,7 +191,7 @@ export default css`
     color: ${selectionColor};
     background-color: ${selectionBackColor};
     border: 0 solid ${selectionBorderColor};
-    border-width: 0 0 0 2px;
+    border-width: 0 0 0 ${selectionBorderWidth};
     padding: 0.5rem 1rem 0.5rem calc(1rem - 2px);
     margin: ${selectionMargin};
     border-radius: ${selectionBorderRadius};
