@@ -58,12 +58,14 @@ export default css`
   }
 
   .air-datepicker-nav {
-    background-color: var(--sl-color-primary-600);
+    position: relative;
+    z-index: 1;
+    background-color: var(--sl-color-neutral-500);
     border: 0 solid var(--adp-border-color-inner);
     color: white !important;
     border-bottom-width: 1px;
     margin: -1px;
-    padding: 4px;
+    padding: 0;
   }
 
   .air-datepicker-cell.-current- {
@@ -72,7 +74,7 @@ export default css`
   }
 
   .air-datepicker {
-    border: 2px solid var(--sl-color-primary-600);
+    border: 2px solid var(--sl-color-primary-500);
     border-radius: 4px;
   }
 
@@ -88,12 +90,12 @@ export default css`
   .air-datepicker-nav--title:hover,
   .air-datepicker-nav--action:hover {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-700);
+    background-color: var(--sl-color-neutral-700);
   }
 
   .air-datepicker-nav--title:active,
   .air-datepicker-nav--action:active {
-    background-color: var(--sl-color-primary-800);
+    background-color: var(--sl-color-neutral-800);
   }
 
   .air-datepicker-button {

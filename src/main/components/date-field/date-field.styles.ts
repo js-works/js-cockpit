@@ -11,6 +11,6 @@ export default css`
   }
 
   .popup::part(arrow) {
-    background-color: var(--sl-color-primary-600);
+    background-color: var(--sl-color-neutral-500);
   }
 `;
