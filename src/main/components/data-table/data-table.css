@@ -72,11 +72,11 @@ table.head-table > thead th.sortable:hover {
   color: var(--sl-light, var(--sl-color-primary-950))
     var(--sl-dark, var(--sl-color-primary-50));
 
-  background-color: var(--sl-color-neutral-200);
+  background-color: var(--sl-color-primary-200);
 }
 
 table.head-table > thead th.sortable:active {
-  background-color: var(--sl-color-primary-200);
+  background-color: var(--sl-color-primary-300);
 }
 
 table.head-table > thead > tr > th .content {
@@ -118,10 +118,6 @@ table.body-table > tbody > tr:nth-child(even) > td {
 
 th.selector-column > sl-checkbox {
   transform: translate(3px, 0);
-}
-
-th.selector-column > sl-checkbox::part(control) {
-  border: 1px solid var(--sl-color-neutral-600);
 }
 
 td.selector-column > sl-checkbox {
