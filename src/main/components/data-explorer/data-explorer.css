@@ -99,10 +99,10 @@
   align-items: center;
   gap: 1.5rem;
 
-  background-color: var(--sl-light, var(--sl-color-neutral-600))
+  background-color: var(--sl-light, var(--sl-color-neutral-800))
     var(--sl-dark, var(--sl-color-neutral-300));
 
-  padding: 1rem 1.7rem;
+  padding: 1.7rem 2.7rem;
   border-radius: 2px;
 }
 
