@@ -24,15 +24,14 @@ export default css`
 
   .popup {
     background-color: var(--sl-color-neutral-0);
-    border: 2px solid var(--sl-color-neutral-400);
+    border: 2px solid var(--sl-color-primary-600);
     border-radius: 4px;
   }
 
   .filters-header {
     padding: 0.2rem 0.6rem 0.3rem 1rem;
-    color: var(--sl-color-neutral-1000);
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-neutral-500);
+    background-color: var(--sl-color-primary-600);
   }
 
   .filters {

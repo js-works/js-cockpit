@@ -60,7 +60,7 @@ export default css`
   .air-datepicker-nav {
     position: relative;
     z-index: 1;
-    background-color: var(--sl-color-neutral-500);
+    background-color: var(--sl-color-neutral-600);
     border: 0 solid var(--adp-border-color-inner);
     color: white !important;
     border-bottom-width: 1px;
