@@ -55,10 +55,14 @@ class TextField extends Component {
   required = false;
 
   @prop({ attr: Attrs.string })
-  error = '';
+  errorText = '';
 
   @prop
   bind: FieldBinder<string> = null;
+
+  getFieldValue(): string {
+    return this.value;
+  }
 
   reset() {}
 
@@ -86,17 +90,30 @@ class TextField extends Component {
   private _i18n = new I18nController(this);
   private _error: string | null = null;
   private _slInputRef = createRef<SlInput>();
-  private _errorText = '';
 
   private _formField: FormFieldController<string> = new FormFieldController({
     element: this,
     getValue: () => this.value,
     getRawValue: () => this.value,
-    setErrorText: (value) => (this._errorText = value)
+    setErrorText: (value) => (this.errorText = value)
   });
 
   constructor() {
     super();
+  }
+
+  get validationMessage(): string {
+    const input = this._slInputRef.value;
+
+    if (!input) {
+      return '';
+    }
+
+    if (this.required && !input.value) {
+      return 'Field is required';
+    }
+
+    return '';
   }
 
   private _onInput = () => {
@@ -114,7 +131,7 @@ class TextField extends Component {
       <div
         class="base ${classMap({
           'required': this.required,
-          'has-error': !!this._errorText
+          'has-error': !!this.errorText
         })}"
       >
         <sl-input
@@ -128,7 +145,7 @@ class TextField extends Component {
         >
           <span slot="label" class="control-label">${this.label}</span>
         </sl-input>
-        <div class="error">${this._errorText}</div>
+        <div class="error-text">${this.errorText}</div>
       </div>
     `;
   }

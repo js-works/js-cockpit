@@ -1,10 +1,12 @@
-import { render } from 'preact';
+import { render, Ref, ComponentChild } from 'preact';
 import { useState } from 'preact/hooks';
 
 import {
+  showErrorDialog,
   Brand,
   DateField,
   EmailField,
+  FormSubmitEvent,
   handleFormFields,
   LoginForm,
   PasswordField,
@@ -25,7 +27,10 @@ export const formValidation = () => {
 };
 
 type Adjust<T> = {
-  [K in keyof T]: Partial<Omit<T[K], 'children'>> & { children?: any };
+  [K in keyof T]: Partial<Omit<T[K], 'children'>> & {
+    ref?: Ref<T[K]>;
+    children?: ComponentChild;
+  };
 };
 
 declare global {
@@ -34,16 +39,155 @@ declare global {
   }
 }
 
+type Control<T> = HTMLElement & {
+  required: boolean;
+  disabled: boolean;
+  getFieldData: () => T;
+  validationMessage: string;
+  errorText: string;
+  ref?: Ref<Control<T>>;
+};
+
+function createProxy(): any {
+  const proxy = new Proxy(
+    {},
+    {
+      get(target, key) {
+        return {
+          errorText: 'Please fill out field'
+        };
+      }
+    }
+  );
+
+  return proxy;
+}
+
+const input = document.createElement('input');
+
+function useFormFields<T extends Record<string, unknown>>(): [
+  {
+    [K in keyof T]: {
+      ref?: any; // Ref<Control<T[K]>>;// TODO!!!!!!!!
+      errorText?: string;
+    };
+  },
+  boolean,
+  (action: (data: Partial<T>) => void) => (ev: Event) => void
+] {
+  const [, setDummy] = useState(false);
+
+  const update = () => setDummy((it) => !it);
+
+  const [ctrl] = useState(() => {
+    let showErrors = false;
+    const cache: any = {};
+
+    const proxy = new Proxy(
+      {},
+      {
+        get(target, key) {
+          if (cache.hasOwnProperty(key)) {
+            return cache[key];
+          }
+
+          let showError = true;
+          const ref: Ref<Control<unknown>> = { current: null };
+
+          const onInput = () => {
+            if (showError) {
+              showError = false;
+              update();
+            }
+          };
+
+          const onChange = () => {
+            showError = true;
+            console.log(1111);
+            update();
+          };
+
+          return (cache[key] = {
+            ref,
+            onInput,
+            'onChange': onChange,
+            'onsl-change': onChange,
+
+            get 'errorText'() {
+              return !showErrors || !showError || !ref.current
+                ? ''
+                : ref.current.validationMessage;
+            }
+          });
+        }
+      }
+    );
+
+    return {
+      bind: proxy as any,
+
+      hasError: () => {
+        return false;
+      },
+
+      process: (action: (data: Partial<T>) => void) => (ev: Event) => {
+        ev.preventDefault();
+        const data: Record<string, any> = {};
+
+        for (const key of Object.keys(cache)) {
+          const ref = cache[key].ref;
+
+          if (ref && ref.current && ref.current.validationMessage) {
+            showErrors = true;
+            update();
+
+            /*
+            showErrorDialog({
+              message: 'Please fill out all form field properly'
+            });
+            */
+
+            return;
+          }
+
+          data[key] = ref.current.getFieldValue();
+        }
+
+        action(data as T);
+      }
+    };
+  });
+
+  return [ctrl.bind, ctrl.hasError(), ctrl.process];
+}
+
 function FormDemo() {
-  const onSubmit = (ev: Event) => {
-    ev.preventDefault();
-    alert('Hallo');
-  };
+  const [to, hasError, processSubmit] = useFormFields<{
+    firstName: string;
+    lastName: string;
+  }>();
+
+  const onSubmit = processSubmit((data) => {
+    alert(JSON.stringify(data, null, 2));
+  });
 
   return (
     <form onSubmit={onSubmit}>
-      <cp-text-field label="First name" required></cp-text-field>
-      <cp-text-field label="Last name" required></cp-text-field>
+      <cp-text-field
+        label="First name"
+        required
+        {...to.firstName}
+      ></cp-text-field>
+      <cp-text-field
+        label="Last name"
+        required
+        {...to.lastName}
+      ></cp-text-field>
+      <br />
+      {hasError && (
+        <cp-message variant="danger">Please check the form errors</cp-message>
+      )}
+      <br />
       <sl-button type="submit">Submit</sl-button>
     </form>
   );

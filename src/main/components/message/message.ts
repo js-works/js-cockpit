@@ -18,6 +18,14 @@ import messageStyles from './message.css';
 
 export { Message };
 
+// === types =========================================================
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cp-message': Message;
+  }
+}
+
 // === constants =====================================================
 
 const appearanceByVariant = new Map([
