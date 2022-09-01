@@ -62,3 +62,10 @@ function handleFormFields<T extends Record<string, unknown>>(): {
     }
   };
 }
+
+function defineFieldBinder<T extends Record<string, unknown>>(): {
+  (): any;
+  (key: keyof T): any;
+} {
+  return null as any;
+}

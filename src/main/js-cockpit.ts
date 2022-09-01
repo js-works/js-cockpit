@@ -15,7 +15,7 @@ export { LoginForm2 } from './components/login-form2/login-form2';
 export { PaginationBar } from './components/pagination-bar/pagination-bar';
 export { PasswordField } from './components/password-field/password-field';
 export { RadioGroup } from './components/radio-group/radio-group';
-export { MessageBar } from './components/message-bar/message-bar';
+export { Message } from './components/message/message';
 export { BasicCockpit } from './components/basic-cockpit/basic-cockpit';
 export { NavMenu } from './components/nav-menu/nav-menu';
 export { SelectBox } from './components/select-box/select-box';

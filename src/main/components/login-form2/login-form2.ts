@@ -22,7 +22,7 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner';
 import { FocusTrap } from '@a11y/focus-trap';
-import { MessageBar } from '../message-bar/message-bar';
+import { Message } from '../message/message';
 import { Form } from '../form/form';
 import { PasswordField } from '../password-field/password-field';
 import { TextField } from '../text-field/text-field';
@@ -70,7 +70,7 @@ namespace LoginForm {
   uses: [
     FocusTrap,
     Form,
-    MessageBar,
+    Message,
     PasswordField,
     SlAnimation,
     SlButton,

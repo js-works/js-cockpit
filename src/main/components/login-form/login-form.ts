@@ -22,7 +22,7 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner';
 import { FocusTrap } from '@a11y/focus-trap';
-import { MessageBar } from '../message-bar/message-bar';
+import { Message } from '../message/message';
 import { Form } from '../form/form';
 import { PasswordField } from '../password-field/password-field';
 import { TextField } from '../text-field/text-field';
@@ -67,7 +67,7 @@ namespace LoginForm {
   uses: [
     FocusTrap,
     Form,
-    MessageBar,
+    Message,
     PasswordField,
     SlAnimation,
     SlButton,
@@ -314,7 +314,7 @@ class LoginForm extends Component {
                         >`}
                     ${!this._showInvalidFormError
                       ? null
-                      : html`<cp-message-bar
+                      : html`<cp-message
                           variant="danger"
                           class=${classMap({
                             'message': true,
@@ -325,10 +325,10 @@ class LoginForm extends Component {
                             'jsCockpit.validation',
                             'formInvalid'
                           )}
-                        </cp-message-bar>`}
+                        </cp-message>`}
                     ${!this._successMessage
                       ? null
-                      : html`<cp-message-bar
+                      : html`<cp-message
                           variant="success"
                           class=${classMap({
                             'message': true,
@@ -336,10 +336,10 @@ class LoginForm extends Component {
                           })}
                         >
                           ${this._successMessage}
-                        </cp-message-bar>`}
+                        </cp-message>`}
                     ${!this._errorMessage
                       ? null
-                      : html`<cp-message-bar
+                      : html`<cp-message
                           variant="danger"
                           class=${classMap({
                             'message': true,
@@ -347,7 +347,7 @@ class LoginForm extends Component {
                           })}
                         >
                           ${this._errorMessage}
-                        </cp-message-bar>`}
+                        </cp-message>`}
                     <focus-trap .inactive=${!this._isLoading}>
                       <sl-button
                         variant="primary"

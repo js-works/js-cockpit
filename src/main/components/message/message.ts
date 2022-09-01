@@ -12,11 +12,11 @@ import warningIcon from '../../icons/exclamation-circle.svg';
 import dangerIcon from '../../icons/exclamation-diamond.svg';
 
 // styles
-import messageBarStyles from './message-bar.css';
+import messageStyles from './message.css';
 
 // === exports =======================================================
 
-export { MessageBar };
+export { Message };
 
 // === constants =====================================================
 
@@ -27,17 +27,17 @@ const appearanceByVariant = new Map([
   ['danger', { className: 'variant-danger', icon: dangerIcon }]
 ]);
 
-// === MessageBar ====================================================
+// === Message ====================================================
 
 /**
  * slots: default
  */
 @elem({
-  tag: 'cp-message-bar',
-  styles: messageBarStyles,
+  tag: 'cp-message',
+  styles: messageStyles,
   uses: [SlIcon]
 })
-class MessageBar extends Component {
+class Message extends Component {
   @prop({ attr: Attrs.string })
   variant: 'info' | 'success' | 'warning' | 'danger' = 'info';
 
