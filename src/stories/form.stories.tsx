@@ -48,21 +48,6 @@ type Control<T> = HTMLElement & {
   ref?: Ref<Control<T>>;
 };
 
-function createProxy(): any {
-  const proxy = new Proxy(
-    {},
-    {
-      get(target, key) {
-        return {
-          errorText: 'Please fill out field'
-        };
-      }
-    }
-  );
-
-  return proxy;
-}
-
 const input = document.createElement('input');
 
 function useFormFields<T extends Record<string, unknown>>(): [
@@ -76,11 +61,11 @@ function useFormFields<T extends Record<string, unknown>>(): [
   (action: (data: Partial<T>) => void) => (ev: Event) => void
 ] {
   const [, setDummy] = useState(false);
-
   const update = () => setDummy((it) => !it);
 
   const [ctrl] = useState(() => {
     let showErrors = false;
+    let showErrorBox = false;
     const cache: any = {};
 
     const proxy = new Proxy(
@@ -95,21 +80,29 @@ function useFormFields<T extends Record<string, unknown>>(): [
           const ref: Ref<Control<unknown>> = { current: null };
 
           const onInput = () => {
-            if (showError) {
+            if (showError || showErrorBox) {
               showError = false;
+              showErrorBox = false;
               update();
             }
           };
 
           const onChange = () => {
-            showError = true;
-            console.log(1111);
-            update();
+            if (showErrorBox) {
+              showErrorBox = false;
+              update();
+            }
+
+            if (!showError) {
+              showError = true;
+              update();
+            }
           };
 
           return (cache[key] = {
             ref,
             onInput,
+            'onsl-input': onInput,
             'onChange': onChange,
             'onsl-change': onChange,
 
@@ -126,8 +119,8 @@ function useFormFields<T extends Record<string, unknown>>(): [
     return {
       bind: proxy as any,
 
-      hasError: () => {
-        return false;
+      showErrorBox: () => {
+        return showErrors && showErrorBox;
       },
 
       process: (action: (data: Partial<T>) => void) => (ev: Event) => {
@@ -139,13 +132,8 @@ function useFormFields<T extends Record<string, unknown>>(): [
 
           if (ref && ref.current && ref.current.validationMessage) {
             showErrors = true;
+            showErrorBox = true;
             update();
-
-            /*
-            showErrorDialog({
-              message: 'Please fill out all form field properly'
-            });
-            */
 
             return;
           }
@@ -158,7 +146,7 @@ function useFormFields<T extends Record<string, unknown>>(): [
     };
   });
 
-  return [ctrl.bind, ctrl.hasError(), ctrl.process];
+  return [ctrl.bind, ctrl.showErrorBox(), ctrl.process];
 }
 
 function FormDemo() {
