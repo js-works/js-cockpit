@@ -65,7 +65,7 @@ table.head-table > thead > tr > th {
   padding: 0.15rem 10px;
   font-weight: var(--sl-font-weight-semibold);
   color: var(--sl-color-neutral-1000);
-  background-color: var(--sl-color-neutral-0);
+  background-color: var(--sl-color-neutral-50);
   white-space: nowrap;
 }
 
