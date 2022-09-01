@@ -25,6 +25,12 @@ export { TextField };
 
 // === types =========================================================
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'cp-text-field': TextField;
+  }
+}
+
 // === TextField =====================================================
 
 @elem({

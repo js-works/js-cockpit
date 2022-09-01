@@ -9,6 +9,8 @@
     "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "preserveConstEnums": true,

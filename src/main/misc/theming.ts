@@ -446,6 +446,10 @@ const ColorSchemes = Object.freeze({
 
   turquoise: {
     primaryColor: '#40e0d0'
+  },
+
+  tomato: {
+    primaryColor: '#ff6347'
   }
 });
 
@@ -523,8 +527,8 @@ const lightThemeTokens = {
   // --off: ' '
 
   // used for conditional "light vs. dark" theming
-  light: 'var(--on)' as 'var(--on)' | 'var(--off)',
-  dark: 'var(--off)' as 'var(--on)' | 'var(--off)',
+  'light': 'var(--on)' as 'var(--on)' | 'var(--off)',
+  'dark': 'var(--off)' as 'var(--on)' | 'var(--off)',
 
   // other new tokens
   'label-font-weight': 'var(--sl-font-weight-normal)',

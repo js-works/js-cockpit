@@ -29,6 +29,7 @@
   "devDependencies": {
     "@a11y/focus-trap": "^1.0.5",
     "@babel/core": "^7.18.13",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
     "@storybook/html": "^6.5.10",
     "@types/chroma-js": "^2.1.4",
     "@types/color": "^3.0.3",
@@ -43,6 +44,7 @@
     "esbuild-sass-plugin": "^2.3.2",
     "faker": "5.5.3",
     "focus-trap": "^7.0.0",
+    "preact": "^10.10.6",
     "prettier": "^2.7.1",
     "raw-loader": "^4.0.2",
     "remixicon": "^2.5.0",
