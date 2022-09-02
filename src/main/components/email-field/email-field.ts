@@ -10,7 +10,6 @@ import {
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
-import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -69,7 +68,7 @@ class EmailField extends Component {
         })}"
       >
         <div class="field-wrapper">
-          <div class="control">
+          <div class="sl-control">
             <sl-input
               type="email"
               name=${this.name}

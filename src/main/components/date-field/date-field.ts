@@ -152,7 +152,7 @@ export class DateField extends Component {
         >
           <sl-input
             slot="anchor"
-            class="control"
+            class="sl-control"
             ?required=${this.required}
             ?disabled=${this.disabled}
             @keydown=${this._onKeyDown}

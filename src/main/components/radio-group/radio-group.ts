@@ -37,7 +37,7 @@ class RadioGroup extends Component {
       <div class="base">
         <div class="field-wrapper">
           <div class="label">${this.label}</div>
-          <div class="control">
+          <div class="sl-control">
             <sl-radio-group>
               <sl-radio value="1" checked>Item 1</sl-radio>
               <sl-radio value="2">Item 2</sl-radio>

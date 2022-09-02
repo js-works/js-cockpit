@@ -55,7 +55,7 @@ class TextArea extends Component {
   render() {
     return html`
       <div class="base ${classMap({ required: this.required })}">
-        <sl-textarea class="input control" size="small" rows=${this.rows}>
+        <sl-textarea class="input sl-control" size="small" rows=${this.rows}>
           <span slot="label">${this.label}</span>
         </sl-textarea>
         <div class="error">${this.error}</div>

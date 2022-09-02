@@ -1,17 +1,7 @@
-import {
-  bind,
-  elem,
-  prop,
-  afterInit,
-  afterUpdate,
-  Attrs,
-  Component
-} from '../../utils/components';
-
+import { elem, prop, Attrs, Component } from '../../utils/components';
 import { classMap, createRef, html, ref } from '../../utils/lit';
-import type { FieldBinder } from '../../forms/form-fields';
 import { I18nController } from '../../i18n/i18n';
-import { FormFieldController } from '../../controllers/form-field-controller';
+import { FormControl } from '../../misc/forms';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -38,7 +28,7 @@ declare global {
   styles: textFieldStyles,
   uses: [SlInput]
 })
-class TextField extends Component {
+class TextField extends Component implements FormControl<string> {
   @prop({ attr: Attrs.string })
   name = '';
 
@@ -57,9 +47,6 @@ class TextField extends Component {
   @prop({ attr: Attrs.string })
   errorText = '';
 
-  @prop
-  bind: FieldBinder<string> = null;
-
   getFieldValue(): string {
     return this.value;
   }
@@ -70,33 +57,24 @@ class TextField extends Component {
     this._slInputRef.value!.focus();
   }
 
-  get invalid() {
-    return this._slInputRef.value!.invalid;
+  get invalid(): boolean {
+    return !!this._slInputRef.value?.invalid;
   }
 
-  setCustomValidity(message: string) {
-    return this._slInputRef.value!.setCustomValidity(message);
+  setCustomValidity(message: string): void {
+    this._slInputRef.value?.setCustomValidity(message);
   }
 
-  reportValidity() {
-    alert(1);
-    return this._slInputRef.value!.reportValidity();
+  reportValidity(): boolean {
+    return !!this._slInputRef.value?.reportValidity();
   }
 
-  blur() {
-    this._slInputRef.value!.blur();
+  blur(): void {
+    this._slInputRef.value?.blur();
   }
 
   private _i18n = new I18nController(this);
-  private _error: string | null = null;
   private _slInputRef = createRef<SlInput>();
-
-  private _formField: FormFieldController<string> = new FormFieldController({
-    element: this,
-    getValue: () => this.value,
-    getRawValue: () => this.value,
-    setErrorText: (value) => (this.errorText = value)
-  });
 
   constructor() {
     super();
@@ -135,7 +113,7 @@ class TextField extends Component {
         })}"
       >
         <sl-input
-          class="input control"
+          class="input sl-control"
           ?required=${this.required}
           ${ref(this._slInputRef)}
           @sl-input=${this._onInput}
@@ -143,7 +121,7 @@ class TextField extends Component {
           @focus=${this._onFocus}
           @blur=${this._onBlur}
         >
-          <span slot="label" class="control-label">${this.label}</span>
+          <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
         <div class="error-text">${this.errorText}</div>
       </div>

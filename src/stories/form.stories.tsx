@@ -1,4 +1,4 @@
-import { render, Ref, ComponentChild } from 'preact';
+import { render, ComponentChild, Ref, ComponentType } from 'preact';
 import { useState } from 'preact/hooks';
 
 import {
@@ -6,8 +6,8 @@ import {
   Brand,
   DateField,
   EmailField,
+  FormControl,
   FormSubmitEvent,
-  handleFormFields,
   LoginForm,
   PasswordField,
   TextField,
@@ -39,21 +39,12 @@ declare global {
   }
 }
 
-type Control<T> = HTMLElement & {
-  required: boolean;
-  disabled: boolean;
-  getFieldData: () => T;
-  validationMessage: string;
-  errorText: string;
-  ref?: Ref<Control<T>>;
-};
-
 const input = document.createElement('input');
 
 function useFormFields<T extends Record<string, unknown>>(): [
   {
     [K in keyof T]: {
-      ref?: any; // Ref<Control<T[K]>>;// TODO!!!!!!!!
+      ref?: Ref<any>;
       errorText?: string;
     };
   },
@@ -77,7 +68,7 @@ function useFormFields<T extends Record<string, unknown>>(): [
           }
 
           let showError = true;
-          const ref: Ref<Control<unknown>> = { current: null };
+          const ref: Ref<FormControl<unknown>> = { current: null };
 
           const onInput = () => {
             if (showError || showErrorBox) {

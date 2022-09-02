@@ -1,7 +1,7 @@
 import { css } from 'lit';
 
 export default css`
-  .control::part(form-control) {
+  .sl-control::part(form-control) {
     display: flex;
 
     flex-direction: var(--label-align-vertical, column)
@@ -14,7 +14,7 @@ export default css`
       var(--label-align-vertical, 0);
   }
 
-  .control::part(form-control-label) {
+  .sl-control::part(form-control-label) {
     flex: 0 0 auto;
 
     width: var(--label-align-vertical, auto)
@@ -27,10 +27,19 @@ export default css`
       var(--label-align-horizontal, 2px 0);
   }
 
-  .control::part(form-control-input) {
+  .sl-control::part(form-control-input) {
     flex: 1 1 auto;
 
     margin: var(--label-align-vertical, 0 0 0.4rem 0)
       var(--label-align-horizontal, 2px 0);
+  }
+
+  /* -------------------------------------------------------------- */
+
+  .error-text:not(:empty) {
+    margin: -4px 0 4px 0;
+    font-size: 90%;
+    font-weight: var(--sl-font-weight-normal);
+    color: var(--sl-color-danger-700);
   }
 `;

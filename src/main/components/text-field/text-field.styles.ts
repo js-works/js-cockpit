@@ -13,11 +13,4 @@ export default css`
     border-color: var(--sl-color-danger-700);
     --sl-focus-ring: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-danger-700);
   }
-
-  .error-text:not(:empty) {
-    margin: -4px 0 4px 0;
-    font-size: 90%;
-    font-weight: var(--sl-font-weight-normal);
-    color: var(--sl-color-danger-700);
-  }
 `;

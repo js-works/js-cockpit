@@ -36,16 +36,13 @@ export { LogoutEvent } from './events/logout-event';
 export { PageChangeEvent } from './events/page-change-event';
 export { PageSizeChangeEvent } from './events/page-size-change-event';
 
-// forms
-export * from './forms/form-fields';
-
 // i18n
 export * from './i18n/i18n';
 
 // controllers
-export * from './controllers/form-field-controller';
 
 // misc
+export * from './misc/forms';
 export * from './misc/dialogs';
 export * from './misc/theming';
 

@@ -212,7 +212,7 @@ class PaginationBar extends Component {
         >
           <sl-icon src=${chevronLeftSvg}></sl-icon>
         </sl-button>
-        <div class="page-control">
+        <div class="page-sl-control">
           ${pageTxt}
           <sl-input
             size="small"

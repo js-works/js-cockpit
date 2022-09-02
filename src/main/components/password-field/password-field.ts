@@ -10,7 +10,6 @@ import {
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
-import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -49,13 +48,6 @@ class PasswordField extends Component {
 
   private _i18n = new I18nController(this);
 
-  private _formField: FormFieldController<string> = new FormFieldController({
-    element: this as any, // TODO!!!!
-    getValue: () => this.value,
-    getRawValue: () => this.value,
-    setErrorText: () => {} // TODO!!!
-  });
-
   @bind
   private _onInput() {
     this.value = this._slInputRef.value!.value;
@@ -77,12 +69,12 @@ class PasswordField extends Component {
           type="password"
           name=${this.name}
           toggle-password
-          class="input control"
+          class="input sl-control"
           required=${this.required}
           @sl-input=${this._onInput}
           ${ref(this._slInputRef)}
         >
-          <span slot="label" class="control-label">${this.label}</span>
+          <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
         <div class="error"></div>
       </div>
