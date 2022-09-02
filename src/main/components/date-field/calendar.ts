@@ -495,8 +495,12 @@ function getStyles() {
       cursor: default;
     }
     
+    .air-datepicker .air-datepicker--time {
+      padding: 0.4rem 0.2rem;
+    }
+
     .air-datepicker.-only-timepicker- .air-datepicker--time {
-      padding: 1rem 0rem;
+      padding: 0.75rem 0.5rem;
       border: none;
     }
   `;
