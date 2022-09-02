@@ -20,7 +20,7 @@ export default css`
   }
 
   sl-button::part(base) {
-    border-color: var(--sl-color-neutral-500);
+    border-color: var(--sl-color-neutral-400);
   }
 
   sl-button:hover::part(base) {
