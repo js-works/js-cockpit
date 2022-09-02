@@ -6,7 +6,7 @@ export default css`
 
   .base {
     display: flex;
-    gap: 0.8px;
+    gap: 3px;
     font-family: var(--sl-font-sans);
     user-select: none;
   }
@@ -15,6 +15,7 @@ export default css`
     font-size: var(--sl-font-size-small);
   }
 
+  /*
   .button:first-child::part(base),
   sl-dropdown:first-child sl-button::part(base) {
     border-top-left-radius: 4px;
@@ -25,6 +26,12 @@ export default css`
   sl-dropdown:last-child sl-button::part(base) {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+  }
+  */
+
+  .button::part(base),
+  sl-dropdown sl-button::part(base) {
+    border-radius: 6px;
   }
 
   sl-icon {
