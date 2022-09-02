@@ -47,7 +47,7 @@
 
 .actions {
   flex-grow: 1;
-  margin-top: 0.3rem;
+  margin-top: 0.25rem;
 }
 
 .search {
@@ -68,6 +68,7 @@
 
 .table {
   flex-grow: 1;
+  margin-top: 0.1rem;
 }
 
 .footer {

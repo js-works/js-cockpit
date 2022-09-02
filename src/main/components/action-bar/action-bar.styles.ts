@@ -6,27 +6,25 @@ export default css`
 
   .base {
     display: flex;
-    gap: 2px;
+    gap: 0.8px;
     font-family: var(--sl-font-sans);
     user-select: none;
-  }
-
-  sl-button:not(:hover)::part(base) {
-    xxxborder-color: transparent;
   }
 
   sl-button::part(base) {
     font-size: var(--sl-font-size-medium);
   }
 
-  sl-button::part(base) {
-    border-color: var(--sl-color-neutral-400);
+  .button:first-child::part(base),
+  sl-dropdown:first-child sl-button::part(base) {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
   }
 
-  sl-button:hover::part(base) {
-    color: var(--sl-color-primary-900);
-    background-color: var(--sl-color-primary-200);
-    border-color: var(--sl-color-primary-700);
+  .button:last-child::part(base),
+  sl-dropdown:last-child sl-button::part(base) {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
   }
 
   sl-icon {

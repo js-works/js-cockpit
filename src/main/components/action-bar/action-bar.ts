@@ -56,65 +56,62 @@ class ActionBar extends Component {
 
     return html`
       <div class="base">
-        <sl-button-group>
-          ${repeat(
-            this.actions,
-            (_, idx) => idx,
-            (it, idx) => {
-              if (it.kind === 'action') {
-                return it.disabled
-                  ? null
-                  : html`
+        ${repeat(
+          this.actions,
+          (_, idx) => idx,
+          (it, idx) => {
+            if (it.kind === 'action') {
+              return it.disabled
+                ? null
+                : html`
+                    <sl-button
+                      class="button"
+                      variant="primary"
+                      size="small"
+                      ?disabled=${it.disabled}
+                      ?pill=${this.pill}
+                    >
+                      ${it.text}
+                    </sl-button>
+                  `;
+            } else {
+              const disabled =
+                !it.actions ||
+                it.actions.length === 0 ||
+                it.actions.every((it) => it.disabled);
+
+              return disabled
+                ? null
+                : html`
+                    <sl-dropdown class="button">
                       <sl-button
+                        slot="trigger"
+                        variant="primary"
                         size="small"
-                        outline
-                        variant="neutral"
-                        ?disabled=${it.disabled}
+                        caret
+                        ?disabled=${disabled}
                         ?pill=${this.pill}
                       >
-                        ${it.text}
-                      </sl-button>
-                    `;
-              } else {
-                const disabled =
-                  !it.actions ||
-                  it.actions.length === 0 ||
-                  it.actions.every((it) => it.disabled);
-
-                return disabled
-                  ? null
-                  : html`
-                      <sl-dropdown class="button">
-                        <sl-button
-                          slot="trigger"
-                          outline
-                          size="small"
-                          variant="neutral"
-                          caret
-                          ?disabled=${disabled}
-                          ?pill=${this.pill}
-                        >
-                          ${it.text}</sl-button
-                        >
-                        <sl-menu>
-                          ${repeat(
-                            it.actions,
-                            (_, idx) => idx,
-                            (it) => {
-                              return html`
-                                <sl-menu-item ?disabled=${it.disabled}>
-                                  ${it.text}
-                                </sl-menu-item>
-                              `;
-                            }
-                          )}
-                        </sl-menu>
-                      </sl-dropdown>
-                    `;
-              }
+                        ${it.text}</sl-button
+                      >
+                      <sl-menu>
+                        ${repeat(
+                          it.actions,
+                          (_, idx) => idx,
+                          (it) => {
+                            return html`
+                              <sl-menu-item ?disabled=${it.disabled}>
+                                ${it.text}
+                              </sl-menu-item>
+                            `;
+                          }
+                        )}
+                      </sl-menu>
+                    </sl-dropdown>
+                  `;
             }
-          )}
-        </sl-button-group>
+          }
+        )}
       </div>
     `;
   }
