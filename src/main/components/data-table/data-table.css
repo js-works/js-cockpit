@@ -55,7 +55,7 @@ table {
 }
 
 table.head-table > thead > tr {
-  border-bottom: 1px solid var(--sl-color-primary-600);
+  border-bottom: 1px solid var(--sl-color-neutral-400);
 }
 
 table.head-table > thead > tr > th {

@@ -145,7 +145,7 @@ export class DateField extends Component {
           class="popup"
           placement="bottom"
           ?active=${this._pickerVisible}
-          distance=${2}
+          distance=${5}
           skidding=${0}
           ?flip=${true}
           ?arrow=${true}
