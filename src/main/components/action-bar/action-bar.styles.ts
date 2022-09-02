@@ -24,8 +24,9 @@ export default css`
   }
 
   sl-button:hover::part(base) {
+    color: var(--sl-color-primary-900);
+    background-color: var(--sl-color-primary-200);
     border-color: var(--sl-color-primary-700);
-    background-color: var(--sl-color-primary-600);
   }
 
   sl-icon {

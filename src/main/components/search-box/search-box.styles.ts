@@ -22,6 +22,16 @@ export default css`
     font-size: 110%;
   }
 
+  sl-button::part(base) {
+    border-color: var(--sl-color-neutral-500);
+  }
+
+  sl-button:hover::part(base) {
+    color: var(--sl-color-primary-900);
+    background-color: var(--sl-color-primary-200);
+    border-color: var(--sl-color-primary-700);
+  }
+
   .popup {
     background-color: var(--sl-color-neutral-0);
     border: 2px solid var(--sl-color-primary-600);
