@@ -12,7 +12,7 @@ export default css`
   }
 
   sl-button::part(base) {
-    font-size: var(--sl-font-size-medium);
+    font-size: var(--sl-font-size-small);
   }
 
   .button:first-child::part(base),
