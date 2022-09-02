@@ -6,7 +6,7 @@ export default css`
 
   .base {
     display: flex;
-    gap: 3px;
+    gap: 2.5px;
     font-family: var(--sl-font-sans);
     user-select: none;
   }
@@ -31,7 +31,7 @@ export default css`
 
   .button::part(base),
   sl-dropdown sl-button::part(base) {
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
   sl-icon {
