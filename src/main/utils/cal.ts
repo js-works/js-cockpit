@@ -136,7 +136,7 @@ class Calendar {
   readonly #focusables: HTMLElement[];
 
   #localeSettings = defaultLocaleSettings;
-  #currView: View = 'decade';
+  #currView: View = 'month';
   #currMonth: number;
   #currYear: number;
   #currDecade: number;
@@ -219,18 +219,32 @@ class Calendar {
 
   #refresh = () => {
     switch (this.#currView) {
+      case 'month': {
+        const month = this.#currMonth;
+        const year = this.#currYear;
+        const title = `${this.#localeSettings.months[month]} ${year}`;
+        this.#calTitle.innerText = title;
+        this.#calMain.innerHTML = '';
+
+        this.#calMain.append(
+          this.#renderMonthView(this.#currYear, this.#currMonth)
+        );
+
+        break;
+      }
+
       case 'year':
         this.#calTitle.innerText = String(this.#currYear);
         this.#calMain.innerHTML = '';
-        this.#calMain.append(this.#renderYearView());
+        this.#calMain.append(this.#renderYearView(this.#currYear));
         break;
 
       case 'decade':
         this.#calTitle.innerText =
-          this.#currDecade + ' - ' + (this.#currDecade + 12);
+          this.#currDecade + ' - ' + (this.#currDecade + 11);
 
         this.#calMain.innerHTML = '';
-        this.#calMain.append(this.#renderDecadeView());
+        this.#calMain.append(this.#renderDecadeView(this.#currDecade));
     }
   };
 
@@ -240,7 +254,46 @@ class Calendar {
 
   #ok = () => {};
 
-  #renderYearView = () => {
+  #renderMonthView = (year: number, month: number) => {
+    const ret = h('div', { className: 'cal-view-month' });
+
+    ret.append(h('div'));
+
+    for (let i = 0; i < 7; ++i) {
+      ret.append(
+        h('div', { class: 'cal-weekday' }, this.#localeSettings.daysShort[i])
+      );
+    }
+
+    for (let i = 0; i < 31; ++i) {
+      const day = i;
+
+      if (i % 7 === 0) {
+        const weekElem = h('div', {
+          className: 'cal-week-number'
+        });
+
+        ret.append(weekElem);
+      }
+
+      const elem = h(
+        'div',
+        {
+          'className': 'cal-cell',
+          'data-year': year,
+          'data-month': month,
+          'data-day': i
+        },
+        i
+      );
+
+      ret.append(elem);
+    }
+
+    return ret;
+  };
+
+  #renderYearView = (year: number) => {
     const ret = h('div', { className: 'cal-view-year' });
 
     for (let i = 0; i < 12; ++i) {
@@ -250,6 +303,7 @@ class Calendar {
         'div',
         {
           'className': 'cal-cell',
+          'data-year': year,
           'data-month': month
         },
         month
@@ -261,8 +315,7 @@ class Calendar {
     return ret;
   };
 
-  #renderDecadeView = () => {
-    const startYear = 2020;
+  #renderDecadeView = (startYear: number) => {
     const ret = h('div', { className: 'cal-view-decade' });
 
     for (let i = 0; i < 12; ++i) {
@@ -282,6 +335,19 @@ class Calendar {
 }
 
 // === local =========================================================
+
+function getDayCount(year: number, month: number) {
+  const n = year * 12 + month;
+
+  year = Math.floor(n / 12);
+  month = n % 12;
+
+  if (month !== 1) {
+    return month % 7 === 0 ? 31 : 30;
+  }
+
+  return year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0) ? 28 : 29;
+}
 
 function query<T extends HTMLElement>(root: HTMLElement, selector: string): T {
   return root.querySelector(selector)!;
@@ -390,6 +456,7 @@ function getStyles(theme: Calendar.Theme) {
       width: 300px;
       border: 1px solid red;
       font: ${theme.font};
+      user-select: none;
     }
 
     .cal-input {
