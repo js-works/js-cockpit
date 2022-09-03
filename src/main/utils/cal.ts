@@ -30,29 +30,7 @@ namespace Calendar {
       clear: string;
     };
   };
-
-  export type Theme = {
-    font: string;
-    headerTextColor: string;
-    headerBackgroundColor: string;
-    headerHoverBackgroundColor: string;
-    headerActiveBackgroundColor: string;
-    buttonBackgroundColor: string;
-    buttonHoverBackgroundColor: string;
-    buttonActiveBackgroundColor: string;
-  };
 }
-
-const defaultTheme: Calendar.Theme = {
-  font: '15px Helvetica,Arial,sans-serif',
-  headerTextColor: 'black',
-  headerBackgroundColor: 'orange',
-  headerHoverBackgroundColor: 'darkorange',
-  headerActiveBackgroundColor: 'red',
-  buttonBackgroundColor: 'yellow',
-  buttonHoverBackgroundColor: 'orange',
-  buttonActiveBackgroundColor: 'blue'
-};
 
 // === local types ===================================================
 
@@ -109,8 +87,6 @@ const defaultLocaleSettings: Calendar.LocaleSettings = {
 // === public ========================================================
 
 class Calendar {
-  readonly #theme: Calendar.Theme;
-
   readonly #getLocaleSettings: (
     locale: string
   ) => Partial<Calendar.LocaleSettings>;
@@ -143,12 +119,10 @@ class Calendar {
 
   constructor(params: {
     getLocaleSettings: (locale: string) => Partial<Calendar.LocaleSettings>;
-    theme?: Calendar.Theme;
     styles?: string;
   }) {
     this.#getLocaleSettings = params.getLocaleSettings;
-    this.#theme = params.theme || defaultTheme;
-    this.#cal = renderPickerScaffold(this.#theme, params.styles);
+    this.#cal = renderPickerScaffold(params.styles);
     this.#calBase = query(this.#cal.shadowRoot!, '.cal-base')!;
     this.#calInput = query(this.#calBase, '.cal-input')!;
     this.#calTitle = query(this.#calBase, '.cal-title')!;
@@ -611,16 +585,11 @@ function css(parts: TemplateStringsArray, ...values: any[]): string {
   return html(parts, ...values);
 }
 
-function renderPickerScaffold(
-  theme: Calendar.Theme,
-  customStyles?: string
-): HTMLDivElement {
-  const styles = getStyles(theme);
-
+function renderPickerScaffold(styles: string = ''): HTMLDivElement {
   const content = html`
     <style>
+      ${getBaseStyles()}
       ${styles}
-      ${customStyles || null}
     </style>
     <div class="cal-base">
       <input class="cal-input" />
@@ -652,14 +621,28 @@ function renderPickerScaffold(
   return ret;
 }
 
-function getStyles(theme: Calendar.Theme) {
+function getBaseStyles() {
   return css`
+    :host {
+      --cal-font: 15px Helvetica, Arial, sans-serif;
+      --cal-header-color: white;
+      --cal-header-background-color: #404040;
+      --cal-header-hover-background-color: #606060;
+      --cal-header-active-background-color: #a0a0a0;
+      --cal-border-color: #a0a0a0;
+      --cal-cell-hover-background-color: #d0d0d0;
+      --cal-cell-active-background-color: #c8c8c8;
+      --cal-button-background-color: white;
+      --cal-button-hover-background-color: #e0e0e0;
+      --cal-button-active-background-color: blue;
+    }
+
     .cal-base {
       position: relative;
       display: flow;
       width: 300px;
-      border: 1px solid red;
-      font: ${theme.font};
+      font: var(--cal-font);
+      border: 1px solid var(--cal-header-background-color);
       user-select: none;
     }
 
@@ -677,8 +660,8 @@ function getStyles(theme: Calendar.Theme) {
 
     .cal-nav {
       display: flex;
-      background-color: yellow;
-      background-color: ${theme.headerBackgroundColor};
+      color: var(--cal-header-color);
+      background-color: var(--cal-header-background-color);
     }
 
     .cal-title-container {
@@ -709,13 +692,13 @@ function getStyles(theme: Calendar.Theme) {
     .cal-title:not(.cal--disabled):hover,
     .cal-prev:not(.cal--disabled):hover,
     .cal-next:not(.cal--disabled):hover {
-      background-color: ${theme.headerHoverBackgroundColor};
+      background-color: var(--cal-header-hover-background-color);
     }
 
     .cal-title:not(.cal--disabled):active,
     .cal-prev:not(.cal--disabled):active,
     .cal-next:not(.cal--disabled):active {
-      background-color: ${theme.headerActiveBackgroundColor};
+      background-color: var(--cal-header-active-background-color);
     }
 
     .cal-view-month {
@@ -733,6 +716,14 @@ function getStyles(theme: Calendar.Theme) {
       grid-template-columns: repeat(4, 1fr);
     }
 
+    .cal-cell {
+      align-self: center;
+    }
+
+    .cal-cell:hover {
+      background-color: var(--cal-cell-hover-background-color);
+    }
+
     .cal-time-selector {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -747,22 +738,25 @@ function getStyles(theme: Calendar.Theme) {
       padding: 0.5rem;
     }
 
+    .cal-buttons {
+      display: flex;
+      border-collapse: collapse;
+    }
+
     .cal-button {
       flex-grow: 1;
       outline: none;
-      background-color: ${theme.buttonBackgroundColor};
+      background-color: var(--cal-button-background-color);
+      border: 1px solid var(--cal-border-color);
+      border-collapse: collapse;
     }
 
     .cal-button:hover {
-      background-color: ${theme.buttonHoverBackgroundColor};
+      background-color: var(--cal-button-hover-background-color);
     }
 
     .cal-button:active {
-      background-color: ${theme.buttonActiveBackgroundColor};
-    }
-
-    .cal-buttons {
-      display: flex;
+      background-color: var(--cal-button-active-background-color);
     }
   `;
 }
