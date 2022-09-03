@@ -56,7 +56,6 @@ const defaultTheme: Calendar.Theme = {
 
 // === local types ===================================================
 
-type Renderable = Node | string | number | null | undefined | Renderable[];
 type View = 'month' | 'year' | 'decade';
 
 // === local data ====================================================
@@ -98,10 +97,7 @@ const defaultLocaleSettings: Calendar.LocaleSettings = {
 
   firstDayOfWeek: 0,
   weekendDays: [0, 6],
-
-  getCalendarWeek: (date, firstDayOfWeek) => {
-    return 42;
-  }, // TODO!!!
+  getCalendarWeek,
 
   texts: {
     ok: 'OK',
@@ -143,28 +139,29 @@ class Calendar {
   #currHour: number | null = 0;
   #currMinute: number | null = 0;
 
-  #refreshRequested = false;
+  #updateRequested = false;
 
   constructor(params: {
     getLocaleSettings: (locale: string) => Partial<Calendar.LocaleSettings>;
     theme?: Calendar.Theme;
+    styles?: string;
   }) {
     this.#getLocaleSettings = params.getLocaleSettings;
     this.#theme = params.theme || defaultTheme;
-    this.#cal = renderRoot(this.#theme);
-    this.#calBase = query(this.#cal, '.cal-base');
-    this.#calInput = query(this.#cal, '.cal-input');
-    this.#calTitle = query(this.#cal, '.cal-title');
-    this.#calPrev = query(this.#cal, '.cal-prev');
-    this.#calNext = query(this.#cal, '.cal-next');
-    this.#calMain = query(this.#cal, '.cal-main');
-    this.#calTimeSelector = query(this.#cal, '.cal-time-selector');
-    this.#calTime = query(this.#cal, '.cal-time');
-    this.#calHour = query(this.#cal, '.cal-hour');
-    this.#calMinute = query(this.#cal, '.cal-minute');
-    this.#calOk = query(this.#cal, '.cal-ok');
-    this.#calCancel = query(this.#cal, '.cal-cancel');
-    this.#calClear = query(this.#cal, '.cal-clear');
+    this.#cal = renderPickerScaffold(this.#theme, params.styles);
+    this.#calBase = query(this.#cal.shadowRoot!, '.cal-base')!;
+    this.#calInput = query(this.#calBase, '.cal-input')!;
+    this.#calTitle = query(this.#calBase, '.cal-title')!;
+    this.#calPrev = query(this.#calBase, '.cal-prev')!;
+    this.#calNext = query(this.#calBase, '.cal-next')!;
+    this.#calMain = query(this.#calBase, '.cal-main')!;
+    this.#calTimeSelector = query(this.#calBase, '.cal-time-selector')!;
+    this.#calTime = query(this.#calBase, '.cal-time')!;
+    this.#calHour = query(this.#calBase, '.cal-hour')!;
+    this.#calMinute = query(this.#calBase, '.cal-minute')!;
+    this.#calOk = query(this.#calBase, '.cal-ok')!;
+    this.#calCancel = query(this.#calBase, '.cal-cancel')!;
+    this.#calClear = query(this.#calBase, '.cal-clear')!;
 
     this.#focusables = [
       this.#calHour,
@@ -178,157 +175,178 @@ class Calendar {
     this.#currMonth = now.getMonth();
     this.#currYear = now.getFullYear();
     this.#currDecade = Math.floor(this.#currYear / 10) * 10;
-
-    this.#cal.addEventListener('mousedown', this.#onMouseDown);
-    this.#cal.addEventListener('click', this.#onClick);
-
-    this.#calHour.addEventListener('input', (ev) => {
-      const target = ev.target;
-
-      if (!(target instanceof HTMLInputElement)) {
-        return;
-      }
-
-      this.#currHour = target.valueAsNumber;
-      this.#updateTimeText();
-    });
-
-    this.#calMinute.addEventListener('input', (ev) => {
-      const target = ev.target;
-
-      if (!(target instanceof HTMLInputElement)) {
-        return;
-      }
-
-      this.#currMinute = target.valueAsNumber;
-      this.#updateTimeText();
-    });
-
-    this.#requestRefresh();
+    this.#calBase.addEventListener('mousedown', this.#onPickerMouseDown);
+    this.#calBase.addEventListener('click', this.#onPickerClick);
+    this.#calHour.addEventListener('input', this.#onHourInput);
+    this.#calMinute.addEventListener('input', this.#onMinuteInput);
+    this.#update();
   }
 
   getElement() {
     return this.#cal;
   }
 
-  #onMouseDown = (ev: MouseEvent) => {
-    if (!this.#focusables.includes(ev.target as HTMLElement)) {
+  #onPickerMouseDown = (ev: MouseEvent) => {
+    if (
+      ev.target instanceof HTMLElement &&
+      !this.#focusables.includes(ev.target)
+    ) {
       ev.preventDefault();
       ev.stopPropagation();
     }
   };
 
-  #onClick = (ev: MouseEvent) => {
+  #onPickerClick = (ev: MouseEvent) => {
     const target = ev.target;
 
-    if (this.#refreshRequested || !(target instanceof HTMLElement)) {
+    if (this.#updateRequested || !(target instanceof HTMLElement)) {
       return;
     }
 
     if (target.classList.contains('cal-cell')) {
-      switch (this.#currView) {
-        case 'month':
-          break;
-
-        case 'year':
-          this.#currYear = parseInt(target.getAttribute('data-year')!, 10);
-          this.#currMonth = parseInt(target.getAttribute('data-month')!, 10);
-          this.#currView = 'month';
-          this.#requestRefresh();
-          break;
-
-        case 'decade':
-          this.#currYear = parseInt(target.getAttribute('data-year')!, 10);
-          this.#currView = 'year';
-          this.#requestRefresh();
-          break;
-      }
-
+      this.#onCellClick(ev);
       return;
     }
 
     const action = target.getAttribute('data-action');
 
     if (action) {
-      switch (action) {
-        case 'movePrev':
-          if (this.#currView === 'month') {
-            if (this.#currMonth === 0) {
-              this.#currMonth = 11;
-              this.#currYear--;
-            } else {
-              this.#currMonth--;
-            }
+      const actionMap: Record<string, (ev: MouseEvent) => void> = {
+        movePrev: this.#onPrevClick,
+        moveNext: this.#onNextClick,
+        switchView: this.#onTitleClick,
+        ok: this.#onOkClick,
+        cancel: this.#onCancelClick,
+        clear: this.#onClearClick
+      };
 
-            this.#requestRefresh();
-          }
-          if (this.#currView === 'year') {
-            this.#currYear--;
-
-            this.#requestRefresh();
-          } else if (this.#currView === 'decade') {
-            this.#currDecade -= 10;
-            this.#requestRefresh();
-          }
-          break;
-
-        case 'moveNext':
-          if (this.#currView === 'month') {
-            if (this.#currMonth === 11) {
-              this.#currMonth = 0;
-              this.#currYear++;
-            } else {
-              this.#currMonth++;
-            }
-
-            this.#requestRefresh();
-          } else if (this.#currView === 'year') {
-            this.#currYear++;
-
-            this.#requestRefresh();
-          } else if (this.#currView === 'decade') {
-            this.#currDecade += 10;
-            this.#requestRefresh();
-          }
-          break;
-
-        case 'switchView':
-          if (this.#currView !== 'decade') {
-            this.#currView = this.#currView === 'month' ? 'year' : 'decade';
-            this.#requestRefresh();
-          }
-
-          break;
-
-        case 'cancel':
-          this.#cancel();
-          break;
-
-        case 'clear':
-          this.#clear();
-          break;
-
-        case 'ok':
-          this.#ok();
-          break;
-      }
+      actionMap[action]?.(ev);
     }
   };
 
-  #requestRefresh = () => {
-    if (this.#refreshRequested) {
+  #onTitleClick = () => {
+    if (this.#currView !== 'decade') {
+      this.#currView = this.#currView === 'month' ? 'year' : 'decade';
+      this.#requestUpdate();
+    }
+  };
+
+  #onPrevClick = () => {
+    if (this.#currView === 'month') {
+      if (this.#currMonth === 0) {
+        this.#currMonth = 11;
+        this.#currYear--;
+      } else {
+        this.#currMonth--;
+      }
+
+      this.#requestUpdate();
+    }
+
+    if (this.#currView === 'year') {
+      this.#currYear--;
+
+      this.#requestUpdate();
+    } else if (this.#currView === 'decade') {
+      this.#currDecade -= 10;
+      this.#requestUpdate();
+    }
+  };
+
+  #onNextClick = () => {
+    if (this.#currView === 'month') {
+      if (this.#currMonth === 11) {
+        this.#currMonth = 0;
+        this.#currYear++;
+      } else {
+        this.#currMonth++;
+      }
+
+      this.#requestUpdate();
+    } else if (this.#currView === 'year') {
+      this.#currYear++;
+
+      this.#requestUpdate();
+    } else if (this.#currView === 'decade') {
+      this.#currDecade += 10;
+      this.#requestUpdate();
+    }
+  };
+
+  #onCellClick = (ev: Event) => {
+    const target = ev.target;
+
+    if (!(target instanceof HTMLElement)) {
       return;
     }
 
-    this.#refreshRequested = true;
+    switch (this.#currView) {
+      case 'month':
+        break;
+
+      case 'year':
+        this.#currYear = parseInt(target.getAttribute('data-year')!, 10);
+        this.#currMonth = parseInt(target.getAttribute('data-month')!, 10);
+        this.#currView = 'month';
+        this.#requestUpdate();
+        break;
+
+      case 'decade':
+        this.#currYear = parseInt(target.getAttribute('data-year')!, 10);
+        this.#currView = 'year';
+        this.#requestUpdate();
+        break;
+    }
+  };
+
+  #onOkClick = () => {
+    console.log('ok');
+  };
+
+  #onCancelClick = () => {
+    console.log('cancel');
+  };
+
+  #onClearClick = () => {
+    console.log('clear');
+  };
+
+  #onHourInput = (ev: Event) => {
+    const target = ev.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    this.#currHour = target.valueAsNumber;
+    this.#updateTimeText();
+  };
+
+  #onMinuteInput = (ev: Event) => {
+    const target = ev.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    this.#currMinute = target.valueAsNumber;
+    this.#updateTimeText();
+  };
+
+  #requestUpdate = () => {
+    if (this.#updateRequested) {
+      return;
+    }
+
+    this.#updateRequested = true;
 
     requestAnimationFrame(() => {
-      this.#refreshRequested = false;
-      this.#refresh();
+      this.#updateRequested = false;
+      this.#update();
     });
   };
 
-  #refresh = () => {
+  #update = () => {
     switch (this.#currView) {
       case 'month': {
         const month = this.#currMonth;
@@ -378,12 +396,6 @@ class Calendar {
 
     this.#calTime.innerText = timeText;
   };
-
-  #clear = () => {};
-
-  #cancel = () => {};
-
-  #ok = () => {};
 
   #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
@@ -437,10 +449,8 @@ class Calendar {
       if (i % 7 === 0) {
         const weekElem = h(
           'div',
-          {
-            className: 'cal-week-number'
-          },
-          getCalendarWeek(
+          { className: 'cal-week-number' },
+          this.#localeSettings.getCalendarWeek(
             new Date(cellYear, cellMonth, cellDay),
             this.#localeSettings.firstDayOfWeek
           )
@@ -540,14 +550,17 @@ function getCalendarWeek(date: Date, firstDayOfWeek: number) {
   return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
 }
 
-function query<T extends HTMLElement>(root: HTMLElement, selector: string): T {
-  return root.querySelector(selector)!;
+function query<T extends HTMLElement>(
+  root: HTMLElement | ShadowRoot,
+  selector: string
+): T | null {
+  return root.querySelector(selector);
 }
 
 function h(
   tagName: string,
   props?: Record<string, any> | null,
-  ...children: (string | number | Node)[]
+  child?: string | number | Node
 ): HTMLElement {
   const ret = document.createElement(tagName);
 
@@ -565,14 +578,10 @@ function h(
     }
   }
 
-  for (const child of children) {
-    const type = typeof child;
-
-    if (typeof child === 'string' || typeof child === 'number') {
-      ret.append(document.createTextNode(String(child)));
-    } else if (child) {
-      ret.append(child);
-    }
+  if (typeof child === 'string' || typeof child === 'number') {
+    ret.append(document.createTextNode(String(child)));
+  } else if (child) {
+    ret.append(child);
   }
 
   return ret;
@@ -602,12 +611,16 @@ function css(parts: TemplateStringsArray, ...values: any[]): string {
   return html(parts, ...values);
 }
 
-function renderRoot(theme: Calendar.Theme): HTMLDivElement {
+function renderPickerScaffold(
+  theme: Calendar.Theme,
+  customStyles?: string
+): HTMLDivElement {
   const styles = getStyles(theme);
 
   const content = html`
     <style>
       ${styles}
+      ${customStyles || null}
     </style>
     <div class="cal-base">
       <input class="cal-input" />
@@ -618,7 +631,7 @@ function renderRoot(theme: Calendar.Theme): HTMLDivElement {
         </div>
         <a class="cal-next" data-action="moveNext">&#x1F862;</a>
       </div>
-      <div class="cal-main">[main]</div>
+      <div class="cal-main"></div>
       <div class="cal-time-selector">
         <div class="cal-time"></div>
         <input class="cal-hour" value="0" type="range" min="0" max="23" />
@@ -635,7 +648,7 @@ function renderRoot(theme: Calendar.Theme): HTMLDivElement {
   `;
 
   const ret = h('div') as HTMLDivElement;
-  ret.innerHTML = content;
+  ret.attachShadow({ mode: 'open' }).innerHTML = content;
   return ret;
 }
 
