@@ -257,6 +257,22 @@ class Calendar {
   #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
 
+    const firstDayOfWeek = this.#localeSettings.firstDayOfWeek;
+    const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
+    const dayCountOfCurrMonth = getDayCountOfMonth(year, month);
+    const dayCountOfLastMonth = getDayCountOfMonth(year, month - 1);
+
+    const remainingDaysOfLastMonth =
+      firstDayOfWeek <= firstWeekdayOfMonth
+        ? firstWeekdayOfMonth - firstDayOfWeek
+        : 6 - (firstDayOfWeek - firstWeekdayOfMonth);
+
+    let daysToShow = getDayCountOfMonth(year, month) + remainingDaysOfLastMonth;
+
+    if (daysToShow % 7 > 0) {
+      daysToShow += 7 - (daysToShow % 7);
+    }
+
     ret.append(h('div'));
 
     for (let i = 0; i < 7; ++i) {
@@ -265,8 +281,18 @@ class Calendar {
       );
     }
 
-    for (let i = 0; i < 31; ++i) {
-      const day = i;
+    for (let i = 0; i < daysToShow; ++i) {
+      let day: number;
+
+      if (i < remainingDaysOfLastMonth) {
+        day = dayCountOfLastMonth - remainingDaysOfLastMonth + i + 1;
+      } else {
+        day = i - remainingDaysOfLastMonth + 1;
+
+        if (day > dayCountOfCurrMonth) {
+          day = day - dayCountOfCurrMonth;
+        }
+      }
 
       if (i % 7 === 0) {
         const weekElem = h('div', {
@@ -282,9 +308,9 @@ class Calendar {
           'className': 'cal-cell',
           'data-year': year,
           'data-month': month,
-          'data-day': i
+          'data-day': day
         },
-        i
+        day
       );
 
       ret.append(elem);
@@ -336,17 +362,26 @@ class Calendar {
 
 // === local =========================================================
 
-function getDayCount(year: number, month: number) {
+function getDayCountOfMonth(year: number, month: number) {
   const n = year * 12 + month;
 
   year = Math.floor(n / 12);
   month = n % 12;
 
   if (month !== 1) {
-    return month % 7 === 0 ? 31 : 30;
+    return (month % 7) % 2 === 0 ? 31 : 30;
   }
 
   return year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0) ? 28 : 29;
+}
+
+function getFirstWeekdayInMonth(year: number, month: number) {
+  const n = year * 12 + month;
+
+  year = Math.floor(n / 12);
+  month = n % 12;
+
+  return new Date(year, month, 1).getDay();
 }
 
 function query<T extends HTMLElement>(root: HTMLElement, selector: string): T {
