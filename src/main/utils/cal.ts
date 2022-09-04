@@ -16,7 +16,7 @@ namespace Calendar {
 
   export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-  export type LocaleSettings = {
+  export type Localization = {
     daysShort: string[];
     months: string[];
     monthsShort: string[];
@@ -38,7 +38,7 @@ type View = 'month' | 'year' | 'decade';
 
 // === local data ====================================================
 
-const defaultLocaleSettings: Calendar.LocaleSettings = {
+const defaultLocalization: Calendar.Localization = {
   daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
   months: [
@@ -86,11 +86,6 @@ const defaultLocaleSettings: Calendar.LocaleSettings = {
 
 class Calendar {
   static #template: HTMLTemplateElement | null = null;
-  static #cache = new WeakMap<Function, Map<string, Calendar.LocaleSettings>>();
-
-  readonly #getLocaleSettings: (
-    locale: string
-  ) => Partial<Calendar.LocaleSettings>;
 
   readonly #cal: HTMLElement;
   readonly #calBase: HTMLElement;
@@ -108,7 +103,7 @@ class Calendar {
   readonly #calClear: HTMLInputElement;
   readonly #focusables: HTMLElement[];
 
-  #localeSettings = defaultLocaleSettings;
+  #localization = defaultLocalization;
   #currView: View = 'month';
   #currMonth: number;
   #currYear: number;
@@ -118,11 +113,7 @@ class Calendar {
 
   #updateRequested = false;
 
-  constructor(params: {
-    getLocaleSettings: (locale: string) => Partial<Calendar.LocaleSettings>;
-    styles?: string;
-  }) {
-    this.#getLocaleSettings = params.getLocaleSettings;
+  constructor(params: { styles?: string }) {
     this.#cal = this.#renderPicker(params.styles);
     this.#calBase = query(this.#cal.shadowRoot!, '.cal-base')!;
     this.#calInput = query(this.#calBase, '.cal-input')!;
@@ -161,33 +152,15 @@ class Calendar {
     return this.#cal;
   }
 
-  setLocale(locale: string): void {
-    let map = Calendar.#cache.get(this.#getLocaleSettings);
-
-    if (!map) {
-      map = new Map();
-      Calendar.#cache.set(this.#getLocaleSettings, map);
-    }
-
-    let localeSettings = map.get(locale);
-
-    if (!localeSettings) {
-      localeSettings = {
-        ...defaultLocaleSettings,
-        ...this.#getLocaleSettings(locale)
-      };
-
-      map.set(locale, localeSettings);
-    }
-
-    this.#localeSettings = localeSettings;
+  setLocalization(localization: Partial<Calendar.Localization>): void {
+    this.#localization = { ...defaultLocalization, ...localization };
     this.#requestUpdate();
   }
 
   #renderPicker = (styles: string = '') => {
     if (Calendar.#template === null) {
       Calendar.#template = document.createElement('template');
-      Calendar.#template.innerHTML = pickerScaffold;
+      Calendar.#template.innerHTML = baseTemplate;
     }
 
     const content = Calendar.#template.content.cloneNode(true) as HTMLElement;
@@ -363,7 +336,7 @@ class Calendar {
       case 'month': {
         const month = this.#currMonth;
         const year = this.#currYear;
-        const title = `${this.#localeSettings.months[month]} ${year}`;
+        const title = `${this.#localization.months[month]} ${year}`;
         this.#calTitle.innerText = title;
         this.#calMain.innerHTML = '';
 
@@ -412,7 +385,7 @@ class Calendar {
   #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
 
-    const firstDayOfWeek = this.#localeSettings.firstDayOfWeek;
+    const firstDayOfWeek = this.#localization.firstDayOfWeek;
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const dayCountOfCurrMonth = getDayCountOfMonth(year, month);
     const dayCountOfLastMonth = getDayCountOfMonth(year, month - 1);
@@ -432,7 +405,7 @@ class Calendar {
 
     for (let i = 0; i < 7; ++i) {
       ret.append(
-        h('div', { class: 'cal-weekday' }, this.#localeSettings.daysShort[i])
+        h('div', { class: 'cal-weekday' }, this.#localization.daysShort[i])
       );
     }
 
@@ -462,9 +435,9 @@ class Calendar {
         const weekElem = h(
           'div',
           { className: 'cal-week-number' },
-          this.#localeSettings.getCalendarWeek(
+          this.#localization.getCalendarWeek(
             new Date(cellYear, cellMonth, cellDay),
-            this.#localeSettings.firstDayOfWeek
+            this.#localization.firstDayOfWeek
           )
         );
 
@@ -499,7 +472,7 @@ class Calendar {
           'data-year': year,
           'data-month': i
         },
-        this.#localeSettings.monthsShort[i]
+        this.#localization.monthsShort[i]
       );
 
       ret.append(elem);
@@ -623,7 +596,9 @@ function css(parts: TemplateStringsArray, ...values: any[]): string {
   return html(parts, ...values);
 }
 
-const pickerScaffold = html`
+// === base template =================================================
+
+const baseTemplate = html`
   <style></style>
   <div class="cal-base">
     <input class="cal-input" />
@@ -647,6 +622,8 @@ const pickerScaffold = html`
     </div>
   </div>
 `;
+
+// === base styles ===================================================
 
 const baseStyles = css`
   :host {
@@ -744,6 +721,7 @@ const baseStyles = css`
 
   .cal-cell {
     align-self: center;
+    cursor: pointer;
   }
 
   .cal-cell:hover {
