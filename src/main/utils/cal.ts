@@ -267,6 +267,10 @@ class Calendar {
 
     switch (this.#currView) {
       case 'month':
+        // TODO!!!
+        const cellYear = parseInt(target.getAttribute('data-year')!, 10);
+        const cellMonth = parseInt(target.getAttribute('data-month')!, 10);
+        const cellDay = parseInt(target.getAttribute('data-day')!, 10);
         break;
 
       case 'year':

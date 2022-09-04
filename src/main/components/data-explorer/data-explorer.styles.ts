@@ -44,14 +44,14 @@ export default css`
     margin: 0 1.5rem 0 0.75rem;
     padding: 0.125rem 0.25rem;
     font-family: var(--sl-font-sans);
-    font-size: 1.6rem;
-    font-weight: 400; //var(--sl-font-weight-light);
+    font-size: 2rem;
+    font-weight: var(--sl-font-weight-light);
     color: var(--sl-color-neutral-800);
   }
 
   .actions {
     flex-grow: 1;
-    margin-top: 0.25rem;
+    margin-top: 0.45rem;
   }
 
   .search {
@@ -104,12 +104,12 @@ export default css`
     align-items: center;
     gap: 1.5rem;
 
-    background-color: var(--sl-light, var(--sl-color-neutral-800))
+    background-color: var(--sl-light, var(--sl-color-neutral-1000))
       var(--sl-dark, var(--sl-color-neutral-300));
 
-    padding: 1.4rem 2.3rem;
+    padding: 1.2rem 2rem;
     border-radius: 4px;
-    opacity: 0.9;
+    opacity: 0.8;
   }
 
   .overlay-bottom {

@@ -21,7 +21,7 @@ import { PageChangeEvent } from '../../events/page-change-event';
 import { PageSizeChangeEvent } from '../../events/page-size-change-event';
 
 // styles
-import dataExplorerStyles from './data-explorer.css';
+import dataExplorerStyles from './data-explorer.styles';
 
 // === exports =======================================================
 
