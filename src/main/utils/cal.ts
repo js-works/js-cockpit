@@ -38,8 +38,6 @@ type View = 'month' | 'year' | 'decade';
 
 // === local data ====================================================
 
-const cache = new WeakMap<any, any>();
-
 const defaultLocaleSettings: Calendar.LocaleSettings = {
   daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
@@ -87,19 +85,22 @@ const defaultLocaleSettings: Calendar.LocaleSettings = {
 // === public ========================================================
 
 class Calendar {
+  static #template: HTMLTemplateElement | null = null;
+  static #cache = new WeakMap<Function, Map<string, Calendar.LocaleSettings>>();
+
   readonly #getLocaleSettings: (
     locale: string
   ) => Partial<Calendar.LocaleSettings>;
 
-  readonly #cal: HTMLDivElement;
-  readonly #calBase: HTMLDivElement;
+  readonly #cal: HTMLElement;
+  readonly #calBase: HTMLElement;
   readonly #calInput: HTMLInputElement;
   readonly #calTitle: HTMLAnchorElement;
   readonly #calPrev: HTMLAnchorElement;
   readonly #calNext: HTMLAnchorElement;
-  readonly #calMain: HTMLDivElement;
-  readonly #calTimeSelector: HTMLDivElement;
-  readonly #calTime: HTMLDivElement;
+  readonly #calMain: HTMLElement;
+  readonly #calTimeSelector: HTMLElement;
+  readonly #calTime: HTMLElement;
   readonly #calHour: HTMLInputElement;
   readonly #calMinute: HTMLInputElement;
   readonly #calOk: HTMLInputElement;
@@ -122,7 +123,7 @@ class Calendar {
     styles?: string;
   }) {
     this.#getLocaleSettings = params.getLocaleSettings;
-    this.#cal = renderPickerScaffold(params.styles);
+    this.#cal = this.#renderPicker(params.styles);
     this.#calBase = query(this.#cal.shadowRoot!, '.cal-base')!;
     this.#calInput = query(this.#calBase, '.cal-input')!;
     this.#calTitle = query(this.#calBase, '.cal-title')!;
@@ -156,9 +157,46 @@ class Calendar {
     this.#update();
   }
 
-  getElement() {
+  getElement(): HTMLElement {
     return this.#cal;
   }
+
+  setLocale(locale: string): void {
+    let map = Calendar.#cache.get(this.#getLocaleSettings);
+
+    if (!map) {
+      map = new Map();
+      Calendar.#cache.set(this.#getLocaleSettings, map);
+    }
+
+    let localeSettings = map.get(locale);
+
+    if (!localeSettings) {
+      localeSettings = {
+        ...defaultLocaleSettings,
+        ...this.#getLocaleSettings(locale)
+      };
+
+      map.set(locale, localeSettings);
+    }
+
+    this.#localeSettings = localeSettings;
+    this.#requestUpdate();
+  }
+
+  #renderPicker = (styles: string = '') => {
+    if (Calendar.#template === null) {
+      Calendar.#template = document.createElement('template');
+      Calendar.#template.innerHTML = pickerScaffold;
+    }
+
+    const content = Calendar.#template.content.cloneNode(true) as HTMLElement;
+    const ret = h('div');
+    ret.attachShadow({ mode: 'open' });
+    ret.shadowRoot!.append(content);
+    query(ret.shadowRoot!, 'style')!.innerText = `${baseStyles}\n${styles}`;
+    return ret;
+  };
 
   #onPickerMouseDown = (ev: MouseEvent) => {
     if (
@@ -585,178 +623,165 @@ function css(parts: TemplateStringsArray, ...values: any[]): string {
   return html(parts, ...values);
 }
 
-function renderPickerScaffold(styles: string = ''): HTMLDivElement {
-  const content = html`
-    <style>
-      ${getBaseStyles()}
-      ${styles}
-    </style>
-    <div class="cal-base">
-      <input class="cal-input" />
-      <div class="cal-nav">
-        <a class="cal-prev" data-action="movePrev">&#x1F860;</a>
-        <div class="cal-title-container">
-          <a class="cal-title" data-action="switchView"></a>
-        </div>
-        <a class="cal-next" data-action="moveNext">&#x1F862;</a>
+const pickerScaffold = html`
+  <style></style>
+  <div class="cal-base">
+    <input class="cal-input" />
+    <div class="cal-nav">
+      <a class="cal-prev" data-action="movePrev">&#x1F860;</a>
+      <div class="cal-title-container">
+        <a class="cal-title" data-action="switchView"></a>
       </div>
-      <div class="cal-main"></div>
-      <div class="cal-time-selector">
-        <div class="cal-time"></div>
-        <input class="cal-hour" value="0" type="range" min="0" max="23" />
-        <input class="cal-minute" value="0" type="range" min="0" max="59" />
-      </div>
-      <div class="cal-buttons">
-        <button class="cal-button cal-clear" data-action="clear">Clear</button>
-        <button class="cal-button cal-cancel" data-action="cancel">
-          Cancel
-        </button>
-        <button class="cal-button cal-ok" data-action="ok">OK</button>
-      </div>
+      <a class="cal-next" data-action="moveNext">&#x1F862;</a>
     </div>
-  `;
+    <div class="cal-main"></div>
+    <div class="cal-time-selector">
+      <div class="cal-time"></div>
+      <input class="cal-hour" value="0" type="range" min="0" max="23" />
+      <input class="cal-minute" value="0" type="range" min="0" max="59" />
+    </div>
+    <div class="cal-buttons">
+      <button class="cal-button cal-clear" data-action="clear">Clear</button>
+      <button class="cal-button cal-cancel" data-action="cancel">Cancel</button>
+      <button class="cal-button cal-ok" data-action="ok">OK</button>
+    </div>
+  </div>
+`;
 
-  const ret = h('div') as HTMLDivElement;
-  ret.attachShadow({ mode: 'open' }).innerHTML = content;
-  return ret;
-}
+const baseStyles = css`
+  :host {
+    --cal-font: 15px Helvetica, Arial, sans-serif;
+    --cal-header-color: white;
+    --cal-header-background-color: #404040;
+    --cal-header-hover-background-color: #606060;
+    --cal-header-active-background-color: #a0a0a0;
+    --cal-border-color: #a0a0a0;
+    --cal-cell-hover-background-color: #d0d0d0;
+    --cal-cell-active-background-color: #c8c8c8;
+    --cal-button-background-color: white;
+    --cal-button-hover-background-color: #e0e0e0;
+    --cal-button-active-background-color: blue;
+  }
 
-function getBaseStyles() {
-  return css`
-    :host {
-      --cal-font: 15px Helvetica, Arial, sans-serif;
-      --cal-header-color: white;
-      --cal-header-background-color: #404040;
-      --cal-header-hover-background-color: #606060;
-      --cal-header-active-background-color: #a0a0a0;
-      --cal-border-color: #a0a0a0;
-      --cal-cell-hover-background-color: #d0d0d0;
-      --cal-cell-active-background-color: #c8c8c8;
-      --cal-button-background-color: white;
-      --cal-button-hover-background-color: #e0e0e0;
-      --cal-button-active-background-color: blue;
-    }
+  .cal-base {
+    position: relative;
+    display: flow;
+    width: 300px;
+    font: var(--cal-font);
+    border: 1px solid var(--cal-header-background-color);
+    user-select: none;
+  }
 
-    .cal-base {
-      position: relative;
-      display: flow;
-      width: 300px;
-      font: var(--cal-font);
-      border: 1px solid var(--cal-header-background-color);
-      user-select: none;
-    }
+  .cal-input {
+    position: absolute;
+    border: 1px solid green;
+    width: 0;
+    height: 0;
+    outline: none;
+    border: none;
+    overflow: hidden;
+    opacity: 0;
+    z-index: -1;
+  }
 
-    .cal-input {
-      position: absolute;
-      border: 1px solid green;
-      width: 0;
-      height: 0;
-      outline: none;
-      border: none;
-      overflow: hidden;
-      opacity: 0;
-      z-index: -1;
-    }
+  .cal-nav {
+    display: flex;
+    color: var(--cal-header-color);
+    background-color: var(--cal-header-background-color);
+  }
 
-    .cal-nav {
-      display: flex;
-      color: var(--cal-header-color);
-      background-color: var(--cal-header-background-color);
-    }
+  .cal-title-container {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .cal-title-container {
-      display: flex;
-      flex-grow: 1;
-      align-items: center;
-      justify-content: center;
-    }
+  .cal-title,
+  .cal-prev,
+  .cal-next {
+    padding: 0.125rem 0.25rem;
+    margin: 0.125rem 0.25rem;
+  }
 
-    .cal-title,
-    .cal-prev,
-    .cal-next {
-      padding: 0.125rem 0.25rem;
-      margin: 0.125rem 0.25rem;
-    }
+  .cal-title {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 
-    .cal-title {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
+  .cal-title:not(.cal--disabled),
+  .cal-prev:not(.cal--disabled),
+  .cal-next:not(.cal--disabled) {
+    cursor: pointer;
+  }
 
-    .cal-title:not(.cal--disabled),
-    .cal-prev:not(.cal--disabled),
-    .cal-next:not(.cal--disabled) {
-      cursor: pointer;
-    }
+  .cal-title:not(.cal--disabled):hover,
+  .cal-prev:not(.cal--disabled):hover,
+  .cal-next:not(.cal--disabled):hover {
+    background-color: var(--cal-header-hover-background-color);
+  }
 
-    .cal-title:not(.cal--disabled):hover,
-    .cal-prev:not(.cal--disabled):hover,
-    .cal-next:not(.cal--disabled):hover {
-      background-color: var(--cal-header-hover-background-color);
-    }
+  .cal-title:not(.cal--disabled):active,
+  .cal-prev:not(.cal--disabled):active,
+  .cal-next:not(.cal--disabled):active {
+    background-color: var(--cal-header-active-background-color);
+  }
 
-    .cal-title:not(.cal--disabled):active,
-    .cal-prev:not(.cal--disabled):active,
-    .cal-next:not(.cal--disabled):active {
-      background-color: var(--cal-header-active-background-color);
-    }
+  .cal-view-month {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+  }
 
-    .cal-view-month {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-    }
+  .cal-view-year {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-    .cal-view-year {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .cal-view-decade {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
 
-    .cal-view-decade {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
+  .cal-cell {
+    align-self: center;
+  }
 
-    .cal-cell {
-      align-self: center;
-    }
+  .cal-cell:hover {
+    background-color: var(--cal-cell-hover-background-color);
+  }
 
-    .cal-cell:hover {
-      background-color: var(--cal-cell-hover-background-color);
-    }
+  .cal-time-selector {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    padding: 0.5rem 0;
+  }
 
-    .cal-time-selector {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-template-rows: auto auto;
-      padding: 0.5rem 0;
-    }
+  .cal-time {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: center;
+    padding: 0.5rem;
+  }
 
-    .cal-time {
-      grid-column: 1;
-      grid-row: 1 / span 2;
-      align-self: center;
-      padding: 0.5rem;
-    }
+  .cal-buttons {
+    display: flex;
+    border-collapse: collapse;
+  }
 
-    .cal-buttons {
-      display: flex;
-      border-collapse: collapse;
-    }
+  .cal-button {
+    flex-grow: 1;
+    outline: none;
+    background-color: var(--cal-button-background-color);
+    border: 1px solid var(--cal-border-color);
+    border-collapse: collapse;
+  }
 
-    .cal-button {
-      flex-grow: 1;
-      outline: none;
-      background-color: var(--cal-button-background-color);
-      border: 1px solid var(--cal-border-color);
-      border-collapse: collapse;
-    }
+  .cal-button:hover {
+    background-color: var(--cal-button-hover-background-color);
+  }
 
-    .cal-button:hover {
-      background-color: var(--cal-button-hover-background-color);
-    }
-
-    .cal-button:active {
-      background-color: var(--cal-button-active-background-color);
-    }
-  `;
-}
+  .cal-button:active {
+    background-color: var(--cal-button-active-background-color);
+  }
+`;
