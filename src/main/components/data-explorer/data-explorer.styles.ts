@@ -41,10 +41,10 @@ export default css`
   }
 
   .headline {
-    margin: 0 1.5rem 0 0.75rem;
+    margin: 0 1.5rem 0 1.5rem;
     padding: 0.125rem 0.25rem;
     font-family: var(--sl-font-sans);
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: var(--sl-font-weight-light);
     color: var(--sl-color-neutral-800);
   }
