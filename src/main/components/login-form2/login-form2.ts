@@ -110,7 +110,7 @@ class LoginForm extends Component {
     return html`
       <div class="base">
         ${this._renderHeader()}
-        <div class="main-content">
+        <div class="main">
           <div class="column-a">${this._renderColumnA()}</div>
           <div class="column-b">${this._renderColumnB()}</div>
         </div>
@@ -134,7 +134,7 @@ class LoginForm extends Component {
       <div class="intro">
         <h3 class="intro-headline">Login</h3>
         <div class="intro-text">
-          Please enter your credentials in the form to log in.
+          Please enter your required credentials to log in.
         </div>
       </div>
     `;
@@ -143,12 +143,24 @@ class LoginForm extends Component {
   private _renderColumnB() {
     return html`
       <div class="form">
-        <cp-text-field size="large" label="Username"></cp-text-field>
-        <cp-password-field size="large" label="Password"></cp-password-field>
-        <div></div>
-        <sl-button class="submit-button" variant="primary" size="large"
-          >Log in</sl-button
-        >
+        <div class="form-fields">
+          <cp-text-field size="large" label="Username"></cp-text-field>
+          <cp-password-field size="large" label="Password"></cp-password-field>
+        </div>
+        <div class="form-footer">
+          <div>
+            <sl-checkbox class="remember-login-checkbox"
+              >Remember login</sl-checkbox
+            >
+          </div>
+          <sl-button class="submit-button" variant="primary" size="large">
+            Log in
+          </sl-button>
+          <div class="links">
+            <a class="link">Forgot password?</a>
+            <a class="link">Don't have an account?</a>
+          </div>
+        </div>
       </div>
     `;
   }
