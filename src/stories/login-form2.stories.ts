@@ -40,7 +40,7 @@ class LoginFormDemo extends Component {
             <b style="color: var(--sl-color-primary-600)">My Company</b>
             &nbsp;Back Office
           </div>
-          <div slot="header-end">&copy; 2022, My Company</div>
+          <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
         </cp-login-form2>
       </cp-theme-provider>
     `;

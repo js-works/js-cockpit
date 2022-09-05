@@ -11,7 +11,7 @@ import {
   Listener
 } from '../../utils/components';
 
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
+import { classMap, createRef, html, ref, repeat, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { hasSlot } from '../../utils/slots';
 
@@ -111,9 +111,13 @@ class LoginForm extends Component {
       <div class="base">
         ${this._renderHeader()}
         <div class="main">
-          <div class="column-a">${this._renderColumnA()}</div>
+          ${when(
+            false,
+            () => html`<div class="column-a">${this._renderColumnA()}</div>`
+          )}
           <div class="column-b">${this._renderColumnB()}</div>
         </div>
+        <div class="footer">${this._renderFooter()}</div>
       </div>
     `;
   }
@@ -131,7 +135,7 @@ class LoginForm extends Component {
   private _renderColumnA() {
     return html`
       <div class="intro">
-        <h3 class="intro-headline">Login</h3>
+        <h3 class="intro-headline">Wilkommen</h3>
         <div class="intro-text">
           Please enter your required credentials to log in.
         </div>
@@ -142,6 +146,15 @@ class LoginForm extends Component {
   private _renderColumnB() {
     return html`
       <div class="form">
+        <div style="margin: 0 0 2.5rem 0; text-align: center">
+          <cp-brand
+            size="huge"
+            headline="My Company"
+            text="Back Office - Login"
+            logo="default"
+            multi-color
+          ></cp-brand>
+        </div>
         <div class="form-fields">
           <cp-text-field label="Username"></cp-text-field>
           <cp-password-field label="Password"></cp-password-field>
@@ -160,6 +173,20 @@ class LoginForm extends Component {
             <a class="link">Don't have an account?</a>
           </div>
         </div>
+      </div>
+    `;
+  }
+
+  _renderFooter() {
+    return html`
+      <div class="footer-start">
+        <slot name="footer-start"></slot>
+      </div>
+      <div class="footer-main">
+        <slot name="footer"></slot>
+      </div>
+      <div class="footer-end">
+        <slot name="footer-end"></slot>
       </div>
     `;
   }
