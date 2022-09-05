@@ -35,7 +35,13 @@ class LoginFormDemo extends Component {
   render() {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
-        <cp-login-form2> </cp-login-form2>
+        <cp-login-form2>
+          <div slot="header">
+            <b style="color: var(--sl-color-primary-600)">My Company</b>
+            &nbsp;Back Office
+          </div>
+          <div slot="header-end">&copy; 2022, My Company</div>
+        </cp-login-form2>
       </cp-theme-provider>
     `;
   }

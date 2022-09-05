@@ -22,47 +22,65 @@ export default css`
   }
 
   .header {
+    display: flex;
+    position: relative;
+    z-index: 1;
     background-color: var(--sl-color-neutral-0);
 
     border-bottom: var(--sl-light, none)
       var(--sl-dark, 1px dotted var(--sl-color-primary-500));
 
     box-shadow: var(--sl-light, #e8e8e8 0px 4px 16px) var(--sl-dark, none);
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .header-main {
+    flex-grow: 1;
+  }
+
+  .header-end {
+    justify-self: flex-end;
   }
 
   .main {
     display: flex;
-    padding: 3.5rem;
     flex-grow: 1;
-    justify-content: center;
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .column-a,
+  .column-b {
+    padding: 3rem 2rem;
   }
 
   .column-a {
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    border: 0px solid var(--sl-color-primary-500);
-    border-right-width: 1px;
-    width: 30rem;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    background-color: rgb(249, 250, 251); /* var(--sl-color-neutral-50); */
+    width: 33%;
   }
 
   .column-b {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    min-width: 35rem;
+    justify-content: flex-start;
+    width: 67%;
   }
 
   .intro {
     margin: 0 3rem;
+    width: 25rem;
   }
 
   .intro-headline {
     color: var(--sl-color-primary-500);
-    font-family: var(--sl-font-serif);
+    font-family: var(--sl-font-sans);
     font-size: 250%;
-    font-weight: 400;
+    font-weight: var(--sl-font-weight-normal);
     margin: 0 1rem 1rem 0;
   }
 
@@ -75,8 +93,8 @@ export default css`
     display: flex;
     flex-direction: column;
     margin: 0 3rem;
-    width: 100%;
-    min-height: 75%;
+    min-width: 30rem;
+    min-height: min(80%, 30rem);
     box-sizing: border-box;
   }
 
@@ -87,11 +105,12 @@ export default css`
   .form-footer {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
     margin-top: 2rem;
   }
 
   .remember-login-checkbox {
+    margin: 0.5rem 0;
   }
 
   .submit-button {

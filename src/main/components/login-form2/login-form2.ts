@@ -121,10 +121,9 @@ class LoginForm extends Component {
   private _renderHeader() {
     return html`
       <div class="header">
-        <div>
-          <b style="color: var(--sl-color-primary-600)">My Company</b>
-          &nbsp;Back Office
-        </div>
+        <div class="header-start"><slot name="header-start" /></div>
+        <div class="header-main"><slot name="header" /></div>
+        <div class="header-end"><slot name="header-end" /></div>
       </div>
     `;
   }
@@ -144,8 +143,8 @@ class LoginForm extends Component {
     return html`
       <div class="form">
         <div class="form-fields">
-          <cp-text-field size="large" label="Username"></cp-text-field>
-          <cp-password-field size="large" label="Password"></cp-password-field>
+          <cp-text-field label="Username"></cp-text-field>
+          <cp-password-field label="Password"></cp-password-field>
         </div>
         <div class="form-footer">
           <div>
