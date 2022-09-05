@@ -29,20 +29,23 @@ declare global {
   uses: [SlInput]
 })
 class TextField extends Component implements FormControl<string> {
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   name = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   value = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   label = '';
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   disabled = false;
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   required = false;
+
+  @prop(Attrs.string)
+  size: 'small' | 'medium' | 'large' = 'medium';
 
   @prop({ attr: Attrs.string })
   errorText = '';
@@ -115,6 +118,7 @@ class TextField extends Component implements FormControl<string> {
         <sl-input
           class="input sl-control"
           ?required=${this.required}
+          size=${this.size}
           ${ref(this._slInputRef)}
           @sl-input=${this._onInput}
           @sl-change=${this._onChange}

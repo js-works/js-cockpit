@@ -1,4 +1,4 @@
-import { addToDict, FullTranslations } from '../i18n'
+import { addToDict, FullTranslations } from '../i18n';
 
 const translations: FullTranslations<'jsCockpit'> = {
   en: {
@@ -67,24 +67,24 @@ const translations: FullTranslations<'jsCockpit'> = {
 
     'jsCockpit.paginationBar': {
       itemsXToYOfZ({ firstItemNo, lastItemNo, itemCount }, i18n) {
-        const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
-        const formattedLastItemNo = i18n.formatNumber(lastItemNo)
-        const formattedItemCount = i18n.formatNumber(itemCount)
+        const formattedFirstItemNo = i18n.formatNumber(firstItemNo);
+        const formattedLastItemNo = i18n.formatNumber(lastItemNo);
+        const formattedItemCount = i18n.formatNumber(itemCount);
 
-        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
+        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`;
       },
 
       itemXOfY({ itemNo, itemCount }, i18n) {
-        const formattedItemNo = i18n.formatNumber(itemNo)
-        const formattedItemCount = i18n.formatNumber(itemCount)
+        const formattedItemNo = i18n.formatNumber(itemNo);
+        const formattedItemCount = i18n.formatNumber(itemCount);
 
-        return `${formattedItemNo} / ${formattedItemCount}`
+        return `${formattedItemNo} / ${formattedItemCount}`;
       },
 
       ofXPages({ pageCount }, i18n) {
-        const formattedPageCount = i18n.formatNumber(pageCount)
+        const formattedPageCount = i18n.formatNumber(pageCount);
 
-        return `of ${formattedPageCount}`
+        return `of ${formattedPageCount}`;
       },
 
       page: 'Page',
@@ -103,6 +103,6 @@ const translations: FullTranslations<'jsCockpit'> = {
       logOut: 'Log out'
     }
   }
-}
+};
 
-addToDict(translations)
+addToDict(translations);

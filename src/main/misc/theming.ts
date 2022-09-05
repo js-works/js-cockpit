@@ -427,6 +427,10 @@ const ColorSchemes = Object.freeze({
     //primaryColor: '#ff8c00' //
   },
 
+  temp2: {
+    primaryColor: '#ff746a'
+  },
+
   skyBlue: {
     primaryColor: '#0ea5e9',
     dangerColor: '#e95420'
@@ -817,7 +821,7 @@ const lightThemeTokens = {
   'font-sans':
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" +
     "'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-  'font-serif': "Georgia, 'Times New Roman', serif'",
+  'font-serif': "Georgia, 'Times New Roman', serif",
   'font-size-2x-small': '0.625rem',
   'font-size-x-small': '0.75rem',
   'font-size-small': '0.875rem',

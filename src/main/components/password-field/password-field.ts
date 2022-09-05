@@ -31,20 +31,23 @@ export { PasswordField };
   uses: [SlInput]
 })
 class PasswordField extends Component {
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   name = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   value = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   label = '';
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   disabled = false;
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   required = false;
+
+  @prop(Attrs.string)
+  size: 'small' | 'medium' | 'large' = 'medium';
 
   private _i18n = new I18nController(this);
 
@@ -71,6 +74,7 @@ class PasswordField extends Component {
           toggle-password
           class="input sl-control"
           required=${this.required}
+          size=${this.size}
           @sl-input=${this._onInput}
           ${ref(this._slInputRef)}
         >

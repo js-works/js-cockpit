@@ -26,6 +26,7 @@ import { Message } from '../message/message';
 import { Form } from '../form/form';
 import { PasswordField } from '../password-field/password-field';
 import { TextField } from '../text-field/text-field';
+import { Brand } from '../brand/brand';
 
 // styles
 import loginFormStyles from './login-form2.styles';
@@ -68,6 +69,7 @@ namespace LoginForm {
   tag: 'cp-login-form2',
   styles: loginFormStyles,
   uses: [
+    Brand,
     FocusTrap,
     Form,
     Message,
@@ -107,8 +109,8 @@ class LoginForm extends Component {
   render() {
     return html`
       <div class="base">
-        <div>${this._renderHeader()}</div>
-        <div>${this._renderMain()}</div>
+        ${this._renderHeader()} ${this._renderColumnA()}
+        ${this._renderColumnB()}
       </div>
     `;
   }
@@ -116,25 +118,43 @@ class LoginForm extends Component {
   private _renderHeader() {
     return html`
       <div class="header">
-        <div>Header</div>
-      </div>
-    `;
-  }
-
-  private _renderMain() {
-    return html`
-      <div class="main">
-        <div>${this._renderColumnA()}</div>
-        <div>${this._renderColumnB()}</div>
+        <div
+          style="text-align: center; background-color: var(--sl-color-neutral-200); padding: 0.75rem 1rem;"
+        >
+          <div>
+            <b style="color: var(--sl-color-primary-600)">My Company</b> -
+            BackOffice
+          </div>
+        </div>
       </div>
     `;
   }
 
   private _renderColumnA() {
-    return html`<div class="column-a">leftColumn</div>`;
+    return html`
+      <div class="column-a">
+        <div class="intro">
+          <h3 class="intro-headline">Login</h3>
+          <div class="intro-text">
+            Please enter your credentials in the form to log in.
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   private _renderColumnB() {
-    return html`<div class="column-b">rightColumn</div>`;
+    return html`
+      <div class="column-b">
+        <div class="form">
+          <cp-text-field size="large" label="Username"></cp-text-field>
+          <cp-password-field size="large" label="Password"></cp-password-field>
+          <div></div>
+          <sl-button class="submit-button" variant="primary" size="large"
+            >Log in</sl-button
+          >
+        </div>
+      </div>
+    `;
   }
 }
