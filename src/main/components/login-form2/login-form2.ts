@@ -109,8 +109,11 @@ class LoginForm extends Component {
   render() {
     return html`
       <div class="base">
-        ${this._renderHeader()} ${this._renderColumnA()}
-        ${this._renderColumnB()}
+        ${this._renderHeader()}
+        <div class="main-content">
+          <div class="column-a">${this._renderColumnA()}</div>
+          <div class="column-b">${this._renderColumnB()}</div>
+        </div>
       </div>
     `;
   }
@@ -118,13 +121,9 @@ class LoginForm extends Component {
   private _renderHeader() {
     return html`
       <div class="header">
-        <div
-          style="text-align: center; background-color: var(--sl-color-neutral-200); padding: 0.75rem 1rem;"
-        >
-          <div>
-            <b style="color: var(--sl-color-primary-600)">My Company</b> -
-            BackOffice
-          </div>
+        <div>
+          <b style="color: var(--sl-color-primary-600)">My Company</b>
+          &nbsp;Back Office
         </div>
       </div>
     `;
@@ -132,12 +131,10 @@ class LoginForm extends Component {
 
   private _renderColumnA() {
     return html`
-      <div class="column-a">
-        <div class="intro">
-          <h3 class="intro-headline">Login</h3>
-          <div class="intro-text">
-            Please enter your credentials in the form to log in.
-          </div>
+      <div class="intro">
+        <h3 class="intro-headline">Login</h3>
+        <div class="intro-text">
+          Please enter your credentials in the form to log in.
         </div>
       </div>
     `;
@@ -145,15 +142,13 @@ class LoginForm extends Component {
 
   private _renderColumnB() {
     return html`
-      <div class="column-b">
-        <div class="form">
-          <cp-text-field size="large" label="Username"></cp-text-field>
-          <cp-password-field size="large" label="Password"></cp-password-field>
-          <div></div>
-          <sl-button class="submit-button" variant="primary" size="large"
-            >Log in</sl-button
-          >
-        </div>
+      <div class="form">
+        <cp-text-field size="large" label="Username"></cp-text-field>
+        <cp-password-field size="large" label="Password"></cp-password-field>
+        <div></div>
+        <sl-button class="submit-button" variant="primary" size="large"
+          >Log in</sl-button
+        >
       </div>
     `;
   }

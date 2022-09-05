@@ -9,9 +9,9 @@ export default css`
 
   .base {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    justify-content: stretch;
+    justify-content: auto;
     align-content: stretch;
     position: absolute;
     left: 0;
@@ -21,22 +21,25 @@ export default css`
   }
 
   .header {
-    grid-column: 1 / span 2;
     background-color: var(--sl-color-neutral-0);
+    box-shadow: #e8e8e8 0px 4px 16px;
+    padding: 0.75rem 1rem;
   }
 
-  .header > div {
-    box-shadow: var(--sl-shadow-large);
-    padding: 0.5rem 2rem;
-    margin: 0 0 3px 0;
+  .main-content {
+    display: flex;
+    padding: 4rem;
+    flex-grow: 1;
+    justify-content: center;
   }
 
   .column-a {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    background-color: var(--sl-color-neutral-50);
-    padding-top: 2rem;
+    border: 0px solid var(--sl-color-primary-500);
+    border-right-width: 1px;
+    width: 30rem;
   }
 
   .column-b {
@@ -44,7 +47,7 @@ export default css`
     align-items: flex-start;
     justify-content: center;
     background-color: var(--sl-color-neutral-0);
-    padding-top: 2rem;
+    width: 40rem;
   }
 
   .intro {
@@ -56,7 +59,7 @@ export default css`
     font-family: var(--sl-font-serif);
     font-size: var(--sl-font-size-3x-large);
     font-weight: 400;
-    margin: 1rem 0;
+    margin: 0 1rem 1rem 0;
   }
 
   .intro-text {
