@@ -118,9 +118,10 @@ class LoginForm extends Component {
   private _submitButtonRef = createRef<SlButton>();
   private _animationRef = createRef<SlAnimation>();
 
-  private _onSubmit() {
+  private _onSubmit = (ev: any) => {
+    ev.preventDefault();
     alert('Form submitted');
-  }
+  };
 
   private _onSubmitClick = (ev: any) => {
     this._formRef.value!.submit();
@@ -167,7 +168,6 @@ class LoginForm extends Component {
     return html`
       <div
         class="base ${classMap({
-          'label-align-vertical': true,
           'full-size': this.fullSize
         })}"
       >

@@ -69,12 +69,18 @@ export default css`
     position: relative;
     display: flex;
     flex-direction: column;
-    margin: 3rem 0;
-    width: 32rem;
-    height: 30rem;
-    --label-align-vertical: var(--off);
-    --label-align-horizontal: var(--on);
-    --label-align-horizontal-width: 9rem;
+    margin: 2rem;
+  }
+
+  @media (min-width: 600px) {
+    .form {
+      margin: 3rem 0 0 0;
+      width: 32rem;
+      height: 30rem;
+      --label-align-vertical: var(--off);
+      --label-align-horizontal: var(--on);
+      --label-align-horizontal-width: 9rem;
+    }
   }
 
   .form-fields-start {
