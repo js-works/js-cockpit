@@ -101,11 +101,19 @@ export default css`
     grid-template-areas: 'logo headline text';
   }
 
+  .base.flat .logo {
+    margin: 0;
+  }
+
   .base.flat .headline {
     font-weight: var(--sl-font-weight-semibold);
   }
 
   .base.flat.multi-color .headline {
+    color: var(--sl-color-neutral-1000);
+  }
+
+  .base.flat.multi-color.no-logo .headline {
     color: var(--sl-light, var(--sl-color-primary-600))
       var(--sl-dark, var(--sl-color-primary-400));
   }
