@@ -8,7 +8,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import defaultLogoSvg from './assets/default-logo.svg';
 
 // styles
-import brandStyles from './brand.css';
+import brandStyles from './brand.styles';
 
 // === exports =======================================================
 
@@ -22,19 +22,22 @@ export { Brand };
   uses: [SlIcon]
 })
 class Brand extends Component {
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   logo: String | null = null;
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   headline = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   text = '';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' | 'huge' = 'medium';
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
+  flat = false;
+
+  @prop(Attrs.boolean)
   multiColor = false;
 
   render() {
@@ -42,19 +45,15 @@ class Brand extends Component {
     const size = this.size || 'medium';
 
     return html`
-      <div class="base">
-        <div
-          class=${classMap({
-            'content': true,
-            [size]: true,
-            'multi-color': this.multiColor
-          })}
-        >
+      <div class="base ${classMap({
+        [size]: true,
+        'multi-color': this.multiColor,
+        'no-logo': !logo,
+        'flat': this.flat
+      })}">
           ${!logo ? null : html`<sl-icon src=${logo} class="logo"></sl-icon>`}
-          <div class="headline-and-text">
-            <div class="headline">${this.headline}</div>
-            <div class="text">${this.text}</div>
-          </div>
+          <div class="headline">${this.headline}</div>
+          <div class="text">${this.text}</div>
         </div>
       </div>
     `;

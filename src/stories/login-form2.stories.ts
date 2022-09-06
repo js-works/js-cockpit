@@ -41,8 +41,13 @@ class LoginFormDemo extends Component {
           enable-forgot-password
         >
           <div slot="header">
-            <b style="color: var(--sl-color-primary-600)">My Company</b>
-            &nbsp;Back Office
+            <cp-brand
+              size="small"
+              headline="My Company"
+              text="Back Office"
+              multi-color
+              flat
+            ></cp-brand>
           </div>
             <div slot="form-fields-start">
               <cp-brand
