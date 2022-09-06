@@ -40,6 +40,16 @@ class LoginFormDemo extends Component {
             <b style="color: var(--sl-color-primary-600)">My Company</b>
             &nbsp;Back Office
           </div>
+            <div slot="form-fields-start">
+              <cp-brand
+                size="huge"
+                headline="My Company"
+                text="Back Office"
+                logo="default"
+                multi-color
+              ></cp-brand>
+            </div>
+          </div>
           <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
         </cp-login-form2>
       </cp-theme-provider>

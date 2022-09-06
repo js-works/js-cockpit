@@ -146,16 +146,16 @@ class LoginForm extends Component {
   private _renderColumnB() {
     return html`
       <div class="form">
-        <div style="margin: 0 0 2.5rem 0; text-align: center">
-          <cp-brand
-            size="huge"
-            headline="My Company"
-            text="Back Office - Login"
-            logo="default"
-            multi-color
-          ></cp-brand>
-        </div>
+        ${when(
+          hasSlot(this, 'form-fields-start'),
+          () => html`
+            <div class="form-fields-start">
+              <slot name="form-fields-start"></slot>
+            </div>
+          `
+        )}
         <div class="form-fields">
+          <div class="form-fields-headline">Login</div>
           <cp-text-field label="Username"></cp-text-field>
           <cp-password-field label="Password"></cp-password-field>
         </div>

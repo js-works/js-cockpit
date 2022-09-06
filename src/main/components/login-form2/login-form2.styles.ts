@@ -117,6 +117,17 @@ export default css`
     box-sizing: border-box;
   }
 
+  .form-fields-start {
+    margin: 0 0 2.5rem 0;
+    text-align: center;
+  }
+
+  .form-fields-headline {
+    font-size: var(--sl-font-size-x-large);
+    font-weight: var(--sl-font-weight-normal);
+    margin-bottom: 1.25rem;
+  }
+
   .form-fields {
     flex-grow: 1;
   }
