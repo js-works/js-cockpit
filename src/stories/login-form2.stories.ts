@@ -35,30 +35,23 @@ class LoginFormDemo extends Component {
   render() {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
-        <cp-login-form2
-          full-size
-          enable-registration
-          enable-forgot-password
-        >
-          <div slot="header">
-            <cp-brand
-              size="small"
-              headline="My Company"
-              text="Back Office"
-              multi-color
-              flat
-            ></cp-brand>
-          </div>
-            <div slot="form-fields-start">
-              <cp-brand
-                size="huge"
-                headline="My Company"
-                text="Back Office"
-                logo="default"
-                multi-color
-              ></cp-brand>
-            </div>
-          </div>
+        <cp-login-form2 full-size enable-registration enable-forgot-password>
+          <cp-brand
+            slot="header"
+            size="small"
+            headline="My Company"
+            text="Back Office"
+            multi-color
+            flat
+          ></cp-brand>
+          <cp-brand
+            slot="form-fields-start"
+            size="huge"
+            headline="My Company"
+            text="Back Office"
+            logo="default"
+            multi-color
+          ></cp-brand>
           <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
         </cp-login-form2>
       </cp-theme-provider>
