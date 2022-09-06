@@ -39,12 +39,6 @@ import { Brand } from '../brand/brand';
 // styles
 import loginFormStyles from './login-form2.styles';
 
-// icons
-import loginIntroIcon from './assets/login.svg';
-import forgotPasswordIntroIcon from './assets/forgot-password.svg';
-import registrationIntroIcon from './assets/registration.svg';
-import resetPasswordIntroIcon from './assets/reset-password.svg';
-
 // === exports =======================================================
 
 export { LoginForm as LoginForm2 };
@@ -95,6 +89,9 @@ namespace LoginForm {
   ]
 })
 class LoginForm extends Component {
+  @prop({ attr: Attrs.boolean })
+  fullSize = false;
+
   @prop(Attrs.string)
   initialView?: LoginForm.View;
 
@@ -168,16 +165,18 @@ class LoginForm extends Component {
 
   render() {
     return html`
-      <div class="base">
-        ${this._renderHeader()}
-        <div class="main">
-          ${when(
-            false,
-            () => html`<div class="column-a">${this._renderColumnA()}</div>`
-          )}
-          <div class="column-b">${this._renderColumnB()}</div>
-        </div>
-        <div class="footer">${this._renderFooter()}</div>
+      <div
+        class="base ${classMap({
+          'label-align-vertical': true,
+          'full-size': this.fullSize
+        })}"
+      >
+        ${!this._isLoading ? null : html`<div class="overlay"></div>`}
+        <sl-animation ${ref(this._animationRef)}>
+          ${this._renderHeader()}
+          <div class="main">${this._renderMain()}</div>
+          <div class="footer">${this._renderFooter()}</div>
+        </sl-animation>
       </div>
     `;
   }
@@ -192,18 +191,7 @@ class LoginForm extends Component {
     `;
   }
 
-  private _renderColumnA() {
-    return html`
-      <div class="intro">
-        <h3 class="intro-headline">Wilkommen</h3>
-        <div class="intro-text">
-          Please enter your required credentials to log in.
-        </div>
-      </div>
-    `;
-  }
-
-  private _renderColumnB() {
+  private _renderMain() {
     return html`
       <form class="form" @submit=${this._onSubmit} ${ref(this._formRef)}>
         ${when(
@@ -308,7 +296,9 @@ class LoginForm extends Component {
 
       case 'forgotPassword':
         return html`
-          <h3 class="form-fields-headline">Forgot password</h3>
+          <h3 class="form-fields-headline">
+            ${this._t('forgotPasswordIntroHeadline')}
+          </h3>
           <p class="form-fields-text">${this._t('forgotPasswordIntroText')}</p>
           <slot name="forgot-password-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'forgot-password-fields')

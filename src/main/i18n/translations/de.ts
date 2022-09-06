@@ -25,7 +25,7 @@ const translations: FullTranslations<'jsCockpit'> = {
       forgotPasswordIntroHeadline: 'Passwort vergessen?',
 
       forgotPasswordIntroText:
-        'Sie werden per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können',
+        'Sie werden per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können.',
 
       forgotPasswordSubmitText: 'Passwort zurücksetzen',
       goToLogin: 'Gehe zur Anmeldung',

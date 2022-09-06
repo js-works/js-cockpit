@@ -36,6 +36,7 @@ class LoginFormDemo extends Component {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
         <cp-login-form2
+          full-size
           enable-registration
           enable-forgot-password
         >

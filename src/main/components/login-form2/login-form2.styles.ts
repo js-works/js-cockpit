@@ -8,17 +8,20 @@ export default css`
   }
 
   .base {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    justify-content: auto;
-    align-content: stretch;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    min-height: 100%;
+    display: flex;
+    flex-direction: column;
     background-color: var(--sl-color-neutral-0);
+  }
+
+  .base.full-size {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .header {
@@ -58,66 +61,23 @@ export default css`
 
   .main {
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    justify-content: stretch;
-    width: 100%;
-  }
-
-  .column-a,
-  .column-b {
-    padding: 3rem 2rem;
-  }
-
-  .column-a {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-start;
-    background-color: rgb(249, 250, 251); /* var(--sl-color-neutral-50); */
-    width: 33%;
-  }
-
-  .column-b {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 67%;
-  }
-
-  .column-b:first-child {
-    width: 100%;
-    align-items: center;
-  }
-
-  .intro {
-    margin: 0 3rem;
-    width: 25rem;
-  }
-
-  .intro-headline {
-    color: var(--sl-color-primary-500);
-    font-family: var(--sl-font-sans);
-    font-size: 225%;
-    font-weight: var(--sl-font-weight-normal);
-    margin: 0 1rem 1rem 0;
-  }
-
-  .intro-text {
-    color: var(--sl-color-neutral-1000);
-    font-size: 125%;
+    align-self: center;
+    align-items: stretch;
   }
 
   .form {
     display: flex;
     flex-direction: column;
-    margin: 0 3rem;
-    min-width: 30rem;
+    margin-top: 3rem;
     width: 32rem;
-    min-height: calc(min(80%, 40rem));
+    height: 80%; //calc(min(800%, 242rem));
+    xxheight: calc(80vh - 3rem); //calc(min(800%, 242rem));
     box-sizing: border-box;
     --label-align-vertical: var(--off);
     --label-align-horizontal: var(--on);
+    --label-align-horizontal-width: 11rem;
   }
 
   .form-fields-start {
