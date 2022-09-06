@@ -60,21 +60,18 @@ export default css`
   }
 
   .main {
-    display: flex;
-    flex-direction: column;
+    display: block;
     flex-grow: 1;
     align-self: center;
-    align-items: stretch;
   }
 
   .form {
+    position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 3rem;
+    margin: 3rem 0;
     width: 32rem;
-    height: 80%; //calc(min(800%, 242rem));
-    xxheight: calc(80vh - 3rem); //calc(min(800%, 242rem));
-    box-sizing: border-box;
+    height: 30rem;
     --label-align-vertical: var(--off);
     --label-align-horizontal: var(--on);
     --label-align-horizontal-width: 11rem;
@@ -104,7 +101,6 @@ export default css`
   .form-footer {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     margin-top: 2rem;
   }
 
