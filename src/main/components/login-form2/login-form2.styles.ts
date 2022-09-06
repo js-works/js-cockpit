@@ -74,7 +74,7 @@ export default css`
     height: 30rem;
     --label-align-vertical: var(--off);
     --label-align-horizontal: var(--on);
-    --label-align-horizontal-width: 11rem;
+    --label-align-horizontal-width: 9rem;
   }
 
   .form-fields-start {
@@ -121,5 +121,16 @@ export default css`
   .link {
     font-weight: var(--sl-font-weight-semibold);
     color: var(--sl-color-primary-500);
+  }
+
+  .overlay {
+    position: absolute;
+    background-color: transparent;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 32000;
+    cursor: wait;
   }
 `;

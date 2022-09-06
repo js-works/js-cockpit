@@ -172,11 +172,11 @@ class LoginForm extends Component {
         })}"
       >
         ${!this._isLoading ? null : html`<div class="overlay"></div>`}
+        ${this._renderHeader()}
         <sl-animation ${ref(this._animationRef)}>
-          ${this._renderHeader()}
           <div class="main">${this._renderMain()}</div>
-          <div class="footer">${this._renderFooter()}</div>
         </sl-animation>
+        <div class="footer">${this._renderFooter()}</div>
       </div>
     `;
   }
