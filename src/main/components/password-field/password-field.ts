@@ -73,7 +73,7 @@ class PasswordField extends Component {
           name=${this.name}
           toggle-password
           class="input sl-control"
-          required=${this.required}
+          ?required=${this.required}
           size=${this.size}
           @sl-input=${this._onInput}
           ${ref(this._slInputRef)}

@@ -136,7 +136,7 @@ class Theme {
       '  --theme: light;',
       '  --label-align-vertical: var(--on);',
       '  --label-align-horizontal: var(--off);',
-      '  --label-align-horizontal-width: 8rem;',
+      '  --label-align-horizontal-width: 11rem;',
       '  --label-align-horizontal-gap: 0.8rem;'
     ];
 

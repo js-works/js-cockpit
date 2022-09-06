@@ -113,8 +113,11 @@ export default css`
     flex-direction: column;
     margin: 0 3rem;
     min-width: 30rem;
-    min-height: min(80%, 30rem);
+    width: 32rem;
+    min-height: calc(min(80%, 40rem));
     box-sizing: border-box;
+    --label-align-vertical: var(--off);
+    --label-align-horizontal: var(--on);
   }
 
   .form-fields-start {
@@ -125,7 +128,13 @@ export default css`
   .form-fields-headline {
     font-size: var(--sl-font-size-x-large);
     font-weight: var(--sl-font-weight-normal);
-    margin-bottom: 1.25rem;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .form-fields-text:not(:empty) {
+    font-size: var(--sl-font-size-normal);
+    font-weight: var(--sl-font-weight-normal);
+    margin: 0 0 1.25rem 0;
   }
 
   .form-fields {
@@ -135,7 +144,7 @@ export default css`
   .form-footer {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    flex-grow: 1;
     margin-top: 2rem;
   }
 

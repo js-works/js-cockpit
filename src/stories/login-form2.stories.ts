@@ -35,7 +35,10 @@ class LoginFormDemo extends Component {
   render() {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
-        <cp-login-form2>
+        <cp-login-form2
+          enable-registration
+          enable-forgot-password
+        >
           <div slot="header">
             <b style="color: var(--sl-color-primary-600)">My Company</b>
             &nbsp;Back Office

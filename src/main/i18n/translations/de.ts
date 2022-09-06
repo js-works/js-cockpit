@@ -1,4 +1,4 @@
-import { addToDict, FullTranslations } from '../i18n'
+import { addToDict, FullTranslations } from '../i18n';
 
 const translations: FullTranslations<'jsCockpit'> = {
   de: {
@@ -31,7 +31,7 @@ const translations: FullTranslations<'jsCockpit'> = {
       goToLogin: 'Gehe zur Anmeldung',
       goToRegistration: 'Nicht registriert?',
       loginIntroHeadline: 'Anmeldung',
-      loginIntroText: 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an',
+      loginIntroText: 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an.',
       loginSubmitText: 'Anmelden',
       newPassword: 'Neues Passwort',
       newPasswordRepeat: 'Wiederhole Passwort',
@@ -43,14 +43,14 @@ const translations: FullTranslations<'jsCockpit'> = {
       registrationIntroHeadline: 'Registrierung',
 
       registrationIntroText:
-        'Bitte füllen Sie zur Registrierung das Formular aus',
+        'Bitte füllen Sie zur Registrierung das Formular aus.',
 
       registrationSubmitText: 'Registrieren',
       rememberLogin: 'Angemeldet bleiben',
       resetPasswordIntroHeadline: 'Passwort zurücksetzen',
 
       resetPasswordIntroText:
-        'Bitte füllen Sie für die Rücksetzung des Passworts das Formular aus',
+        'Bitte füllen Sie für die Rücksetzung des Passworts das Formular aus.',
 
       resetPasswordSubmitText: 'Passwort zurücksetzen',
       securityCode: 'Sicherheitscode',
@@ -70,24 +70,24 @@ const translations: FullTranslations<'jsCockpit'> = {
 
     'jsCockpit.paginationBar': {
       itemsXToYOfZ({ firstItemNo, lastItemNo, itemCount }, i18n) {
-        const formattedFirstItemNo = i18n.formatNumber(firstItemNo)
-        const formattedLastItemNo = i18n.formatNumber(lastItemNo)
-        const formattedItemCount = i18n.formatNumber(itemCount)
+        const formattedFirstItemNo = i18n.formatNumber(firstItemNo);
+        const formattedLastItemNo = i18n.formatNumber(lastItemNo);
+        const formattedItemCount = i18n.formatNumber(itemCount);
 
-        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`
+        return `${formattedFirstItemNo} - ${formattedLastItemNo} / ${formattedItemCount}`;
       },
 
       itemXOfY({ itemNo, itemCount }, i18n) {
-        const formattedItemNo = i18n.formatNumber(itemNo)
-        const formattedItemCount = i18n.formatNumber(itemCount)
+        const formattedItemNo = i18n.formatNumber(itemNo);
+        const formattedItemCount = i18n.formatNumber(itemCount);
 
-        return `${formattedItemNo} / ${formattedItemCount}`
+        return `${formattedItemNo} / ${formattedItemCount}`;
       },
 
       ofXPages({ pageCount }, i18n) {
-        const formattedPageCount = i18n.formatNumber(pageCount)
+        const formattedPageCount = i18n.formatNumber(pageCount);
 
-        return `von ${formattedPageCount}`
+        return `von ${formattedPageCount}`;
       },
 
       page: 'Seite',
@@ -106,6 +106,6 @@ const translations: FullTranslations<'jsCockpit'> = {
       logOut: 'Abmelden'
     }
   }
-}
+};
 
-addToDict(translations)
+addToDict(translations);

@@ -16,8 +16,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import controlStyles from '../../styles/control.styles';
-import emailFieldStyles from './email-field.css';
+import emailFieldStyles from './email-field.styles';
 
 // icons
 import emailIcon from '../../icons/envelope.svg';
@@ -32,7 +31,7 @@ export { EmailField };
 
 @elem({
   tag: 'cp-email-field',
-  styles: [controlStyles, emailFieldStyles],
+  styles: emailFieldStyles,
   uses: [SlIcon, SlInput]
 })
 class EmailField extends Component {
@@ -63,28 +62,21 @@ class EmailField extends Component {
     return html`
       <div
         class="base ${classMap({
-          'required': this.required,
-          'has-error': false // TODO!!!
+          required: this.required
         })}"
       >
-        <div class="field-wrapper">
-          <div class="sl-control">
-            <sl-input
-              type="email"
-              name=${this.name}
-              toggle-email
-              class="input"
-              @sl-input=${this._onInput}
-              ${ref(this._slInputRef)}
-            >
-              <div slot="label" class="label">${this.label}</div>
-              <div slot="suffix">
-                <sl-icon src=${emailIcon} class="icon"></sl-icon>
-              </div>
-            </sl-input>
-            <div class="error"></div>
+        <sl-input
+          class="input sl-control"
+          ?required=${this.required}
+          ${ref(this._slInputRef)}
+          @sl-input=${this._onInput}
+        >
+          <span slot="label" class="sl-control-label">${this.label}</span>
+          <div slot="suffix">
+            <sl-icon src=${emailIcon} class="icon"></sl-icon>
           </div>
-        </div>
+        </sl-input>
+        <div class="error-text"></div>
       </div>
     `;
   }
