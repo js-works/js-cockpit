@@ -1,11 +1,12 @@
-import type { Translations } from '../i18n/i18n'
+import type { Translations } from '../i18n/i18n';
 
 type Terms = Translations<{
   'jsCockpit.validation': {
-    fieldRequired: string
-    formInvalid: string
-  }
-}>
+    fieldRequired: string;
+    emailInvalid: string;
+    formInvalid: string;
+  };
+}>;
 
 declare global {
   namespace Localize {

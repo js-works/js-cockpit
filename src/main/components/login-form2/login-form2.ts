@@ -117,12 +117,19 @@ class LoginForm extends Component {
   @state
   private _isLoading = false;
 
+  @state
+  private _errorBoxVisible = false;
+
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.loginForm');
   private _formRef = createRef<Form>();
   private _rememberLoginCheckboxRef = createRef<SlCheckbox>();
   private _submitButtonRef = createRef<SlButton>();
   private _animationRef = createRef<SlAnimation>();
+
+  private _onInput = () => {
+    this._errorBoxVisible = false;
+  };
 
   private _onFormSubmit = async (ev: FormSubmitEvent) => {
     if (!this.processSubmit) {
@@ -153,6 +160,10 @@ class LoginForm extends Component {
     } finally {
       this._isLoading = false;
     }
+  };
+
+  private _onFormInvalid = () => {
+    this._errorBoxVisible = true;
   };
 
   private _onSubmitClick = (ev: any) => {
@@ -186,7 +197,7 @@ class LoginForm extends Component {
     const finishListener = () => {
       this._view = view;
       this._isLoading = false;
-      //this._clearMessages(); // TODO!!!
+      this._errorBoxVisible = false;
       setTimeout(() => (animation.style.visibility = 'visible'), 50);
       animation.removeEventListener('sl-finish', finishListener);
       animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight';
@@ -228,6 +239,8 @@ class LoginForm extends Component {
       <cp-form
         class="form"
         .onFormSubmit=${this._onFormSubmit}
+        .onFormInvalid=${this._onFormInvalid}
+        @input=${this._onInput}
         ${ref(this._formRef)}
       >
         ${when(
@@ -241,7 +254,7 @@ class LoginForm extends Component {
         <div class="form-fields">${this._renderFormFields()}</div>
         <div class="form-footer">
           ${when(
-            this._view === 'login',
+            this._view === 'login' && this.enableRememberLogin,
             () => html`
               <div>
                 <sl-checkbox
@@ -252,6 +265,12 @@ class LoginForm extends Component {
                 </sl-checkbox>
               </div>
             `
+          )}
+          ${when(
+            this._errorBoxVisible,
+            () => html`<cp-message class="error-box" variant="danger">
+              ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
+            </cp-message>`
           )}
           <focus-trap .inactive=${!this._isLoading}>
             <sl-button

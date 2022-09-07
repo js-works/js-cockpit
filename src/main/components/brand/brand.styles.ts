@@ -39,7 +39,7 @@ export default css`
     grid-area: logo;
   }
 
-  .multi-color .logo {
+  .bicolor .logo {
     color: var(--sl-light, var(--sl-color-primary-600))
       var(--sl-dark, var(--sl-color-primary-400));
   }
@@ -109,11 +109,11 @@ export default css`
     font-weight: var(--sl-font-weight-semibold);
   }
 
-  .base.flat.multi-color .headline {
+  .base.flat.bicolor .headline {
     color: var(--sl-color-neutral-1000);
   }
 
-  .base.flat.multi-color.no-logo .headline {
+  .base.flat.bicolor.no-logo .headline {
     color: var(--sl-light, var(--sl-color-primary-600))
       var(--sl-dark, var(--sl-color-primary-400));
   }

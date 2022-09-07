@@ -137,6 +137,10 @@ export default css`
     color: var(--sl-color-primary-500);
   }
 
+  .error-box {
+    margin: 0.25rem 0 1rem 0;
+  }
+
   .overlay {
     position: absolute;
     background-color: transparent;

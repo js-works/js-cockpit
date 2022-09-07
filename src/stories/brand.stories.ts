@@ -64,7 +64,7 @@ class BrandDemo extends Component {
               text="Back Office"
               size="small"
               logo="default"
-              multi-color
+              bicolor
             ></cp-brand>
             <br />
             <br />
@@ -73,7 +73,7 @@ class BrandDemo extends Component {
               text="Back Office"
               size="medium"
               logo="default"
-              multi-color
+              bicolor
             ></cp-brand>
             <br />
             <br />
@@ -82,7 +82,7 @@ class BrandDemo extends Component {
               text="Back Office"
               size="large"
               logo="default"
-              multi-color
+              bicolor
             ></cp-brand>
             <br />
             <br />
@@ -91,7 +91,7 @@ class BrandDemo extends Component {
               text="Back Office"
               size="huge"
               logo="default"
-              multi-color
+              bicolor
             ></cp-brand>
           </div>
         </div>

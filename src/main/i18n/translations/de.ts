@@ -97,8 +97,12 @@ const translations: FullTranslations<'jsCockpit'> = {
     'jsCockpit.sideMenu': {},
 
     'jsCockpit.validation': {
-      fieldRequired: 'Erforderliches Feld',
-      formInvalid: 'Das Formular wurde nicht korrekt ausgefüllt'
+      fieldRequired: 'Bitte füllen Sie dieses Feld aus',
+      emailInvalid: 'Bitte geben Sie eine gültige E-mail-Adresse an',
+
+      formInvalid:
+        'Das Formular wurde nicht korrekt ausgefüllt. ' +
+        'Bitte korrigieren Sie die ungültigen Felder.'
     },
 
     'jsCockpit.userMenu': {

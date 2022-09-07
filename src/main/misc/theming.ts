@@ -289,10 +289,8 @@ const ThemeMods = {
         'border-radius-large': '2px',
         'border-radius-x-large': '3px',
 
-        'focus-ring':
-          '0 0 0 var(--sl-focus-ring-width) var(--sl-color-primary-700)',
-
         'focus-ring-width': '1px',
+        'input-focus-ring-color': 'var(--sl-color-primary-400)',
 
         'input-border-color': 'var(--sl-color-neutral-400)',
         'input-border-color-hover': 'var(--sl-color-neutral-600)',

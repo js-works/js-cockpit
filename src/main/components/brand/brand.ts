@@ -38,7 +38,7 @@ class Brand extends Component {
   flat = false;
 
   @prop(Attrs.boolean)
-  multiColor = false;
+  bicolor = false;
 
   render() {
     const logo = this.logo === 'default' ? defaultLogoSvg : this.logo || null;
@@ -47,7 +47,7 @@ class Brand extends Component {
     return html`
       <div class="base ${classMap({
         [size]: true,
-        'multi-color': this.multiColor,
+        'bicolor': this.bicolor,
         'no-logo': !logo,
         'flat': this.flat
       })}">

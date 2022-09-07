@@ -47,6 +47,7 @@ class LoginFormDemo extends Component {
       <cp-theme-provider .theme=${sharedTheme}>
         <cp-login-form2
           full-size
+          enable-remember-login
           enable-registration
           enable-forgot-password
           .processSubmit=${this._processSubmit}
@@ -56,7 +57,7 @@ class LoginFormDemo extends Component {
             size="small"
             headline="My Company"
             text="Back Office"
-            multi-color
+            bicolor
             flat
           ></cp-brand>
           <cp-brand
@@ -65,7 +66,7 @@ class LoginFormDemo extends Component {
             headline="My Company"
             text="Back Office"
             logo="default"
-            multi-color
+            bicolor
           ></cp-brand>
           <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
         </cp-login-form2>

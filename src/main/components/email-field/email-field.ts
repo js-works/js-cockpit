@@ -27,6 +27,11 @@ export { EmailField };
 
 // === types =========================================================
 
+// === constants =====================================================
+
+const regexEmail =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 // === EmailField =====================================================
 
 @elem({
@@ -96,6 +101,10 @@ class EmailField extends Component {
 
     if (this.required && !input.value) {
       return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
+    }
+
+    if (input.value && !input.value.match(regexEmail)) {
+      return this._i18n.translate('jsCockpit.validation', 'emailInvalid');
     }
 
     return '';

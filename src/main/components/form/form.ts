@@ -10,6 +10,7 @@ import {
 } from '../../utils/components';
 
 import { FormSubmitEvent } from '../../events/form-submit-event';
+import { FormInvalidEvent } from '../../events/form-invalid-event';
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
 
@@ -36,10 +37,19 @@ class Form extends Component {
   @prop
   onFormSubmit?: Listener<FormSubmitEvent>;
 
+  @prop
+  onFormInvalid?: Listener<FormInvalidEvent>;
+
   private _emitFormSubmit = createEmitter(
     this,
     'cp-form-submit',
     () => this.onFormSubmit
+  );
+
+  private _emitFormInvalid = createEmitter(
+    this,
+    'cp-form-invalid',
+    () => this.onFormInvalid
   );
 
   constructor() {
@@ -101,6 +111,8 @@ class Form extends Component {
       for (const { validate, setErrorMsg } of this.#elementsMap.values()) {
         setErrorMsg(validate());
       }
+
+      this._emitFormInvalid(null);
     } else {
       const data: Record<string, unknown> = {};
 

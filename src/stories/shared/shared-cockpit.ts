@@ -122,7 +122,7 @@ export class SharedCockpit extends Component {
             headline="my-company"
             text="Back Office"
             logo="default"
-            multi-color
+            bicolor
           ></cp-brand>
           <cp-nav-menu
             slot="header"

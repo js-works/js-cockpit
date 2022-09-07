@@ -12,7 +12,7 @@ import warningIcon from '../../icons/exclamation-circle.svg';
 import dangerIcon from '../../icons/exclamation-diamond.svg';
 
 // styles
-import messageStyles from './message.css';
+import messageStyles from './message.styles';
 
 // === exports =======================================================
 
