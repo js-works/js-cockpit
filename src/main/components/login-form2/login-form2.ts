@@ -247,12 +247,12 @@ class LoginForm extends Component {
             ? null
             : html`
                 <cp-text-field
-                  name="username"
+                  field="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
                 <cp-password-field
-                  name="password"
+                  field="password"
                   label=${this._t('password')}
                   required
                 ></cp-password-field>

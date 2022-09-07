@@ -1,4 +1,5 @@
 import {
+  afterFirstUpdate,
   bind,
   createEmitter,
   elem,
@@ -35,6 +36,9 @@ export { PasswordField };
 class PasswordField extends Component {
   @prop(Attrs.string)
   name = '';
+
+  @prop(Attrs.string)
+  field = '';
 
   @prop(Attrs.string)
   value = '';
@@ -76,17 +80,25 @@ class PasswordField extends Component {
     return '';
   }
 
+  constructor() {
+    super();
+
+    afterFirstUpdate(this, () => {
+      Object.defineProperty(this, 'value', {
+        get: () => this._slInputRef.value!.value,
+        set: (value: string) => void (this._slInputRef.value!.value = value)
+      });
+    });
+  }
+
   private _onInput = () => this._formField.signalInput();
 
   private _onChange = () => this._formField.signalChange();
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
 
-  private _onKeyDown = (ev: KeyboardEvent) => {
-    if (ev.key === 'Enter') {
-      this._formField.signalSubmit();
-    }
-  };
+  private _onKeyDown = (ev: KeyboardEvent) =>
+    void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   private _slInputRef = createRef<SlInput>();
 

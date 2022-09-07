@@ -23,6 +23,7 @@ class FormFieldController<T> {
   constructor(
     component: ReactiveControllerHost &
       HTMLElement & {
+        field: string;
         label: string;
       },
 
@@ -58,6 +59,7 @@ class FormFieldController<T> {
 
             detail: {
               element: component,
+              getName: () => component.field || '',
               getValue: this.#getValue,
               validate: this.#validate,
               setErrorMsg: this.#setErrorMsg,

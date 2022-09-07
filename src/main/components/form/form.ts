@@ -22,6 +22,7 @@ class Form extends Component {
   #elementsMap = new Map<
     HTMLElement,
     {
+      getName: () => string;
       getValue: () => unknown;
       validate: () => string | null;
       setErrorMsg: (msg: string | null) => void;
@@ -37,8 +38,9 @@ class Form extends Component {
     this.addEventListener('xxx', (ev: any) => {
       const detail = ev.detail;
       const elem = detail.element;
-      console.log(elem, detail);
+
       this.#elementsMap.set(elem, {
+        getName: detail.getName,
         getValue: detail.getValue,
         validate: detail.validate,
         setErrorMsg: detail.setErrorMsg
@@ -82,9 +84,13 @@ class Form extends Component {
       }
     } else {
       const data: Record<string, unknown> = {};
-
-      for (const [elem, { getValue }] of this.#elementsMap.entries()) {
-        data[elem.localName] = getValue();
+      console.log(this.#elementsMap);
+      for (const [elem, { getName, getValue }] of this.#elementsMap.entries()) {
+        const name = getName();
+        console.log(name);
+        if (name) {
+          data[getName()] = getValue();
+        }
       }
 
       alert(JSON.stringify(data, null, 2));

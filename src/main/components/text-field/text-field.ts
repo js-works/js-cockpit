@@ -1,4 +1,12 @@
-import { elem, prop, state, Attrs, Component } from '../../utils/components';
+import {
+  elem,
+  afterInit,
+  prop,
+  state,
+  Attrs,
+  Component,
+  afterFirstUpdate
+} from '../../utils/components';
 import { classMap, createRef, html, ref } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { FormControl } from '../../misc/forms';
@@ -34,6 +42,9 @@ class TextField extends Component implements FormControl<string> {
   name = '';
 
   @prop(Attrs.string)
+  field = '';
+
+  @prop(Attrs.string)
   value = '';
 
   @prop(Attrs.string)
@@ -64,18 +75,8 @@ class TextField extends Component implements FormControl<string> {
     return this.value;
   }
 
-  reset() {}
-
   focus() {
     this._slInputRef.value!.focus();
-  }
-
-  setCustomValidity(message: string): void {
-    this._slInputRef.value?.setCustomValidity(message);
-  }
-
-  reportValidity(): boolean {
-    return !!this._slInputRef.value?.reportValidity();
   }
 
   blur(): void {
@@ -87,6 +88,13 @@ class TextField extends Component implements FormControl<string> {
 
   constructor() {
     super();
+
+    afterFirstUpdate(this, () => {
+      Object.defineProperty(this, 'value', {
+        get: () => this._slInputRef.value!.value,
+        set: (value: string) => void (this._slInputRef.value!.value = value)
+      });
+    });
   }
 
   get validationMessage(): string {
@@ -109,7 +117,7 @@ class TextField extends Component implements FormControl<string> {
   private _onBlur = () => this._formField.signalBlur();
 
   private _onKeyDown = (ev: KeyboardEvent) =>
-    void ev.key === 'Enter' && this._formField.signalSubmit();
+    void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   render() {
     return html`
@@ -124,6 +132,7 @@ class TextField extends Component implements FormControl<string> {
           ?required=${this.required}
           size=${this.size}
           ${ref(this._slInputRef)}
+          value=${this.value}
           @keydown=${this._onKeyDown}
           @sl-input=${this._onInput}
           @sl-change=${this._onChange}
