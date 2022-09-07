@@ -23,8 +23,8 @@ class Form extends Component {
     HTMLElement,
     {
       getValue: () => unknown;
-      hasError: () => boolean;
-      showError: (value: boolean) => void;
+      validate: () => string | null;
+      setErrorMsg: (msg: string | null) => void;
     }
   >();
 
@@ -37,17 +37,17 @@ class Form extends Component {
     this.addEventListener('xxx', (ev: any) => {
       const detail = ev.detail;
       const elem = detail.element;
-
+      console.log(elem, detail);
       this.#elementsMap.set(elem, {
         getValue: detail.getValue,
-        hasError: detail.hasError,
-        showError: detail.showError
+        validate: detail.validate,
+        setErrorMsg: detail.setErrorMsg
       });
 
       detail.setSendSignal((type: string) => {
         switch (type) {
           case 'input':
-            detail.showError(false);
+            detail.setErrorMsg(null);
             break;
 
           case 'submit':
@@ -55,8 +55,6 @@ class Form extends Component {
             break;
         }
       });
-
-      console.log('received xxx event:', ev);
     });
 
     afterConnect(this, () => {
@@ -71,16 +69,16 @@ class Form extends Component {
   submit() {
     let hasErrors = false;
 
-    for (const { hasError } of this.#elementsMap.values()) {
-      if (hasError()) {
+    for (const { validate } of this.#elementsMap.values()) {
+      if (validate() !== null) {
         hasErrors = true;
         break;
       }
     }
 
     if (hasErrors) {
-      for (const { showError } of this.#elementsMap.values()) {
-        showError(true);
+      for (const { validate, setErrorMsg } of this.#elementsMap.values()) {
+        setErrorMsg(validate());
       }
     } else {
       const data: Record<string, unknown> = {};

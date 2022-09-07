@@ -54,16 +54,13 @@ class PasswordField extends Component {
   private _i18n = new I18nController(this);
 
   private _formField = new FormFieldController(this, {
-    getValue: () => {
-      return this.value;
-    },
-
-    hasError: () => this.validationMessage === '',
-    showError: (value: boolean) => (this._showError = value)
+    getValue: () => this.value,
+    validate: () => this.validationMessage || null,
+    setErrorMsg: (msg) => (this._errorMsg = msg)
   });
 
   @state
-  private _showError = false;
+  private _errorMsg: string | null = null;
 
   get validationMessage(): string {
     const input = this._slInputRef.value;
@@ -79,22 +76,11 @@ class PasswordField extends Component {
     return '';
   }
 
-  private _onInput = () => {
-    this.value = this._slInputRef.value!.value; // TODO: prevent refresh
-    this._formField.signalInput();
-  };
+  private _onInput = () => this._formField.signalInput();
 
-  private _onChange = () => {
-    this._formField.signalChange();
-  };
-
-  private _onFocus = () => {
-    this._formField.signalFocus();
-  };
-
-  private _onBlur = () => {
-    this._formField.signalBlur();
-  };
+  private _onChange = () => this._formField.signalChange();
+  private _onFocus = () => this._formField.signalFocus();
+  private _onBlur = () => this._formField.signalBlur();
 
   private _onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Enter') {
@@ -103,8 +89,6 @@ class PasswordField extends Component {
   };
 
   private _slInputRef = createRef<SlInput>();
-
-  reset() {}
 
   render() {
     return html`
@@ -131,11 +115,9 @@ class PasswordField extends Component {
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
         <div class="error-text">
-          ${!this._showError
+          ${!this._errorMsg
             ? null
-            : html`
-                <div class="validation-error">${this.validationMessage}</div>
-              `}
+            : html` <div class="validation-error">${this._errorMsg}</div> `}
         </div>
       </div>
     `;

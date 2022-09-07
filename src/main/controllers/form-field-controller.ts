@@ -17,8 +17,8 @@ const noop = () => {};
 class FormFieldController<T> {
   #sendSignal: (type: string) => void = noop;
   #getValue: () => T;
-  #hasError: () => boolean;
-  #showError: (value: boolean) => void;
+  #validate: () => null | string;
+  #setErrorMsg: (msg: string | null) => void;
 
   constructor(
     component: ReactiveControllerHost &
@@ -28,14 +28,14 @@ class FormFieldController<T> {
 
     params: {
       getValue: () => T;
-      hasError: () => boolean;
-      showError: (value: boolean) => void;
+      validate: () => string | null;
+      setErrorMsg: (msg: string | null) => void;
     }
   ) {
     let hasInitialized = false;
     this.#getValue = params.getValue;
-    this.#hasError = params.hasError;
-    this.#showError = params.showError;
+    this.#validate = params.validate;
+    this.#setErrorMsg = params.setErrorMsg;
 
     component.addController({
       hostConnected: () => {
@@ -59,8 +59,8 @@ class FormFieldController<T> {
             detail: {
               element: component,
               getValue: this.#getValue,
-              hasError: this.#hasError,
-              showError: this.#showError,
+              validate: this.#validate,
+              setErrorMsg: this.#setErrorMsg,
 
               setSendSignal: (sendSignal: (type: string) => void) => {
                 this.#sendSignal = sendSignal;

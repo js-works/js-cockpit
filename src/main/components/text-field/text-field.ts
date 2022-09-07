@@ -52,15 +52,12 @@ class TextField extends Component implements FormControl<string> {
   errorText = '';
 
   @state
-  private _showError = false;
+  private _errorMsg: string | null = null;
 
   private _formField = new FormFieldController(this, {
-    getValue: () => {
-      return this.value;
-    },
-
-    hasError: () => this.validationMessage !== '',
-    showError: (value: boolean) => (this._showError = value)
+    getValue: () => this.value,
+    validate: () => this.validationMessage || null,
+    setErrorMsg: (msg) => (this._errorMsg = msg)
   });
 
   getFieldValue(): string {
@@ -100,26 +97,19 @@ class TextField extends Component implements FormControl<string> {
     }
 
     if (this.required && !input.value) {
-      return 'Field is required (in)';
+      return 'Field is required';
     }
 
     return '';
   }
 
-  private _onInput = () => {
-    this.value = this._slInputRef.value!.value; // TODO: prevent refresh
-    this._formField.signalInput();
-  };
-
+  private _onInput = () => this._formField.signalInput();
   private _onChange = () => this._formField.signalChange();
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
 
-  private _onKeyDown = (ev: KeyboardEvent) => {
-    if (ev.key === 'Enter') {
-      this._formField.signalSubmit();
-    }
-  };
+  private _onKeyDown = (ev: KeyboardEvent) =>
+    void ev.key === 'Enter' && this._formField.signalSubmit();
 
   render() {
     return html`
@@ -143,11 +133,9 @@ class TextField extends Component implements FormControl<string> {
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
         <div class="error-text">
-          ${!this._showError
+          ${!this._errorMsg
             ? null
-            : html`
-                <div class="validation-error">${this.validationMessage}</div>
-              `}
+            : html` <div class="validation-error">${this._errorMsg}</div> `}
           <div>${this.errorText}</div>
         </div>
       </div>
