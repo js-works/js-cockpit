@@ -3,6 +3,7 @@ import {
   createEmitter,
   elem,
   prop,
+  state,
   Attrs,
   Component,
   Listener
@@ -10,6 +11,7 @@ import {
 
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
+import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -51,10 +53,54 @@ class PasswordField extends Component {
 
   private _i18n = new I18nController(this);
 
-  @bind
-  private _onInput() {
-    this.value = this._slInputRef.value!.value;
+  private _formField = new FormFieldController(this, {
+    getValue: () => {
+      return this.value;
+    },
+
+    hasError: () => this.validationMessage === '',
+    showError: (value: boolean) => (this._showError = value)
+  });
+
+  @state
+  private _showError = false;
+
+  get validationMessage(): string {
+    const input = this._slInputRef.value;
+
+    if (!input) {
+      return '';
+    }
+
+    if (this.required && !input.value) {
+      return 'Field is required (pw)';
+    }
+
+    return '';
   }
+
+  private _onInput = () => {
+    this.value = this._slInputRef.value!.value; // TODO: prevent refresh
+    this._formField.signalInput();
+  };
+
+  private _onChange = () => {
+    this._formField.signalChange();
+  };
+
+  private _onFocus = () => {
+    this._formField.signalFocus();
+  };
+
+  private _onBlur = () => {
+    this._formField.signalBlur();
+  };
+
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key === 'Enter') {
+      this._formField.signalSubmitRequest();
+    }
+  };
 
   private _slInputRef = createRef<SlInput>();
 
@@ -75,7 +121,11 @@ class PasswordField extends Component {
           class="input sl-control"
           ?required=${this.required}
           size=${this.size}
+          @keydown=${this._onKeyDown}
           @sl-input=${this._onInput}
+          @sl-change=${this._onChange}
+          @focus=${this._onFocus}
+          @blur=${this._onBlur}
           ${ref(this._slInputRef)}
         >
           <span slot="label" class="sl-control-label">${this.label}</span>

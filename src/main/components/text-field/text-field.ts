@@ -1,7 +1,8 @@
-import { elem, prop, Attrs, Component } from '../../utils/components';
+import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, createRef, html, ref } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { FormControl } from '../../misc/forms';
+import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -50,6 +51,18 @@ class TextField extends Component implements FormControl<string> {
   @prop({ attr: Attrs.string })
   errorText = '';
 
+  @state
+  private _showError = false;
+
+  private _formField = new FormFieldController(this, {
+    getValue: () => {
+      return this.value;
+    },
+
+    hasError: () => this.validationMessage !== '',
+    showError: (value: boolean) => (this._showError = value)
+  });
+
   getFieldValue(): string {
     return this.value;
   }
@@ -58,10 +71,6 @@ class TextField extends Component implements FormControl<string> {
 
   focus() {
     this._slInputRef.value!.focus();
-  }
-
-  get invalid(): boolean {
-    return !!this._slInputRef.value?.invalid;
   }
 
   setCustomValidity(message: string): void {
@@ -91,7 +100,7 @@ class TextField extends Component implements FormControl<string> {
     }
 
     if (this.required && !input.value) {
-      return 'Field is required';
+      return 'Field is required (in)';
     }
 
     return '';
@@ -99,13 +108,26 @@ class TextField extends Component implements FormControl<string> {
 
   private _onInput = () => {
     this.value = this._slInputRef.value!.value; // TODO: prevent refresh
+    this._formField.signalInput();
   };
 
-  private _onChange = () => {};
+  private _onChange = () => {
+    this._formField.signalChange();
+  };
 
-  _onFocus = () => {};
+  private _onFocus = () => {
+    this._formField.signalFocus();
+  };
 
-  _onBlur = () => {};
+  private _onBlur = () => {
+    this._formField.signalBlur();
+  };
+
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key === 'Enter') {
+      this._formField.signalSubmitRequest();
+    }
+  };
 
   render() {
     return html`
@@ -120,6 +142,7 @@ class TextField extends Component implements FormControl<string> {
           ?required=${this.required}
           size=${this.size}
           ${ref(this._slInputRef)}
+          @keydown=${this._onKeyDown}
           @sl-input=${this._onInput}
           @sl-change=${this._onChange}
           @focus=${this._onFocus}
@@ -127,7 +150,14 @@ class TextField extends Component implements FormControl<string> {
         >
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
-        <div class="error-text">${this.errorText}</div>
+        <div class="error-text">
+          ${!this._showError
+            ? null
+            : html`
+                <div class="validation-error">${this.validationMessage}</div>
+              `}
+          <div>${this.errorText}</div>
+        </div>
       </div>
     `;
   }

@@ -36,10 +36,19 @@ export default css`
 
   /* -------------------------------------------------------------- */
 
-  .error-text:not(:empty) {
-    margin: -4px 0 4px 0;
+  .validation-error:not(:empty) {
     font-size: 90%;
     font-weight: var(--sl-font-weight-normal);
     color: var(--sl-color-danger-700);
+    padding: 0.125rem 0 0.5rem 1px;
+
+    margin: 0 0 0 var(--label-align-vertical, 0)
+      var(
+        --label-align-horizontal,
+        calc(
+          var(--label-align-horizontal-width) +
+            var(--label-align-horizontal-gap)
+        )
+      );
   }
 `;

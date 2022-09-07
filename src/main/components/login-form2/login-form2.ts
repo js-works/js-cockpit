@@ -193,7 +193,7 @@ class LoginForm extends Component {
 
   private _renderMain() {
     return html`
-      <form class="form" @submit=${this._onSubmit} ${ref(this._formRef)}>
+      <cp-form class="form" @submit=${this._onSubmit} ${ref(this._formRef)}>
         ${when(
           hasSlot(this, 'form-fields-start'),
           () => html`
@@ -209,7 +209,7 @@ class LoginForm extends Component {
             () => html`
               <div>
                 <sl-checkbox class="remember-login-checkbox">
-                  Remember login
+                  ${this._t('rememberLogin')}
                 </sl-checkbox>
               </div>
             `
@@ -232,7 +232,7 @@ class LoginForm extends Component {
           </sl-button>
           <div class="links">${this._renderLinks()}</div>
         </div>
-      </form>
+      </cp-form>
     `;
   }
 
@@ -258,8 +258,6 @@ class LoginForm extends Component {
                 ></cp-password-field>
               `}
         `;
-
-        break;
 
       case 'registration':
         return html`
