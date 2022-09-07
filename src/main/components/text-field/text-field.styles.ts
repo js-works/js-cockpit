@@ -6,6 +6,10 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  .base.invalid sl-input::part(form-control-label) {
+    color: var(--sl-color-danger-600);
+  }
+
   .base.invalid sl-input::part(base) {
     border-color: var(--sl-color-danger-600);
     --sl-input-focus-ring-color: var(--sl-color-danger-600);

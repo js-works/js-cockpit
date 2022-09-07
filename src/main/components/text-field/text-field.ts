@@ -98,7 +98,7 @@ class TextField extends Component {
     }
 
     if (this.required && !input.value) {
-      return 'Field is required';
+      return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
     }
 
     return '';

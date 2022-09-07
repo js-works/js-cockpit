@@ -32,10 +32,25 @@ export const loginForm = () => h('login-form2-demo');
   ]
 })
 class LoginFormDemo extends Component {
+  private _processSubmit = async (data: any) => {
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 10000);
+    });
+
+    alert(JSON.stringify(data, null, 2));
+  };
+
   render() {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
-        <cp-login-form2 full-size enable-registration enable-forgot-password>
+        <cp-login-form2
+          full-size
+          enable-registration
+          enable-forgot-password
+          .processSubmit=${this._processSubmit}
+        >
           <cp-brand
             slot="header"
             size="small"

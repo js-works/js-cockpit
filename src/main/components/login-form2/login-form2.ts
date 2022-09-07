@@ -20,6 +20,7 @@ import {
   TemplateResult,
   when
 } from '../../utils/lit';
+
 import { I18nController } from '../../i18n/i18n';
 import { hasSlot } from '../../utils/slots';
 
@@ -38,6 +39,7 @@ import { Brand } from '../brand/brand';
 
 // styles
 import loginFormStyles from './login-form2.styles';
+import { FormSubmitEvent } from 'js-cockpit';
 
 // === exports =======================================================
 
@@ -111,16 +113,46 @@ class LoginForm extends Component {
 
   @state
   private _view: LoginForm.View = 'login';
+
+  @state
   private _isLoading = false;
+
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.loginForm');
   private _formRef = createRef<Form>();
+  private _rememberLoginCheckboxRef = createRef<SlCheckbox>();
   private _submitButtonRef = createRef<SlButton>();
   private _animationRef = createRef<SlAnimation>();
 
-  private _onSubmit = (ev: any) => {
-    ev.preventDefault();
-    alert('Form submitted');
+  private _onFormSubmit = async (ev: FormSubmitEvent) => {
+    if (!this.processSubmit) {
+      return;
+    }
+
+    this._submitButtonRef.value!.focus();
+
+    const data: LoginForm.SubmitData =
+      this._view === 'login'
+        ? {
+            view: 'login',
+            locale: this._i18n.getLocale(),
+            rememberLogin: !!this._rememberLoginCheckboxRef.value?.checked,
+            params: ev.detail.data || {} // TODO!!!
+          }
+        : {
+            view: this._view,
+            locale: this._i18n.getLocale(),
+            params: ev.detail.data || {} // TODO!!!
+          };
+
+    this._isLoading = true;
+
+    try {
+      await this.processSubmit(data);
+    } catch {
+    } finally {
+      this._isLoading = false;
+    }
   };
 
   private _onSubmitClick = (ev: any) => {
@@ -193,7 +225,11 @@ class LoginForm extends Component {
 
   private _renderMain() {
     return html`
-      <cp-form class="form" @submit=${this._onSubmit} ${ref(this._formRef)}>
+      <cp-form
+        class="form"
+        .onFormSubmit=${this._onFormSubmit}
+        ${ref(this._formRef)}
+      >
         ${when(
           hasSlot(this, 'form-fields-start'),
           () => html`
@@ -208,28 +244,35 @@ class LoginForm extends Component {
             this._view === 'login',
             () => html`
               <div>
-                <sl-checkbox class="remember-login-checkbox">
+                <sl-checkbox
+                  class="remember-login-checkbox"
+                  ${ref(this._rememberLoginCheckboxRef)}
+                >
                   ${this._t('rememberLogin')}
                 </sl-checkbox>
               </div>
             `
           )}
-          <sl-button
-            variant="primary"
-            size="large"
-            class="submit-button"
-            @click=${this._onSubmitClick}
-            ${ref(this._submitButtonRef)}
-          >
-            <div class="submit-button-content">
-              <span class="submit-button-text">
-                ${this._renderSubmitButtonText()}
-              </span>
-              ${!this._isLoading
-                ? null
-                : html`<sl-spinner class="submit-button-spinner"></sl-spinner>`}
-            </div>
-          </sl-button>
+          <focus-trap .inactive=${!this._isLoading}>
+            <sl-button
+              variant="primary"
+              size="large"
+              class="submit-button"
+              @click=${this._onSubmitClick}
+              ${ref(this._submitButtonRef)}
+            >
+              <div class="submit-button-content">
+                <span class="submit-button-text">
+                  ${this._renderSubmitButtonText()}
+                </span>
+                ${!this._isLoading
+                  ? null
+                  : html`<sl-spinner
+                      class="submit-button-spinner"
+                    ></sl-spinner>`}
+              </div>
+            </sl-button>
+          </focus-trap>
           <div class="links">${this._renderLinks()}</div>
         </div>
       </cp-form>

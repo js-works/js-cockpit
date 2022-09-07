@@ -71,12 +71,11 @@ class PasswordField extends Component {
     }
 
     if (this.required && !input.value) {
-      return 'Field is required (pw)';
+      return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
     }
 
     return '';
   }
-
   constructor() {
     super();
 

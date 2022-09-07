@@ -97,7 +97,7 @@ export default css`
   .form-fields-text:not(:empty) {
     font-size: var(--sl-font-size-normal);
     font-weight: var(--sl-font-weight-normal);
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 1.5rem 0;
   }
 
   .form-fields {
@@ -111,11 +111,19 @@ export default css`
   }
 
   .remember-login-checkbox {
-    margin: 0.5rem 0 0.5rem 0.75rem;
+    margin: 0.5rem 0 0.75rem 0.5rem;
   }
 
   .submit-button {
     width: 100%;
+  }
+
+  .submit-button-spinner {
+    margin-left: 0.5rem;
+    flex-grow: 0;
+    font-size: 1.125rem;
+    --indicator-color: var(--sl-color-neutral-0);
+    --track-width: 2px;
   }
 
   .links {

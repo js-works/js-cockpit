@@ -1,11 +1,15 @@
 import {
+  afterDisconnect,
+  createEmitter,
   elem,
   prop,
   afterConnect,
   Attrs,
   Component,
-  afterDisconnect
+  Listener
 } from '../../utils/components';
+
+import { FormSubmitEvent } from '../../events/form-submit-event';
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
 
@@ -30,7 +34,13 @@ class Form extends Component {
   >();
 
   @prop
-  onFormSubmit?: () => void;
+  onFormSubmit?: Listener<FormSubmitEvent>;
+
+  private _emitFormSubmit = createEmitter(
+    this,
+    'cp-form-submit',
+    () => this.onFormSubmit
+  );
 
   constructor() {
     super();
@@ -84,16 +94,18 @@ class Form extends Component {
       }
     } else {
       const data: Record<string, unknown> = {};
-      console.log(this.#elementsMap);
+
       for (const [elem, { getName, getValue }] of this.#elementsMap.entries()) {
         const name = getName();
-        console.log(name);
+
         if (name) {
           data[getName()] = getValue();
         }
       }
 
-      alert(JSON.stringify(data, null, 2));
+      this._emitFormSubmit({
+        data
+      });
     }
   }
 

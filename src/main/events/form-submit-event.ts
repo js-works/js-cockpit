@@ -1,6 +1,5 @@
 type FormSubmitDetail = {
-  data: Record<string, string> | null;
-  rawData: Record<string, any> | null;
+  data: Record<string, any> | null;
 };
 
 export interface FormSubmitEvent extends CustomEvent<FormSubmitDetail> {
