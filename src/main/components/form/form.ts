@@ -1,16 +1,11 @@
 import {
-  bind,
   elem,
   prop,
-  afterInit,
   afterConnect,
-  afterUpdate,
   Attrs,
   Component,
   afterDisconnect
 } from '../../utils/components';
-
-import { FormSubmitEvent } from '../../events/form-submit-event';
 
 import { classMap, createRef, html, ref } from '../../utils/lit';
 
@@ -49,7 +44,7 @@ class Form extends Component {
         showError: detail.showError
       });
 
-      detail.setEventConsumer((type: string) => {
+      detail.setSendSignal((type: string) => {
         switch (type) {
           case 'input':
             detail.showError(false);

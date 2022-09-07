@@ -15,7 +15,7 @@ const noop = () => {};
 // === controllers ===================================================
 
 class FormFieldController<T> {
-  #eventConsumer: (type: string) => void = noop;
+  #sendSignal: (type: string) => void = noop;
   #getValue: () => T;
   #hasError: () => boolean;
   #showError: (value: boolean) => void;
@@ -32,7 +32,6 @@ class FormFieldController<T> {
       showError: (value: boolean) => void;
     }
   ) {
-    const getLabel = () => (component as any).label;
     let hasInitialized = false;
     this.#getValue = params.getValue;
     this.#hasError = params.hasError;
@@ -41,7 +40,6 @@ class FormFieldController<T> {
     component.addController({
       hostConnected: () => {
         hasInitialized = false;
-        console.log(`host ${getLabel()},  ${component.localName} connected`);
       },
 
       hostDisconnected: () => {},
@@ -64,8 +62,8 @@ class FormFieldController<T> {
               hasError: this.#hasError,
               showError: this.#showError,
 
-              setEventConsumer: (eventConsumer: (type: string) => void) => {
-                this.#eventConsumer = eventConsumer;
+              setSendSignal: (sendSignal: (type: string) => void) => {
+                this.#sendSignal = sendSignal;
               }
             }
           })
@@ -74,23 +72,9 @@ class FormFieldController<T> {
     });
   }
 
-  signalInput(): void {
-    this.#eventConsumer!('input');
-  }
-
-  signalChange(): void {
-    this.#eventConsumer!('change');
-  }
-
-  signalFocus(): void {
-    this.#eventConsumer!('focus');
-  }
-
-  signalBlur(): void {
-    this.#eventConsumer!('blur');
-  }
-
-  signalSubmitRequest(): void {
-    this.#eventConsumer!('submit');
-  }
+  readonly signalInput = () => this.#sendSignal!('input');
+  readonly signalChange = () => this.#sendSignal!('change');
+  readonly signalFocus = () => this.#sendSignal!('focus');
+  readonly signalBlur = () => this.#sendSignal!('blur');
+  readonly signalSubmit = () => this.#sendSignal!('submit');
 }

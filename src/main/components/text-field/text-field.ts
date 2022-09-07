@@ -48,7 +48,7 @@ class TextField extends Component implements FormControl<string> {
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   errorText = '';
 
   @state
@@ -111,21 +111,13 @@ class TextField extends Component implements FormControl<string> {
     this._formField.signalInput();
   };
 
-  private _onChange = () => {
-    this._formField.signalChange();
-  };
-
-  private _onFocus = () => {
-    this._formField.signalFocus();
-  };
-
-  private _onBlur = () => {
-    this._formField.signalBlur();
-  };
+  private _onChange = () => this._formField.signalChange();
+  private _onFocus = () => this._formField.signalFocus();
+  private _onBlur = () => this._formField.signalBlur();
 
   private _onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Enter') {
-      this._formField.signalSubmitRequest();
+      this._formField.signalSubmit();
     }
   };
 

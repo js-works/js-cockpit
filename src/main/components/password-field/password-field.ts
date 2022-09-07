@@ -98,7 +98,7 @@ class PasswordField extends Component {
 
   private _onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Enter') {
-      this._formField.signalSubmitRequest();
+      this._formField.signalSubmit();
     }
   };
 
@@ -130,7 +130,13 @@ class PasswordField extends Component {
         >
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
-        <div class="error"></div>
+        <div class="error-text">
+          ${!this._showError
+            ? null
+            : html`
+                <div class="validation-error">${this.validationMessage}</div>
+              `}
+        </div>
       </div>
     `;
   }
