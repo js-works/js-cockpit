@@ -21,11 +21,7 @@ class FormFieldController<T> {
   #setErrorMsg: (msg: string | null) => void;
 
   constructor(
-    component: ReactiveControllerHost &
-      HTMLElement & {
-        field: string;
-        label: string;
-      },
+    component: ReactiveControllerHost & HTMLElement & { name: string },
 
     params: {
       getValue: () => T;
@@ -59,7 +55,7 @@ class FormFieldController<T> {
 
             detail: {
               element: component,
-              getName: () => component.field || '',
+              getName: () => component.name || '',
               getValue: this.#getValue,
               validate: this.#validate,
               setErrorMsg: this.#setErrorMsg,

@@ -1,15 +1,14 @@
 import {
   elem,
-  afterInit,
   prop,
   state,
   Attrs,
   Component,
   afterFirstUpdate
 } from '../../utils/components';
-import { classMap, createRef, html, ref } from '../../utils/lit';
+
+import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
-import { FormControl } from '../../misc/forms';
 import { FormFieldController } from '../../controllers/form-field-controller';
 
 // custom elements
@@ -37,12 +36,9 @@ declare global {
   styles: textFieldStyles,
   uses: [SlInput]
 })
-class TextField extends Component implements FormControl<string> {
+class TextField extends Component {
   @prop(Attrs.string)
   name = '';
-
-  @prop(Attrs.string)
-  field = '';
 
   @prop(Attrs.string)
   value = '';
@@ -58,9 +54,6 @@ class TextField extends Component implements FormControl<string> {
 
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
-
-  @prop(Attrs.string)
-  errorText = '';
 
   @state
   private _errorMsg: string | null = null;
@@ -123,8 +116,8 @@ class TextField extends Component implements FormControl<string> {
     return html`
       <div
         class="base ${classMap({
-          'required': this.required,
-          'has-error': !!this.errorText
+          required: this.required,
+          invalid: this._errorMsg !== null
         })}"
       >
         <sl-input
@@ -141,12 +134,10 @@ class TextField extends Component implements FormControl<string> {
         >
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
-        <div class="error-text">
-          ${!this._errorMsg
-            ? null
-            : html` <div class="validation-error">${this._errorMsg}</div> `}
-          <div>${this.errorText}</div>
-        </div>
+        ${when(
+          this._errorMsg,
+          () => html`<div class="validation-error">${this._errorMsg}</div>`
+        )}
       </div>
     `;
   }

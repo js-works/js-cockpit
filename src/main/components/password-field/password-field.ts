@@ -38,9 +38,6 @@ class PasswordField extends Component {
   name = '';
 
   @prop(Attrs.string)
-  field = '';
-
-  @prop(Attrs.string)
   value = '';
 
   @prop(Attrs.string)
@@ -106,8 +103,8 @@ class PasswordField extends Component {
     return html`
       <div
         class="base ${classMap({
-          'required': this.required,
-          'has-error': false // TODO!!!
+          required: this.required,
+          invalid: this._errorMsg !== null
         })}"
       >
         <sl-input

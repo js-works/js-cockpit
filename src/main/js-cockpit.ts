@@ -42,7 +42,6 @@ export * from './i18n/i18n';
 // controllers
 
 // misc
-export * from './misc/forms';
 export * from './misc/dialogs';
 export * from './misc/theming';
 

@@ -38,8 +38,8 @@ export default css`
 
   .validation-error:not(:empty) {
     font-size: 90%;
-    font-weight: var(--sl-font-weight-normal);
-    color: var(--sl-color-danger-700);
+    font-weight: var(--sl-font-weight-semibold);
+    color: var(--sl-color-danger-600);
     padding: 0.125rem 0 0.5rem 1px;
 
     margin: 0 0 0 var(--label-align-vertical, 0)
