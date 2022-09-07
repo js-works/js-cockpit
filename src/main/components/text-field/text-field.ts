@@ -64,10 +64,6 @@ class TextField extends Component {
     setErrorMsg: (msg) => (this._errorMsg = msg)
   });
 
-  getFieldValue(): string {
-    return this.value;
-  }
-
   focus() {
     this._slInputRef.value!.focus();
   }
@@ -84,7 +80,10 @@ class TextField extends Component {
 
     afterFirstUpdate(this, () => {
       Object.defineProperty(this, 'value', {
-        get: () => this._slInputRef.value!.value,
+        get: () => {
+          console.log(444, this.name);
+          return this._slInputRef.value!.value;
+        },
         set: (value: string) => void (this._slInputRef.value!.value = value)
       });
     });

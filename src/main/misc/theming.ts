@@ -819,7 +819,7 @@ const lightThemeTokens = {
   'transition-x-fast': '50ms',
   'font-mono': "SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace",
   'font-sans':
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" +
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, " +
     "'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   'font-serif': "Georgia, 'Times New Roman', serif",
   'font-size-2x-small': '0.625rem',

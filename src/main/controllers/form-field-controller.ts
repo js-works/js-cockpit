@@ -35,11 +35,10 @@ class FormFieldController<T> {
     this.#setErrorMsg = params.setErrorMsg;
 
     component.addController({
-      hostConnected: () => {
+      hostDisconnected: () => {
         hasInitialized = false;
+        this.#sendSignal('close');
       },
-
-      hostDisconnected: () => {},
 
       hostUpdate: () => {
         if (hasInitialized) {

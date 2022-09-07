@@ -48,6 +48,7 @@ class Form extends Component {
     this.addEventListener('xxx', (ev: any) => {
       const detail = ev.detail;
       const elem = detail.element;
+      let cancelled = false;
 
       this.#elementsMap.set(elem, {
         getName: detail.getName,
@@ -57,6 +58,10 @@ class Form extends Component {
       });
 
       detail.setSendSignal((type: string) => {
+        if (cancelled) {
+          return;
+        }
+
         switch (type) {
           case 'input':
             detail.setErrorMsg(null);
@@ -65,6 +70,10 @@ class Form extends Component {
           case 'submit':
             this.submit();
             break;
+
+          case 'cancel':
+            cancelled = true;
+            this.#elementsMap.delete(elem);
         }
       });
     });
