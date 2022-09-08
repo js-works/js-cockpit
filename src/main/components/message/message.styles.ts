@@ -50,12 +50,12 @@ export default css`
 
   .base.variant-danger .columns {
     color: var(--sl-color-danger-950);
-    background-color: var(--sl-color-danger-200);
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.variant-danger .columns,
   .base.variant-danger .column1 {
-    border-color: var(--sl-color-danger-300);
+    border-color: var(--sl-color-danger-200);
   }
 
   .column1 {

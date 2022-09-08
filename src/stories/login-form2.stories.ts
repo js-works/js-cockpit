@@ -36,7 +36,7 @@ class LoginFormDemo extends Component {
     await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
-      }, 10000);
+      }, 1000);
     });
 
     alert(JSON.stringify(data, null, 2));
