@@ -1,6 +1,10 @@
-import { bind, elem, prop, Attrs, Component } from '../../utils/components';
+import { effect, elem, prop, Attrs, Component } from '../../utils/components';
+import { createRef, html, ref } from '../../utils/lit';
 
-import { html } from '../../utils/lit';
+import {
+  runCloseVerticalTransition,
+  runOpenVerticalTransition
+} from '../../misc/transitions';
 
 // components
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -46,14 +50,49 @@ const appearanceByVariant = new Map([
   uses: [SlIcon]
 })
 class Message extends Component {
-  @prop({ attr: Attrs.string })
+  @prop(Attrs.string)
   variant: 'info' | 'success' | 'warning' | 'danger' = 'info';
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   transparent?: boolean;
 
-  @prop({ attr: Attrs.boolean })
+  @prop(Attrs.boolean)
   inheritColor?: boolean;
+
+  @prop(Attrs.boolean)
+  hidden = false;
+
+  private _contentRef = createRef<HTMLElement>();
+
+  constructor() {
+    super();
+
+    let initialized = false;
+
+    effect(
+      this,
+      () => {
+        if (this.hidden) {
+          if (!initialized) {
+          } else {
+            runCloseVerticalTransition(this._contentRef.value!).then(() => {
+              this._contentRef.value!.style.maxHeight = '0';
+              this._contentRef.value!.style.overflow = 'hidden';
+            });
+          }
+        } else {
+          runOpenVerticalTransition(this._contentRef.value!).then(() => {
+            this._contentRef.value!.style.maxHeight = 'none';
+            this._contentRef.value!.style.overflow = 'auto';
+            console.log(222, this._contentRef.value!.style.maxHeight);
+          });
+        }
+
+        initialized = true;
+      },
+      () => [this.hidden]
+    );
+  }
 
   render() {
     let appearance = appearanceByVariant.get(this.variant);
@@ -66,13 +105,15 @@ class Message extends Component {
 
     return html`
       <div class="base ${className} ${this.transparent ? 'transparent' : ''}">
-        ${html`
-          <div class="column1">
-            <sl-icon class="icon" src=${icon}></sl-icon>
+        <div class="content" ${ref(this._contentRef)}>
+          <div class="columns">
+            <div class="column1">
+              <sl-icon class="icon" src=${icon}></sl-icon>
+            </div>
+            <div class="column2">
+              <slot></slot>
+            </div>
           </div>
-        `}
-        <div class="column2">
-          <slot></slot>
         </div>
       </div>
     `;

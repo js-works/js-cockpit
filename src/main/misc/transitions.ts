@@ -1,6 +1,6 @@
 // === exports =======================================================
 
-export { runOpenVerticalTransition, runCloseVerticalTransition }
+export { runOpenVerticalTransition, runCloseVerticalTransition };
 
 // === functions =====================================================
 
@@ -9,19 +9,23 @@ function runOpenVerticalTransition(
   duration: string = '0.25s',
   timing = 'ease'
 ): Promise<void> {
-  node.style.transition = `max-height ${duration} ${timing}`
-  node.style.maxHeight = node.scrollHeight + 'px'
-  node.style.overflow = 'hidden'
+  const oldTransition = node.style.transition;
+  const oldMaxHeight = node.style.maxHeight;
+  const oldOverflow = node.style.overflow;
+
+  node.style.transition = `max-height ${duration} ${timing}`;
+  node.style.maxHeight = node.scrollHeight + 'px';
+  node.style.overflow = 'hidden';
 
   return new Promise((resolve) => {
     node.addEventListener('transitionend', function listener() {
-      node.removeEventListener('transitionend', listener)
-      node.style.transition = ''
-      node.style.maxHeight = ''
-      node.style.overflow = ''
-      resolve()
-    })
-  })
+      node.removeEventListener('transitionend', listener);
+      node.style.transition = oldTransition;
+      node.style.maxHeight = oldMaxHeight;
+      node.style.overflow = oldOverflow;
+      resolve();
+    });
+  });
 }
 
 function runCloseVerticalTransition(
@@ -29,21 +33,25 @@ function runCloseVerticalTransition(
   duration: string = '0.25s',
   timing = 'ease'
 ): Promise<void> {
-  node.style.transition = `max-height ${duration} ${timing}`
-  node.style.maxHeight = node.scrollHeight + 'px'
-  node.style.overflow = 'hidden'
+  const oldTransition = node.style.transition;
+  const oldMaxHeight = node.style.maxHeight;
+  const oldOverflow = node.style.overflow;
+
+  node.style.transition = `max-height ${duration} ${timing}`;
+  node.style.maxHeight = node.scrollHeight + 'px';
+  node.style.overflow = 'hidden';
 
   setTimeout(() => {
-    node.style.maxHeight = '0px'
-  })
+    node.style.maxHeight = '0px';
+  });
 
   return new Promise((resolve) => {
     node.addEventListener('transitionend', function listener() {
-      node.removeEventListener('transitionend', listener)
-      node.style.transition = ''
-      node.style.maxHeight = ''
-      node.style.overflow = ''
-      resolve()
-    })
-  })
+      node.removeEventListener('transitionend', listener);
+      node.style.transition = oldTransition;
+      node.style.maxHeight = oldMaxHeight;
+      node.style.overflow = oldOverflow;
+      resolve();
+    });
+  });
 }

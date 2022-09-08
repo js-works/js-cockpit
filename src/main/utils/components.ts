@@ -21,6 +21,7 @@ export {
   beforeUpdate,
   bind,
   createEmitter,
+  effect,
   elem,
   prop,
   state,
@@ -336,6 +337,39 @@ function afterUpdate(component: Component, action: () => Cleanup): void {
   });
 }
 
+function effect(
+  component: Component,
+  action: () => void | (() => void),
+  getDeps?: () => unknown[]
+) {
+  let cleanup: (() => void) | null = null;
+  let prevDeps: unknown[] | null;
+
+  component.addController({
+    hostUpdated() {
+      if (getDeps) {
+        const nextDeps = getDeps();
+
+        if (prevDeps && isEqualArray(prevDeps, nextDeps)) {
+          return;
+        } else {
+          prevDeps = nextDeps;
+        }
+      }
+
+      if (cleanup) {
+        try {
+          cleanup();
+        } finally {
+          cleanup = null;
+        }
+      }
+
+      cleanup = action() || null;
+    }
+  });
+}
+
 function createEmitter(host: Component): (ev: CustomEvent<any>) => void;
 
 function createEmitter<D = void>(
@@ -387,4 +421,22 @@ function createEmitter(
 
     host.dispatchEvent(ev);
   };
+}
+
+// --- locals --------------------------------------------------------
+
+function isEqualArray(arr1: any[], arr2: any[]) {
+  let ret =
+    Array.isArray(arr1) && Array.isArray(arr2) && arr1.length === arr2.length;
+
+  if (ret) {
+    for (let i = 0; i < arr1.length; ++i) {
+      if (arr1[i] !== arr2[i]) {
+        ret = false;
+        break;
+      }
+    }
+  }
+
+  return ret;
 }

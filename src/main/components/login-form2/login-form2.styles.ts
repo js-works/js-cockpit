@@ -18,7 +18,6 @@ export default css`
     top: 0;
     left: 0;
     min-width: 100%;
-    max-width: 100%;
     min-height: 100%;
     max-width: 100%;
     overflow: hidden;
@@ -60,7 +59,6 @@ export default css`
   }
 
   .main {
-    display: block;
     flex-grow: 1;
     align-self: center;
   }

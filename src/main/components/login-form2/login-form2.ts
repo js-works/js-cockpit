@@ -1,7 +1,6 @@
 import {
   afterInit,
   afterUpdate,
-  bind,
   createEmitter,
   elem,
   prop,
@@ -266,12 +265,13 @@ class LoginForm extends Component {
               </div>
             `
           )}
-          ${when(
-            this._errorBoxVisible,
-            () => html`<cp-message class="error-box" variant="danger">
-              ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
-            </cp-message>`
-          )}
+          <cp-message
+            class="error-box"
+            variant="danger"
+            .hidden=${!this._errorBoxVisible}
+          >
+            ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
+          </cp-message>
           <focus-trap .inactive=${!this._isLoading}>
             <sl-button
               variant="primary"

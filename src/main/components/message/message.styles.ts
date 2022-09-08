@@ -5,16 +5,24 @@ export default css`
   ${componentStyles}
 
   .base {
+    font-size: var(--sl-font-size-medium);
+    text-align: left;
+  }
+
+  .content {
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .columns {
     display: flex;
     align-items: stretch;
     border-width: 1px;
     border-style: solid;
-    font-size: var(--sl-font-size-medium);
     border-radius: var(--sl-border-radius-medium);
-    text-align: left;
   }
 
-  .base.variant-info {
+  .base.variant-info .columns {
     color: var(--sl-color-primary-950);
     background-color: var(--sl-color-primary-100);
   }
@@ -24,32 +32,32 @@ export default css`
     border-color: var(--sl-color-primary-200);
   }
 
-  .base.variant-success {
+  .base.variant-success .columns {
     color: var(--sl-color-success-950);
     background-color: var(--sl-color-success-100);
   }
 
-  .base.variant-success,
+  .base.variant-success .columns,
   .base.variant-success .column1 {
     border-color: var(--sl-color-success-300);
   }
 
-  .base.variant-warning {
+  .base.variant-warning .columns {
     color: var(--sl-color-warning-950);
     background-color: var(--sl-color-warning-200);
   }
 
-  .base.variant-warning,
+  .base.variant-warning .columns,
   .base.variant-warning .column1 {
     border-color: var(--sl-color-warning-300);
   }
 
-  .base.variant-danger {
+  .base.variant-danger .columns {
     color: var(--sl-color-danger-900);
     background-color: var(--sl-color-danger-100);
   }
 
-  .base.variant-danger,
+  .base.variant-danger .columns,
   .base.variant-danger .column1 {
     border-color: var(--sl-color-danger-200);
   }
