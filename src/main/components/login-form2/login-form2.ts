@@ -192,13 +192,19 @@ class LoginForm extends Component {
 
     setTimeout(() => {
       animation.style.visibility = 'hidden';
+      this._errorBoxRef.value!.hidden = true;
     }, animation.duration - 50);
 
     const finishListener = () => {
       this._view = view;
       this._isLoading = false;
       this._errorBoxVisible = false;
-      setTimeout(() => (animation.style.visibility = 'visible'), 50);
+
+      setTimeout(() => {
+        animation.style.visibility = 'visible';
+        this._errorBoxRef.value!.hidden = false;
+      }, 50);
+
       animation.removeEventListener('sl-finish', finishListener);
       animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight';
       animation.play = true;
@@ -267,6 +273,7 @@ class LoginForm extends Component {
             `
           )}
           <cp-message
+            key=${Date.now()}
             class="error-box"
             variant="danger"
             ?open=${this._errorBoxVisible}
