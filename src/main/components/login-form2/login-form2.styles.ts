@@ -136,7 +136,6 @@ export default css`
   }
 
   .error-box {
-    margin: 0.25rem 0 1rem 0;
   }
 
   .overlay {

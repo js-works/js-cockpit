@@ -122,6 +122,7 @@ class LoginForm extends Component {
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.loginForm');
   private _formRef = createRef<Form>();
+  private _errorBoxRef = createRef<Message>();
   private _rememberLoginCheckboxRef = createRef<SlCheckbox>();
   private _submitButtonRef = createRef<SlButton>();
   private _animationRef = createRef<SlAnimation>();
@@ -183,7 +184,7 @@ class LoginForm extends Component {
 
   private _changeView(view: LoginForm.View) {
     const animation = this._animationRef.value!;
-    animation.duration = 400;
+    animation.duration = 300;
     animation.easing = 'ease';
     animation.iterations = 1;
     animation.name = view === 'login' ? 'fadeOutRight' : 'fadeOutLeft';
@@ -268,8 +269,8 @@ class LoginForm extends Component {
           <cp-message
             class="error-box"
             variant="danger"
-            animated
-            ?closed=${!this._errorBoxVisible}
+            ?open=${this._errorBoxVisible}
+            ${ref(this._errorBoxRef)}
           >
             ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
           </cp-message>

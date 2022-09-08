@@ -9,37 +9,33 @@ export default css`
     text-align: left;
   }
 
-  .content {
-    xxxmax-height: 0;
-    xxxoverflow: hidden;
-  }
-
   .columns {
     display: flex;
     align-items: stretch;
     border-width: 1px;
     border-style: solid;
     border-radius: var(--sl-border-radius-medium);
+    margin: 0.75rem 0 0.75rem 0;
   }
 
   .base.variant-info .columns {
     color: var(--sl-color-primary-950);
-    background-color: var(--sl-color-primary-100);
+    background-color: var(--sl-color-primary-200);
   }
 
   .base.variant-info,
   .base.variant-info .column1 {
-    border-color: var(--sl-color-primary-200);
+    border-color: var(--sl-color-primary-500);
   }
 
   .base.variant-success .columns {
     color: var(--sl-color-success-950);
-    background-color: var(--sl-color-success-100);
+    background-color: var(--sl-color-success-200);
   }
 
   .base.variant-success .columns,
   .base.variant-success .column1 {
-    border-color: var(--sl-color-success-300);
+    border-color: var(--sl-color-success-400);
   }
 
   .base.variant-warning .columns {
@@ -49,17 +45,17 @@ export default css`
 
   .base.variant-warning .columns,
   .base.variant-warning .column1 {
-    border-color: var(--sl-color-warning-300);
+    border-color: var(--sl-color-warning-400);
   }
 
   .base.variant-danger .columns {
-    color: var(--sl-color-danger-900);
-    background-color: var(--sl-color-danger-100);
+    color: var(--sl-color-danger-950);
+    background-color: var(--sl-color-danger-200);
   }
 
   .base.variant-danger .columns,
   .base.variant-danger .column1 {
-    border-color: var(--sl-color-danger-200);
+    border-color: var(--sl-color-danger-300);
   }
 
   .column1 {

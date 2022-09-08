@@ -60,10 +60,7 @@ class Message extends Component {
   inheritColor?: boolean;
 
   @prop(Attrs.boolean)
-  closed = false;
-
-  @prop(Attrs.boolean)
-  animated = false;
+  open = false;
 
   private _contentRef = createRef<HTMLElement>();
 
@@ -75,28 +72,21 @@ class Message extends Component {
     effect(
       this,
       () => {
-        if (this.closed) {
-          if (!initialized || !this.animated) {
+        if (!this.open) {
+          if (!initialized) {
             this._contentRef.value!.style.maxHeight = '0';
             this._contentRef.value!.style.overflow = 'hidden';
-          } else if (this.animated) {
-            /*
-            this._contentRef.value!.style.maxHeight = 'none';
-            this._contentRef.value!.style.overflow = 'auto';
-            */
-            this._contentRef.value!.style.maxHeight = 'none';
-            this._contentRef.value!.style.overflow = 'auto';
-
+          } else {
             runCloseVerticalTransition(this._contentRef.value!).then(() => {
               this._contentRef.value!.style.maxHeight = '0';
               this._contentRef.value!.style.overflow = 'hidden';
             });
           }
         } else {
-          if (!initialized || !this.animated) {
+          if (!initialized) {
             this._contentRef.value!.style.maxHeight = 'none';
             this._contentRef.value!.style.overflow = 'auto';
-          } else if (this.animated) {
+          } else {
             runOpenVerticalTransition(this._contentRef.value!).then(() => {
               this._contentRef.value!.style.maxHeight = 'none';
               this._contentRef.value!.style.overflow = 'auto';
@@ -106,7 +96,7 @@ class Message extends Component {
 
         initialized = true;
       },
-      () => [this.closed]
+      () => [this.open]
     );
   }
 
