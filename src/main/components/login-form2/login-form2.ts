@@ -268,8 +268,8 @@ class LoginForm extends Component {
           <cp-message
             class="error-box"
             variant="danger"
-            xxxanimated
-            ?hidden=${!this._errorBoxVisible}
+            animated
+            ?closed=${!this._errorBoxVisible}
           >
             ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
           </cp-message>

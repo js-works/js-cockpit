@@ -10,8 +10,8 @@ export default css`
   }
 
   .content {
-    max-height: 0;
-    overflow: hidden;
+    xxxmax-height: 0;
+    xxxoverflow: hidden;
   }
 
   .columns {
