@@ -73,16 +73,16 @@ export default css`
   @media (min-width: 600px) {
     .form {
       margin: 3rem 0 0 0;
-      width: 32rem;
+      width: 36rem;
       height: 30rem;
       --label-align-vertical: var(--off);
       --label-align-horizontal: var(--on);
-      --label-align-horizontal-width: 9rem;
+      --label-align-horizontal-width: 10rem;
     }
   }
 
   .form-fields-start {
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 1.5rem 0;
     text-align: center;
   }
 

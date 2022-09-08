@@ -15,7 +15,7 @@ export default css`
     border-width: 1px;
     border-style: solid;
     border-radius: var(--sl-border-radius-medium);
-    margin: 0.75rem 0 0.75rem 0;
+    margin: 0.5rem 0 0.5rem 0;
   }
 
   .base.variant-info .columns {

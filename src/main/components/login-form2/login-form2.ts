@@ -126,16 +126,18 @@ class LoginForm extends Component {
   private _rememberLoginCheckboxRef = createRef<SlCheckbox>();
   private _submitButtonRef = createRef<SlButton>();
   private _animationRef = createRef<SlAnimation>();
+  private _preventFormSubmit = false;
 
   private _onInput = () => {
     this._errorBoxVisible = false;
   };
 
   private _onFormSubmit = async (ev: FormSubmitEvent) => {
-    if (!this.processSubmit) {
+    if (this._preventFormSubmit || !this.processSubmit) {
       return;
     }
 
+    this._preventFormSubmit = true;
     this._submitButtonRef.value!.focus();
 
     const data: LoginForm.SubmitData =
@@ -159,6 +161,7 @@ class LoginForm extends Component {
     } catch {
     } finally {
       this._isLoading = false;
+      this._preventFormSubmit = false;
     }
   };
 
@@ -273,7 +276,6 @@ class LoginForm extends Component {
             `
           )}
           <cp-message
-            key=${Date.now()}
             class="error-box"
             variant="danger"
             ?open=${this._errorBoxVisible}
