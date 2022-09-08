@@ -72,9 +72,9 @@ export default css`
 
   @media (min-width: 600px) {
     .form {
-      margin: 3rem 0 0 0;
-      width: 36rem;
-      height: 30rem;
+      margin: 3em 0 0 0;
+      width: 36em;
+      height: 34em;
       --label-align-vertical: var(--off);
       --label-align-horizontal: var(--on);
       --label-align-horizontal-width: 10rem;

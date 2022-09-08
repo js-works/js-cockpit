@@ -62,7 +62,7 @@ class LoginFormDemo extends Component {
           ></cp-brand>
           <cp-brand
             slot="form-fields-start"
-            size="huge"
+            size="large"
             headline="My Company"
             text="Back Office"
             logo="default"

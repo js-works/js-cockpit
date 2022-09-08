@@ -1,17 +1,43 @@
-import { css } from 'lit';
+import { css, unsafeCSS } from 'lit';
 import componentStyles from '../../styles/component.styles';
+
+const factorTextSmall = 1;
+const factorTextMedium = 1.25;
+const factorTextLarge = 1.75;
+const factorTextHuge = 2;
+
+const f = (n: number) => Math.round((n / 1.5) * 100);
+
+const sizeTextSmall = unsafeCSS(`${factorTextSmall * 100}%`);
+const sizeTextMedium = unsafeCSS(`${factorTextMedium * 100}%`);
+const sizeTextLarge = unsafeCSS(`${factorTextLarge * 100}%`);
+const sizeTextHuge = unsafeCSS(`${factorTextHuge * 100}%`);
+
+const sizeHeadlineSmall = unsafeCSS(`${f(factorTextSmall)}%`);
+const sizeHeadlineMedium = unsafeCSS(`${f(factorTextMedium)}%`);
+const sizeHeadlineLarge = unsafeCSS(`${f(factorTextLarge)}%`);
+const sizeHeadlineHuge = unsafeCSS(`${f(factorTextHuge)}%`);
+
+const factorLogo = unsafeCSS('1.125 * var(--sl-font-size-medium)');
+
+const sizeLogoSmall = unsafeCSS(`calc(${factorTextSmall} * ${factorLogo})`);
+const sizeLogoMedium = unsafeCSS(`calc(${factorTextMedium} * ${factorLogo})`);
+const sizeLogoLarge = unsafeCSS(`calc(${factorTextLarge} * ${factorLogo})`);
+const sizeLogoHuge = unsafeCSS(`calc(${factorTextHuge} * ${factorLogo})`);
 
 export default css`
   ${componentStyles}
 
   .base {
+    margin: 1px 2px;
+    font-size: var(--sl-font-size-medium);
     display: inline-grid;
     grid-template-areas:
       'logo headline'
       'logo text';
     justify-items: start;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
   }
 
   base.no-logo {
@@ -33,9 +59,9 @@ export default css`
   }
 
   .logo {
-    width: 26px;
-    height: 26px;
-    margin-right: 8px;
+    width: ${sizeLogoMedium};
+    height: ${sizeLogoMedium};
+    margin-right: 0.25em;
     grid-area: logo;
   }
 
@@ -45,56 +71,57 @@ export default css`
   }
 
   .small .logo {
-    width: 22px;
-    height: 22px;
+    width: ${sizeLogoSmall};
+    height: ${sizeLogoSmall};
   }
 
   .large .logo {
-    width: 30px;
-    height: 30px;
+    width: ${sizeLogoLarge};
+    height: ${sizeLogoLarge};
   }
 
   .huge .logo {
-    width: 36px;
-    height: 36px;
+    width: ${sizeLogoHuge};
+    height: ${sizeLogoHuge};
   }
 
   .headline {
-    font-size: 14px;
-    line-height: 100%;
+    line-height: 1;
+    font-size: ${sizeHeadlineMedium};
     white-space: nowrap;
     grid-area: headline;
   }
 
   .small .headline {
-    font-size: 12px;
+    font-size: ${sizeHeadlineSmall};
   }
 
   .large .headline {
-    font-size: 16px;
+    font-size: ${sizeHeadlineLarge};
   }
 
   .huge .headline {
-    font-size: 20px;
+    font-size: ${sizeHeadlineHuge};
   }
 
   .text {
-    font-size: 17px;
-    line-height: 100%;
+    padding: 0;
+    font-size: ${sizeTextMedium};
+    line-height: 1;
     white-space: nowrap;
     grid-area: text;
   }
 
   .small .text {
-    font-size: 16px;
+    font-size: ${sizeTextSmall};
   }
 
   .large .text {
-    font-size: 24px;
+    font-size: ${sizeTextLarge};
   }
 
   .huge .text {
-    font-size: 28px;
+    font-size: ${sizeTextHuge};
   }
 
   .base.flat {
@@ -120,7 +147,7 @@ export default css`
 
   .base.flat.small .headline,
   .base.flat.small .text {
-    font-size: 16px;
+    font-size: ${sizeTextSmall};
   }
 
   .base.flat.medium .headline,

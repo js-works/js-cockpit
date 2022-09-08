@@ -99,12 +99,12 @@ export default css`
     overflow: auto;
   }
 
-  ::slotted(c-brand) {
+  ::slotted(cp-brand) {
     position: relative;
     margin: 0 11px;
   }
 
-  ::slotted(c-nav-menu) {
+  ::slotted(cp-nav-menu) {
     position: relative;
     left: 20px;
     right: 20px;
