@@ -37,7 +37,7 @@ class FormFieldController<T> {
     component.addController({
       hostDisconnected: () => {
         hasInitialized = false;
-        this.#sendSignal('close');
+        this.#sendSignal('cancel');
       },
 
       hostUpdate: () => {

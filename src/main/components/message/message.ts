@@ -77,20 +77,24 @@ class Message extends Component {
             this._contentRef.value!.style.maxHeight = '0';
             this._contentRef.value!.style.overflow = 'hidden';
           } else {
-            runCloseVerticalTransition(this._contentRef.value!).then(() => {
-              this._contentRef.value!.style.maxHeight = '0';
-              this._contentRef.value!.style.overflow = 'hidden';
-            });
+            runCloseVerticalTransition(this._contentRef.value!, '500ms').then(
+              () => {
+                this._contentRef.value!.style.maxHeight = '0';
+                this._contentRef.value!.style.overflow = 'hidden';
+              }
+            );
           }
         } else {
           if (!initialized) {
             this._contentRef.value!.style.maxHeight = 'none';
             this._contentRef.value!.style.overflow = 'auto';
           } else {
-            runOpenVerticalTransition(this._contentRef.value!).then(() => {
-              this._contentRef.value!.style.maxHeight = 'none';
-              this._contentRef.value!.style.overflow = 'auto';
-            });
+            runOpenVerticalTransition(this._contentRef.value!, '500ms').then(
+              () => {
+                this._contentRef.value!.style.maxHeight = 'none';
+                this._contentRef.value!.style.overflow = 'auto';
+              }
+            );
           }
         }
 

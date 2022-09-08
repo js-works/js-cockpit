@@ -343,22 +343,22 @@ class LoginForm extends Component {
             ? null
             : html`
                 <cp-text-field
-                  name="username-reg"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
                 <cp-text-field
-                  name="firstName-reg"
+                  name="firstName"
                   label=${this._t('firstName')}
                   required
                 ></cp-text-field>
                 <cp-text-field
-                  name="lastName-reg"
+                  name="lastName"
                   label=${this._t('lastName')}
                   required
                 ></cp-text-field>
                 <cp-email-field
-                  name="email-reg"
+                  name="email"
                   label=${this._t('email')}
                   required
                 ></cp-email-field>
@@ -376,13 +376,13 @@ class LoginForm extends Component {
             ? null
             : html`
                 <cp-text-field
-                  name="username-fp"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
 
                 <cp-email-field
-                  name="email-fp"
+                  name="email"
                   label=${this._t('email')}
                   required
                 ></cp-email-field>
@@ -400,7 +400,7 @@ class LoginForm extends Component {
             ? null
             : html`
                 <cp-text-field
-                  name="username-rp"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
@@ -415,7 +415,7 @@ class LoginForm extends Component {
                   required
                 ></cp-password-field>
                 <cp-text-field
-                  name="securityCode-rp"
+                  name="securityCode"
                   label=${this._t('securityCode')}
                   required
                 ></cp-text-field>

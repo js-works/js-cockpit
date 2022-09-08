@@ -307,8 +307,8 @@ function afterFirstUpdate(component: Component, action: () => void): void {
 
   const controller = {
     hostUpdated() {
-      action();
       component.removeController(controller);
+      action();
     }
   };
 

@@ -80,10 +80,7 @@ class TextField extends Component {
 
     afterFirstUpdate(this, () => {
       Object.defineProperty(this, 'value', {
-        get: () => {
-          console.log(444, this.name);
-          return this._slInputRef.value!.value;
-        },
+        get: () => this._slInputRef.value!.value,
         set: (value: string) => void (this._slInputRef.value!.value = value)
       });
     });
@@ -120,7 +117,7 @@ class TextField extends Component {
         })}"
       >
         <sl-input
-          class="input sl-control"
+          class="sl-control"
           ?required=${this.required}
           size=${this.size}
           ${ref(this._slInputRef)}
