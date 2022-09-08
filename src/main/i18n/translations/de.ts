@@ -98,7 +98,7 @@ const translations: FullTranslations<'jsCockpit'> = {
 
     'jsCockpit.validation': {
       fieldRequired: 'Bitte füllen Sie dieses Feld aus',
-      emailInvalid: 'Bitte geben Sie eine gültige E-mail-Adresse an',
+      emailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse an',
 
       formInvalid:
         'Das Formular wurde nicht korrekt ausgefüllt. ' +

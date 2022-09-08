@@ -62,6 +62,9 @@ class Message extends Component {
   @prop(Attrs.boolean)
   hidden = false;
 
+  @prop(Attrs.string)
+  animated = true;
+
   private _contentRef = createRef<HTMLElement>();
 
   constructor() {
@@ -73,19 +76,25 @@ class Message extends Component {
       this,
       () => {
         if (this.hidden) {
-          if (!initialized) {
-          } else {
+          if (!initialized || !this.animated) {
+            this._contentRef.value!.style.maxHeight = '0';
+            this._contentRef.value!.style.overflow = 'hidden';
+          } else if (this.animated) {
             runCloseVerticalTransition(this._contentRef.value!).then(() => {
               this._contentRef.value!.style.maxHeight = '0';
               this._contentRef.value!.style.overflow = 'hidden';
             });
           }
         } else {
-          runOpenVerticalTransition(this._contentRef.value!).then(() => {
+          if (!initialized || !this.animated) {
             this._contentRef.value!.style.maxHeight = 'none';
             this._contentRef.value!.style.overflow = 'auto';
-            console.log(222, this._contentRef.value!.style.maxHeight);
-          });
+          } else if (this.animated) {
+            runOpenVerticalTransition(this._contentRef.value!).then(() => {
+              this._contentRef.value!.style.maxHeight = 'none';
+              this._contentRef.value!.style.overflow = 'auto';
+            });
+          }
         }
 
         initialized = true;
