@@ -1,22 +1,22 @@
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button'
-import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon'
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input'
-import { FocusTrap } from '@a11y/focus-trap'
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import { FocusTrap } from '@a11y/focus-trap';
 
-import { I18nController } from '../i18n/i18n'
-import { I18nFacade } from '../i18n/i18n'
+import { I18nController } from '../i18n/i18n';
+import { I18nFacade } from '../i18n/i18n';
 
 // icons
-import infoIcon from '../icons/info-circle.svg'
-import warningIcon from '../icons/exclamation-circle.svg'
-import errorIcon from '../icons/exclamation-triangle.svg'
-import confirmationIcon from '../icons/question-circle.svg'
-import approvalIcon from '../icons/question-diamond.svg'
-import inputIcon from '../icons/keyboard.svg'
+import infoIcon from '../icons/info-circle.svg';
+import warningIcon from '../icons/exclamation-circle.svg';
+import errorIcon from '../icons/exclamation-triangle.svg';
+import confirmationIcon from '../icons/question-circle.svg';
+import approvalIcon from '../icons/question-diamond.svg';
+import inputIcon from '../icons/keyboard.svg';
 
 // styles
-import dialogStyles from './dialogs.css'
+import dialogStyles from './dialogs.styles';
 
 // === exports =======================================================
 
@@ -27,45 +27,45 @@ export {
   showInfoDialog,
   showInputDialog,
   showWarnDialog
-}
+};
 
 // required custom element (to prevent too much tree shaking)
-void FocusTrap
+void FocusTrap;
 
 // === types =========================================================
 
 type DialogConfig<T> = {
-  type: 'normal' | 'warning' | 'danger'
-  icon: string
-  title: string
-  message: string
+  type: 'normal' | 'warning' | 'danger';
+  icon: string;
+  title: string;
+  message: string;
 
   buttons: {
-    text: string
-    variant?: 'default' | 'primary' | 'danger'
-  }[]
+    text: string;
+    variant?: 'default' | 'primary' | 'danger';
+  }[];
 
-  defaultResult?: T
-  content?: HTMLElement | null
-  mapResult?: (data: Record<string, string>) => T
-}
+  defaultResult?: T;
+  content?: HTMLElement | null;
+  mapResult?: (data: Record<string, string>) => T;
+};
 
 // --- functions -----------------------------------------------------
 
 function createDialogFn<P extends Record<string, any>, R = void>(
   logic: (parent: HTMLElement | null, params: P) => Promise<R>
 ): {
-  (params: P): Promise<R>
-  (parent: HTMLElement | null, params: P): Promise<R>
+  (params: P): Promise<R>;
+  (parent: HTMLElement | null, params: P): Promise<R>;
 } {
   return (arg1: any, arg2?: any) =>
-    arg2 && typeof arg2 === 'object' ? logic(arg1, arg2) : logic(null, arg1)
+    arg2 && typeof arg2 === 'object' ? logic(arg1, arg2) : logic(null, arg1);
 }
 
 const showInfoDialog = createDialogFn<{
-  message: string
-  title?: string
-  okText?: string
+  message: string;
+  title?: string;
+  okText?: string;
 }>((parent, params) => {
   return showDialog(parent, (translate) => ({
     type: 'normal',
@@ -79,13 +79,13 @@ const showInfoDialog = createDialogFn<{
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 const showWarnDialog = createDialogFn<{
-  message: string
-  title?: string
-  okText?: string
+  message: string;
+  title?: string;
+  okText?: string;
 }>((parent, params) => {
   return showDialog(parent, (translate) => ({
     type: 'warning',
@@ -99,13 +99,13 @@ const showWarnDialog = createDialogFn<{
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 const showErrorDialog = createDialogFn<{
-  message: string
-  title?: string
-  okText?: string
+  message: string;
+  title?: string;
+  okText?: string;
 }>((parent, params) => {
   return showDialog(parent, (translate) => ({
     type: 'danger',
@@ -119,15 +119,15 @@ const showErrorDialog = createDialogFn<{
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 const showConfirmDialog = createDialogFn<
   {
-    message: string
-    title?: string
-    okText?: string
-    cancelText?: string
+    message: string;
+    title?: string;
+    okText?: string;
+    cancelText?: string;
   },
   boolean
 >((parent, params) => {
@@ -147,15 +147,15 @@ const showConfirmDialog = createDialogFn<
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 const showApproveDialog = createDialogFn<
   {
-    message: string
-    title?: string
-    okText?: string
-    cancelText?: string
+    message: string;
+    title?: string;
+    okText?: string;
+    cancelText?: string;
   },
   boolean
 >((parent, params) => {
@@ -175,24 +175,24 @@ const showApproveDialog = createDialogFn<
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 const showInputDialog = createDialogFn<
   {
-    message: string
-    title?: string
-    okText?: string
-    cancelText?: string
-    value?: string
+    message: string;
+    title?: string;
+    okText?: string;
+    cancelText?: string;
+    value?: string;
   },
   string | null
 >((parent, params) => {
-  const inputField = document.createElement('sl-input')
-  inputField.name = 'input'
-  inputField.value = params.value || ''
-  inputField.size = 'small'
-  inputField.setAttribute('autofocus', '')
+  const inputField = document.createElement('sl-input');
+  inputField.name = 'input';
+  inputField.value = params.value || '';
+  inputField.size = 'small';
+  inputField.setAttribute('autofocus', '');
 
   return showDialog(parent, (translate) => ({
     type: 'normal',
@@ -211,8 +211,8 @@ const showInputDialog = createDialogFn<
         text: params.okText || translate('ok')
       }
     ]
-  }))
-})
+  }));
+});
 
 function showDialog<T = void>(
   parent: HTMLElement | null,
@@ -226,27 +226,27 @@ function showDialog<T = void>(
     parent ||
     document.querySelector('#app') ||
     document.querySelector('#root') ||
-    document.body
+    document.body;
 
-  const locale = new I18nController(target, null).getLocale()
-  const i18n = new I18nFacade(() => locale)
-  const translate = i18n.translate('jsCockpit.dialogs')
+  const locale = new I18nController(target, null).getLocale();
+  const i18n = new I18nFacade(() => locale);
+  const translate = i18n.translate('jsCockpit.dialogs');
 
-  const params = init(translate)
-  const container = document.createElement('div')
-  container.attachShadow({ mode: 'open' })
-  const containerShadow = container.shadowRoot!
+  const params = init(translate);
+  const container = document.createElement('div');
+  container.attachShadow({ mode: 'open' });
+  const containerShadow = container.shadowRoot!;
 
   const setText = (text: string | undefined, selector: string) => {
-    const target = containerShadow.querySelector<HTMLElement>(selector)!
+    const target = containerShadow.querySelector<HTMLElement>(selector)!;
 
     if (text) {
-      target.innerText = text
+      target.innerText = text;
     }
-  }
+  };
 
   // required custom elements
-  void (FocusTrap || SlButton || SlIcon || SlInput || SlDialog)
+  void (FocusTrap || SlButton || SlIcon || SlInput || SlDialog);
 
   containerShadow.innerHTML = `
     <style>
@@ -264,81 +264,85 @@ function showDialog<T = void>(
         </sl-dialog>
       </focus-trap>
     </form>
-  `
+  `;
 
-  setText(params.title, '.title')
-  setText(params.message, '.message')
+  setText(params.title, '.title');
+  setText(params.message, '.message');
 
-  const form = containerShadow.querySelector<HTMLFormElement>('form.form')!
-  const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!
+  const form = containerShadow.querySelector<HTMLFormElement>('form.form')!;
+  const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!;
   const contentBox =
-    containerShadow.querySelector<HTMLDivElement>('div.content')!
+    containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
   if (params.content) {
-    contentBox.append(params.content)
+    contentBox.append(params.content);
   }
 
   form.addEventListener('submit', (ev: any) => {
-    ev.preventDefault()
+    ev.preventDefault();
 
     // This will be run before the button submit event is dispatched.
     // That's why the logic logic here will be deferred.
 
     setTimeout(() => {
-      const formData = new FormData(form)
-      const data: Record<string, string> = {}
+      const formData = new FormData(form);
+      const data: Record<string, string> = {};
 
       formData.forEach((value: FormDataEntryValue, key: string) => {
-        data[key] = value.toString()
-      })
+        data[key] = value.toString();
+      });
 
-      contentBox.removeEventListener('keydown', onKeyDown)
-      buttonBox.removeEventListener('keydown', onKeyDown)
-      container.remove()
-      containerShadow.innerHTML = ''
+      contentBox.removeEventListener('keydown', onKeyDown);
+      buttonBox.removeEventListener('keydown', onKeyDown);
+      container.remove();
+      containerShadow.innerHTML = '';
 
-      emitResult(params.mapResult?.(data))
-    }, 0)
-  })
+      emitResult(params.mapResult?.(data));
+    }, 0);
+  });
 
   dialog.addEventListener('sl-request-close', (ev: Event) => {
-    ev.preventDefault()
-  })
+    ev.preventDefault();
+    dialog.hide();
+    emitResult(params.defaultResult);
+  });
 
-  const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!
-  icon.classList.add(`${params.type}`)
-  icon.src = params.icon
+  const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!;
+  icon.classList.add(`${params.type}`);
+  icon.src = params.icon;
 
-  setText(dialogStyles, 'style')
+  setText(dialogStyles.toString(), 'style');
 
-  const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!
-  const hiddenField = document.createElement('input')
+  const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!;
+  const hiddenField = document.createElement('input');
 
   const onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Escape') {
-      container.remove()
-      emitResult(params.defaultResult)
+      dialog.hide();
+      emitResult(params.defaultResult);
     }
-  }
+  };
 
-  contentBox.addEventListener('keydown', onKeyDown)
-  buttonBox.addEventListener('keydown', onKeyDown)
+  contentBox.addEventListener('keydown', onKeyDown);
+  buttonBox.addEventListener('keydown', onKeyDown);
 
-  hiddenField.type = 'hidden'
-  hiddenField.name = 'button'
-  buttonBox.append(hiddenField)
+  hiddenField.type = 'hidden';
+  hiddenField.name = 'button';
+  buttonBox.append(hiddenField);
 
-  const hasPrimaryButton = params.buttons.some((it) => it.variant === 'primary')
+  const hasPrimaryButton = params.buttons.some(
+    (it) => it.variant === 'primary'
+  );
 
   params.buttons.forEach(({ text, variant = 'default' }, idx) => {
-    const button: SlButton = document.createElement('sl-button')
-    button.type = 'submit'
-    button.className = 'button'
-    button.variant = variant
-    button.innerText = text
+    const button: SlButton = document.createElement('sl-button');
+    button.type = 'submit';
+    button.className = 'button';
+    button.variant = variant;
+    button.innerText = text;
 
     if (variant === 'primary' || (!hasPrimaryButton && idx === 0)) {
-      button.setAttribute('autofocus', '')
+      button.setAttribute('autofocus', '');
     }
 
     button.onclick = () => {
@@ -346,24 +350,24 @@ function showDialog<T = void>(
       // dispatched for the corresponding form element.
       // That's why the form submit event handler logic
       // will be deferred.
-      hiddenField.value = String(idx)
-    }
+      hiddenField.value = String(idx);
+    };
 
-    buttonBox.append(button)
-  })
-  ;(target.shadowRoot || target).appendChild(container)
+    buttonBox.append(button);
+  });
+  (target.shadowRoot || target).appendChild(container);
 
-  const elem = dialog.querySelector<HTMLElement>('[autofocus]')
+  const elem = dialog.querySelector<HTMLElement>('[autofocus]');
 
   if (elem && typeof elem.focus === 'function') {
-    setTimeout(() => elem.focus())
+    setTimeout(() => elem.focus());
   }
 
-  let emitResult: (result: any) => void
+  let emitResult: (result: any) => void;
 
   return new Promise((resolve) => {
     emitResult = (result: any) => {
-      setTimeout(() => resolve(result), 50)
-    }
-  })
+      setTimeout(() => resolve(result), 50);
+    };
+  });
 }

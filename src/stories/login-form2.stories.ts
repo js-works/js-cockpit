@@ -1,9 +1,10 @@
-import { bind, elem, Component } from '../main/utils/components';
+import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
 
 import {
+  showInfoDialog,
   Brand,
   DateField,
   EmailField,
@@ -39,7 +40,10 @@ class LoginFormDemo extends Component {
       }, 1000);
     });
 
-    alert(JSON.stringify(data, null, 2));
+    showInfoDialog({
+      title: 'Form data',
+      message: JSON.stringify(data, null, 2)
+    });
   };
 
   render() {

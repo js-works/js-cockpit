@@ -1,30 +1,18 @@
-import {
-  bind,
-  elem,
-  prop,
-  afterConnect,
-  Attrs,
-  Component
-} from '../../utils/components';
-
-import { classMap, createRef, html, ref } from '../../utils/lit';
-
-// custom elements
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
-import SlButtonGroup from '@shoelace-style/shoelace/dist/components/button-group/button-group';
-import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
-import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
-
-// styles
-import actionBarStyles from './focus-trap.css';
 import { createFocusTrap, FocusTrap as Trap } from 'focus-trap';
+import { elem, afterConnect, Component } from '../../utils/components';
+import { createRef, html, ref } from '../../utils/lit';
 
 // === exports =======================================================
 
 export { FocusTrap };
 
-// === types =========================================================
+// === public types ==================================================
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cp-focus-trap': FocusTrap;
+  }
+}
 
 // === FocusTrap =====================================================
 
@@ -47,6 +35,6 @@ class FocusTrap extends Component {
   }
 
   render() {
-    return html`<div ${ref(this._containerRef)}><slot></slot></div>`;
+    return html`<span ${ref(this._containerRef)}><slot></slot></span>`;
   }
 }
