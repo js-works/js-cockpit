@@ -1,8 +1,5 @@
-import {
-  LitElement,
-  ReactiveController,
-  ReactiveControllerHost
-} from '../utils/lit';
+import { FormFieldEvent } from '../events/form-field-event';
+import { ReactiveControllerHost } from '../utils/lit';
 
 // === exports =======================================================
 
@@ -15,7 +12,7 @@ const noop = () => {};
 // === controllers ===================================================
 
 class FormFieldController<T> {
-  #sendSignal: (type: string) => void = noop;
+  #sendSignal: (type: FormFieldEvent.SignalType) => void = noop;
   #getValue: () => T;
   #validate: () => null | string;
   #setErrorMsg: (msg: string | null) => void;
@@ -47,8 +44,9 @@ class FormFieldController<T> {
 
         hasInitialized = true;
 
-        component.dispatchEvent(
-          new CustomEvent('xxx', {
+        const formFieldEvent = new CustomEvent<FormFieldEvent.Detail>(
+          'cp-form-field',
+          {
             bubbles: true,
             composed: true,
 
@@ -59,12 +57,14 @@ class FormFieldController<T> {
               validate: this.#validate,
               setErrorMsg: this.#setErrorMsg,
 
-              setSendSignal: (sendSignal: (type: string) => void) => {
+              setSendSignal: (sendSignal) => {
                 this.#sendSignal = sendSignal;
               }
             }
-          })
+          }
         );
+
+        component.dispatchEvent(formFieldEvent);
       }
     });
   }

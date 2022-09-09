@@ -370,18 +370,27 @@ function effect(
   });
 }
 
-function createEmitter(host: Component): (ev: CustomEvent<any>) => void;
+// TODO!!!
+type EventOf<K extends keyof HTMLElementEventMap> =
+  HTMLElementEventMap[K] extends CustomEvent
+    ? HTMLElementEventMap[K] & { type: K }
+    : never;
 
-function createEmitter<D = void>(
-  host: Component,
-  type: string
-): (detail: D) => void;
+type EventDetailOf<K extends keyof HTMLElementEventMap> =
+  HTMLElementEventMap[K] extends CustomEvent<infer D> ? D : never;
 
-function createEmitter<T extends string, D>(
+function createEmitter(host: Component): (ev: CustomEvent<unknown>) => void;
+
+function createEmitter<K extends keyof HTMLElementEventMap>(
   host: Component,
-  type: T,
-  getEventProp: () => Listener<CustomEvent<D> & { type: T }> | undefined
-): (detail: D) => void;
+  type: K
+): (detail: EventDetailOf<K> extends null ? void : EventDetailOf<K>) => void;
+
+function createEmitter<K extends keyof HTMLElementEventMap>(
+  host: Component,
+  type: K,
+  getEventProp: () => Listener<EventOf<K>> | undefined
+): (detail: EventDetailOf<K> extends null ? void : EventDetailOf<K>) => void;
 
 function createEmitter(
   host: Component,

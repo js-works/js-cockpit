@@ -3,16 +3,13 @@ import {
   createEmitter,
   elem,
   prop,
-  afterConnect,
-  Attrs,
   Component,
   Listener
 } from '../../utils/components';
 
 import { FormSubmitEvent } from '../../events/form-submit-event';
 import { FormInvalidEvent } from '../../events/form-invalid-event';
-
-import { classMap, createRef, html, ref } from '../../utils/lit';
+import { html } from '../../utils/lit';
 
 // === exports =======================================================
 
@@ -55,7 +52,7 @@ class Form extends Component {
   constructor() {
     super();
 
-    this.addEventListener('xxx', (ev: any) => {
+    this.addEventListener('cp-form-field', (ev) => {
       const detail = ev.detail;
       const elem = detail.element;
       let cancelled = false;
@@ -67,7 +64,7 @@ class Form extends Component {
         setErrorMsg: detail.setErrorMsg
       });
 
-      detail.setSendSignal((type: string) => {
+      detail.setSendSignal((type) => {
         if (cancelled) {
           return;
         }
@@ -88,12 +85,8 @@ class Form extends Component {
       });
     });
 
-    afterConnect(this, () => {
-      console.log('cp-form connected');
-    });
-
     afterDisconnect(this, () => {
-      console.log('cp-form disconnected');
+      this.#elementsMap.clear();
     });
   }
 
@@ -112,7 +105,7 @@ class Form extends Component {
         setErrorMsg(validate());
       }
 
-      this._emitFormInvalid(null);
+      this._emitFormInvalid();
     } else {
       const data: Record<string, unknown> = {};
 

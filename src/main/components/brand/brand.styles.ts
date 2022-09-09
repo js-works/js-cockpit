@@ -32,9 +32,11 @@ export default css`
     margin: 1px 2px;
     font-size: var(--sl-font-size-medium);
     display: inline-grid;
+
     grid-template-areas:
       'logo headline'
       'logo text';
+
     justify-items: start;
     align-items: center;
     gap: 1px;
