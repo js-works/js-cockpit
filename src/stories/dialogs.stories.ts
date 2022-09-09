@@ -1,4 +1,4 @@
-import { bind, elem, Component } from '../main/utils/components';
+import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
@@ -9,6 +9,7 @@ import {
   showErrorDialog,
   showInfoDialog,
   showInputDialog,
+  showSuccessDialog,
   showWarnDialog,
   ThemeProvider
 } from 'js-cockpit';
@@ -41,35 +42,39 @@ const styles = `
   uses: [ThemeProvider]
 })
 class DialogsDemo extends Component {
-  @bind
-  private _onInfoClick() {
+  private _onInfoClick = () => {
     showInfoDialog(this, {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Thanks :-)'
     });
-  }
+  };
 
-  @bind
-  private _onWarnClick() {
+  private _onSuccessClick = () => {
+    showSuccessDialog(this, {
+      message: 'Your question has been submitted successfully',
+      title: 'Submit',
+      okText: 'Good to know'
+    });
+  };
+
+  private _onWarnClick = () => {
     showWarnDialog(this, {
       message: 'This is your last warning',
       title: 'Important!!!',
       okText: 'OK - I understand'
     });
-  }
+  };
 
-  @bind
-  private _onErrorClick() {
+  private _onErrorClick = () => {
     showErrorDialog(this, {
       message: 'The form could not be submitted',
       title: 'Form error',
       okText: 'OK - I understand'
     });
-  }
+  };
 
-  @bind
-  private _onConfirmClick() {
+  private _onConfirmClick = () => {
     showConfirmDialog(this, {
       message: 'Do you really want to log out?',
       okText: 'Log out'
@@ -80,10 +85,9 @@ class DialogsDemo extends Component {
         });
       }
     });
-  }
+  };
 
-  @bind
-  private _onApproveClick() {
+  private _onApproveClick = () => {
     showApproveDialog(this, {
       message: 'Do you really want to delete the project?',
       title: 'Are you sure?',
@@ -95,10 +99,9 @@ class DialogsDemo extends Component {
         });
       }
     });
-  }
+  };
 
-  @bind
-  private _onPromptClick() {
+  private _onPromptClick = () => {
     showInputDialog(this, {
       message: 'Please enter your name',
       title: 'Input required',
@@ -110,10 +113,9 @@ class DialogsDemo extends Component {
         });
       }
     });
-  }
+  };
 
-  @bind
-  private async _onDestroyPlanet() {
+  private _onDestroyPlanet = async () => {
     const confirmed = await showConfirmDialog(this, {
       message: 'Are you really sure that the planet shall be destroyed?'
     });
@@ -136,13 +138,16 @@ class DialogsDemo extends Component {
         });
       }
     }
-  }
+  };
 
   render() {
     return html`
       <div class="demo">
         <div>
           <sl-button @click=${this._onInfoClick}>Info</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onSuccessClick}>Success</sl-button>
         </div>
         <div>
           <sl-button @click=${this._onWarnClick}>Warn</sl-button>

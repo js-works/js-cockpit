@@ -26,6 +26,7 @@ export {
   showErrorDialog,
   showInfoDialog,
   showInputDialog,
+  showSuccessDialog,
   showWarnDialog
 };
 
@@ -35,14 +36,14 @@ void FocusTrap;
 // === types =========================================================
 
 type DialogConfig<T> = {
-  type: 'normal' | 'warning' | 'danger';
+  type: 'normal' | 'success' | 'warning' | 'danger';
   icon: string;
   title: string;
   message: string;
 
   buttons: {
     text: string;
-    variant?: 'default' | 'primary' | 'danger';
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
 
   defaultResult?: T;
@@ -82,6 +83,26 @@ const showInfoDialog = createDialogFn<{
   }));
 });
 
+const showSuccessDialog = createDialogFn<{
+  message: string;
+  title?: string;
+  okText?: string;
+}>((parent, params) => {
+  return showDialog(parent, (translate) => ({
+    type: 'success',
+    icon: infoIcon,
+    title: params.title || translate('information'),
+    message: params.message || '',
+
+    buttons: [
+      {
+        variant: 'success',
+        text: params.okText || translate('ok')
+      }
+    ]
+  }));
+});
+
 const showWarnDialog = createDialogFn<{
   message: string;
   title?: string;
@@ -95,7 +116,7 @@ const showWarnDialog = createDialogFn<{
 
     buttons: [
       {
-        variant: 'primary',
+        variant: 'warning',
         text: params.okText || translate('ok')
       }
     ]
@@ -115,7 +136,7 @@ const showErrorDialog = createDialogFn<{
 
     buttons: [
       {
-        variant: 'primary',
+        variant: 'danger',
         text: params.okText || translate('ok')
       }
     ]
@@ -267,7 +288,7 @@ function showDialog<T = void>(
   `;
 
   setText(params.title, '.title');
-  setText(params.message, '.message');
+  setText(adjustMessage(params.message), '.message');
 
   const form = containerShadow.querySelector<HTMLFormElement>('form.form')!;
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!;
@@ -370,4 +391,8 @@ function showDialog<T = void>(
       setTimeout(() => resolve(result), 50);
     };
   });
+}
+
+function adjustMessage(msg: string): string {
+  return msg.replace(/^(\s+)/gm, (s) => '\u2007'.repeat(s.length));
 }

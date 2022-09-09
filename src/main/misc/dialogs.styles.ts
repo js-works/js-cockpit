@@ -70,6 +70,10 @@ export default css`
     color: var(--sl-color-primary-500);
   }
 
+  .icon.success {
+    color: var(--sl-color-success-500);
+  }
+
   .icon.warning {
     color: var(--sl-color-warning-500);
   }
@@ -78,12 +82,15 @@ export default css`
     color: var(--sl-color-danger-500);
   }
 
+  .dialog::part(header) {
+    border-bottom: 1px solid var(--sl-color-neutral-200);
+  }
+
   .header {
     display: flex;
     align-items: center;
     gap: 0.7rem;
     font-size: calc(1.25 * var(--sl-font-size-medium));
-    border-bottom: 1px solid var(--sl-color-neutral-200);
     padding: 0.625rem 1rem;
   }
 
