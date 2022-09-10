@@ -50,9 +50,9 @@ const appearanceByVariant = new Map([
 setDefaultAnimation('cp-message.shake', {
   keyframes: [
     { transform: 'scale(1)' },
-    { transform: 'scale(1.05)' },
+    { transform: 'scale(0.9)' },
     { transform: 'scale(1)' },
-    { transform: 'scale(1.05)' },
+    { transform: 'scale(0.9)' },
     { transform: 'scale(1)' }
   ],
   options: { duration: 700, easing: 'ease-out' }
@@ -129,7 +129,7 @@ class Message extends Component {
       dir: this._i18n.getDirection()
     });
 
-    this.animate(keyframes, options);
+    this.shadowRoot!.querySelector('.base')!.animate(keyframes, options);
   }
 
   render() {

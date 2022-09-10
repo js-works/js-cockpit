@@ -95,7 +95,7 @@ export default css`
   .message {
     font-family: var(--sl-font-sans);
     font-size: calc(1.05 * var(--sl-font-size-medium));
-    margin: 0.5rem 0 1rem 0;
+    padding: 0.5rem 0 1rem 0;
   }
 
   .message:empty {

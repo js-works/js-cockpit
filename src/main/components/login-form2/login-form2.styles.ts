@@ -73,7 +73,7 @@ export default css`
   @media (min-width: 600px) {
     .form {
       margin: 3em 0 0 0;
-      width: 36em;
+      width: 34em;
       height: 34em;
       --label-align-vertical: var(--off);
       --label-align-horizontal: var(--on);
@@ -133,9 +133,6 @@ export default css`
   .link {
     font-weight: var(--sl-font-weight-semibold);
     color: var(--sl-color-primary-500);
-  }
-
-  .error-box {
   }
 
   .overlay {
