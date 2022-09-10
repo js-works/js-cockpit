@@ -75,10 +75,9 @@ class EmailField extends Component {
 
     afterFirstUpdate(this, () => {
       Object.defineProperty(this, 'value', {
-        get: () => {
-          console.log(444, this.name);
-          return this._slInputRef.value!.value;
-        },
+        get: () => 
+          this._slInputRef.value!.value;
+        ,
         set: (value: string) => void (this._slInputRef.value!.value = value)
       });
     });

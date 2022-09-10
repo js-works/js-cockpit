@@ -143,7 +143,6 @@ class LoginForm extends Component {
 
     try {
       await this.processSubmit(data);
-    } catch {
     } finally {
       this._isLoading = false;
       this._preventFormSubmit = false;
@@ -217,12 +216,20 @@ class LoginForm extends Component {
         <sl-animation ${ref(this._animationRef)}>
           <div class="main">${this._renderMain()}</div>
         </sl-animation>
-        <div class="footer">${this._renderFooter()}</div>
+        ${this._renderFooter()}
       </div>
     `;
   }
 
   private _renderHeader() {
+    if (
+      !hasSlot(this, 'header') &&
+      !hasSlot(this, 'header-start') &&
+      !hasSlot(this, 'header-stop')
+    ) {
+      return null;
+    }
+
     return html`
       <div class="header">
         <div class="header-start"><slot name="header-start" /></div>
@@ -413,15 +420,25 @@ class LoginForm extends Component {
   }
 
   _renderFooter() {
+    if (
+      !hasSlot(this, 'footer') &&
+      !hasSlot(this, 'footer-start') &&
+      !hasSlot(this, 'footer-stop')
+    ) {
+      return null;
+    }
+
     return html`
-      <div class="footer-start">
-        <slot name="footer-start"></slot>
-      </div>
-      <div class="footer-main">
-        <slot name="footer"></slot>
-      </div>
-      <div class="footer-end">
-        <slot name="footer-end"></slot>
+      <div class="footer">
+        <div class="footer-start">
+          <slot name="footer-start"></slot>
+        </div>
+        <div class="footer-main">
+          <slot name="footer"></slot>
+        </div>
+        <div class="footer-end">
+          <slot name="footer-end"></slot>
+        </div>
       </div>
     `;
   }
