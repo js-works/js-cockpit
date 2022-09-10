@@ -1,5 +1,11 @@
+import {
+  getAnimation,
+  setDefaultAnimation
+} from '@shoelace-style/shoelace/dist/utilities/animation-registry';
+
 import { effect, elem, prop, Attrs, Component } from '../../utils/components';
 import { createRef, html, ref } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
 
 import {
   runCloseVerticalTransition,
@@ -39,6 +45,19 @@ const appearanceByVariant = new Map([
   ['danger', { className: 'variant-danger', icon: dangerIcon }]
 ]);
 
+// === animations ====================================================
+
+setDefaultAnimation('cp-message.shake', {
+  keyframes: [
+    { transform: 'scale(1)' },
+    { transform: 'scale(1.05)' },
+    { transform: 'scale(1)' },
+    { transform: 'scale(1.05)' },
+    { transform: 'scale(1)' }
+  ],
+  options: { duration: 700, easing: 'ease-out' }
+});
+
 // === Message ====================================================
 
 /**
@@ -63,6 +82,7 @@ class Message extends Component {
   open = false;
 
   private _contentRef = createRef<HTMLElement>();
+  private _i18n = new I18nController(this);
 
   constructor() {
     super();
@@ -72,7 +92,6 @@ class Message extends Component {
     effect(
       this,
       () => {
-        console.log(1111, this.open);
         if (!this.open) {
           if (!initialized) {
             this._contentRef.value!.style.maxHeight = '0';
@@ -103,6 +122,14 @@ class Message extends Component {
       },
       () => [this.open]
     );
+  }
+
+  shake() {
+    const { keyframes, options } = getAnimation(this, 'cp-message.shake', {
+      dir: this._i18n.getDirection()
+    });
+
+    this.animate(keyframes, options);
   }
 
   render() {

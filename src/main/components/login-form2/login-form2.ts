@@ -1,25 +1,10 @@
 import {
-  afterInit,
-  afterUpdate,
-  createEmitter,
-  elem,
-  prop,
-  state,
-  Attrs,
-  Component,
-  Listener
-} from '../../utils/components';
-
-import {
-  classMap,
-  createRef,
-  html,
-  ref,
-  repeat,
-  TemplateResult,
-  when
-} from '../../utils/lit';
-
+  getAnimation,
+  setAnimation,
+  setDefaultAnimation
+} from '@shoelace-style/shoelace/dist/utilities/animation-registry.js';
+import { elem, prop, state, Attrs, Component } from '../../utils/components';
+import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { hasSlot } from '../../utils/slots';
 
@@ -166,7 +151,11 @@ class LoginForm extends Component {
   };
 
   private _onFormInvalid = () => {
-    this._errorBoxVisible = true;
+    if (!this._errorBoxVisible) {
+      this._errorBoxVisible = true;
+    } else {
+      this._errorBoxRef.value!.shake();
+    }
   };
 
   private _onSubmitClick = (ev: any) => {

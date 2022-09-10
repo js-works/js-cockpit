@@ -18,6 +18,7 @@ import errorIcon from '../icons/exclamation-triangle.svg';
 import confirmationIcon from '../icons/question-circle.svg';
 import approvalIcon from '../icons/question-diamond.svg';
 import inputIcon from '../icons/keyboard.svg';
+import customInputIcon from '../icons/card-text.svg';
 
 // styles
 import dialogStyles from './dialogs.styles';
@@ -275,7 +276,7 @@ const showCustomInputDialog = createDialogFn<
 
   return showDialog(parent, (translate) => ({
     type: 'normal',
-    icon: inputIcon,
+    icon: customInputIcon,
     title: params.title || translate('input'),
     message: params.message || '',
     content: container,
@@ -377,9 +378,8 @@ function showDialog<T = void>(
 
   const form = containerShadow.querySelector<HTMLFormElement>('cp-form.form')!;
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!;
-  const content = containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
-  const errorMessage = containerShadow.querySelector<Message>(
+  const errorBox = containerShadow.querySelector<Message>(
     'cp-message.error-message'
   )!;
 
@@ -405,11 +405,15 @@ function showDialog<T = void>(
   });
 
   form.addEventListener('cp-form-invalid', (ev) => {
-    errorMessage.open = true;
+    if (!errorBox.open) {
+      errorBox.open = true;
+    } else {
+      errorBox.shake();
+    }
   });
 
   form.addEventListener('input', () => {
-    errorMessage.open = false;
+    errorBox.open = false;
   });
 
   dialog.addEventListener('sl-request-close', (ev: Event) => {

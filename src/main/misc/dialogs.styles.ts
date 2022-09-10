@@ -65,7 +65,7 @@ export default css`
   }
 
   .icon {
-    font-size: var(--sl-font-size-x-large);
+    font-size: var(--sl-font-size-large);
   }
 
   .icon.normal {
@@ -104,6 +104,7 @@ export default css`
 
   .content {
     flex-grow: 1;
+    padding: 0 2px;
   }
 
   .error-box {
