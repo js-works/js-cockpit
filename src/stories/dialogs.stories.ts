@@ -2,6 +2,7 @@ import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
+import { wait } from './shared/utils';
 
 import {
   showApproveDialog,
@@ -81,8 +82,10 @@ class DialogsDemo extends Component {
     showConfirmDialog(this, {
       message: 'Do you really want to log out?',
       okText: 'Log out'
-    }).then((confirmed) => {
+    }).then(async (confirmed) => {
       if (confirmed) {
+        await wait(400);
+
         showInfoDialog(this, {
           message: "You've been logged out"
         });
@@ -109,8 +112,10 @@ class DialogsDemo extends Component {
       message: 'Please enter your name',
       title: 'Input required',
       cancelText: 'No way!'
-    }).then((name) => {
+    }).then(async (name) => {
       if (name !== null) {
+        await wait(400);
+
         showInfoDialog(this, {
           message: `Hello, ${name || 'stranger'}!`
         });
@@ -120,8 +125,10 @@ class DialogsDemo extends Component {
 
   private _onCustomInputClick = () => {
     showCustomInputDialog(this, {
-      title: 'Add user',
+      title: 'New user',
+      okText: 'Add user',
       uses: [TextField, DateField],
+      minHeight: '20rem',
       content: html`
         <cp-text-field
           name="firstName"
@@ -139,10 +146,12 @@ class DialogsDemo extends Component {
           required
         ></cp-date-field>
       `
-    }).then((name) => {
-      if (name !== null) {
+    }).then((data) => {
+      if (data !== null) {
         showSuccessDialog(this, {
-          message: 'Successfully added new user to database'
+          message:
+            'Successfully added new user to database:\n\n' +
+            JSON.stringify(data, null, 2)
         });
       }
     });
@@ -208,8 +217,4 @@ class DialogsDemo extends Component {
 }
 
 export const dialogs = () =>
-  h(
-    'cp-theme-provider',
-    { theme: sharedTheme },
-    h('dialogs-demo', { lang: 'en' })
-  );
+  h('cp-theme-provider', { theme: sharedTheme }, h('dialogs-demo'));

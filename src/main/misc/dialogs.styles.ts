@@ -80,12 +80,6 @@ export default css`
     color: var(--sl-color-danger-500);
   }
 
-  /*
-  .dialog::part(header) {
-    border-bottom: 1px solid var(--sl-color-neutral-200);
-  }
-  */
-
   .header {
     display: flex;
     align-items: center;
@@ -103,8 +97,19 @@ export default css`
   .message:empty {
     display: none;
   }
+  .content-outer {
+    display: flex;
+    flex-direction: column;
+    margin: 0rem 2rem 1rem 2rem;
+  }
 
   .content {
-    margin: 0rem 2rem 1rem 2rem;
+    flex-grow: 1;
+  }
+
+  .error-box {
+    box-sizing: border-box;
+    justify-self: flex-end;
+    margin-bottom: -1rem;
   }
 `;

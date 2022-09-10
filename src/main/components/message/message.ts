@@ -72,6 +72,7 @@ class Message extends Component {
     effect(
       this,
       () => {
+        console.log(1111, this.open);
         if (!this.open) {
           if (!initialized) {
             this._contentRef.value!.style.maxHeight = '0';

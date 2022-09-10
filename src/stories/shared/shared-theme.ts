@@ -27,7 +27,7 @@ linkElem.setAttribute(
 
 document.head.append(linkElem);
 
-document.documentElement.lang = 'de';
+document.documentElement.lang = 'en';
 
 setTimeout(() => {
   //  document.documentElement.lang = 'en'

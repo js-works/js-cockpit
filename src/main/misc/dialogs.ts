@@ -4,6 +4,8 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { FocusTrap } from '@a11y/focus-trap';
 import { Form } from '../components/form/form';
+import { Message } from '../components/message/message';
+import { TextField } from '../components/text-field/text-field';
 
 import { html, render, TemplateResult } from 'lit';
 import { I18nController } from '../i18n/i18n';
@@ -43,6 +45,7 @@ type DialogConfig<T> = {
   icon: string;
   title: string;
   message: string;
+  minHeight?: string | null;
 
   buttons: {
     text: string;
@@ -51,12 +54,12 @@ type DialogConfig<T> = {
 
   defaultResult?: T;
   content?: HTMLElement | null;
-  mapResult?: (data: Record<string, string>) => T;
+  mapResult?: (data: Record<string, any>, buttonIndex: number) => T;
 };
 
 // --- functions -----------------------------------------------------
 
-function createDialogFn<P extends Record<string, any>, R = void>(
+function createDialogFn<P extends Record<string, unknown>, R = void>(
   logic: (parent: HTMLElement | null, params: P) => Promise<R>
 ): {
   (params: P): Promise<R>;
@@ -160,7 +163,7 @@ const showConfirmDialog = createDialogFn<
     icon: confirmationIcon,
     title: params.title || translate('confirmation'),
     message: params.message || '',
-    mapResult: ({ button }) => button === '1',
+    mapResult: (_, buttonIndex) => buttonIndex === 1,
 
     buttons: [
       {
@@ -188,7 +191,7 @@ const showApproveDialog = createDialogFn<
     icon: approvalIcon,
     title: params.title || translate('approval'),
     message: params.message || '',
-    mapResult: ({ button }) => button === '1',
+    mapResult: (_, buttonIndex) => buttonIndex === 1,
 
     buttons: [
       {
@@ -212,7 +215,7 @@ const showInputDialog = createDialogFn<
   },
   string | null
 >((parent, params) => {
-  const inputField = document.createElement('sl-input');
+  const inputField = document.createElement('cp-text-field');
   inputField.name = 'input';
   inputField.value = params.value || '';
   inputField.size = 'small';
@@ -224,7 +227,8 @@ const showInputDialog = createDialogFn<
     title: params.title || translate('input'),
     message: params.message || '',
     content: inputField,
-    mapResult: ({ button, input }) => (button === '0' ? null : input),
+    defaultResult: null,
+    mapResult: (data, buttonIndex) => (buttonIndex === 0 ? null : data.input),
 
     buttons: [
       {
@@ -246,8 +250,9 @@ const showCustomInputDialog = createDialogFn<
     okText?: string;
     cancelText?: string;
     uses?: unknown[];
+    minHeight?: string | null;
   },
-  string | null
+  Record<string, unknown> | null
 >((parent, params) => {
   let container: HTMLElement | null = null;
 
@@ -255,19 +260,11 @@ const showCustomInputDialog = createDialogFn<
     container = document.createElement('div');
     container.attachShadow({ mode: 'open' });
 
-    const onFormSubmit = (ev: any) => {};
-
-    const onFormInvalid = (ev: any) => {};
-
-    render(
-      html`
-        <cp-form .onFormSubmit=${onFormSubmit} .onFormInvalid=${onFormSubmit}>
-          ${params.content}
-        </cp-form>
-      `,
-
-      container.shadowRoot!
-    );
+    if (params.content instanceof HTMLElement) {
+      container.append(params.content);
+    } else if (params.content) {
+      render(params.content, container.shadowRoot!);
+    }
   }
 
   return showDialog(parent, (translate) => ({
@@ -276,7 +273,8 @@ const showCustomInputDialog = createDialogFn<
     title: params.title || translate('input'),
     message: params.message || '',
     content: container,
-    mapResult: ({ button, input }) => (button === '0' ? null : input),
+    minHeight: params.minHeight || null,
+    mapResult: (data, buttonIndex) => (buttonIndex === 0 ? null : data),
 
     buttons: [
       {
@@ -321,60 +319,89 @@ function showDialog<T = void>(
     }
   };
 
-  // required custom elements
-  void (Form || FocusTrap || SlButton || SlIcon || SlInput || SlDialog);
+  let buttonIndex = -1;
 
-  containerShadow.innerHTML = `
-    <style>
-    </style>
-    <form class="form" dir=${i18n.getDirection()}>
-      <focus-trap>
-        <sl-dialog open class="dialog">
-          <div slot="label" class="header">
-            <sl-icon class="icon"></sl-icon>
-            <div class="title"></div>
-          </div>
-          <div class="message"></div>
-          <div class="content"></div>
-          <div slot="footer" class="buttons"></div>
-        </sl-dialog>
-      </focus-trap>
-    </form>
-  `;
+  // required custom elements
+  void (
+    Form ||
+    Message ||
+    TextField ||
+    FocusTrap ||
+    SlButton ||
+    SlIcon ||
+    SlDialog
+  );
+
+  render(
+    html`
+      <style></style>
+      <cp-form class="form" dir=${i18n.getDirection()}>
+        <focus-trap>
+          <sl-dialog open class="dialog">
+            <div slot="label" class="header">
+              <sl-icon class="icon"></sl-icon>
+              <div class="title"></div>
+            </div>
+            <div class="message"></div>
+            <div class="content-outer">
+              <div class="content"></div>
+              <div class="error-box">
+                <cp-message variant="danger" class="error-message">
+                  ${i18n.translate('jsCockpit.validation', 'formInvalid')}
+                </cp-message>
+              </div>
+            </div>
+            <div slot="footer" class="buttons"></div>
+          </sl-dialog>
+        </focus-trap>
+      </cp-form>
+    `,
+    containerShadow
+  );
 
   setText(params.title, '.title');
   setText(adjustMessage(params.message), '.message');
 
-  const form = containerShadow.querySelector<HTMLFormElement>('form.form')!;
+  const form = containerShadow.querySelector<HTMLFormElement>('cp-form.form')!;
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!;
+  const content = containerShadow.querySelector<HTMLDivElement>('div.content')!;
+
+  const errorMessage = containerShadow.querySelector<Message>(
+    'cp-message.error-message'
+  )!;
+
   const contentBox =
     containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
+  const contentOuter =
+    containerShadow.querySelector<HTMLDivElement>('div.content-outer')!;
+
   if (params.content) {
-    contentBox.append(params.content);
+    contentBox.prepend(params.content);
   }
 
-  form.addEventListener('submit', (ev: any) => {
-    ev.preventDefault();
+  contentOuter.style.minHeight = params.minHeight || 'none';
 
+  form.addEventListener('cp-form-submit', (ev) => {
     // This will be run before the button submit event is dispatched.
     // That's why the logic logic here will be deferred.
 
     setTimeout(() => {
-      const formData = new FormData(form);
-      const data: Record<string, string> = {};
-
-      formData.forEach((value: FormDataEntryValue, key: string) => {
-        data[key] = value.toString();
-      });
-
+      const data = ev.detail.data || {};
+      dialog.hide();
       contentBox.removeEventListener('keydown', onKeyDown);
       buttonBox.removeEventListener('keydown', onKeyDown);
-      container.remove();
-      containerShadow.innerHTML = '';
-
-      emitResult(params.mapResult?.(data));
+      emitResult(params.mapResult?.(data, buttonIndex));
+      buttonIndex = -1;
     }, 0);
+  });
+
+  form.addEventListener('cp-form-invalid', (ev) => {
+    errorMessage.open = true;
+  });
+
+  form.addEventListener('input', () => {
+    errorMessage.open = false;
   });
 
   dialog.addEventListener('sl-request-close', (ev: Event) => {
@@ -390,7 +417,6 @@ function showDialog<T = void>(
   setText(dialogStyles.toString(), 'style');
 
   const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!;
-  const hiddenField = document.createElement('input');
 
   const onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Escape') {
@@ -401,10 +427,6 @@ function showDialog<T = void>(
 
   contentBox.addEventListener('keydown', onKeyDown);
   buttonBox.addEventListener('keydown', onKeyDown);
-
-  hiddenField.type = 'hidden';
-  hiddenField.name = 'button';
-  buttonBox.append(hiddenField);
 
   const hasPrimaryButton = params.buttons.some(
     (it) => it.variant === 'primary'
@@ -422,15 +444,13 @@ function showDialog<T = void>(
     }
 
     button.onclick = () => {
-      // This will be run after an submit event will be
-      // dispatched for the corresponding form element.
-      // That's why the form submit event handler logic
-      // will be deferred.
-      hiddenField.value = String(idx);
+      buttonIndex = idx;
+      form.submit();
     };
 
     buttonBox.append(button);
   });
+
   (target.shadowRoot || target).appendChild(container);
 
   const elem = dialog.querySelector<HTMLElement>('[autofocus]');
@@ -443,11 +463,12 @@ function showDialog<T = void>(
 
   return new Promise((resolve) => {
     emitResult = (result: any) => {
+      (target.shadowRoot || target).removeChild(container);
       setTimeout(() => resolve(result), 50);
     };
   });
 }
 
 function adjustMessage(msg: string): string {
-  return msg.replace(/^(\s+)/gm, (s) => '\u2007'.repeat(s.length));
+  return msg.replace(/^( +)/gm, (s1, s2) => '\u2007'.repeat(s1.length) + s2);
 }
