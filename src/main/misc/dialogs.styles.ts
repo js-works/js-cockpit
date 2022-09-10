@@ -40,6 +40,7 @@ export default css`
   }
 
   .dialog::part(body) {
+    display: flex;
     padding-bottom: 0.5rem;
     user-select: none;
   }
@@ -97,8 +98,13 @@ export default css`
   .message:empty {
     display: none;
   }
+
   .content-outer {
     display: flex;
+    flex-direction: column;
+    justify-items: stretch;
+    justify-content: stretch;
+    flex-grow: 1;
     flex-direction: column;
     margin: 0rem 2rem 1rem 2rem;
   }

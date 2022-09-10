@@ -2,7 +2,6 @@ import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
-import { wait } from './shared/utils';
 
 import {
   showApproveDialog,
@@ -84,8 +83,6 @@ class DialogsDemo extends Component {
       okText: 'Log out'
     }).then(async (confirmed) => {
       if (confirmed) {
-        await wait(400);
-
         showInfoDialog(this, {
           message: "You've been logged out"
         });
@@ -114,8 +111,6 @@ class DialogsDemo extends Component {
       cancelText: 'No way!'
     }).then(async (name) => {
       if (name !== null) {
-        await wait(400);
-
         showInfoDialog(this, {
           message: `Hello, ${name || 'stranger'}!`
         });
@@ -128,7 +123,7 @@ class DialogsDemo extends Component {
       title: 'New user',
       okText: 'Add user',
       uses: [TextField, DateField],
-      minHeight: '20rem',
+      minHeight: '29rem',
       content: html`
         <cp-text-field
           name="firstName"

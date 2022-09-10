@@ -45,6 +45,7 @@ type DialogConfig<T> = {
   icon: string;
   title: string;
   message: string;
+  width?: string | null;
   minHeight?: string | null;
 
   buttons: {
@@ -254,6 +255,7 @@ const showCustomInputDialog = createDialogFn<
     okText?: string;
     cancelText?: string;
     uses?: unknown[];
+    width?: string | null;
     minHeight?: string | null;
   },
   Record<string, unknown> | null
@@ -277,6 +279,7 @@ const showCustomInputDialog = createDialogFn<
     title: params.title || translate('input'),
     message: params.message || '',
     content: container,
+    width: params.width || null,
     minHeight: params.minHeight || null,
     mapResult: (data, buttonIndex) => (buttonIndex === 0 ? null : data),
     defaultResult: null,
@@ -341,6 +344,12 @@ function showDialog<T = void>(
   render(
     html`
       <style></style>
+      <style>
+        sl-dialog::part(panel) {
+          ${params.width ? `width: ${params.width};` : ''};
+          ${params.minHeight ? `min-height: ${params.minHeight};` : ''};
+        }
+      </style>
       <cp-form class="form" dir=${i18n.getDirection()}>
         <focus-trap>
           <sl-dialog open class="dialog">
@@ -348,8 +357,8 @@ function showDialog<T = void>(
               <sl-icon class="icon"></sl-icon>
               <div class="title"></div>
             </div>
-            <div class="message"></div>
             <div class="content-outer">
+              <div class="message"></div>
               <div class="content"></div>
               <div class="error-box">
                 <cp-message variant="danger" class="error-message">
@@ -379,14 +388,9 @@ function showDialog<T = void>(
   const contentBox =
     containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
-  const contentOuter =
-    containerShadow.querySelector<HTMLDivElement>('div.content-outer')!;
-
   if (params.content) {
     contentBox.prepend(params.content);
   }
-
-  contentOuter.style.minHeight = params.minHeight || 'none';
 
   form.addEventListener('cp-form-submit', (ev) => {
     // This will be run before the button submit event is dispatched.
@@ -474,8 +478,10 @@ function showDialog<T = void>(
 
   return new Promise((resolve) => {
     emitResult = (result: any) => {
-      (target.shadowRoot || target).removeChild(container);
-      setTimeout(() => resolve(result), 50);
+      setTimeout(() => {
+        (target.shadowRoot || target).removeChild(container);
+        resolve(result);
+      }, 200);
     };
   });
 }
