@@ -41,8 +41,11 @@ export default css`
 
   .dialog::part(body) {
     display: flex;
-    padding-bottom: 0.5rem;
+    flex-direction: column;
     user-select: none;
+    padding-bottom: 0.5rem;
+    box-sizing: border-box;
+    margin: 0 2rem;
   }
 
   .dialog::part(footer) {
@@ -92,21 +95,11 @@ export default css`
   .message {
     font-family: var(--sl-font-sans);
     font-size: calc(1.05 * var(--sl-font-size-medium));
-    margin: 0.5rem 2rem 1rem 2rem;
+    margin: 0.5rem 0 1rem 0;
   }
 
   .message:empty {
     display: none;
-  }
-
-  .content-outer {
-    display: flex;
-    flex-direction: column;
-    justify-items: stretch;
-    justify-content: stretch;
-    flex-grow: 1;
-    flex-direction: column;
-    margin: 0rem 2rem 1rem 2rem;
   }
 
   .content {
@@ -116,6 +109,5 @@ export default css`
   .error-box {
     box-sizing: border-box;
     justify-self: flex-end;
-    margin-bottom: -1rem;
   }
 `;

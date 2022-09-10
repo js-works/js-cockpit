@@ -357,14 +357,12 @@ function showDialog<T = void>(
               <sl-icon class="icon"></sl-icon>
               <div class="title"></div>
             </div>
-            <div class="content-outer">
-              <div class="message"></div>
-              <div class="content"></div>
-              <div class="error-box">
-                <cp-message variant="danger" class="error-message">
-                  ${i18n.translate('jsCockpit.validation', 'formInvalid')}
-                </cp-message>
-              </div>
+            <div class="message"></div>
+            <div class="content"></div>
+            <div class="error-box">
+              <cp-message variant="danger" class="error-message">
+                ${i18n.translate('jsCockpit.validation', 'formInvalid')}
+              </cp-message>
             </div>
             <div slot="footer" class="buttons"></div>
           </sl-dialog>
