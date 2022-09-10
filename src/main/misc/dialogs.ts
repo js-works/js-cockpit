@@ -50,6 +50,7 @@ type DialogConfig<T> = {
   buttons: {
     text: string;
     variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
+    cancel?: true;
   }[];
 
   defaultResult?: T;
@@ -167,7 +168,8 @@ const showConfirmDialog = createDialogFn<
 
     buttons: [
       {
-        text: params.cancelText || translate('cancel')
+        text: params.cancelText || translate('cancel'),
+        cancel: true
       },
       {
         variant: 'primary',
@@ -195,7 +197,8 @@ const showApproveDialog = createDialogFn<
 
     buttons: [
       {
-        text: params.cancelText || translate('cancel')
+        text: params.cancelText || translate('cancel'),
+        cancel: true
       },
       {
         variant: 'danger',
@@ -232,7 +235,8 @@ const showInputDialog = createDialogFn<
 
     buttons: [
       {
-        text: params.cancelText || translate('cancel')
+        text: params.cancelText || translate('cancel'),
+        cancel: true
       },
       {
         variant: 'primary',
@@ -275,10 +279,12 @@ const showCustomInputDialog = createDialogFn<
     content: container,
     minHeight: params.minHeight || null,
     mapResult: (data, buttonIndex) => (buttonIndex === 0 ? null : data),
+    defaultResult: null,
 
     buttons: [
       {
-        text: params.cancelText || translate('cancel')
+        text: params.cancelText || translate('cancel'),
+        cancel: true
       },
       {
         variant: 'primary',
@@ -432,7 +438,7 @@ function showDialog<T = void>(
     (it) => it.variant === 'primary'
   );
 
-  params.buttons.forEach(({ text, variant = 'default' }, idx) => {
+  params.buttons.forEach(({ text, variant = 'default', cancel }, idx) => {
     const button: SlButton = document.createElement('sl-button');
     button.type = 'submit';
     button.className = 'button';
@@ -444,8 +450,13 @@ function showDialog<T = void>(
     }
 
     button.onclick = () => {
-      buttonIndex = idx;
-      form.submit();
+      if (cancel) {
+        dialog.hide();
+        emitResult(params.defaultResult);
+      } else {
+        buttonIndex = idx;
+        form.submit();
+      }
     };
 
     buttonBox.append(button);
