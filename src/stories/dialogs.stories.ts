@@ -6,11 +6,14 @@ import { sharedTheme } from './shared/shared-theme';
 import {
   showApproveDialog,
   showConfirmDialog,
+  showCustomInputDialog,
   showErrorDialog,
   showInfoDialog,
   showInputDialog,
   showSuccessDialog,
   showWarnDialog,
+  TextField,
+  DateField,
   ThemeProvider
 } from 'js-cockpit';
 
@@ -101,7 +104,7 @@ class DialogsDemo extends Component {
     });
   };
 
-  private _onPromptClick = () => {
+  private _onInputClick = () => {
     showInputDialog(this, {
       message: 'Please enter your name',
       title: 'Input required',
@@ -110,6 +113,36 @@ class DialogsDemo extends Component {
       if (name !== null) {
         showInfoDialog(this, {
           message: `Hello, ${name || 'stranger'}!`
+        });
+      }
+    });
+  };
+
+  private _onCustomInputClick = () => {
+    showCustomInputDialog(this, {
+      title: 'Add user',
+      uses: [TextField, DateField],
+      content: html`
+        <cp-text-field
+          name="firstName"
+          label="First name"
+          required
+        ></cp-text-field>
+        <cp-text-field
+          name="lastName"
+          label="Last name"
+          required
+        ></cp-text-field>
+        <cp-date-field
+          name="dayOfBirth"
+          label="Day of birth"
+          required
+        ></cp-date-field>
+      `
+    }).then((name) => {
+      if (name !== null) {
+        showSuccessDialog(this, {
+          message: 'Successfully added new user to database'
         });
       }
     });
@@ -162,7 +195,10 @@ class DialogsDemo extends Component {
           <sl-button @click=${this._onApproveClick}>Approve</sl-button>
         </div>
         <div>
-          <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
+          <sl-button @click=${this._onInputClick}>Input</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onCustomInputClick}>Custom input</sl-button>
         </div>
         <br />
         <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>

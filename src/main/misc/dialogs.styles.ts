@@ -31,23 +31,21 @@ export default css`
   }
 
   .dialog::part(title) {
-    padding-bottom: 0.5rem;
-    user-select: none;
-  }
-
-  .dialog::part(body) {
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
-    user-select: none;
-  }
-
-  .dialog::part(footer) {
     user-select: none;
   }
 
   .dialog::part(title),
   .dialog::part(body) {
     padding: 0;
+  }
+
+  .dialog::part(body) {
+    padding-bottom: 0.5rem;
+    user-select: none;
+  }
+
+  .dialog::part(footer) {
+    user-select: none;
   }
 
   .buttons {
@@ -82,25 +80,31 @@ export default css`
     color: var(--sl-color-danger-500);
   }
 
+  /*
   .dialog::part(header) {
     border-bottom: 1px solid var(--sl-color-neutral-200);
   }
+  */
 
   .header {
     display: flex;
     align-items: center;
     gap: 0.7rem;
     font-size: calc(1.25 * var(--sl-font-size-medium));
-    padding: 0.625rem 1rem;
+    padding: 0.75rem 1.25rem;
   }
 
   .message {
     font-family: var(--sl-font-sans);
     font-size: calc(1.05 * var(--sl-font-size-medium));
-    margin: 1.25rem 2rem;
+    margin: 0.5rem 2rem 1rem 2rem;
+  }
+
+  .message:empty {
+    display: none;
   }
 
   .content {
-    margin: 1.25rem 2rem;
+    margin: 0rem 2rem 1rem 2rem;
   }
 `;

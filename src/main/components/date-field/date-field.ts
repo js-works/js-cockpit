@@ -52,7 +52,7 @@ export class DateField extends Component {
   @prop(Attrs.string, true)
   label = '';
 
-  @prop(Attrs.string, true)
+  @prop(Attrs.boolean, true)
   required = true;
 
   @prop(Attrs.boolean, true)

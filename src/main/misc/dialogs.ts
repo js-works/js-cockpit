@@ -3,7 +3,9 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { FocusTrap } from '@a11y/focus-trap';
+import { Form } from '../components/form/form';
 
+import { html, render, TemplateResult } from 'lit';
 import { I18nController } from '../i18n/i18n';
 import { I18nFacade } from '../i18n/i18n';
 
@@ -24,6 +26,7 @@ export {
   showApproveDialog,
   showConfirmDialog,
   showErrorDialog,
+  showCustomInputDialog,
   showInfoDialog,
   showInputDialog,
   showSuccessDialog,
@@ -235,6 +238,58 @@ const showInputDialog = createDialogFn<
   }));
 });
 
+const showCustomInputDialog = createDialogFn<
+  {
+    content: TemplateResult;
+    message?: string;
+    title?: string;
+    okText?: string;
+    cancelText?: string;
+    uses?: unknown[];
+  },
+  string | null
+>((parent, params) => {
+  let container: HTMLElement | null = null;
+
+  if (params.content) {
+    container = document.createElement('div');
+    container.attachShadow({ mode: 'open' });
+
+    const onFormSubmit = (ev: any) => {};
+
+    const onFormInvalid = (ev: any) => {};
+
+    render(
+      html`
+        <cp-form .onFormSubmit=${onFormSubmit} .onFormInvalid=${onFormSubmit}>
+          ${params.content}
+        </cp-form>
+      `,
+
+      container.shadowRoot!
+    );
+  }
+
+  return showDialog(parent, (translate) => ({
+    type: 'normal',
+    icon: inputIcon,
+    title: params.title || translate('input'),
+    message: params.message || '',
+    content: container,
+    mapResult: ({ button, input }) => (button === '0' ? null : input),
+
+    buttons: [
+      {
+        text: params.cancelText || translate('cancel')
+      },
+      {
+        variant: 'primary',
+        text: params.okText || translate('ok')
+      }
+    ]
+  }));
+});
+
 function showDialog<T = void>(
   parent: HTMLElement | null,
   init: (
@@ -267,7 +322,7 @@ function showDialog<T = void>(
   };
 
   // required custom elements
-  void (FocusTrap || SlButton || SlIcon || SlInput || SlDialog);
+  void (Form || FocusTrap || SlButton || SlIcon || SlInput || SlDialog);
 
   containerShadow.innerHTML = `
     <style>
