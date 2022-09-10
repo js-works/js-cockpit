@@ -408,7 +408,7 @@ function showDialog<T = void>(
     if (!errorBox.open) {
       errorBox.open = true;
     } else {
-      errorBox.shake();
+      errorBox.vibrate();
     }
   });
 

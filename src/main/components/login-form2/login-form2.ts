@@ -153,7 +153,7 @@ class LoginForm extends Component {
     if (!this._errorBoxVisible) {
       this._errorBoxVisible = true;
     } else {
-      this._errorBoxRef.value!.shake();
+      this._errorBoxRef.value!.vibrate();
     }
   };
 

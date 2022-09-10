@@ -47,7 +47,7 @@ const appearanceByVariant = new Map([
 
 // === animations ====================================================
 
-setDefaultAnimation('cp-message.shake', {
+setDefaultAnimation('cp-message.vibrate', {
   keyframes: [
     { transform: 'scale(1)' },
     { transform: 'scale(0.9)' },
@@ -124,8 +124,8 @@ class Message extends Component {
     );
   }
 
-  shake() {
-    const { keyframes, options } = getAnimation(this, 'cp-message.shake', {
+  vibrate() {
+    const { keyframes, options } = getAnimation(this, 'cp-message.vibrate', {
       dir: this._i18n.getDirection()
     });
 
