@@ -1,6 +1,11 @@
 import { FormFieldEvent } from '../events/form-field-event';
 import { ReactiveControllerHost } from '../utils/lit';
 
+import {
+  runCloseVerticalTransition,
+  runOpenVerticalTransition
+} from '../misc/transitions';
+
 // === exports =======================================================
 
 export { FormFieldController };
@@ -61,13 +66,26 @@ class FormFieldController<T> {
                 }
 
                 this.#errorMsg = errorMsg;
-                this.#errorDiv.innerHTML = '';
 
                 if (errorMsg) {
+                  this.#errorDiv.innerHTML = '';
                   const innerDiv = document.createElement('div');
-                  innerDiv.className = 'validation-error';
                   innerDiv.innerText = errorMsg;
                   this.#errorDiv.append(innerDiv);
+                  innerDiv.className = 'validation-error';
+                  this.#errorDiv.style.maxHeight = '0';
+                  this.#errorDiv.style.overflow = 'hidden';
+
+                  runOpenVerticalTransition(this.#errorDiv).then(() => {
+                    this.#errorDiv.style.maxHeight = 'none';
+                    this.#errorDiv.style.overflow = 'auto';
+                  });
+                } else {
+                  runCloseVerticalTransition(this.#errorDiv).then(() => {
+                    this.#errorDiv.style.maxHeight = '0';
+                    this.#errorDiv.style.overflow = 'hidden';
+                    this.#errorDiv.innerHTML = '';
+                  });
                 }
 
                 component.requestUpdate();
