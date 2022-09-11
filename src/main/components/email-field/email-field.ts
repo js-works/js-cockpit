@@ -58,13 +58,9 @@ class EmailField extends Component {
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  @state
-  private _errorMsg: string | null = null;
-
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-    validate: () => this.validationMessage || null,
-    setErrorMsg: (msg) => (this._errorMsg = msg)
+    validate: () => this.validationMessage || null
   });
 
   private _slInputRef = createRef<SlInput>();
@@ -75,9 +71,7 @@ class EmailField extends Component {
 
     afterFirstUpdate(this, () => {
       Object.defineProperty(this, 'value', {
-        get: () => 
-          this._slInputRef.value!.value;
-        ,
+        get: () => this._slInputRef.value!.value,
         set: (value: string) => void (this._slInputRef.value!.value = value)
       });
     });
@@ -114,7 +108,7 @@ class EmailField extends Component {
       <div
         class="base ${classMap({
           required: this.required,
-          invalid: this._errorMsg !== null
+          invalid: this._formField.showsError()
         })}"
       >
         <sl-input
@@ -134,9 +128,8 @@ class EmailField extends Component {
             <sl-icon src=${emailIcon} class="icon"></sl-icon>
           </div>
         </sl-input>
-        ${when(
-          this._errorMsg,
-          () => html`<div class="validation-error">${this._errorMsg}</div>`
+        ${this._formField.ifErrorShown(
+          (errorMsg) => html`<div class="validation-error">${errorMsg}</div>`
         )}
       </div>
     `;

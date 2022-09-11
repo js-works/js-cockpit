@@ -15,7 +15,7 @@ class FormFieldController<T> {
   #sendSignal: (type: FormFieldEvent.SignalType) => void = noop;
   #getValue: () => T;
   #validate: () => null | string;
-  #setErrorMsg: (msg: string | null) => void;
+  #errorMsg: string | null = null;
 
   constructor(
     component: ReactiveControllerHost & HTMLElement & { name: string },
@@ -23,13 +23,11 @@ class FormFieldController<T> {
     params: {
       getValue: () => T;
       validate: () => string | null;
-      setErrorMsg: (msg: string | null) => void;
     }
   ) {
     let hasInitialized = false;
     this.#getValue = params.getValue;
     this.#validate = params.validate;
-    this.#setErrorMsg = params.setErrorMsg;
 
     component.addController({
       hostDisconnected: () => {
@@ -55,7 +53,15 @@ class FormFieldController<T> {
               getName: () => component.name || '',
               getValue: this.#getValue,
               validate: this.#validate,
-              setErrorMsg: this.#setErrorMsg,
+
+              setErrorMsg: (errorMsg) => {
+                if (errorMsg === this.#errorMsg) {
+                  return;
+                }
+
+                this.#errorMsg = errorMsg;
+                component.requestUpdate();
+              },
 
               setSendSignal: (sendSignal) => {
                 this.#sendSignal = sendSignal;
@@ -74,4 +80,20 @@ class FormFieldController<T> {
   readonly signalFocus = () => this.#sendSignal!('focus');
   readonly signalBlur = () => this.#sendSignal!('blur');
   readonly signalSubmit = () => this.#sendSignal!('submit');
+
+  getShownErrorMsg(): string | null {
+    return this.#errorMsg;
+  }
+
+  showsError() {
+    return this.#errorMsg !== null;
+  }
+
+  ifErrorShown<T>(fn: (errorMsg: string) => T): T | null {
+    if (this.#errorMsg === null) {
+      return null;
+    }
+
+    return fn(this.#errorMsg);
+  }
 }

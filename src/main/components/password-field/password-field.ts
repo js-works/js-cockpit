@@ -56,12 +56,8 @@ class PasswordField extends Component {
 
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-    validate: () => this.validationMessage || null,
-    setErrorMsg: (msg) => (this._errorMsg = msg)
+    validate: () => this.validationMessage || null
   });
-
-  @state
-  private _errorMsg: string | null = null;
 
   get validationMessage(): string {
     const input = this._slInputRef.value;
@@ -103,7 +99,7 @@ class PasswordField extends Component {
       <div
         class="base ${classMap({
           required: this.required,
-          invalid: this._errorMsg !== null
+          invalid: this._formField.showsError()
         })}"
       >
         <sl-input
@@ -122,11 +118,9 @@ class PasswordField extends Component {
         >
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
-        <div class="error-text">
-          ${!this._errorMsg
-            ? null
-            : html` <div class="validation-error">${this._errorMsg}</div> `}
-        </div>
+        ${this._formField.ifErrorShown(
+          (errorMsg) => html`<div class="validation-error">${errorMsg}</div>`
+        )}
       </div>
     `;
   }
