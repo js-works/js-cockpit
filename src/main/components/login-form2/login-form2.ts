@@ -309,8 +309,8 @@ class LoginForm extends Component {
     switch (this._view) {
       case 'login':
         return html`
-          <h3 class="form-fields-headline">${this._t('loginIntroHeadline')}</h3>
-          <p class="form-fields-text">${this._t('loginIntroText')}</p>
+          <h3 class="form-fields-headline">${this._t('loginHeadline')}</h3>
+          <p class="form-fields-text">${this._t('loginText')}</p>
           <slot name="login-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'login-fields')
             ? null
@@ -331,9 +331,9 @@ class LoginForm extends Component {
       case 'registration':
         return html`
           <h3 class="form-fields-headline">
-            ${this._t('registrationIntroHeadline')}
+            ${this._t('registrationHeadline')}
           </h3>
-          <p class="form-fields-text">${this._t('registrationIntroText')}</p>
+          <p class="form-fields-text">${this._t('registrationText')}</p>
           <slot name="registration-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'registration-fields')
             ? null
@@ -364,9 +364,9 @@ class LoginForm extends Component {
       case 'forgotPassword':
         return html`
           <h3 class="form-fields-headline">
-            ${this._t('forgotPasswordIntroHeadline')}
+            ${this._t('forgotPasswordHeadline')}
           </h3>
-          <p class="form-fields-text">${this._t('forgotPasswordIntroText')}</p>
+          <p class="form-fields-text">${this._t('forgotPasswordText')}</p>
           <slot name="forgot-password-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'forgot-password-fields')
             ? null
@@ -391,7 +391,7 @@ class LoginForm extends Component {
             class="fields-slot"
           ></slot>
           <h3 class="form-fields-headline">Reset password</h3>
-          <p class="form-fields-text">${this._t('resetPasswordIntroText')}</p>
+          <p class="form-fields-text">${this._t('resetPasswordText')}</p>
           ${hasSlot(this, 'reset-password-fields')
             ? null
             : html`

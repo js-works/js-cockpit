@@ -21,17 +21,17 @@ const translations: FullTranslations<'jsCockpit'> = {
       failedForgotPasswordSubmit: 'Data could not be submitted',
       failedResetPasswordSubmit: 'Data could not be submitted',
       failedRegistrationSubmit: 'Data could not be submitted',
-      forgotPassword: 'Forgot password?',
-      forgotPasswordIntroHeadline: 'Forgot password?',
+      forgotPassword: 'Forgot your password?',
+      forgotPasswordHeadline: 'Password reset',
 
-      forgotPasswordIntroText:
+      forgotPasswordText:
         "Please fill out and submit the form and you'll receive an e-mail with further instructions how to reset your password",
 
       forgotPasswordSubmitText: 'Request password reset',
       goToLogin: 'Go to login form',
-      goToRegistration: 'Need account?',
-      loginIntroHeadline: 'Login',
-      loginIntroText: 'Please enter your credentials in the form to log in',
+      goToRegistration: 'Need an account?',
+      loginHeadline: 'Login',
+      loginText: 'Please enter your credentials in the form to log in',
       loginSubmitText: 'Log in',
       newPassword: 'New password',
       newPasswordRepeat: 'Repeat new password',
@@ -40,16 +40,16 @@ const translations: FullTranslations<'jsCockpit'> = {
       processingForgotPasswordSubmit: 'Submitting...',
       processingResetPasswordSubmit: 'Submitting...',
       processingRegistrationSubmit: 'Submitting...',
-      registrationIntroHeadline: 'Registration',
+      registrationHeadline: 'Registration',
 
-      registrationIntroText:
-        'Please fill out the form and press the submit button to register',
+      registrationText:
+        'Please fill out the form and press the submit button to register.',
 
       registrationSubmitText: 'Register',
       rememberLogin: 'Remember login',
-      resetPasswordIntroHeadline: 'Reset password',
+      resetPasswordHeadline: 'Reset password',
 
-      resetPasswordIntroText:
+      resetPasswordText:
         'Please fill out and submit the form to reset your password',
 
       resetPasswordSubmitText: 'Reset password',

@@ -72,9 +72,9 @@ export default css`
 
   @media (min-width: 600px) {
     .form {
-      margin: 3em 0 0 0;
+      margin: 3em 0 2rem 0;
       width: 34em;
-      height: 34em;
+      xxxheight: 34em;
       --label-align-vertical: var(--off);
       --label-align-horizontal: var(--on);
       --label-align-horizontal-width: 10rem;
@@ -100,6 +100,7 @@ export default css`
 
   .form-fields {
     flex-grow: 1;
+    min-height: 12rem;
   }
 
   .form-footer {

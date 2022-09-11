@@ -388,8 +388,8 @@ class LoginForm extends Component {
         return html`
           <slot name="login-intro">
             <div class="default-intro">
-              <h3>${this._t('loginIntroHeadline')}</h3>
-              <p>${this._t('loginIntroText')}</p>
+              <h3>${this._t('loginHeadline')}</h3>
+              <p>${this._t('loginText')}</p>
             </div>
           </slot>
         `;
@@ -398,8 +398,8 @@ class LoginForm extends Component {
         return html`
           <slot name="registration-intro">
             <div class="default-intro">
-              <h3>${this._t('registrationIntroHeadline')}</h3>
-              <p>${this._t('registrationIntroText')}</p>
+              <h3>${this._t('registrationHeadline')}</h3>
+              <p>${this._t('registrationText')}</p>
             </div>
           </slot>
         `;
@@ -408,8 +408,8 @@ class LoginForm extends Component {
         return html`
           <slot name="forgot-password-intro">
             <div class="default-intro">
-              <h3>${this._t('forgotPasswordIntroHeadline')}</h3>
-              <p>${this._t('forgotPasswordIntroText')}</p>
+              <h3>${this._t('forgotPasswordHeadline')}</h3>
+              <p>${this._t('forgotPasswordText')}</p>
             </div>
           </slot>
         `;
@@ -417,8 +417,8 @@ class LoginForm extends Component {
         return html`
           <slot name="reset-password-intro">
             <div class="default-intro">
-              <h3>${this._t('resetPasswordIntroHeadline')}</h3>
-              <p>${this._t('resetPasswordIntroText')}</p>
+              <h3>${this._t('resetPasswordHeadline')}</h3>
+              <p>${this._t('resetPasswordText')}</p>
             </div>
           </slot>
         `;

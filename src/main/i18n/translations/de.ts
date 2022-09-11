@@ -22,16 +22,16 @@ const translations: FullTranslations<'jsCockpit'> = {
       failedResetPasswordSubmit: 'Die Daten konnten nicht übermittelt werden',
       failedRegistrationSubmit: 'Die Daten konnten nicht übermittelt werden',
       forgotPassword: 'Passwort vergessen?',
-      forgotPasswordIntroHeadline: 'Passwort vergessen?',
+      forgotPasswordHeadline: 'Passwort vergessen?',
 
-      forgotPasswordIntroText:
+      forgotPasswordText:
         'Sie werden per E-Mail Anweisungen zu erhalten, wie Sie Ihr Passwort zurücksetzen können.',
 
       forgotPasswordSubmitText: 'Passwort zurücksetzen',
       goToLogin: 'Gehe zur Anmeldung',
       goToRegistration: 'Nicht registriert?',
-      loginIntroHeadline: 'Anmeldung',
-      loginIntroText: 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an.',
+      loginHeadline: 'Anmeldung',
+      loginText: 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an.',
       loginSubmitText: 'Anmelden',
       newPassword: 'Neues Passwort',
       newPasswordRepeat: 'Wiederhole Passwort',
@@ -40,16 +40,15 @@ const translations: FullTranslations<'jsCockpit'> = {
       processingForgotPasswordSubmit: 'Sende Daten...',
       processingResetPasswordSubmit: 'Sede Daten...',
       processingRegistrationSubmit: 'Sende Daten...',
-      registrationIntroHeadline: 'Registrierung',
+      registrationHeadline: 'Registrierung',
 
-      registrationIntroText:
-        'Bitte füllen Sie zur Registrierung das Formular aus.',
+      registrationText: 'Bitte füllen Sie zur Registrierung das Formular aus.',
 
       registrationSubmitText: 'Registrieren',
       rememberLogin: 'Angemeldet bleiben',
-      resetPasswordIntroHeadline: 'Passwort zurücksetzen',
+      resetPasswordHeadline: 'Passwort zurücksetzen',
 
-      resetPasswordIntroText:
+      resetPasswordText:
         'Bitte füllen Sie für die Rücksetzung des Passworts das Formular aus.',
 
       resetPasswordSubmitText: 'Passwort zurücksetzen',
