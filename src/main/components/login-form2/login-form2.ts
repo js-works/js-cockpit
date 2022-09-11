@@ -1,12 +1,8 @@
-import {
-  getAnimation,
-  setAnimation,
-  setDefaultAnimation
-} from '@shoelace-style/shoelace/dist/utilities/animation-registry.js';
 import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { hasSlot } from '../../utils/slots';
+import { showErrorDialog } from '../../misc/dialogs';
 
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation';
@@ -143,6 +139,24 @@ class LoginForm extends Component {
 
     try {
       await this.processSubmit(data);
+    } catch (e) {
+      let errorMsg = '';
+
+      if (typeof e === 'string') {
+        errorMsg = e.trim();
+      } else if (e !== null && typeof (e as any).message === 'string') {
+        errorMsg = (e as any).message.trim();
+      }
+
+      if (errorMsg) {
+        errorMsg = ` ${errorMsg}`;
+      }
+
+      errorMsg = this._t((data.view + 'ErrorText') as any) + errorMsg;
+
+      showErrorDialog({
+        message: errorMsg
+      });
     } finally {
       this._isLoading = false;
       this._preventFormSubmit = false;

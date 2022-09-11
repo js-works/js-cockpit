@@ -10,11 +10,13 @@ type Terms = Translations<{
     failedResetPasswordSubmit: string;
     failedRegistrationSubmit: string;
     forgotPassword: string;
+    forgotPasswordErrorText: string;
     forgotPasswordHeadline: string;
     forgotPasswordText: string;
     forgotPasswordSubmitText: string;
     goToLogin: string;
     goToRegistration: string;
+    loginErrorText: string;
     loginHeadline: string;
     loginText: string;
     loginSubmitText: string;
@@ -25,10 +27,12 @@ type Terms = Translations<{
     processingForgotPasswordSubmit: string;
     processingResetPasswordSubmit: string;
     processingRegistrationSubmit: string;
+    registrationErrorText: string;
     registrationHeadline: string;
     registrationText: string;
     registrationSubmitText: string;
     rememberLogin: string;
+    resetPasswordErrorText: string;
     resetPasswordHeadline: string;
     resetPasswordText: string;
     resetPasswordSubmitText: string;

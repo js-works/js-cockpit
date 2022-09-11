@@ -113,7 +113,6 @@ class EmailField extends Component {
       >
         <sl-input
           class="input sl-control"
-          ?required=${this.required}
           size=${this.size}
           ${ref(this._slInputRef)}
           value=${this.value}
@@ -123,7 +122,15 @@ class EmailField extends Component {
           @focus=${this._onFocus}
           @blur=${this._onBlur}
         >
-          <span slot="label" class="sl-control-label">${this.label}</span>
+          <span
+            slot="label"
+            class=${classMap({
+              'sl-control-label': true,
+              'sl-control-label--required': this.required
+            })}
+          >
+            ${this.label}
+          </span>
           <div slot="suffix">
             <sl-icon src=${emailIcon} class="icon"></sl-icon>
           </div>

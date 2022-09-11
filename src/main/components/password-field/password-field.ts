@@ -107,7 +107,6 @@ class PasswordField extends Component {
           name=${this.name}
           toggle-password
           class="input sl-control"
-          ?required=${this.required}
           size=${this.size}
           @keydown=${this._onKeyDown}
           @sl-input=${this._onInput}
@@ -116,7 +115,15 @@ class PasswordField extends Component {
           @blur=${this._onBlur}
           ${ref(this._slInputRef)}
         >
-          <span slot="label" class="sl-control-label">${this.label}</span>
+          <span
+            slot="label"
+            class=${classMap({
+              'sl-control-label': true,
+              'sl-control-label--required': this.required
+            })}
+          >
+            ${this.label}
+          </span>
         </sl-input>
         ${this._formField.getErrorMsgElement()}
       </div>

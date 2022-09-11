@@ -22,6 +22,8 @@ const translations: FullTranslations<'jsCockpit'> = {
       failedResetPasswordSubmit: 'Die Daten konnten nicht übermittelt werden',
       failedRegistrationSubmit: 'Die Daten konnten nicht übermittelt werden',
       forgotPassword: 'Passwort vergessen?',
+      forgotPasswordErrorText:
+        'Antrag auf Zurücksetzen des Passworts konnte nicht ausgeführt werden.',
       forgotPasswordHeadline: 'Passwort vergessen?',
 
       forgotPasswordText:
@@ -30,6 +32,7 @@ const translations: FullTranslations<'jsCockpit'> = {
       forgotPasswordSubmitText: 'Passwort zurücksetzen',
       goToLogin: 'Gehe zur Anmeldung',
       goToRegistration: 'Nicht registriert?',
+      loginErrorText: 'Anmeldung konnte nicht ausgeführt werden.',
       loginHeadline: 'Anmeldung',
       loginText: 'Bitte geben Sie zum Einloggen Ihre Zugangsdaten an.',
       loginSubmitText: 'Anmelden',
@@ -40,12 +43,13 @@ const translations: FullTranslations<'jsCockpit'> = {
       processingForgotPasswordSubmit: 'Sende Daten...',
       processingResetPasswordSubmit: 'Sede Daten...',
       processingRegistrationSubmit: 'Sende Daten...',
+      registrationErrorText:
+        'Die Registrierung konnte nicht ausgeführt werden.',
       registrationHeadline: 'Registrierung',
-
       registrationText: 'Bitte füllen Sie zur Registrierung das Formular aus.',
-
       registrationSubmitText: 'Registrieren',
       rememberLogin: 'Angemeldet bleiben',
+      resetPasswordErrorText: 'Das Passwort konnt nicht zurückgesetzt werden.',
       resetPasswordHeadline: 'Passwort zurücksetzen',
 
       resetPasswordText:

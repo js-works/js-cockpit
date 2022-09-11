@@ -80,8 +80,8 @@ export default css`
     display: flex;
     flex-direction: column;
     flex-grow: 5;
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 330px;
+    max-width: 330px;
     padding: 26px 20px 24px 20px;
     box-sizing: border-box;
 
@@ -113,8 +113,8 @@ export default css`
     flex-direction: column;
     gap: 8px;
     text-align: left;
-    width: 330px;
-    max-width: 330px;
+    width: 350px;
+    max-width: 350px;
     padding: 24px 20px;
     border-radius: 0 6px 6px 0;
 

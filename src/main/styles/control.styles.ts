@@ -34,6 +34,24 @@ export default css`
       var(--label-align-horizontal, 2px 0);
   }
 
+  .sl-control-label {
+  }
+
+  .sl-control-label--required::after {
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-font-size-medium);
+    position: relative;
+    top: -2px;
+    margin: 0 calc(-1.5ch) 0 0;
+    left: calc(-0.5ch + 2px);
+    width: 1ex;
+    max-width: 1ex;
+    overflow: hidden;
+    content: '*';
+    color: var(--sl-color-danger-600);
+    box-sizing: border-box;
+  }
+
   /* -------------------------------------------------------------- */
 
   .validation-error:not(:empty) {

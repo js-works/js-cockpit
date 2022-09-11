@@ -40,10 +40,11 @@ class LoginFormDemo extends Component {
       }, 1000);
     });
 
-    showInfoDialog({
-      title: 'Form data',
-      message: JSON.stringify(data, null, 2)
-    });
+    throw Error(
+      'This is just a simple demo, the form data will not really be submitted.' +
+        '\n\nForm data:\n' +
+        JSON.stringify(data, null, 2)
+    );
   };
 
   render() {
