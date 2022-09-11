@@ -118,9 +118,7 @@ class PasswordField extends Component {
         >
           <span slot="label" class="sl-control-label">${this.label}</span>
         </sl-input>
-        ${this._formField.ifErrorShown(
-          (errorMsg) => html`<div class="validation-error">${errorMsg}</div>`
-        )}
+        ${this._formField.getErrorMsgElement()}
       </div>
     `;
   }

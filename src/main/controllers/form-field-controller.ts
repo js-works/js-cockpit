@@ -16,6 +16,7 @@ class FormFieldController<T> {
   #getValue: () => T;
   #validate: () => null | string;
   #errorMsg: string | null = null;
+  #errorDiv = document.createElement('div');
 
   constructor(
     component: ReactiveControllerHost & HTMLElement & { name: string },
@@ -60,6 +61,15 @@ class FormFieldController<T> {
                 }
 
                 this.#errorMsg = errorMsg;
+                this.#errorDiv.innerHTML = '';
+
+                if (errorMsg) {
+                  const innerDiv = document.createElement('div');
+                  innerDiv.className = 'validation-error';
+                  innerDiv.innerText = errorMsg;
+                  this.#errorDiv.append(innerDiv);
+                }
+
                 component.requestUpdate();
               },
 
@@ -95,5 +105,9 @@ class FormFieldController<T> {
     }
 
     return fn(this.#errorMsg);
+  }
+
+  getErrorMsgElement(): HTMLElement | null {
+    return this.#errorDiv;
   }
 }

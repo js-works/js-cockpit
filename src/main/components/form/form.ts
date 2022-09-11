@@ -24,6 +24,7 @@ class Form extends Component {
   #elementsMap = new Map<
     HTMLElement,
     {
+      edited: boolean;
       getName: () => string;
       getValue: () => unknown;
       validate: () => string | null;
@@ -58,6 +59,7 @@ class Form extends Component {
       let cancelled = false;
 
       this.#elementsMap.set(elem, {
+        edited: false,
         getName: detail.getName,
         getValue: detail.getValue,
         validate: detail.validate,
@@ -72,6 +74,10 @@ class Form extends Component {
         switch (type) {
           case 'input':
             detail.setErrorMsg(null);
+            break;
+
+          case 'change':
+            detail.setErrorMsg(detail.validate());
             break;
 
           case 'submit':

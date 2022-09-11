@@ -128,9 +128,7 @@ class EmailField extends Component {
             <sl-icon src=${emailIcon} class="icon"></sl-icon>
           </div>
         </sl-input>
-        ${this._formField.ifErrorShown(
-          (errorMsg) => html`<div class="validation-error">${errorMsg}</div>`
-        )}
+        ${this._formField.getErrorMsgElement()}
       </div>
     `;
   }
