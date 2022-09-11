@@ -1,19 +1,8 @@
-import {
-  afterInit,
-  afterUpdate,
-  bind,
-  createEmitter,
-  elem,
-  prop,
-  state,
-  Attrs,
-  Component,
-  Listener
-} from '../../utils/components';
-
-import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
+import { elem, prop, state, Attrs, Component } from '../../utils/components';
+import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { hasSlot } from '../../utils/slots';
+import { showErrorDialog } from '../../misc/dialogs';
 
 // custom elements
 import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation';
@@ -26,15 +15,11 @@ import { Message } from '../message/message';
 import { Form } from '../form/form';
 import { PasswordField } from '../password-field/password-field';
 import { TextField } from '../text-field/text-field';
+import { Brand } from '../brand/brand';
 
 // styles
 import loginFormStyles from './login-form.styles';
-
-// icons
-import loginIntroIcon from './assets/login.svg';
-import forgotPasswordIntroIcon from './assets/forgot-password.svg';
-import registrationIntroIcon from './assets/registration.svg';
-import resetPasswordIntroIcon from './assets/reset-password.svg';
+import { FormSubmitEvent } from 'js-cockpit';
 
 // === exports =======================================================
 
@@ -42,9 +27,13 @@ export { LoginForm };
 
 // === types =========================================================
 
-type View = 'login' | 'registration' | 'forgotPassword' | 'resetPassword';
-
 namespace LoginForm {
+  export type View =
+    | 'login'
+    | 'registration'
+    | 'forgotPassword'
+    | 'resetPassword';
+
   export type SubmitData =
     | {
         view: 'login';
@@ -59,12 +48,16 @@ namespace LoginForm {
       };
 }
 
+// === local types ===================================================
+
 // === Login form ====================================================
 
 @elem({
   tag: 'cp-login-form',
   styles: loginFormStyles,
+
   uses: [
+    Brand,
     FocusTrap,
     Form,
     Message,
@@ -78,20 +71,20 @@ namespace LoginForm {
   ]
 })
 class LoginForm extends Component {
-  @prop({ attr: Attrs.string })
-  initialView?: View;
-
-  @prop({ attr: Attrs.boolean })
-  enableRememberLogin = false;
-
-  @prop({ attr: Attrs.boolean })
-  enableForgotPassword = false;
-
-  @prop({ attr: Attrs.boolean })
-  enableRegistration = false;
-
   @prop({ attr: Attrs.boolean })
   fullSize = false;
+
+  @prop(Attrs.string)
+  initialView?: LoginForm.View;
+
+  @prop(Attrs.boolean)
+  enableRememberLogin = false;
+
+  @prop(Attrs.boolean)
+  enableForgotPassword = false;
+
+  @prop(Attrs.boolean)
+  enableRegistration = false;
 
   @prop
   processSubmit?: (
@@ -99,158 +92,104 @@ class LoginForm extends Component {
   ) => Promise<string | undefined | null>;
 
   @state
-  private _view: View = 'login';
-
-  @state
-  private _showInvalidFormError = false;
-
-  @state
-  private _successMessage = '';
-
-  @state
-  private _errorMessage = '';
-
-  @state
-  private _messageFading = 'none' as 'none' | 'fadeOut';
+  private _view: LoginForm.View = 'login';
 
   @state
   private _isLoading = false;
 
-  private _submitButtonRef = createRef<SlButton>();
-  private _animationRef = createRef<SlAnimation>();
-  private _formRef = createRef<Form>();
+  @state
+  private _errorBoxVisible = false;
+
   private _i18n = new I18nController(this);
   private _t = this._i18n.translate('jsCockpit.loginForm');
+  private _formRef = createRef<Form>();
+  private _errorBoxRef = createRef<Message>();
+  private _rememberLoginCheckboxRef = createRef<SlCheckbox>();
+  private _submitButtonRef = createRef<SlButton>();
+  private _animationRef = createRef<SlAnimation>();
+  private _preventFormSubmit = false;
 
-  @bind
-  private _onForgotPasswordClick() {
-    this._changeView('forgotPassword');
-  }
+  private _onInput = () => {
+    this._errorBoxVisible = false;
+  };
 
-  @bind
-  private _onGoToLoginClick() {
-    this._changeView('login');
-  }
-
-  @bind
-  private _onGoToRegistrationClick() {
-    this._changeView('registration');
-  }
-
-  @bind
-  private _onSubmit(ev?: any) {
-    const form = this._formRef.value!;
-
-    // TODO
-    if (ev) {
-      ev.preventDefault();
-    }
-    /*
-    if (!form.checkValidity()) {
-      this._showInvalidFormError = true
-      return
+  private _onFormSubmit = async (ev: FormSubmitEvent) => {
+    if (this._preventFormSubmit || !this.processSubmit) {
+      return;
     }
 
-    if (typeof this.processSubmit !== 'function') {
-      this._errorMessage = ''
-      this._successMessage = ''
-      return
-    }
+    this._preventFormSubmit = true;
+    this._submitButtonRef.value!.focus();
 
-    const formData = new FormData(form)
+    const data: LoginForm.SubmitData =
+      this._view === 'login'
+        ? {
+            view: 'login',
+            locale: this._i18n.getLocale(),
+            rememberLogin: !!this._rememberLoginCheckboxRef.value?.checked,
+            params: ev.detail.data || {} // TODO!!!
+          }
+        : {
+            view: this._view,
+            locale: this._i18n.getLocale(),
+            params: ev.detail.data || {} // TODO!!!
+          };
 
-    const data: LoginForm.SubmitData = {
-      view: this._view as any,
-      locale: this._i18n.getLocale(),
-      params: {}
-    }
+    this._isLoading = true;
 
-    formData.forEach((value, key) => {
-      data.params[key] = value
-    })
+    try {
+      await this.processSubmit(data);
+    } catch (e) {
+      let errorMsg = '';
 
-    if (this._view === 'login') {
-      ;(data as any).remeberLogin = this.enableRememberLogin // TODO!!!!
-    }
-
-    this._isLoading = true
-    this._successMessage = ''
-    this._errorMessage = ''
-    this._submitButtonRef.value!.focus()
-
-    this.processSubmit(data)
-      .then((message) => {
-        this._isLoading = false
-        ;(this._successMessage = 'Success'), (this._errorMessage = '')
-      })
-      .catch((error) => {
-        this._isLoading = false
-        this._successMessage = ''
-        this._errorMessage = String(error)
-      })
-  */
-  }
-
-  @bind
-  private _onSubmitClick(ev: any) {
-    this._formRef.value!.submit();
-  }
-
-  constructor() {
-    super();
-
-    this.addEventListener('mousedown', (ev) => {
-      if (this._isLoading) {
-        ev.preventDefault();
-      }
-    });
-
-    afterInit(this, () => {
-      let view: View = 'login';
-
-      if (this.enableForgotPassword && this.initialView === 'forgotPassword') {
-        view = 'forgotPassword';
-      } else if (
-        this.enableRegistration &&
-        this.initialView === 'registration'
-      ) {
-        view = 'registration';
-      } else if (
-        this.enableForgotPassword &&
-        this.initialView === 'resetPassword'
-      ) {
-        view = 'resetPassword';
+      if (typeof e === 'string') {
+        errorMsg = e.trim();
+      } else if (e !== null && typeof (e as any).message === 'string') {
+        errorMsg = (e as any).message.trim();
       }
 
-      this._view = view;
+      if (errorMsg) {
+        errorMsg = ` ${errorMsg}`;
+      }
 
-      this.addEventListener('input', () => {
-        this._clearMessages(true);
+      errorMsg = this._t((data.view + 'ErrorText') as any) + errorMsg;
+
+      showErrorDialog({
+        message: errorMsg
       });
-    });
-  }
-
-  private _clearMessages(delayed = false) {
-    if (
-      this._showInvalidFormError ||
-      this._successMessage ||
-      this._errorMessage
-    ) {
-      if (!delayed) {
-        (this._showInvalidFormError = false),
-          (this._successMessage = ''),
-          (this._errorMessage = ''),
-          (this._messageFading = 'none');
-      } else {
-        this._messageFading = 'fadeOut';
-        setTimeout(() => this._clearMessages(), 500);
-      }
+    } finally {
+      this._isLoading = false;
+      this._preventFormSubmit = false;
     }
-  }
+  };
 
-  private _changeView(view: View) {
+  private _onFormInvalid = () => {
+    if (!this._errorBoxVisible) {
+      this._errorBoxVisible = true;
+    } else {
+      this._errorBoxRef.value!.vibrate();
+    }
+  };
+
+  private _onSubmitClick = (ev: any) => {
+    this._formRef.value!.submit();
+  };
+
+  private _onForgotPasswordClick = () => {
+    this._changeView('forgotPassword');
+  };
+
+  private _onGoToLoginClick = () => {
+    this._changeView('login');
+  };
+
+  private _onGoToRegistrationClick = () => {
+    this._changeView('registration');
+  };
+
+  private _changeView(view: LoginForm.View) {
     const animation = this._animationRef.value!;
-    animation.duration = 400;
+    animation.duration = 300;
     animation.easing = 'ease';
     animation.iterations = 1;
     animation.name = view === 'login' ? 'fadeOutRight' : 'fadeOutLeft';
@@ -258,13 +197,19 @@ class LoginForm extends Component {
 
     setTimeout(() => {
       animation.style.visibility = 'hidden';
+      this._errorBoxRef.value!.hidden = true;
     }, animation.duration - 50);
 
     const finishListener = () => {
       this._view = view;
       this._isLoading = false;
-      this._clearMessages();
-      setTimeout(() => (animation.style.visibility = 'visible'), 50);
+      this._errorBoxVisible = false;
+
+      setTimeout(() => {
+        animation.style.visibility = 'visible';
+        this._errorBoxRef.value!.hidden = false;
+      }, 50);
+
       animation.removeEventListener('sl-finish', finishListener);
       animation.name = view === 'login' ? 'fadeInLeft' : 'fadeInRight';
       animation.play = true;
@@ -277,171 +222,110 @@ class LoginForm extends Component {
     return html`
       <div
         class="base ${classMap({
-          'label-align-vertical': true,
           'full-size': this.fullSize
         })}"
       >
         ${!this._isLoading ? null : html`<div class="overlay"></div>`}
+        ${this._renderHeader()}
         <sl-animation ${ref(this._animationRef)}>
-          <div class="container">
-            <div class="header">
-              <slot name="header"></slot>
-            </div>
-            <div class="center">
-              <div class="main">
-                <div class="column1">
-                  <div class="column1-top">
-                    <div>${this._renderIntro()}</div>
-                    ${this._view !== 'login'
-                      ? null
-                      : html`<div class="login-intro-appendix">
-                          <slot name="login-intro-appendix"></slot>
-                        </div>`}
-                  </div>
-                  <div class="column1-bottom">${this._renderIntroIcon()}</div>
-                </div>
-                <cp-form
-                  class="column2"
-                  @submit=${this._onSubmit}
-                  ${ref(this._formRef)}
-                >
-                  <div class="column2-top">${this._renderFields()}</div>
-                  <div class="column2-bottom">
-                    ${this._view !== 'login' || !this.enableRememberLogin
-                      ? null
-                      : html`<sl-checkbox
-                          >${this._t('rememberLogin')}</sl-checkbox
-                        >`}
-                    ${!this._showInvalidFormError
-                      ? null
-                      : html`<cp-message
-                          variant="danger"
-                          class=${classMap({
-                            'message': true,
-                            'fade-out': this._messageFading === 'fadeOut'
-                          })}
-                        >
-                          ${this._i18n.translate(
-                            'jsCockpit.validation',
-                            'formInvalid'
-                          )}
-                        </cp-message>`}
-                    ${!this._successMessage
-                      ? null
-                      : html`<cp-message
-                          variant="success"
-                          class=${classMap({
-                            'message': true,
-                            'fade-out': this._messageFading === 'fadeOut'
-                          })}
-                        >
-                          ${this._successMessage}
-                        </cp-message>`}
-                    ${!this._errorMessage
-                      ? null
-                      : html`<cp-message
-                          variant="danger"
-                          class=${classMap({
-                            'message': true,
-                            'fade-out': this._messageFading === 'fadeOut'
-                          })}
-                        >
-                          ${this._errorMessage}
-                        </cp-message>`}
-                    <focus-trap .inactive=${!this._isLoading}>
-                      <sl-button
-                        variant="primary"
-                        size="large"
-                        class="submit-button"
-                        @click=${this._onSubmitClick}
-                        ${ref(this._submitButtonRef)}
-                      >
-                        <div class="submit-button-content">
-                          <span class="submit-button-text">
-                            ${this._renderSubmitButtonText()}
-                          </span>
-                          ${!this._isLoading
-                            ? null
-                            : html`<sl-spinner
-                                class="submit-button-spinner"
-                              ></sl-spinner>`}
-                        </div>
-                      </sl-button>
-                    </focus-trap>
-                    ${this._renderLinks()}
-                  </div>
-                </cp-form>
-              </div>
-            </div>
-            <div class="footer">
-              <slot name="footer"></slot>
-            </div>
-          </div>
+          <div class="main">${this._renderMain()}</div>
         </sl-animation>
+        ${this._renderFooter()}
       </div>
     `;
   }
 
-  private _renderIntro() {
-    switch (this._view) {
-      case 'login':
-        return html`
-          <slot name="login-intro">
-            <div class="default-intro">
-              <h3>${this._t('loginHeadline')}</h3>
-              <p>${this._t('loginText')}</p>
-            </div>
-          </slot>
-        `;
-
-      case 'registration':
-        return html`
-          <slot name="registration-intro">
-            <div class="default-intro">
-              <h3>${this._t('registrationHeadline')}</h3>
-              <p>${this._t('registrationText')}</p>
-            </div>
-          </slot>
-        `;
-
-      case 'forgotPassword':
-        return html`
-          <slot name="forgot-password-intro">
-            <div class="default-intro">
-              <h3>${this._t('forgotPasswordHeadline')}</h3>
-              <p>${this._t('forgotPasswordText')}</p>
-            </div>
-          </slot>
-        `;
-      case 'resetPassword':
-        return html`
-          <slot name="reset-password-intro">
-            <div class="default-intro">
-              <h3>${this._t('resetPasswordHeadline')}</h3>
-              <p>${this._t('resetPasswordText')}</p>
-            </div>
-          </slot>
-        `;
+  private _renderHeader() {
+    if (
+      !hasSlot(this, 'header') &&
+      !hasSlot(this, 'header-start') &&
+      !hasSlot(this, 'header-stop')
+    ) {
+      return null;
     }
+
+    return html`
+      <div class="header">
+        <div class="header-start"><slot name="header-start" /></div>
+        <div class="header-main"><slot name="header" /></div>
+        <div class="header-end"><slot name="header-end" /></div>
+      </div>
+    `;
   }
 
-  private _renderIntroIcon() {
-    const icon =
-      this._view === 'registration'
-        ? registrationIntroIcon
-        : this._view === 'forgotPassword'
-        ? forgotPasswordIntroIcon
-        : this._view === 'resetPassword'
-        ? resetPasswordIntroIcon
-        : loginIntroIcon;
-
-    return html`<sl-icon alt="" src=${icon} class="intro-icon" />`;
+  private _renderMain() {
+    return html`
+      <cp-form
+        class="form"
+        .onFormSubmit=${this._onFormSubmit}
+        .onFormInvalid=${this._onFormInvalid}
+        @input=${this._onInput}
+        ${ref(this._formRef)}
+      >
+        ${when(
+          hasSlot(this, 'form-fields-start'),
+          () => html`
+            <div class="form-fields-start">
+              <slot name="form-fields-start"></slot>
+            </div>
+          `
+        )}
+        <div class="form-fields">${this._renderFormFields()}</div>
+        <div class="form-footer">
+          ${when(
+            this._view === 'login' && this.enableRememberLogin,
+            () => html`
+              <div>
+                <sl-checkbox
+                  class="remember-login-checkbox"
+                  ${ref(this._rememberLoginCheckboxRef)}
+                >
+                  ${this._t('rememberLogin')}
+                </sl-checkbox>
+              </div>
+            `
+          )}
+          <cp-message
+            class="error-box"
+            variant="danger"
+            ?open=${this._errorBoxVisible}
+            ${ref(this._errorBoxRef)}
+          >
+            ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
+          </cp-message>
+          <focus-trap .inactive=${!this._isLoading}>
+            <sl-button
+              variant="primary"
+              size="large"
+              class="submit-button"
+              @click=${this._onSubmitClick}
+              ${ref(this._submitButtonRef)}
+            >
+              <div class="submit-button-content">
+                <span class="submit-button-text">
+                  ${this._renderSubmitButtonText()}
+                </span>
+                ${!this._isLoading
+                  ? null
+                  : html`<sl-spinner
+                      class="submit-button-spinner"
+                    ></sl-spinner>`}
+              </div>
+            </sl-button>
+          </focus-trap>
+          <div class="links">${this._renderLinks()}</div>
+        </div>
+      </cp-form>
+    `;
   }
 
-  private _renderFields() {
+  _renderFormFields() {
     switch (this._view) {
       case 'login':
-        return html`<slot name="login-fields" class="fields-slot"></slot>
+        return html`
+          <h3 class="form-fields-headline">${this._t('loginHeadline')}</h3>
+          <p class="form-fields-text">${this._t('loginText')}</p>
+          <slot name="login-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'login-fields')
             ? null
             : html`
@@ -455,76 +339,93 @@ class LoginForm extends Component {
                   label=${this._t('password')}
                   required
                 ></cp-password-field>
-              `}`;
+              `}
+        `;
 
       case 'registration':
-        return html`<slot name="registration-fields" class="fields-slot"></slot>
+        return html`
+          <h3 class="form-fields-headline">
+            ${this._t('registrationHeadline')}
+          </h3>
+          <p class="form-fields-text">${this._t('registrationText')}</p>
+          <slot name="registration-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'registration-fields')
             ? null
             : html`
                 <cp-text-field
-                  name="username-reg"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
                 <cp-text-field
-                  name="firstName-reg"
+                  name="firstName"
                   label=${this._t('firstName')}
                   required
                 ></cp-text-field>
                 <cp-text-field
-                  name="lastName-reg"
+                  name="lastName"
                   label=${this._t('lastName')}
                   required
                 ></cp-text-field>
                 <cp-email-field
-                  name="email-reg"
+                  name="email"
                   label=${this._t('email')}
                   required
                 ></cp-email-field>
-              `}`;
+              `}
+        `;
 
       case 'forgotPassword':
-        return html`<slot
-            name="forgot-password-fields"
-            class="fields-slot"
-          ></slot>
+        return html`
+          <h3 class="form-fields-headline">
+            ${this._t('forgotPasswordHeadline')}
+          </h3>
+          <p class="form-fields-text">${this._t('forgotPasswordText')}</p>
+          <slot name="forgot-password-fields" class="fields-slot"></slot>
           ${hasSlot(this, 'forgot-password-fields')
             ? null
             : html`
                 <cp-text-field
-                  name="username-fp"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
 
                 <cp-email-field
-                  name="email-fp"
+                  name="email"
                   label=${this._t('email')}
                   required
                 ></cp-email-field>
-              `}`;
+              `}
+        `;
 
       case 'resetPassword':
         return html`<slot
             name="reset-password-fields"
             class="fields-slot"
           ></slot>
-          ${hasSlot(this, 'forgot-password-fields')
+          <h3 class="form-fields-headline">Reset password</h3>
+          <p class="form-fields-text">${this._t('resetPasswordText')}</p>
+          ${hasSlot(this, 'reset-password-fields')
             ? null
             : html`
                 <cp-text-field
-                  name="username-rp"
+                  name="username"
                   label=${this._t('username')}
                   required
                 ></cp-text-field>
                 <cp-password-field
-                  name="newPasswordRepeat-rp"
+                  name="newPassword"
+                  label=${this._t('password')}
+                  required
+                ></cp-password-field>
+                <cp-password-field
+                  name="newPasswordRepeat"
                   label=${this._t('newPasswordRepeat')}
                   required
                 ></cp-password-field>
                 <cp-text-field
-                  name="securityCode-rp"
+                  name="securityCode"
                   label=${this._t('securityCode')}
                   required
                 ></cp-text-field>
@@ -532,24 +433,78 @@ class LoginForm extends Component {
     }
   }
 
+  _renderFooter() {
+    if (
+      !hasSlot(this, 'footer') &&
+      !hasSlot(this, 'footer-start') &&
+      !hasSlot(this, 'footer-stop')
+    ) {
+      return null;
+    }
+
+    return html`
+      <div class="footer">
+        <div class="footer-start">
+          <slot name="footer-start"></slot>
+        </div>
+        <div class="footer-main">
+          <slot name="footer"></slot>
+        </div>
+        <div class="footer-end">
+          <slot name="footer-end"></slot>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderSubmitButtonText() {
+    if (!this._isLoading) {
+      switch (this._view) {
+        case 'login':
+          return this._t('loginSubmitText');
+
+        case 'registration':
+          return this._t('registrationSubmitText');
+
+        case 'forgotPassword':
+          return this._t('forgotPasswordSubmitText');
+
+        case 'resetPassword':
+          return this._t('resetPasswordSubmitText');
+      }
+    } else {
+      switch (this._view) {
+        case 'login':
+          return this._t('processingLoginSubmit');
+
+        case 'forgotPassword':
+          return this._t('processingForgotPasswordSubmit');
+
+        case 'resetPassword':
+          return this._t('processingResetPasswordSubmit');
+
+        case 'registration':
+          return this._t('processingRegistrationSubmit');
+      }
+    }
+  }
+
   private _renderLinks() {
     switch (this._view) {
       case 'login':
         return html`
-          <div class="links">
-            ${this._renderForgotPasswordLink()}
-            ${this._renderGoToRegistrationLink()}
-          </div>
+          ${this._renderForgotPasswordLink()}
+          ${this._renderGoToRegistrationLink()}
         `;
 
       case 'registration':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
+        return this._renderGoToLoginLink();
 
       case 'forgotPassword':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
+        return this._renderGoToLoginLink();
 
       case 'resetPassword':
-        return html` <div class="links">${this._renderGoToLoginLink()}</div> `;
+        return this._renderGoToLoginLink();
     }
   }
 
@@ -591,37 +546,5 @@ class LoginForm extends Component {
           </sl-button>
         `
       : '';
-  }
-
-  private _renderSubmitButtonText() {
-    if (!this._isLoading) {
-      switch (this._view) {
-        case 'login':
-          return this._t('loginSubmitText');
-
-        case 'registration':
-          return this._t('registrationSubmitText');
-
-        case 'forgotPassword':
-          return this._t('forgotPasswordSubmitText');
-
-        case 'resetPassword':
-          return this._t('resetPasswordSubmitText');
-      }
-    } else {
-      switch (this._view) {
-        case 'login':
-          return this._t('processingLoginSubmit');
-
-        case 'forgotPassword':
-          return this._t('processingForgotPasswordSubmit');
-
-        case 'resetPassword':
-          return this._t('processingResetPasswordSubmit');
-
-        case 'registration':
-          return this._t('processingRegistrationSubmit');
-      }
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { bind, elem, Component } from '../main/utils/components';
+import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { sharedTheme } from './shared/shared-theme';
@@ -17,6 +17,8 @@ export default {
   title: 'login-form'
 };
 
+export const loginForm = () => h('login-form-demo');
+
 @elem({
   tag: 'login-form-demo',
   uses: [
@@ -30,74 +32,49 @@ export default {
   ]
 })
 class LoginFormDemo extends Component {
+  private _processSubmit = async (data: any) => {
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+
+    throw Error(
+      'This is just a simple demo, the form data will not really be submitted.' +
+        '\n\nForm data:\n' +
+        JSON.stringify(data, null, 2)
+    );
+  };
+
   render() {
     return html`
       <cp-theme-provider .theme=${sharedTheme}>
         <cp-login-form
           full-size
           enable-remember-login
-          enable-forgot-password
           enable-registration
-          initial-view="login"
-          .processSubmit=${(data: LoginForm.SubmitData) => {
-            console.log(JSON.stringify(data, null, 2));
-
-            return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                //reject('This is just a demo. Forms cannot really be submitted')
-                resolve('xxx');
-              }, 2000);
-            });
-          }}
+          enable-forgot-password
+          .processSubmit=${this._processSubmit}
         >
           <cp-brand
             slot="header"
-            logo="default"
-            headline="my-company"
+            size="small"
+            headline="My Company"
             text="Back Office"
-            size="large"
+            bicolor
+            flat
           ></cp-brand>
-          <!--
-          <div slot="login-fields">
-            <cp-text-field
-              label="Username"
-              name="usernamelll"
-              required
-            ></cp-text-field>
-            <cp-password-field label="Password" required></cp-password-field>
-          </div>
--->
-          <div slot="registration-fields">
-            <cp-text-field
-              name="usernamerrr"
-              label="Username"
-              required
-            ></cp-text-field>
-            <cp-text-field
-              name="firstNamerrr"
-              label="First name"
-              required
-            ></cp-text-field>
-            <cp-text-field
-              name="lastNamerrr"
-              label="Last name"
-              required
-            ></cp-text-field>
-            <cp-email-field
-              name="emailrrr"
-              label="Email"
-              required
-            ></cp-email-field>
-            <cp-date-field
-              name="dayOfBirthrrr"
-              label="Day of birth"
-            ></cp-date-field>
-          </div>
-          <div slot="footer">&copy; 2021, my-company</div>
+          <cp-brand
+            slot="form-fields-start"
+            size="large"
+            headline="My Company"
+            text="Back Office"
+            logo="default"
+            bicolor
+          ></cp-brand>
+          <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
         </cp-login-form>
       </cp-theme-provider>
     `;
   }
 }
-
-export const loginForm = () => h('login-form-demo');
