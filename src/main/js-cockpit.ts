@@ -11,7 +11,6 @@ export { EmailField } from './components/email-field/email-field';
 export { Fieldset } from './components/fieldset/fieldset';
 export { FormSection } from './components/form-section/form-section';
 export { LoginForm } from './components/login-form/login-form';
-export { LoginForm2 } from './components/login-form2/login-form2';
 export { PaginationBar } from './components/pagination-bar/pagination-bar';
 export { PasswordField } from './components/password-field/password-field';
 export { RadioGroup } from './components/radio-group/radio-group';
