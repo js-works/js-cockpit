@@ -154,7 +154,7 @@ class LoginForm extends Component {
 
       errorMsg = this._t((data.view + 'ErrorText') as any) + errorMsg;
 
-      showErrorDialog({
+      showErrorDialog(this, {
         message: errorMsg
       });
     } finally {

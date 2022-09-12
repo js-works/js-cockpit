@@ -24,7 +24,7 @@ export { SideMenu2 } from './components/side-menu2/side-menu2';
 export { Tab } from './components/tab/tab';
 export { Tabs } from './components/tabs/tabs';
 export { ThemeProvider } from './components/theme-provider/theme-provider';
-export { TextArea } from './components/text-area/text-area';
+// export { TextArea } from './components/text-area/text-area';
 export { TextField } from './components/text-field/text-field';
 export { UserMenu } from './components/user-menu/user-menu';
 
