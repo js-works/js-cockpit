@@ -362,7 +362,7 @@ function showDialog<T = void>(
             <div class="content"></div>
             <div class="error-box">
               <cp-message variant="danger" class="error-message">
-                ${i18n.translate('jsCockpit.validation', 'formInvalid')}
+                ${i18n.translate('jsCockpit.formValidation', 'formInvalid')}
               </cp-message>
             </div>
             <div slot="footer" class="buttons"></div>

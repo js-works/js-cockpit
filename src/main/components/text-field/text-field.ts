@@ -10,6 +10,7 @@ import {
 import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { FormFieldController } from '../../controllers/form-field-controller';
+import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -55,10 +56,19 @@ class TextField extends Component {
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
 
+  private _slInputRef = createRef<SlInput>();
+  private _i18n = new I18nController(this);
+
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
     validate: () => this.validationMessage || null
   });
+
+  private _fieldValidator = new FieldValidator(
+    () => this.value,
+    () => this._i18n.getLocale(),
+    [FieldCheckers.required((value) => !!value)]
+  );
 
   focus() {
     this._slInputRef.value!.focus();
@@ -67,9 +77,6 @@ class TextField extends Component {
   blur(): void {
     this._slInputRef.value?.blur();
   }
-
-  private _i18n = new I18nController(this);
-  private _slInputRef = createRef<SlInput>();
 
   constructor() {
     super();
@@ -83,17 +90,7 @@ class TextField extends Component {
   }
 
   get validationMessage(): string {
-    const input = this._slInputRef.value;
-
-    if (!input) {
-      return '';
-    }
-
-    if (this.required && !input.value) {
-      return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
-    }
-
-    return '';
+    return this._fieldValidator.validate();
   }
 
   private _onInput = () => this._formField.signalInput();

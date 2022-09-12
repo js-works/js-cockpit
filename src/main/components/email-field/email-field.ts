@@ -10,6 +10,7 @@ import {
 import { classMap, createRef, html, ref, when } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { FormFieldController } from '../../controllers/form-field-controller';
+import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
 
 // custom elements
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -26,11 +27,6 @@ import emailIcon from '../../icons/envelope.svg';
 export { EmailField };
 
 // === types =========================================================
-
-// === constants =====================================================
-
-const regexEmail =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 // === EmailField =====================================================
 
@@ -66,6 +62,12 @@ class EmailField extends Component {
   private _slInputRef = createRef<SlInput>();
   private _i18n = new I18nController(this);
 
+  private _fieldValidator = new FieldValidator(
+    () => this.value,
+    () => this._i18n.getLocale(),
+    [FieldCheckers.required((value) => !!value), FieldCheckers.email()]
+  );
+
   constructor() {
     super();
 
@@ -86,21 +88,7 @@ class EmailField extends Component {
     void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   get validationMessage(): string {
-    const input = this._slInputRef.value;
-
-    if (!input) {
-      return '';
-    }
-
-    if (this.required && !input.value) {
-      return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
-    }
-
-    if (input.value && !input.value.match(regexEmail)) {
-      return this._i18n.translate('jsCockpit.validation', 'emailInvalid');
-    }
-
-    return '';
+    return this._fieldValidator.validate();
   }
 
   render() {

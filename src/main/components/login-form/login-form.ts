@@ -293,7 +293,7 @@ class LoginForm extends Component {
             ?open=${this._errorBoxVisible}
             ${ref(this._errorBoxRef)}
           >
-            ${this._i18n.translate('jsCockpit.validation', 'formInvalid')}
+            ${this._i18n.translate('jsCockpit.formValidation', 'formInvalid')}
           </cp-message>
           <focus-trap .inactive=${!this._isLoading}>
             <sl-button

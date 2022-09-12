@@ -1,7 +1,7 @@
 import type { Translations } from '../i18n/i18n';
 
 type Terms = Translations<{
-  'jsCockpit.validation': {
+  'jsCockpit.formValidation': {
     fieldRequired: string;
     emailInvalid: string;
     formInvalid: string;

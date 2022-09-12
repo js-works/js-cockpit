@@ -13,6 +13,15 @@ const translations: FullTranslations<'jsCockpit'> = {
       approval: 'Zustimmung'
     },
 
+    'jsCockpit.formValidation': {
+      fieldRequired: 'Bitte füllen Sie dieses Feld aus',
+      emailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse an',
+
+      formInvalid:
+        'Das Formular wurde nicht korrekt ausgefüllt. ' +
+        'Bitte korrigieren Sie die ungültigen Felder.'
+    },
+
     'jsCockpit.loginForm': {
       email: 'E-mail',
       firstName: 'Vorname',
@@ -98,15 +107,6 @@ const translations: FullTranslations<'jsCockpit'> = {
     },
 
     'jsCockpit.sideMenu': {},
-
-    'jsCockpit.validation': {
-      fieldRequired: 'Bitte füllen Sie dieses Feld aus',
-      emailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse an',
-
-      formInvalid:
-        'Das Formular wurde nicht korrekt ausgefüllt. ' +
-        'Bitte korrigieren Sie die ungültigen Felder.'
-    },
 
     'jsCockpit.userMenu': {
       anonymous: 'Anonymous',

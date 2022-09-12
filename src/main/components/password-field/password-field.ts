@@ -13,6 +13,7 @@ import {
 import { classMap, createRef, html, ref, repeat } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
 import { FormFieldController } from '../../controllers/form-field-controller';
+import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -59,19 +60,16 @@ class PasswordField extends Component {
     validate: () => this.validationMessage || null
   });
 
+  private _fieldValidator = new FieldValidator(
+    () => this.value,
+    () => this._i18n.getLocale(),
+    [FieldCheckers.required((value) => !!value)]
+  );
+
   get validationMessage(): string {
-    const input = this._slInputRef.value;
-
-    if (!input) {
-      return '';
-    }
-
-    if (this.required && !input.value) {
-      return this._i18n.translate('jsCockpit.validation', 'fieldRequired');
-    }
-
-    return '';
+    return this._fieldValidator.validate();
   }
+
   constructor() {
     super();
 

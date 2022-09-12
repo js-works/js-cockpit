@@ -225,7 +225,7 @@ class BaseLocalizer implements Localizer {
     return getDirection(this.#getLocale());
   }
 
-  translate<U extends Translations>(): <
+  translate<U extends Localize.Translations>(): <
     C extends keyof U,
     K extends keyof U[C]
   >(
