@@ -19,7 +19,9 @@ import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
 import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 import SlTree from '@shoelace-style/shoelace/dist/components/tree/tree';
 import SlTreeItem from '@shoelace-style/shoelace/dist/components/tree-item/tree-item';
-import { SlCheckbox, SlIcon, SlSpinner } from '@shoelace-style/shoelace';
+import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner';
 
 // === exports =======================================================
 

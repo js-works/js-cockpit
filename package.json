@@ -1,6 +1,6 @@
 {
   "name": "js-cockpit",
-  "version": "0.0.34",
+  "version": "0.0.37",
   "description": "",
   "type": "module",
   "main": "./dist/js-cockpit.cjs.js",
