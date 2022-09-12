@@ -44,14 +44,14 @@ export default css`
     margin: 0 1.5rem 0 1.5rem;
     padding: 0.125rem 0.25rem;
     font-family: var(--sl-font-sans);
-    font-size: 1.75rem;
-    font-weight: var(--sl-font-weight-light);
+    font-size: 1.5rem;
+    font-weight: var(--sl-font-weight-normal);
     color: var(--sl-color-neutral-800);
   }
 
   .actions {
     flex-grow: 1;
-    margin-top: 0.45rem;
+    margin-top: 0.3rem;
   }
 
   .search {

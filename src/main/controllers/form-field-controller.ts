@@ -21,7 +21,7 @@ class FormFieldController<T> {
   #getValue: () => T;
   #validate: () => null | string;
   #errorMsg: string | null = null;
-  #errorDiv = document.createElement('div');
+  #errorMsgDiv = document.createElement('div');
 
   constructor(
     component: ReactiveControllerHost & HTMLElement & { name: string },
@@ -68,23 +68,23 @@ class FormFieldController<T> {
                 this.#errorMsg = errorMsg;
 
                 if (errorMsg) {
-                  this.#errorDiv.innerHTML = '';
+                  this.#errorMsgDiv.innerHTML = '';
                   const innerDiv = document.createElement('div');
                   innerDiv.innerText = errorMsg;
-                  this.#errorDiv.append(innerDiv);
+                  this.#errorMsgDiv.append(innerDiv);
                   innerDiv.className = 'validation-error';
-                  this.#errorDiv.style.maxHeight = '0';
-                  this.#errorDiv.style.overflow = 'hidden';
+                  this.#errorMsgDiv.style.maxHeight = '0';
+                  this.#errorMsgDiv.style.overflow = 'hidden';
 
-                  runOpenVerticalTransition(this.#errorDiv).then(() => {
-                    this.#errorDiv.style.maxHeight = 'none';
-                    this.#errorDiv.style.overflow = 'auto';
+                  runOpenVerticalTransition(this.#errorMsgDiv).then(() => {
+                    this.#errorMsgDiv.style.maxHeight = 'none';
+                    this.#errorMsgDiv.style.overflow = 'auto';
                   });
                 } else {
-                  runCloseVerticalTransition(this.#errorDiv).then(() => {
-                    this.#errorDiv.style.maxHeight = '0';
-                    this.#errorDiv.style.overflow = 'hidden';
-                    this.#errorDiv.innerHTML = '';
+                  runCloseVerticalTransition(this.#errorMsgDiv).then(() => {
+                    this.#errorMsgDiv.style.maxHeight = '0';
+                    this.#errorMsgDiv.style.overflow = 'hidden';
+                    this.#errorMsgDiv.innerHTML = '';
                   });
                 }
 
@@ -125,7 +125,7 @@ class FormFieldController<T> {
     return fn(this.#errorMsg);
   }
 
-  getErrorMsgElement(): HTMLElement | null {
-    return this.#errorDiv;
+  renderErrorMsg(): HTMLElement | null {
+    return this.#errorMsgDiv;
   }
 }

@@ -54,7 +54,7 @@ class FieldValidator<T> {
     this.#checkers = checkers;
   }
 
-  validate(): string {
+  validate(): string | null {
     const value = this.#getValue();
     this.#currLocale = this.#getLocale();
 
@@ -66,7 +66,7 @@ class FieldValidator<T> {
       }
     }
 
-    return '';
+    return null;
   }
 }
 

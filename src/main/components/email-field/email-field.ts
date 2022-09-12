@@ -54,19 +54,19 @@ class EmailField extends Component {
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  private _formField = new FormFieldController(this, {
-    getValue: () => this.value,
-    validate: () => this.validationMessage || null
-  });
+  private readonly _slInputRef = createRef<SlInput>();
+  private readonly _i18n = new I18nController(this);
 
-  private _slInputRef = createRef<SlInput>();
-  private _i18n = new I18nController(this);
-
-  private _fieldValidator = new FieldValidator(
+  private readonly _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._i18n.getLocale(),
     [FieldCheckers.required((value) => !!value), FieldCheckers.email()]
   );
+
+  private readonly _formField = new FormFieldController(this, {
+    getValue: () => this.value,
+    validate: () => this._fieldValidator.validate()
+  });
 
   constructor() {
     super();
@@ -79,16 +79,16 @@ class EmailField extends Component {
     });
   }
 
-  private _onInput = () => this._formField.signalInput();
-  private _onChange = () => this._formField.signalChange();
-  private _onFocus = () => this._formField.signalFocus();
-  private _onBlur = () => this._formField.signalBlur();
+  private readonly _onInput = () => this._formField.signalInput();
+  private readonly _onChange = () => this._formField.signalChange();
+  private readonly _onFocus = () => this._formField.signalFocus();
+  private readonly _onBlur = () => this._formField.signalBlur();
 
-  private _onKeyDown = (ev: KeyboardEvent) =>
+  private readonly _onKeyDown = (ev: KeyboardEvent) =>
     void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   get validationMessage(): string {
-    return this._fieldValidator.validate();
+    return this._fieldValidator.validate() || '';
   }
 
   render() {
@@ -123,7 +123,7 @@ class EmailField extends Component {
             <sl-icon src=${emailIcon} class="icon"></sl-icon>
           </div>
         </sl-input>
-        ${this._formField.getErrorMsgElement()}
+        ${this._formField.renderErrorMsg()}
       </div>
     `;
   }

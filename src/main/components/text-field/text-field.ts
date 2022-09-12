@@ -59,16 +59,16 @@ class TextField extends Component {
   private _slInputRef = createRef<SlInput>();
   private _i18n = new I18nController(this);
 
-  private _formField = new FormFieldController(this, {
-    getValue: () => this.value,
-    validate: () => this.validationMessage || null
-  });
-
   private _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._i18n.getLocale(),
     [FieldCheckers.required((value) => !!value)]
   );
+
+  private _formField = new FormFieldController(this, {
+    getValue: () => this.value,
+    validate: () => this._fieldValidator.validate()
+  });
 
   focus() {
     this._slInputRef.value!.focus();
@@ -90,7 +90,7 @@ class TextField extends Component {
   }
 
   get validationMessage(): string {
-    return this._fieldValidator.validate();
+    return this._fieldValidator.validate() || '';
   }
 
   private _onInput = () => this._formField.signalInput();
@@ -130,7 +130,7 @@ class TextField extends Component {
             ${this.label}
           </span>
         </sl-input>
-        ${this._formField.getErrorMsgElement()}
+        ${this._formField.renderErrorMsg()}
       </div>
     `;
   }

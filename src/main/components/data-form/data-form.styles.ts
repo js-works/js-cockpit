@@ -27,8 +27,8 @@ export default css`
   .headline {
     margin: 0 0.75rem;
     padding: 0.125rem 0.75rem;
-    font-size: 1.75rem;
-    font-weight: var(--sl-font-weight-light);
+    font-size: 1.5rem;
+    font-weight: var(--sl-font-weight-normal);
   }
 
   .actions {

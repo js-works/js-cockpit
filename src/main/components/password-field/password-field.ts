@@ -53,22 +53,18 @@ class PasswordField extends Component {
   @prop(Attrs.string)
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  private _i18n = new I18nController(this);
+  private readonly _i18n = new I18nController(this);
 
-  private _formField = new FormFieldController(this, {
-    getValue: () => this.value,
-    validate: () => this.validationMessage || null
-  });
-
-  private _fieldValidator = new FieldValidator(
+  private readonly _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._i18n.getLocale(),
     [FieldCheckers.required((value) => !!value)]
   );
 
-  get validationMessage(): string {
-    return this._fieldValidator.validate();
-  }
+  private readonly _formField = new FormFieldController(this, {
+    getValue: () => this.value,
+    validate: () => this._fieldValidator.validate()
+  });
 
   constructor() {
     super();
@@ -79,6 +75,10 @@ class PasswordField extends Component {
         set: (value: string) => void (this._slInputRef.value!.value = value)
       });
     });
+  }
+
+  get validationMessage(): string {
+    return this._fieldValidator.validate() || '';
   }
 
   private _onInput = () => this._formField.signalInput();
@@ -123,7 +123,7 @@ class PasswordField extends Component {
             ${this.label}
           </span>
         </sl-input>
-        ${this._formField.getErrorMsgElement()}
+        ${this._formField.renderErrorMsg()}
       </div>
     `;
   }
