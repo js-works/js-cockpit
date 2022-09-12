@@ -48,7 +48,7 @@ export default css`
     max-width: 1ex;
     overflow: hidden;
     content: '*';
-    color: var(--sl-color-danger-600);
+    color: var(--sl-color-danger-700);
     box-sizing: border-box;
   }
 

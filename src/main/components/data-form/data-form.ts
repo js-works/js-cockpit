@@ -2,7 +2,7 @@ import { elem, prop, Attrs, Component } from '../../utils/components';
 import { html } from '../../utils/lit';
 
 // custom elements
-import { ActionBar } from 'js-cockpit';
+import { ActionBar } from '../action-bar/action-bar';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';

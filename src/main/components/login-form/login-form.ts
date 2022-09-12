@@ -17,9 +17,11 @@ import { PasswordField } from '../password-field/password-field';
 import { TextField } from '../text-field/text-field';
 import { Brand } from '../brand/brand';
 
+// events
+import { FormSubmitEvent } from '../../events/form-submit-event';
+
 // styles
 import loginFormStyles from './login-form.styles';
-import { FormSubmitEvent } from 'js-cockpit';
 
 // === exports =======================================================
 
