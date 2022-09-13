@@ -97,21 +97,21 @@ const defaultOptions: Calendar.Options = {
 class Calendar {
   static #template: HTMLTemplateElement | null = null;
 
-  readonly #cal: HTMLElement;
-  readonly #calBase: HTMLElement;
-  readonly #calInput: HTMLInputElement;
-  readonly #calTitle: HTMLAnchorElement;
-  readonly #calPrev: HTMLAnchorElement;
-  readonly #calNext: HTMLAnchorElement;
-  readonly #calSheet: HTMLElement;
-  readonly #calTimeSelector: HTMLElement;
-  readonly #calTime: HTMLElement;
-  readonly #calHourSlider: HTMLInputElement;
-  readonly #calMinuteSlider: HTMLInputElement;
-  readonly #calOk: HTMLInputElement;
-  readonly #calCancel: HTMLInputElement;
-  readonly #calClear: HTMLInputElement;
-  readonly #focusables: HTMLElement[];
+  #cal: HTMLElement;
+  #calBase: HTMLElement;
+  #calInput: HTMLInputElement;
+  #calTitle: HTMLAnchorElement;
+  #calPrev: HTMLAnchorElement;
+  #calNext: HTMLAnchorElement;
+  #calSheet: HTMLElement;
+  #calTimeSelector: HTMLElement;
+  #calTime: HTMLElement;
+  #calHourSlider: HTMLInputElement;
+  #calMinuteSlider: HTMLInputElement;
+  #calOk: HTMLInputElement;
+  #calCancel: HTMLInputElement;
+  #calClear: HTMLInputElement;
+  #focusables: HTMLElement[];
 
   #options = defaultOptions;
   #currView: View = 'month';
@@ -178,7 +178,7 @@ class Calendar {
     }
   }
 
-  readonly #renderPicker = (styles: string = '') => {
+  #renderPicker = (styles: string = '') => {
     if (Calendar.#template === null) {
       Calendar.#template = document.createElement('template');
       Calendar.#template.innerHTML = baseTemplate;
@@ -192,7 +192,7 @@ class Calendar {
     return ret;
   };
 
-  readonly #onPickerMouseDown = (ev: MouseEvent) => {
+  #onPickerMouseDown = (ev: MouseEvent) => {
     if (
       ev.target instanceof HTMLElement &&
       !this.#focusables.includes(ev.target)
@@ -202,7 +202,7 @@ class Calendar {
     }
   };
 
-  readonly #onPickerClick = (ev: MouseEvent) => {
+  #onPickerClick = (ev: MouseEvent) => {
     const target = ev.target;
 
     if (this.#updateRequested || !(target instanceof HTMLElement)) {
@@ -230,14 +230,14 @@ class Calendar {
     }
   };
 
-  readonly #onTitleClick = () => {
+  #onTitleClick = () => {
     if (this.#currView !== 'decade') {
       this.#currView = this.#currView === 'month' ? 'year' : 'decade';
       this.#requestUpdate();
     }
   };
 
-  readonly #onPrevClick = () => {
+  #onPrevClick = () => {
     if (this.#currView === 'month') {
       if (this.#currMonth === 0) {
         this.#currMonth = 11;
@@ -259,7 +259,7 @@ class Calendar {
     }
   };
 
-  readonly #onNextClick = () => {
+  #onNextClick = () => {
     if (this.#currView === 'month') {
       if (this.#currMonth === 11) {
         this.#currMonth = 0;
@@ -279,7 +279,7 @@ class Calendar {
     }
   };
 
-  readonly #onCellClick = (ev: Event) => {
+  #onCellClick = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLElement)) {
@@ -309,19 +309,19 @@ class Calendar {
     }
   };
 
-  readonly #onOkClick = () => {
+  #onOkClick = () => {
     console.log('ok');
   };
 
-  readonly #onCancelClick = () => {
+  #onCancelClick = () => {
     console.log('cancel');
   };
 
-  readonly #onClearClick = () => {
+  #onClearClick = () => {
     console.log('clear');
   };
 
-  readonly #onHourInput = (ev: Event) => {
+  #onHourInput = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLInputElement)) {
@@ -332,7 +332,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  readonly #onMinuteInput = (ev: Event) => {
+  #onMinuteInput = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLInputElement)) {
@@ -343,7 +343,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  readonly #requestUpdate = () => {
+  #requestUpdate = () => {
     if (this.#updateRequested) {
       return;
     }
@@ -356,7 +356,7 @@ class Calendar {
     });
   };
 
-  readonly #update = () => {
+  #update = () => {
     switch (this.#currView) {
       case 'month': {
         const month = this.#currMonth;
@@ -395,7 +395,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  readonly #updateTimeText = () => {
+  #updateTimeText = () => {
     let timeText: string;
 
     if (this.#currHour === null || this.#currMinute === null) {
@@ -413,7 +413,7 @@ class Calendar {
     this.#calTime.innerText = timeText;
   };
 
-  readonly #renderMonthView = (year: number, month: number) => {
+  #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
     const options = this.#options;
     const localization = options.localization;
@@ -501,7 +501,7 @@ class Calendar {
     return ret;
   };
 
-  readonly #renderYearView = (year: number) => {
+  #renderYearView = (year: number) => {
     const ret = h('div', { className: 'cal-view-year' });
 
     for (let i = 0; i < 12; ++i) {
@@ -521,7 +521,7 @@ class Calendar {
     return ret;
   };
 
-  readonly #renderDecadeView = (startYear: number) => {
+  #renderDecadeView = (startYear: number) => {
     const ret = h('div', { className: 'cal-view-decade' });
 
     for (let i = 0; i < 12; ++i) {
