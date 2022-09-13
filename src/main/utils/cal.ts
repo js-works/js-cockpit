@@ -89,7 +89,7 @@ const defaultLocalization: Calendar.Localization = {
 
 const defaultOptions: Calendar.Options = {
   localization: defaultLocalization,
-  alwaysShow42Days: true
+  alwaysShow42Days: false
 };
 
 // === public ========================================================
@@ -386,6 +386,12 @@ class Calendar {
         this.#calSheet.append(this.#renderDecadeView(this.#currDecade));
     }
 
+    if (this.#currView === 'decade') {
+      this.#calTitle.classList.add('cal--disabled');
+    } else {
+      this.#calTitle.classList.remove('cal--disabled');
+    }
+
     this.#updateTimeText();
   };
 
@@ -645,15 +651,16 @@ const baseStyles = /*css*/ `
     --cal-border-radius: 3px;
     --cal-header-color: #444;
     --cal-header-background-color: #fff;
-    --cal-header-hover-background-color: #606060;
-    --cal-header-active-background-color: #a0a0a0;
+    --cal-header-hover-background-color: #ddd;
+    --cal-header-active-background-color: #ccc;
     --cal-header-border-color: #eee;
     --cal-header-border-width: 0 0 1px 0;
     --cal-sheet-min-width: 20em;
     --cal-sheet-min-height: 16em;
-    --cal-cell-hover-background-color: #d0d0d0;
-    --cal-cell-active-background-color: #c8c8c8;
-    --cal-cell-other-month-background-color: #ccc;
+    --cal-sheet-padding: 4px;
+    --cal-cell-hover-background-color: #ddd;
+    --cal-cell-active-background-color: #ccc;
+    --cal-cell-other-month-color: #ccc;
     --cal-button-margin: 0;
     --cal-button-padding: 0.5em;
     --cal-button-border-color: #ccc;
@@ -714,7 +721,7 @@ const baseStyles = /*css*/ `
   .cal-prev,
   .cal-next {
     padding: 0.125rem 0.25rem;
-    margin: 0.125rem 0.25rem;
+    margin: 0.125rem 0.125rem;
   }
 
   .cal-title {
@@ -738,6 +745,12 @@ const baseStyles = /*css*/ `
   .cal-prev:not(.cal--disabled):active,
   .cal-next:not(.cal--disabled):active {
     background-color: var(--cal-header-active-background-color);
+    background-color: red;
+  }
+
+  .cal-title.cal--disabled {
+    background-color: inherit;
+    cursor: default;
   }
 
   .cal-sheet {
@@ -747,6 +760,7 @@ const baseStyles = /*css*/ `
     flex-grow: 1;
     min-width: var(--cal-sheet-min-width);
     min-height: var(--cal-sheet-min-height);
+    padding: var(--cal-sheet-padding);
   }
 
   .cal-view-month {
@@ -787,8 +801,12 @@ const baseStyles = /*css*/ `
   }
 
 
-  .cal-cell--other-month {
-    color: var(--cal-cell-other-month-background-color) 
+  .cal-cell--other-month:not(:hover) {
+    color: var(--cal-cell-other-month-color) 
+  }
+  
+  .cal-cell--other-month:hover {
+    color: var(--cal-cell-color) 
   }
 
   .cal-week-number {
