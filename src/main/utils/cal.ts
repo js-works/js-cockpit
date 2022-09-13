@@ -30,6 +30,11 @@ namespace Calendar {
       clear: string;
     };
   };
+
+  export type Options = {
+    localization: Localization;
+    alwaysShow42Days: boolean;
+  };
 }
 
 // === local types ===================================================
@@ -82,6 +87,11 @@ const defaultLocalization: Calendar.Localization = {
   }
 };
 
+const defaultOptions: Calendar.Options = {
+  localization: defaultLocalization,
+  alwaysShow42Days: true
+};
+
 // === public ========================================================
 
 class Calendar {
@@ -93,17 +103,17 @@ class Calendar {
   readonly #calTitle: HTMLAnchorElement;
   readonly #calPrev: HTMLAnchorElement;
   readonly #calNext: HTMLAnchorElement;
-  readonly #calMain: HTMLElement;
+  readonly #calSheet: HTMLElement;
   readonly #calTimeSelector: HTMLElement;
   readonly #calTime: HTMLElement;
-  readonly #calHour: HTMLInputElement;
-  readonly #calMinute: HTMLInputElement;
+  readonly #calHourSlider: HTMLInputElement;
+  readonly #calMinuteSlider: HTMLInputElement;
   readonly #calOk: HTMLInputElement;
   readonly #calCancel: HTMLInputElement;
   readonly #calClear: HTMLInputElement;
   readonly #focusables: HTMLElement[];
 
-  #localization = defaultLocalization;
+  #options = defaultOptions;
   #currView: View = 'month';
   #currMonth: number;
   #currYear: number;
@@ -113,25 +123,29 @@ class Calendar {
 
   #updateRequested = false;
 
-  constructor(params: { styles?: string }) {
+  constructor(params: { styles?: string }, options: Partial<Calendar.Options>) {
+    if (options) {
+      this.setOptions(options);
+    }
+
     this.#cal = this.#renderPicker(params.styles);
     this.#calBase = query(this.#cal.shadowRoot!, '.cal-base')!;
     this.#calInput = query(this.#calBase, '.cal-input')!;
     this.#calTitle = query(this.#calBase, '.cal-title')!;
     this.#calPrev = query(this.#calBase, '.cal-prev')!;
     this.#calNext = query(this.#calBase, '.cal-next')!;
-    this.#calMain = query(this.#calBase, '.cal-main')!;
+    this.#calSheet = query(this.#calBase, '.cal-sheet')!;
     this.#calTimeSelector = query(this.#calBase, '.cal-time-selector')!;
     this.#calTime = query(this.#calBase, '.cal-time')!;
-    this.#calHour = query(this.#calBase, '.cal-hour')!;
-    this.#calMinute = query(this.#calBase, '.cal-minute')!;
+    this.#calHourSlider = query(this.#calBase, '.cal-hour-slider')!;
+    this.#calMinuteSlider = query(this.#calBase, '.cal-minute-slider')!;
     this.#calOk = query(this.#calBase, '.cal-ok')!;
     this.#calCancel = query(this.#calBase, '.cal-cancel')!;
     this.#calClear = query(this.#calBase, '.cal-clear')!;
 
     this.#focusables = [
-      this.#calHour,
-      this.#calMinute,
+      this.#calHourSlider,
+      this.#calMinuteSlider,
       this.#calCancel,
       this.#calClear,
       this.#calOk
@@ -143,8 +157,9 @@ class Calendar {
     this.#currDecade = Math.floor(this.#currYear / 10) * 10;
     this.#calBase.addEventListener('mousedown', this.#onPickerMouseDown);
     this.#calBase.addEventListener('click', this.#onPickerClick);
-    this.#calHour.addEventListener('input', this.#onHourInput);
-    this.#calMinute.addEventListener('input', this.#onMinuteInput);
+    this.#calHourSlider.addEventListener('input', this.#onHourInput);
+    this.#calMinuteSlider.addEventListener('input', this.#onMinuteInput);
+
     this.#update();
   }
 
@@ -152,9 +167,15 @@ class Calendar {
     return this.#cal;
   }
 
-  setLocalization(localization: Partial<Calendar.Localization>): void {
-    this.#localization = { ...defaultLocalization, ...localization };
-    this.#requestUpdate();
+  setOptions(options: Partial<Calendar.Options>) {
+    this.#options = { ...this.#options, ...options };
+
+    if (options.localization) {
+      this.#options.localization = {
+        ...defaultLocalization,
+        ...options.localization
+      };
+    }
   }
 
   readonly #renderPicker = (styles: string = '') => {
@@ -340,11 +361,11 @@ class Calendar {
       case 'month': {
         const month = this.#currMonth;
         const year = this.#currYear;
-        const title = `${this.#localization.months[month]} ${year}`;
+        const title = `${this.#options.localization.months[month]} ${year}`;
         this.#calTitle.innerText = title;
-        this.#calMain.innerHTML = '';
+        this.#calSheet.innerHTML = '';
 
-        this.#calMain.append(
+        this.#calSheet.append(
           this.#renderMonthView(this.#currYear, this.#currMonth)
         );
 
@@ -353,16 +374,16 @@ class Calendar {
 
       case 'year':
         this.#calTitle.innerText = String(this.#currYear);
-        this.#calMain.innerHTML = '';
-        this.#calMain.append(this.#renderYearView(this.#currYear));
+        this.#calSheet.innerHTML = '';
+        this.#calSheet.append(this.#renderYearView(this.#currYear));
         break;
 
       case 'decade':
         this.#calTitle.innerText =
           this.#currDecade + ' - ' + (this.#currDecade + 11);
 
-        this.#calMain.innerHTML = '';
-        this.#calMain.append(this.#renderDecadeView(this.#currDecade));
+        this.#calSheet.innerHTML = '';
+        this.#calSheet.append(this.#renderDecadeView(this.#currDecade));
     }
 
     this.#updateTimeText();
@@ -388,8 +409,10 @@ class Calendar {
 
   readonly #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
+    const options = this.#options;
+    const localization = options.localization;
 
-    const firstDayOfWeek = this.#localization.firstDayOfWeek;
+    const firstDayOfWeek = localization.firstDayOfWeek;
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const dayCountOfCurrMonth = getDayCountOfMonth(year, month);
     const dayCountOfLastMonth = getDayCountOfMonth(year, month - 1);
@@ -399,29 +422,33 @@ class Calendar {
         ? firstWeekdayOfMonth - firstDayOfWeek
         : 6 - (firstDayOfWeek - firstWeekdayOfMonth);
 
-    let daysToShow = getDayCountOfMonth(year, month) + remainingDaysOfLastMonth;
+    let daysToShow = 42;
 
-    if (daysToShow % 7 > 0) {
-      daysToShow += 7 - (daysToShow % 7);
+    if (!options.alwaysShow42Days) {
+      daysToShow = getDayCountOfMonth(year, month) + remainingDaysOfLastMonth;
+
+      if (daysToShow % 7 > 0) {
+        daysToShow += 7 - (daysToShow % 7);
+      }
     }
 
     ret.append(h('div'));
 
     for (let i = 0; i < 7; ++i) {
-      ret.append(
-        h('div', { class: 'cal-weekday' }, this.#localization.daysShort[i])
-      );
+      ret.append(h('div', { class: 'cal-weekday' }, localization.daysShort[i]));
     }
 
     for (let i = 0; i < daysToShow; ++i) {
       let cellYear: number;
       let cellMonth: number;
       let cellDay: number;
+      let inOtherMonth = false;
 
       if (i < remainingDaysOfLastMonth) {
         cellDay = dayCountOfLastMonth - remainingDaysOfLastMonth + i + 1;
         cellMonth = month === 0 ? 11 : month - 1;
         cellYear = month === 0 ? year - 1 : year;
+        inOtherMonth = true;
       } else {
         cellDay = i - remainingDaysOfLastMonth + 1;
 
@@ -429,9 +456,11 @@ class Calendar {
           cellDay = cellDay - dayCountOfCurrMonth;
           cellMonth = month === 11 ? 1 : month + 1;
           cellYear = month === 11 ? year + 1 : year;
+          inOtherMonth = true;
         } else {
           cellMonth = month;
           cellYear = year;
+          inOtherMonth = false;
         }
       }
 
@@ -439,9 +468,9 @@ class Calendar {
         const weekElem = h(
           'div',
           { className: 'cal-week-number' },
-          this.#localization.getCalendarWeek(
+          localization.getCalendarWeek(
             new Date(cellYear, cellMonth, cellDay),
-            this.#localization.firstDayOfWeek
+            localization.firstDayOfWeek
           )
         );
 
@@ -451,7 +480,8 @@ class Calendar {
       const elem = h(
         'div',
         {
-          'className': 'cal-cell',
+          'className':
+            'cal-cell' + (inOtherMonth ? ' cal-cell--other-month' : ''),
           'data-year': cellYear,
           'data-month': cellMonth,
           'data-day': cellDay
@@ -476,7 +506,7 @@ class Calendar {
           'data-year': year,
           'data-month': i
         },
-        this.#localization.monthsShort[i]
+        this.#options.localization.monthsShort[i]
       );
 
       ret.append(elem);
@@ -576,33 +606,9 @@ function h(
   return ret;
 }
 
-function html(parts: TemplateStringsArray, ...values: any[]): string {
-  if (parts.length === 1) {
-    return parts[0];
-  }
-
-  const arr: string[] = [];
-
-  parts.forEach((part, idx) => {
-    arr.push(part);
-
-    const value = values![idx];
-
-    if (value != null) {
-      arr.push(String(values![idx]));
-    }
-  });
-
-  return arr.join('');
-}
-
-function css(parts: TemplateStringsArray, ...values: any[]): string {
-  return html(parts, ...values);
-}
-
 // === base template =================================================
 
-const baseTemplate = html`
+const baseTemplate = /*html*/ `
   <style></style>
   <div class="cal-base">
     <input class="cal-input" />
@@ -613,11 +619,11 @@ const baseTemplate = html`
       </div>
       <a class="cal-next" data-action="moveNext">&#x1F862;</a>
     </div>
-    <div class="cal-main"></div>
+    <div class="cal-sheet"></div>
     <div class="cal-time-selector">
       <div class="cal-time"></div>
-      <input class="cal-hour" value="0" type="range" min="0" max="23" />
-      <input class="cal-minute" value="0" type="range" min="0" max="59" />
+      <input class="cal-hour-slider" value="0" type="range" min="0" max="23"/>
+      <input class="cal-minute-slider" value="0" type="range" min="0" max="59"/>
     </div>
     <div class="cal-footer">
       <button class="cal-button cal-clear" data-action="clear">Clear</button>
@@ -629,28 +635,36 @@ const baseTemplate = html`
 
 // === base styles ===================================================
 
-const baseStyles = css`
+const baseStyles = /*css*/ `
   :host {
     --cal-font: 15px Helvetica, Arial, sans-serif;
-    --cal-min-height: 20rem;
-    --cal-min-width: 22rem;
+    --cal-min-height: none;
+    --cal-min-width: none;
     --cal-border-color: #e0e0e0;
     --cal-border-width: 1px;
     --cal-border-radius: 3px;
-    --cal-shadow: rgba(0, 0, 0, 0.1) 0px 10px 14px;
     --cal-header-color: #444;
     --cal-header-background-color: #fff;
     --cal-header-hover-background-color: #606060;
     --cal-header-active-background-color: #a0a0a0;
     --cal-header-border-color: #eee;
-    --cal-header-border-width: 0 0 1px;
+    --cal-header-border-width: 0 0 1px 0;
+    --cal-sheet-min-width: 20em;
+    --cal-sheet-min-height: 16em;
     --cal-cell-hover-background-color: #d0d0d0;
     --cal-cell-active-background-color: #c8c8c8;
+    --cal-cell-other-month-background-color: #ccc;
+    --cal-button-margin: 0;
+    --cal-button-padding: 0.5em;
+    --cal-button-border-color: #ccc;
     --cal-button-background-color: white;
-    --cal-button-hover-background-color: #e0e0e0;
-    --cal-button-active-background-color: blue;
+    --cal-button-focus-background-color: #d8d8d8;
+    --cal-button-hover-background-color: #e8e8e8;
+    --cal-button-active-background-color: #dadada; 
 
-    float: left;
+    --cal-slider-track-color: #ccc;
+    
+    display: inline-block;
   }
 
   .cal-base {
@@ -662,9 +676,8 @@ const baseStyles = css`
     font: var(--cal-font);
     border-style: solid;
     border-color: var(--cal-border-color);
-    border-width: var(--cal-border-with);
+    border-width: var(--cal-border-width);
     border-radius: var(--cal-border-radius);
-    box-shadow: var(--cal-shadow);
     user-select: none;
   }
 
@@ -727,11 +740,13 @@ const baseStyles = css`
     background-color: var(--cal-header-active-background-color);
   }
 
-  .cal-main {
+  .cal-sheet {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     flex-grow: 1;
+    min-width: var(--cal-sheet-min-width);
+    min-height: var(--cal-sheet-min-height);
   }
 
   .cal-view-month {
@@ -752,9 +767,14 @@ const baseStyles = css`
     flex-grow: 1;
   }
 
+  .cal-weekday {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .cal-cell {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
@@ -764,6 +784,11 @@ const baseStyles = css`
 
   .cal-cell:hover {
     background-color: var(--cal-cell-hover-background-color);
+  }
+
+
+  .cal-cell--other-month {
+    color: var(--cal-cell-other-month-background-color) 
   }
 
   .cal-week-number {
@@ -786,17 +811,39 @@ const baseStyles = css`
     padding: 0.5rem;
   }
 
+  .cal-hour-slider,
+  .cal-minute-slider {
+    appearance: none;
+    background: linear-gradient(to right, var(--cal-slider-track-color),var(--cal-slider-track-color)) left 50%/100% px no-repeat;
+  }
+
   .cal-footer {
     display: flex;
-    border-collapse: collapse;
   }
 
   .cal-button {
     flex-grow: 1;
     outline: none;
+    padding: var(--cal-button-padding);
+    margin: var(--cal-button-margin);
     background-color: var(--cal-button-background-color);
-    border: 1px solid var(--cal-border-color);
-    border-collapse: collapse;
+    border-style: solid;
+    border-color: var(--cal-button-border-color);
+    border-width: 1px 1px 0 0; 
+    cursor: pointer;
+  }
+
+  .cal-button:first-child {
+    border-bottom-left-radius: var(--cal-border-radius);
+  }
+
+  .cal-button:last-child {
+    border-bottom-right-radius: var(--cal-border-radius);
+    border-right-width: 0;
+  }
+  
+  .cal-button:focus {
+    background-color: var(--cal-button-focus-background-color);
   }
 
   .cal-button:hover {
@@ -807,3 +854,5 @@ const baseStyles = css`
     background-color: var(--cal-button-active-background-color);
   }
 `;
+
+// cSpell:ignore focusables
