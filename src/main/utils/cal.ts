@@ -157,7 +157,7 @@ class Calendar {
     this.#requestUpdate();
   }
 
-  #renderPicker = (styles: string = '') => {
+  readonly #renderPicker = (styles: string = '') => {
     if (Calendar.#template === null) {
       Calendar.#template = document.createElement('template');
       Calendar.#template.innerHTML = baseTemplate;
@@ -171,7 +171,7 @@ class Calendar {
     return ret;
   };
 
-  #onPickerMouseDown = (ev: MouseEvent) => {
+  readonly #onPickerMouseDown = (ev: MouseEvent) => {
     if (
       ev.target instanceof HTMLElement &&
       !this.#focusables.includes(ev.target)
@@ -181,7 +181,7 @@ class Calendar {
     }
   };
 
-  #onPickerClick = (ev: MouseEvent) => {
+  readonly #onPickerClick = (ev: MouseEvent) => {
     const target = ev.target;
 
     if (this.#updateRequested || !(target instanceof HTMLElement)) {
@@ -209,14 +209,14 @@ class Calendar {
     }
   };
 
-  #onTitleClick = () => {
+  readonly #onTitleClick = () => {
     if (this.#currView !== 'decade') {
       this.#currView = this.#currView === 'month' ? 'year' : 'decade';
       this.#requestUpdate();
     }
   };
 
-  #onPrevClick = () => {
+  readonly #onPrevClick = () => {
     if (this.#currView === 'month') {
       if (this.#currMonth === 0) {
         this.#currMonth = 11;
@@ -238,7 +238,7 @@ class Calendar {
     }
   };
 
-  #onNextClick = () => {
+  readonly #onNextClick = () => {
     if (this.#currView === 'month') {
       if (this.#currMonth === 11) {
         this.#currMonth = 0;
@@ -258,7 +258,7 @@ class Calendar {
     }
   };
 
-  #onCellClick = (ev: Event) => {
+  readonly #onCellClick = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLElement)) {
@@ -288,19 +288,19 @@ class Calendar {
     }
   };
 
-  #onOkClick = () => {
+  readonly #onOkClick = () => {
     console.log('ok');
   };
 
-  #onCancelClick = () => {
+  readonly #onCancelClick = () => {
     console.log('cancel');
   };
 
-  #onClearClick = () => {
+  readonly #onClearClick = () => {
     console.log('clear');
   };
 
-  #onHourInput = (ev: Event) => {
+  readonly #onHourInput = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLInputElement)) {
@@ -311,7 +311,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  #onMinuteInput = (ev: Event) => {
+  readonly #onMinuteInput = (ev: Event) => {
     const target = ev.target;
 
     if (!(target instanceof HTMLInputElement)) {
@@ -322,7 +322,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  #requestUpdate = () => {
+  readonly #requestUpdate = () => {
     if (this.#updateRequested) {
       return;
     }
@@ -335,7 +335,7 @@ class Calendar {
     });
   };
 
-  #update = () => {
+  readonly #update = () => {
     switch (this.#currView) {
       case 'month': {
         const month = this.#currMonth;
@@ -368,7 +368,7 @@ class Calendar {
     this.#updateTimeText();
   };
 
-  #updateTimeText = () => {
+  readonly #updateTimeText = () => {
     let timeText: string;
 
     if (this.#currHour === null || this.#currMinute === null) {
@@ -386,7 +386,7 @@ class Calendar {
     this.#calTime.innerText = timeText;
   };
 
-  #renderMonthView = (year: number, month: number) => {
+  readonly #renderMonthView = (year: number, month: number) => {
     const ret = h('div', { className: 'cal-view-month' });
 
     const firstDayOfWeek = this.#localization.firstDayOfWeek;
@@ -465,7 +465,7 @@ class Calendar {
     return ret;
   };
 
-  #renderYearView = (year: number) => {
+  readonly #renderYearView = (year: number) => {
     const ret = h('div', { className: 'cal-view-year' });
 
     for (let i = 0; i < 12; ++i) {
@@ -485,7 +485,7 @@ class Calendar {
     return ret;
   };
 
-  #renderDecadeView = (startYear: number) => {
+  readonly #renderDecadeView = (startYear: number) => {
     const ret = h('div', { className: 'cal-view-decade' });
 
     for (let i = 0; i < 12; ++i) {
@@ -606,7 +606,7 @@ const baseTemplate = html`
   <style></style>
   <div class="cal-base">
     <input class="cal-input" />
-    <div class="cal-nav">
+    <div class="cal-header">
       <a class="cal-prev" data-action="movePrev">&#x1F860;</a>
       <div class="cal-title-container">
         <a class="cal-title" data-action="switchView"></a>
@@ -619,7 +619,7 @@ const baseTemplate = html`
       <input class="cal-hour" value="0" type="range" min="0" max="23" />
       <input class="cal-minute" value="0" type="range" min="0" max="59" />
     </div>
-    <div class="cal-buttons">
+    <div class="cal-footer">
       <button class="cal-button cal-clear" data-action="clear">Clear</button>
       <button class="cal-button cal-cancel" data-action="cancel">Cancel</button>
       <button class="cal-button cal-ok" data-action="ok">OK</button>
@@ -632,24 +632,39 @@ const baseTemplate = html`
 const baseStyles = css`
   :host {
     --cal-font: 15px Helvetica, Arial, sans-serif;
-    --cal-header-color: white;
-    --cal-header-background-color: #404040;
+    --cal-min-height: 20rem;
+    --cal-min-width: 22rem;
+    --cal-border-color: #e0e0e0;
+    --cal-border-width: 1px;
+    --cal-border-radius: 3px;
+    --cal-shadow: rgba(0, 0, 0, 0.1) 0px 10px 14px;
+    --cal-header-color: #444;
+    --cal-header-background-color: #fff;
     --cal-header-hover-background-color: #606060;
     --cal-header-active-background-color: #a0a0a0;
-    --cal-border-color: #a0a0a0;
+    --cal-header-border-color: #eee;
+    --cal-header-border-width: 0 0 1px;
     --cal-cell-hover-background-color: #d0d0d0;
     --cal-cell-active-background-color: #c8c8c8;
     --cal-button-background-color: white;
     --cal-button-hover-background-color: #e0e0e0;
     --cal-button-active-background-color: blue;
+
+    float: left;
   }
 
   .cal-base {
     position: relative;
-    display: flow;
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    min-width: var(--cal-min-width);
+    min-height: var(--cal-min-height);
     font: var(--cal-font);
-    border: 1px solid var(--cal-header-background-color);
+    border-style: solid;
+    border-color: var(--cal-border-color);
+    border-width: var(--cal-border-with);
+    border-radius: var(--cal-border-radius);
+    box-shadow: var(--cal-shadow);
     user-select: none;
   }
 
@@ -665,10 +680,14 @@ const baseStyles = css`
     z-index: -1;
   }
 
-  .cal-nav {
+  .cal-header {
     display: flex;
     color: var(--cal-header-color);
     background-color: var(--cal-header-background-color);
+    border-style: solid;
+    border-color: var(--cal-header-border-color);
+    border-width: var(--cal-header-border-width);
+    border-radius: var(--cal-border-radius) var(--cal-border-radius) 0 0;
   }
 
   .cal-title-container {
@@ -708,28 +727,49 @@ const baseStyles = css`
     background-color: var(--cal-header-active-background-color);
   }
 
+  .cal-main {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+  }
+
   .cal-view-month {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+    flex-grow: 1;
   }
 
   .cal-view-year {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    flex-grow: 1;
   }
 
   .cal-view-decade {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    flex-grow: 1;
   }
 
   .cal-cell {
-    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     cursor: pointer;
+    padding: 0.5em;
   }
 
   .cal-cell:hover {
     background-color: var(--cal-cell-hover-background-color);
+  }
+
+  .cal-week-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cal-time-selector {
@@ -746,7 +786,7 @@ const baseStyles = css`
     padding: 0.5rem;
   }
 
-  .cal-buttons {
+  .cal-footer {
     display: flex;
     border-collapse: collapse;
   }
