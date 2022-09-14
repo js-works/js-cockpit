@@ -1,7 +1,7 @@
 import { SideMenu2 } from 'js-cockpit';
 import { DateField as OldDateField } from 'js-cockpit';
 import { Calendar as OldCalendar } from '../main/utils/__old_cal';
-import { Calendar } from 'js-cockpit';
+import { DatePicker } from 'js-cockpit';
 
 export default {
   title: 'temporary'
@@ -9,9 +9,9 @@ export default {
 
 const cal = new OldCalendar({});
 
-void (SideMenu2 || OldDateField || Calendar);
+void (SideMenu2 || OldDateField || DatePicker);
 
-export const calendar = () => '<cp-calendar></cp-calendar>';
+export const datePicker = () => '<cp-date-picker></cp-date-picker>';
 export const oldCalendar = () => cal.getElement();
 export const sideMenu2 = () => '<cp-side-menu2></cp-side-menu>';
 

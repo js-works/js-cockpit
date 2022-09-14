@@ -1,10 +1,10 @@
 // === exports =======================================================
 
-export { HeadlessCalendar };
+export { Calendar };
 
 // === exported types ================================================
 
-namespace HeadlessCalendar {
+namespace Calendar {
   export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
   export type Localization = Readonly<{
@@ -113,7 +113,7 @@ const defaultMonthNames = [
   'December'
 ];
 
-const defaultLocalization: HeadlessCalendar.Localization = {
+const defaultLocalization: Calendar.Localization = {
   dayNames: defaultDayNames,
   dayNamesShort: defaultDayNames.map((it) => it.substring(0, 3)),
   monthNames: defaultMonthNames,
@@ -123,23 +123,23 @@ const defaultLocalization: HeadlessCalendar.Localization = {
   getCalendarWeek
 };
 
-const defaultOptions: HeadlessCalendar.Options = {
+const defaultOptions: Calendar.Options = {
   localization: defaultLocalization,
   minDate: null,
   maxDate: null,
   disableWeekend: false,
-  alwaysShow42Days: false
+  alwaysShow42Days: true
 };
 
-// === HeadlessCalendar ==============================================
+// === Calendar ==============================================
 
-class HeadlessCalendar {
-  #options: HeadlessCalendar.Options = defaultOptions;
+class Calendar {
+  #options: Calendar.Options = defaultOptions;
 
   static #mergeOptions(
-    options: HeadlessCalendar.Options,
-    partialOptions: HeadlessCalendar.PartialOptions
-  ): HeadlessCalendar.Options {
+    options: Calendar.Options,
+    partialOptions: Calendar.PartialOptions
+  ): Calendar.Options {
     const newOptions = { ...options, ...partialOptions };
 
     if (partialOptions.localization) {
@@ -149,22 +149,20 @@ class HeadlessCalendar {
       };
     }
 
-    return newOptions as HeadlessCalendar.Options;
+    return newOptions as Calendar.Options;
   }
 
-  constructor(options?: HeadlessCalendar.PartialOptions) {
+  constructor(options?: Calendar.PartialOptions) {
     if (options) {
-      this.#options = HeadlessCalendar.#mergeOptions(defaultOptions, options);
+      this.#options = Calendar.#mergeOptions(defaultOptions, options);
     }
   }
 
-  vary(options: HeadlessCalendar.PartialOptions): HeadlessCalendar {
-    return new HeadlessCalendar(
-      HeadlessCalendar.#mergeOptions(this.#options, options)
-    );
+  vary(options: Calendar.PartialOptions): Calendar {
+    return new Calendar(Calendar.#mergeOptions(this.#options, options));
   }
 
-  getMonthView(year: number, month: number): HeadlessCalendar.MonthView {
+  getMonthView(year: number, month: number): Calendar.MonthView {
     // we also allow month values less than 0 and greater than 11
     const n = year * 12 + month;
     year = Math.floor(n / 12);
@@ -196,7 +194,7 @@ class HeadlessCalendar {
       }
     }
 
-    const days: HeadlessCalendar.DayData[] = [];
+    const days: Calendar.DayData[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
       let cellYear: number;
@@ -255,9 +253,9 @@ class HeadlessCalendar {
     };
   }
 
-  getYearView(year: number): HeadlessCalendar.YearView {
+  getYearView(year: number): Calendar.YearView {
     const localization = this.#options.localization;
-    const months: HeadlessCalendar.MonthData[] = [];
+    const months: Calendar.MonthData[] = [];
     const currYear = new Date().getFullYear();
     const currMonth = new Date().getMonth();
 
@@ -280,12 +278,12 @@ class HeadlessCalendar {
     };
   }
 
-  getDecadeView(year: number): HeadlessCalendar.DecadeView {
+  getDecadeView(year: number): Calendar.DecadeView {
     const startYear = year - (year % 10);
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
 
-    const years: HeadlessCalendar.YearData[] = [];
+    const years: Calendar.YearData[] = [];
 
     for (let cellYear = startYear; cellYear <= endYear; ++cellYear) {
       years.push({

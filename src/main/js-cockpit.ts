@@ -2,12 +2,12 @@
 export { ActionBar } from './components/action-bar/action-bar';
 export { AppLayout } from './components/app-layout/app-layout';
 export { Brand } from './components/brand/brand';
-export { Calendar } from './components/calendar/calendar';
 export { Cockpit } from './components/cockpit/cockpit';
 export { DataExplorer } from './components/data-explorer/data-explorer';
 export { DataForm } from './components/data-form/data-form';
 export { DataTable } from './components/data-table/data-table';
 export { DateField } from './components/date-field/date-field';
+export { DatePicker } from './components/date-picker/date-picker';
 export { EmailField } from './components/email-field/email-field';
 export { Fieldset } from './components/fieldset/fieldset';
 export { FormSection } from './components/form-section/form-section';

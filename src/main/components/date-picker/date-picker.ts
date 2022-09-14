@@ -1,22 +1,24 @@
 import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, html, repeat } from '../../utils/lit';
-import { HeadlessCalendar } from './headless-calendar';
+import { Calendar } from './calendar';
 import { I18nController } from '../../i18n/i18n';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+import SlButtonGroup from '@shoelace-style/shoelace/dist/components/button-group/button-group';
 
 // styles
-import calendarStyles from './calendar.styles';
+import calendarStyles from './date-picker.styles';
 
 // === exports =======================================================
 
-export { Calendar };
+export { DatePicker };
 
 // === exported types ==========================================
 
-namespace Calendar {
+namespace DatePicker {
   export type Type =
     | 'date'
     | 'dates'
@@ -34,11 +36,11 @@ type View = 'month' | 'year' | 'decade';
 // === Calendar ======================================================
 
 @elem({
-  tag: 'cp-calendar',
+  tag: 'cp-date-picker',
   styles: calendarStyles,
-  uses: [SlRange]
+  uses: [SlButton, SlRange]
 })
-class Calendar extends Component {
+class DatePicker extends Component {
   @state
   private _view: View = 'month';
 
@@ -55,7 +57,7 @@ class Calendar extends Component {
   private _activeMinute = new Date().getMinutes();
 
   private _i18n = new I18nController(this);
-  private _headlessCalendar = new HeadlessCalendar();
+  private _headlessCalendar = new Calendar();
 
   constructor() {
     super();
@@ -146,13 +148,23 @@ class Calendar extends Component {
           ></sl-range>
         </div>
         <div class="cal-footer">
-          <button class="cal-button cal-clear" data-action="clear">
+          <sl-button
+            variant="text"
+            class="cal-button cal-clear"
+            data-action="clear"
+          >
             Clear
-          </button>
-          <button class="cal-button cal-cancel" data-action="cancel">
+          </sl-button>
+          <sl-button
+            variant="text"
+            class="cal-button cal-cancel"
+            data-action="cancel"
+          >
             Cancel
-          </button>
-          <button class="cal-button cal-ok" data-action="ok">OK</button>
+          </sl-button>
+          <sl-button variant="text" class="cal-button cal-ok" data-action="ok"
+            >OK</sl-button
+          >
         </div>
       </div>
     `;
@@ -216,7 +228,7 @@ class Calendar extends Component {
     `;
   }
 
-  private _renderDayCell(dayData: HeadlessCalendar.DayData) {
+  private _renderDayCell(dayData: Calendar.DayData) {
     return html`
       <div
         class=${classMap({
@@ -245,7 +257,7 @@ class Calendar extends Component {
     `;
   }
 
-  private _renderMonthCell(monthData: HeadlessCalendar.MonthData) {
+  private _renderMonthCell(monthData: Calendar.MonthData) {
     return html`<div
       class=${classMap({
         'cal-cell': true
@@ -271,7 +283,7 @@ class Calendar extends Component {
     `;
   }
 
-  private _renderYearCell(yearData: HeadlessCalendar.YearData) {
+  private _renderYearCell(yearData: Calendar.YearData) {
     return html`
       <div
         class=${classMap({
@@ -285,14 +297,36 @@ class Calendar extends Component {
   }
 
   private _renderTime() {
-    //const hour = this._activeHour.toString().padStart(2, '0');
-    //const minute = this._activeMinute.toString().padStart(2, '0');
+    const date = new Date(1970, 0, 1, this._activeHour, this._activeMinute);
+    let time = '';
+    let dayPeriod = '';
 
-    //return html`${hour}:${minute}`;
+    const parts = new Intl.DateTimeFormat(this._i18n.getLocale(), {
+      hour: 'numeric',
+      minute: 'numeric'
+    }).formatToParts(date);
 
-    return this._i18n.formatDate(
-      new Date(1970, 0, 1, this._activeHour, this._activeMinute),
-      { hour: '2-digit', minute: '2-digit' }
-    );
+    if (
+      parts.length > 4 &&
+      parts[parts.length - 1].type === 'dayPeriod' &&
+      parts[parts.length - 2].type === 'literal' &&
+      parts[parts.length - 2].value === ' '
+    ) {
+      time = parts
+        .slice(0, -2)
+        .map((it) => it.value)
+        .join('');
+
+      dayPeriod = parts[parts.length - 1].value;
+    } else {
+      time = parts.map((it) => it.value).join('');
+    }
+
+    return html`<div class="cp-time">
+      ${time}
+      ${!dayPeriod
+        ? null
+        : html`<span class="cal-day-period">${dayPeriod}</span>`}
+    </div>`;
   }
 }
