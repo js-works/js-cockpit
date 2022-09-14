@@ -1,18 +1,18 @@
 import { SideMenu2 } from 'js-cockpit';
-import { DateField } from 'js-cockpit';
-import { Calendar } from '../main/utils/cal';
+import { DateField as OldDateField } from 'js-cockpit';
+import { Calendar as OldCalendar } from '../main/utils/__old_cal';
+import { Calendar } from 'js-cockpit';
 
 export default {
   title: 'temporary'
 };
 
-const cal = new Calendar({
-  getLocaleSettings: () => null as any
-});
+const cal = new OldCalendar({});
 
-void (SideMenu2 || DateField);
+void (SideMenu2 || OldDateField || Calendar);
 
-export const calendar = () => cal.getElement();
+export const calendar = () => '<cp-calendar></cp-calendar>';
+export const oldCalendar = () => cal.getElement();
 export const sideMenu2 = () => '<cp-side-menu2></cp-side-menu>';
 
 export const dateField2 = () => `

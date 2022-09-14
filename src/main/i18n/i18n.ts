@@ -309,7 +309,7 @@ class BaseLocalizer implements Localizer {
     return getCalendarWeek(this.#getLocale(), date);
   }
 
-  getDayName(index: number, format?: DayNameFormat): string {
+  getDayName(index: number, format: DayNameFormat = 'long'): string {
     const date = new Date(1970, 0, 4 + (index % 7));
 
     return new Intl.DateTimeFormat(this.#getLocale(), {
@@ -317,7 +317,7 @@ class BaseLocalizer implements Localizer {
     }).format(date);
   }
 
-  getDayNames(format?: DayNameFormat): string[] {
+  getDayNames(format: DayNameFormat = 'long'): string[] {
     const arr: string[] = [];
 
     for (let i = 0; i < 7; ++i) {
@@ -327,7 +327,7 @@ class BaseLocalizer implements Localizer {
     return arr;
   }
 
-  getMonthName(index: number, format?: MonthNameFormat): string {
+  getMonthName(index: number, format: MonthNameFormat = 'long'): string {
     const date = new Date(1970, index % 12, 1);
 
     return new Intl.DateTimeFormat(this.#getLocale(), { month: format }).format(

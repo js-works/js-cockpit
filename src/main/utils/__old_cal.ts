@@ -123,7 +123,10 @@ class Calendar {
 
   #updateRequested = false;
 
-  constructor(params: { styles?: string }, options: Partial<Calendar.Options>) {
+  constructor(
+    params: { styles?: string },
+    options?: Partial<Calendar.Options>
+  ) {
     if (options) {
       this.setOptions(options);
     }
