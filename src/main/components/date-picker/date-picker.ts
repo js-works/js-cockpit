@@ -4,10 +4,7 @@ import { Calendar } from './calendar';
 import { I18nController } from '../../i18n/i18n';
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
-import SlButtonGroup from '@shoelace-style/shoelace/dist/components/button-group/button-group';
 
 // styles
 import calendarStyles from './date-picker.styles';
@@ -38,7 +35,7 @@ type View = 'month' | 'year' | 'decade';
 @elem({
   tag: 'cp-date-picker',
   styles: calendarStyles,
-  uses: [SlButton, SlRange]
+  uses: [SlRange]
 })
 class DatePicker extends Component {
   @state
@@ -110,28 +107,22 @@ class DatePicker extends Component {
 
     return html`
       <style></style>
-      <div class="cal-base">
-        <input class="cal-input" />
-        <div class="cal-header">
-          <a
-            class="cal-prev"
-            data-action="movePrev"
-            @click=${this._onMovePrevClick}
+      <div class="base">
+        <input class="input" />
+        <div class="header">
+          <a class="prev" data-action="movePrev" @click=${this._onMovePrevClick}
             >&#x1F860;</a
           >
-          <div class="cal-title-container">${this._renderTitle()}</div>
-          <a
-            class="cal-next"
-            data-action="moveNext"
-            @click=${this._onMoveNextClick}
+          <div class="title-container">${this._renderTitle()}</div>
+          <a class="next" data-action="moveNext" @click=${this._onMoveNextClick}
             >&#x1F862;</a
           >
         </div>
-        <div class="cal-sheet">${sheet}</div>
-        <div class="cal-time-selector">
-          <div class="cal-time">${this._renderTime()}</div>
+        <div class="sheet">${sheet}</div>
+        <div class="time-selector">
+          <div class="time">${this._renderTime()}</div>
           <sl-range
-            class="cal-hour-slider"
+            class="hour-slider"
             value=${this._activeHour}
             min="0"
             max="23"
@@ -139,32 +130,13 @@ class DatePicker extends Component {
             @sl-change=${this._onHourChange}
           ></sl-range>
           <sl-range
-            class="cal-minute-slider"
+            class="minute-slider"
             value=${this._activeMinute}
             min="0"
             max="59"
             tooltip="none"
             @sl-change=${this._onMinuteChange}
           ></sl-range>
-        </div>
-        <div class="cal-footer">
-          <sl-button
-            variant="text"
-            class="cal-button cal-clear"
-            data-action="clear"
-          >
-            Clear
-          </sl-button>
-          <sl-button
-            variant="text"
-            class="cal-button cal-cancel"
-            data-action="cancel"
-          >
-            Cancel
-          </sl-button>
-          <sl-button variant="text" class="cal-button cal-ok" data-action="ok"
-            >OK</sl-button
-          >
         </div>
       </div>
     `;
@@ -198,7 +170,7 @@ class DatePicker extends Component {
       }
     }
 
-    return html`<div class="cal-title" @click=${onClick}>${title}</div>`;
+    return html`<div class="title" @click=${onClick}>${title}</div>`;
   }
 
   private _renderMonthSheet() {
@@ -208,7 +180,7 @@ class DatePicker extends Component {
     );
 
     return html`
-      <div class="cal-view-month">
+      <div class="view-month">
         ${repeat(
           view.days,
           (dayData) => dayData.month * 100 + dayData.day,
@@ -217,9 +189,7 @@ class DatePicker extends Component {
             return idx % 7 > 0
               ? cell
               : [
-                  html`<div class="cal-week-number">
-                    ${dayData.weekNumber}
-                  </div>`,
+                  html`<div class="week-number">${dayData.weekNumber}</div>`,
                   cell
                 ];
           }
@@ -232,7 +202,7 @@ class DatePicker extends Component {
     return html`
       <div
         class=${classMap({
-          'cal-cell': true
+          cell: true
         })}
         data-year=${dayData.year}
         data-month=${dayData.month}
@@ -247,7 +217,7 @@ class DatePicker extends Component {
     const view = this._headlessCalendar.getYearView(this._activeYear);
 
     return html`
-      <div class="cal-view-year">
+      <div class="view-year">
         ${repeat(
           view.months,
           (monthData) => monthData.month,
@@ -260,7 +230,7 @@ class DatePicker extends Component {
   private _renderMonthCell(monthData: Calendar.MonthData) {
     return html`<div
       class=${classMap({
-        'cal-cell': true
+        cell: true
       })}
       data-year=${monthData.year}
       data-month=${monthData.month}
@@ -273,7 +243,7 @@ class DatePicker extends Component {
     const view = this._headlessCalendar.getDecadeView(this._activeYear);
 
     return html`
-      <div class="cal-view-decade">
+      <div class="view-decade">
         ${repeat(
           view.years,
           (monthData) => monthData.year,
@@ -287,7 +257,7 @@ class DatePicker extends Component {
     return html`
       <div
         class=${classMap({
-          'cal-cell': true
+          cell: true
         })}
         data-year=${yearData.year}
       >
@@ -302,8 +272,8 @@ class DatePicker extends Component {
     let dayPeriod = '';
 
     const parts = new Intl.DateTimeFormat(this._i18n.getLocale(), {
-      hour: 'numeric',
-      minute: 'numeric'
+      hour: '2-digit',
+      minute: '2-digit'
     }).formatToParts(date);
 
     if (
@@ -324,9 +294,7 @@ class DatePicker extends Component {
 
     return html`<div class="cp-time">
       ${time}
-      ${!dayPeriod
-        ? null
-        : html`<span class="cal-day-period">${dayPeriod}</span>`}
+      ${!dayPeriod ? null : html`<span class="day-period">${dayPeriod}</span>`}
     </div>`;
   }
 }
