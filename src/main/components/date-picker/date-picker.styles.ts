@@ -29,8 +29,8 @@ export default css`
 
   .header {
     display: flex;
-    color: var(--sl-color-primary-950);
-    background-color: var(--sl-color-primary-200);
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-500);
   }
 
   .title-container {
@@ -60,7 +60,7 @@ export default css`
   .title:not(.-disabled):hover,
   .prev:not(.-disabled):hover,
   .next:not(.-disabled):hover {
-    background-color: var(--sl-color-primary-300);
+    background-color: var(--sl-color-primary-600);
   }
 
   .title:not(.-disabled):active,
