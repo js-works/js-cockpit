@@ -298,7 +298,6 @@ class LoginForm extends Component {
           <focus-trap .inactive=${!this._isLoading}>
             <sl-button
               variant="primary"
-              size="large"
               class="submit-button"
               @click=${this._onSubmitClick}
               ${ref(this._submitButtonRef)}

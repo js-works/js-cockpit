@@ -117,6 +117,10 @@ export default css`
     width: 100%;
   }
 
+  .submit-button-text {
+    font-size: 120%;
+  }
+
   .submit-button-spinner {
     margin-left: 0.5rem;
     flex-grow: 0;

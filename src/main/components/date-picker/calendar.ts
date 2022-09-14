@@ -5,16 +5,14 @@ export { Calendar };
 // === exported types ================================================
 
 namespace Calendar {
-  export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-
   export type Localization = Readonly<{
     dayNames: readonly string[];
     dayNamesShort: readonly string[];
     monthNames: readonly string[];
     monthNamesShort: readonly string[];
-    firstDayOfWeek: Weekday;
-    weekendDays: readonly Weekday[];
-    getCalendarWeek: (date: Date, firstDayOfWeek: Weekday) => number;
+    firstDayOfWeek: number;
+    weekendDays: readonly number[];
+    getCalendarWeek: (date: Date, firstDayOfWeek: number) => number;
   }>;
 
   export type Options = Readonly<{
@@ -25,20 +23,16 @@ namespace Calendar {
     alwaysShow42Days: boolean;
   }>;
 
-  export type PartialOptions = Partial<
-    Omit<Options, 'localization'> & {
-      localization: Partial<Localization>;
-    }
-  >;
-
   export type DayData = Readonly<{
     year: number;
     month: number;
     day: number;
     weekNumber: number;
     current: boolean; // true if today, else false
+    weekend: boolean; // true if weekend day, else false
     disabled: boolean;
     outOfMinMaxRange: boolean;
+    adjacent: boolean;
   }>;
 
   export type MonthData = Readonly<{
@@ -58,6 +52,7 @@ namespace Calendar {
     year: number;
     month: number; // 0 -> january, ..., 11 -> december
     days: DayData[];
+    weekdays: number[];
     prevMonthDisabled: boolean;
     nextMonthDisabled: boolean;
     dayNames: readonly string[];
@@ -84,82 +79,17 @@ namespace Calendar {
   }>;
 }
 
-// === local types ===================================================
-
-// === local data ====================================================
-
-const defaultDayNames = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday'
-];
-
-const defaultMonthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
-const defaultLocalization: Calendar.Localization = {
-  dayNames: defaultDayNames,
-  dayNamesShort: defaultDayNames.map((it) => it.substring(0, 3)),
-  monthNames: defaultMonthNames,
-  monthNamesShort: defaultMonthNames.map((it) => it.substring(0, 3)),
-  firstDayOfWeek: 0,
-  weekendDays: [0, 6],
-  getCalendarWeek
-};
-
-const defaultOptions: Calendar.Options = {
-  localization: defaultLocalization,
-  minDate: null,
-  maxDate: null,
-  disableWeekend: false,
-  alwaysShow42Days: true
-};
-
 // === Calendar ==============================================
 
 class Calendar {
-  #options: Calendar.Options = defaultOptions;
+  #options: Calendar.Options;
 
-  static #mergeOptions(
-    options: Calendar.Options,
-    partialOptions: Calendar.PartialOptions
-  ): Calendar.Options {
-    const newOptions = { ...options, ...partialOptions };
-
-    if (partialOptions.localization) {
-      newOptions.localization = {
-        ...options.localization,
-        ...partialOptions.localization
-      };
-    }
-
-    return newOptions as Calendar.Options;
+  constructor(options: Calendar.Options) {
+    this.#options = options;
   }
 
-  constructor(options?: Calendar.PartialOptions) {
-    if (options) {
-      this.#options = Calendar.#mergeOptions(defaultOptions, options);
-    }
-  }
-
-  vary(options: Calendar.PartialOptions): Calendar {
-    return new Calendar(Calendar.#mergeOptions(this.#options, options));
+  vary(options: Partial<Calendar.Options>): Calendar {
+    return new Calendar({ ...this.#options, ...options });
   }
 
   getMonthView(year: number, month: number): Calendar.MonthView {
@@ -200,13 +130,13 @@ class Calendar {
       let cellYear: number;
       let cellMonth: number;
       let cellDay: number;
-      let inOtherMonth = false;
+      let adjacent = false;
 
       if (i < remainingDaysOfLastMonth) {
         cellDay = dayCountOfLastMonth - remainingDaysOfLastMonth + i + 1;
         cellMonth = month === 0 ? 11 : month - 1;
         cellYear = month === 0 ? year - 1 : year;
-        inOtherMonth = true;
+        adjacent = true;
       } else {
         cellDay = i - remainingDaysOfLastMonth + 1;
 
@@ -214,13 +144,15 @@ class Calendar {
           cellDay = cellDay - dayCountOfCurrMonth;
           cellMonth = month === 11 ? 1 : month + 1;
           cellYear = month === 11 ? year + 1 : year;
-          inOtherMonth = true;
+          adjacent = true;
         } else {
           cellMonth = month;
           cellYear = year;
-          inOtherMonth = false;
+          adjacent = false;
         }
       }
+
+      const cellDate = new Date(cellYear, cellMonth, cellDay);
 
       days.push({
         year: cellYear,
@@ -228,6 +160,9 @@ class Calendar {
         day: cellDay,
         disabled: false, // TODO!!!
         outOfMinMaxRange: false, // TODO!!!
+        adjacent: adjacent,
+        weekend: localization.weekendDays.includes(cellDate.getDay()),
+
         weekNumber: getCalendarWeek(
           new Date(cellYear, cellMonth, cellDay),
           firstDayOfWeek
@@ -240,6 +175,12 @@ class Calendar {
       });
     }
 
+    const weekdays: number[] = [];
+
+    for (let i = 0; i < 7; ++i) {
+      weekdays.push((i + localization.firstDayOfWeek) % 7);
+    }
+
     return {
       year,
       month,
@@ -248,6 +189,7 @@ class Calendar {
       monthNames: localization.monthNames,
       monthNamesShort: localization.monthNamesShort,
       days,
+      weekdays,
       prevMonthDisabled: false, // TODO!!
       nextMonthDisabled: false // TODO!!!
     };
@@ -259,7 +201,7 @@ class Calendar {
     const currYear = new Date().getFullYear();
     const currMonth = new Date().getMonth();
 
-    for (let month = 0; month < 11; ++month) {
+    for (let month = 0; month < 12; ++month) {
       months.push({
         year,
         month,

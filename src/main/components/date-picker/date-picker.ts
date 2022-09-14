@@ -1,7 +1,7 @@
 import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, html, repeat } from '../../utils/lit';
 import { Calendar } from './calendar';
-import { I18nController } from '../../i18n/i18n';
+import { I18nController, I18nFacade } from '../../i18n/i18n';
 
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
@@ -38,6 +38,9 @@ type View = 'month' | 'year' | 'decade';
   uses: [SlRange]
 })
 class DatePicker extends Component {
+  @prop(Attrs.boolean)
+  highlightWeekend = true;
+
   @state
   private _view: View = 'month';
 
@@ -54,26 +57,25 @@ class DatePicker extends Component {
   private _activeMinute = new Date().getMinutes();
 
   private _i18n = new I18nController(this);
-  private _headlessCalendar = new Calendar();
+
+  private _calendar = new Calendar({
+    localization: getLocalization(this._i18n.getLocale()),
+    disableWeekend: false,
+    alwaysShow42Days: true,
+    maxDate: null,
+    minDate: null
+  });
 
   constructor() {
     super();
   }
 
-  private _onMovePrevClick = () => {
-    this._move(-1);
-  };
-
-  private _onMoveNextClick = () => {
-    this._move(1);
-  };
-
   private _move(signum: 1 | -1) {
     switch (this._view) {
       case 'month': {
-        const n = this._activeYear * 100 + this._activeMonth + signum;
-        this._activeYear = Math.floor(n / 100);
-        this._activeMonth = n % 100;
+        let n = this._activeYear * 12 + this._activeMonth + signum;
+        this._activeYear = Math.floor(n / 12);
+        this._activeMonth = n % 12;
         return;
       }
 
@@ -95,6 +97,38 @@ class DatePicker extends Component {
     this._activeMinute = (ev.target as SlRange).value;
   };
 
+  private _onPickerClick = (ev: MouseEvent) => {
+    const target = ev.target as HTMLElement;
+
+    if (target.hasAttribute('data-action')) {
+      const action = target.getAttribute('data-action');
+
+      switch (action) {
+        case 'movePrev':
+          this._move(-1);
+          return;
+
+        case 'moveNext':
+          this._move(1);
+          return;
+      }
+    } else if (target.classList.contains('cell')) {
+      const year = parseInt(target.getAttribute('data-year')!, 10);
+      const month = parseInt(target.getAttribute('data-month')!, 10);
+
+      if (this._view === 'month') {
+        // TODO!!!
+      } else if (this._view === 'year') {
+        this._activeYear = year;
+        this._activeMonth = month;
+        this._view = 'month';
+      } else if (this._view === 'decade') {
+        this._activeYear = year;
+        this._view = 'year';
+      }
+    }
+  };
+
   render() {
     const sheet =
       this._view === 'month'
@@ -107,16 +141,12 @@ class DatePicker extends Component {
 
     return html`
       <style></style>
-      <div class="base">
+      <div class="base" @click=${this._onPickerClick}>
         <input class="input" />
         <div class="header">
-          <a class="prev" data-action="movePrev" @click=${this._onMovePrevClick}
-            >&#x1F860;</a
-          >
+          <a class="prev" data-action="movePrev">&#x1F860;</a>
           <div class="title-container">${this._renderTitle()}</div>
-          <a class="next" data-action="moveNext" @click=${this._onMoveNextClick}
-            >&#x1F862;</a
-          >
+          <a class="next" data-action="moveNext">&#x1F862;</a>
         </div>
         <div class="sheet">${sheet}</div>
         <div class="time-selector">
@@ -174,13 +204,19 @@ class DatePicker extends Component {
   }
 
   private _renderMonthSheet() {
-    const view = this._headlessCalendar.getMonthView(
+    const view = this._calendar.getMonthView(
       this._activeYear,
       this._activeMonth
     );
 
     return html`
       <div class="view-month">
+        <div></div>
+        ${repeat(
+          view.weekdays,
+          (idx) => idx,
+          (idx) => html`<div class="weekday">${view.dayNamesShort[idx]}</div>`
+        )}
         ${repeat(
           view.days,
           (dayData) => dayData.month * 100 + dayData.day,
@@ -202,7 +238,10 @@ class DatePicker extends Component {
     return html`
       <div
         class=${classMap({
-          cell: true
+          'cell': true,
+          'cell--adjacent': dayData.adjacent,
+          'cell--current': dayData.current,
+          'cell--highlighted': this.highlightWeekend && dayData.weekend
         })}
         data-year=${dayData.year}
         data-month=${dayData.month}
@@ -214,7 +253,7 @@ class DatePicker extends Component {
   }
 
   private _renderYearSheet() {
-    const view = this._headlessCalendar.getYearView(this._activeYear);
+    const view = this._calendar.getYearView(this._activeYear);
 
     return html`
       <div class="view-year">
@@ -230,17 +269,18 @@ class DatePicker extends Component {
   private _renderMonthCell(monthData: Calendar.MonthData) {
     return html`<div
       class=${classMap({
-        cell: true
+        cell: true,
+        current: monthData.current
       })}
       data-year=${monthData.year}
       data-month=${monthData.month}
     >
-      ${this._i18n.getMonthName(monthData.month)}
+      ${this._i18n.getMonthName(monthData.month, 'short')}
     </div>`;
   }
 
   private _renderDecadeSheet() {
-    const view = this._headlessCalendar.getDecadeView(this._activeYear);
+    const view = this._calendar.getDecadeView(this._activeYear);
 
     return html`
       <div class="view-decade">
@@ -257,7 +297,8 @@ class DatePicker extends Component {
     return html`
       <div
         class=${classMap({
-          cell: true
+          cell: true,
+          current: yearData.current
         })}
         data-year=${yearData.year}
       >
@@ -297,4 +338,18 @@ class DatePicker extends Component {
       ${!dayPeriod ? null : html`<span class="day-period">${dayPeriod}</span>`}
     </div>`;
   }
+}
+
+function getLocalization(locale: string): Calendar.Localization {
+  const i18n = new I18nFacade(() => locale);
+
+  return {
+    dayNames: i18n.getDayNames(),
+    dayNamesShort: i18n.getDayNames('short'),
+    firstDayOfWeek: i18n.getFirstDayOfWeek(),
+    getCalendarWeek: i18n.getCalendarWeek,
+    monthNames: i18n.getMonthNames(),
+    monthNamesShort: i18n.getMonthNames('short'),
+    weekendDays: i18n.getWeekendDays()
+  };
 }

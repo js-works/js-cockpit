@@ -2,7 +2,7 @@ import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit';
 import { initI18n } from 'js-localize';
 
 export const sharedTheme = new Theme([
-  //ThemeMods.colors(ColorSchemes.pacificBlue),
+  ThemeMods.colors(ColorSchemes.bostonBlue)
   //ThemeMods.modern()
   //ThemeMods.compact()
   //ThemeMods.dark(true)
@@ -27,8 +27,4 @@ linkElem.setAttribute(
 
 document.head.append(linkElem);
 
-document.documentElement.lang = 'en';
-
-setTimeout(() => {
-  //  document.documentElement.lang = 'en'
-}, 3000);
+document.documentElement.lang = 'en-GB';

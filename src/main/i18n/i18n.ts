@@ -477,10 +477,10 @@ function getFirstDayOfWeek(locale: string): number {
     }
   }
 
-  const region = getLocaleInfo(locale).region;
+  const region = getLocaleInfo(locale).region!;
 
   return region
-    ? firstDayOfWeekByCountryCode.get(region) || defaultFirstDayOfWeek
+    ? firstDayOfWeekByCountryCode.get(region) ?? defaultFirstDayOfWeek
     : defaultFirstDayOfWeek;
 }
 

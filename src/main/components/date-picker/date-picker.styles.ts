@@ -14,6 +14,8 @@ export default css`
     flex-direction: column;
     user-select: none;
     box-shadow: var(--sl-shadow-x-large);
+    min-width: 20rem;
+    min-height: 20rem;
   }
 
   .input {
@@ -47,8 +49,8 @@ export default css`
   }
 
   .title {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
   }
 
   .title:not(.-disabled),
@@ -90,7 +92,7 @@ export default css`
 
   .view-year {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;
   }
 
@@ -104,6 +106,13 @@ export default css`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 90%;
+    padding: 0 0 3px 0;
+  }
+
+  .week-number {
+    font-size: 70%;
+    opacity: 75%;
   }
 
   .cell {
@@ -112,18 +121,23 @@ export default css`
     justify-content: center;
     cursor: pointer;
     padding: 0.25em;
+    box-sizing: border-box;
+  }
+
+  .cell--highlighted {
+    background-color: var(--sl-color-neutral-50);
+  }
+
+  .cell--adjacent:not(:hover) {
+    color: var(--sl-color-neutral-400);
+  }
+
+  .cell--current {
+    background-color: var(--sl-color-orange-100);
   }
 
   .cell:hover {
-    background-color: var(--sl-color-neutral-200);
-  }
-
-  .cell--other-month:not(:hover) {
-    color: var(--sl-color-neutral-700);
-  }
-
-  .cell--other-month:hover {
-    color: var(--sl-color-neutral-1000);
+    background-color: var(--sl-color-primary-100);
   }
 
   .week-number {
@@ -143,20 +157,19 @@ export default css`
     grid-column: 1;
     grid-row: 1 / span 2;
     align-self: center;
-    margin: 0 0 0 0.5em;
+    margin: 0 0.5em;
     font-size: 125%;
 
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--sl-font-sans);
 
-    width: 5em;
     text-align: center;
   }
 
   .day-period {
     display: inline-block;
     font-size: 60%;
-    width: 3em;
+    width: 2em;
     text-align: left;
   }
 
