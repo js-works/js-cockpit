@@ -6,10 +6,6 @@ export { Calendar };
 
 namespace Calendar {
   export type Localization = Readonly<{
-    dayNames: readonly string[];
-    dayNamesShort: readonly string[];
-    monthNames: readonly string[];
-    monthNamesShort: readonly string[];
     firstDayOfWeek: number;
     weekendDays: readonly number[];
     getCalendarWeek: (date: Date, firstDayOfWeek: number) => number;
@@ -55,10 +51,6 @@ namespace Calendar {
     weekdays: number[];
     prevMonthDisabled: boolean;
     nextMonthDisabled: boolean;
-    dayNames: readonly string[];
-    dayNamesShort: readonly string[];
-    monthNames: readonly string[];
-    monthNamesShort: readonly string[];
   }>;
 
   export type YearView = Readonly<{
@@ -66,8 +58,6 @@ namespace Calendar {
     months: readonly MonthData[];
     prevYearDisabled: boolean;
     nextYearDisabled: boolean;
-    monthNames: readonly string[];
-    monthNamesShort: readonly string[];
   }>;
 
   export type DecadeView = Readonly<{
@@ -184,10 +174,6 @@ class Calendar {
     return {
       year,
       month,
-      dayNames: localization.dayNames,
-      dayNamesShort: localization.dayNamesShort,
-      monthNames: localization.monthNames,
-      monthNamesShort: localization.monthNamesShort,
       days,
       weekdays,
       prevMonthDisabled: false, // TODO!!
@@ -212,8 +198,6 @@ class Calendar {
 
     return {
       year,
-      monthNames: localization.monthNames,
-      monthNamesShort: localization.monthNamesShort,
       months,
       prevYearDisabled: false, // TODO!!!
       nextYearDisabled: false // TODO!!!

@@ -215,7 +215,10 @@ class DatePicker extends Component {
         ${repeat(
           view.weekdays,
           (idx) => idx,
-          (idx) => html`<div class="weekday">${view.dayNamesShort[idx]}</div>`
+          (idx) =>
+            html`<div class="weekday">
+              ${this._i18n.getDayName(idx, 'short')}
+            </div>`
         )}
         ${repeat(
           view.days,
@@ -344,12 +347,8 @@ function getLocalization(locale: string): Calendar.Localization {
   const i18n = new I18nFacade(() => locale);
 
   return {
-    dayNames: i18n.getDayNames(),
-    dayNamesShort: i18n.getDayNames('short'),
     firstDayOfWeek: i18n.getFirstDayOfWeek(),
     getCalendarWeek: i18n.getCalendarWeek,
-    monthNames: i18n.getMonthNames(),
-    monthNamesShort: i18n.getMonthNames('short'),
     weekendDays: i18n.getWeekendDays()
   };
 }
