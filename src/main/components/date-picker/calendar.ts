@@ -143,17 +143,24 @@ class Calendar {
       }
 
       const cellDate = new Date(cellYear, cellMonth, cellDay);
+      const weekend = localization.weekendDays.includes(cellDate.getDay());
+
+      const outOfMinMaxRange = !inDateRange(
+        cellDate,
+        options.minDate,
+        options.maxDate
+      );
 
       days.push({
         year: cellYear,
         month: cellMonth,
         day: cellDay,
-        disabled: false, // TODO!!!
-        outOfMinMaxRange: false, // TODO!!!
-        adjacent: adjacent,
-        weekend: localization.weekendDays.includes(cellDate.getDay()),
+        disabled: (options.disableWeekend && weekend) || outOfMinMaxRange,
+        outOfMinMaxRange,
+        adjacent,
+        weekend,
 
-        weekNumber: getCalendarWeek(
+        weekNumber: localization.getCalendarWeek(
           new Date(cellYear, cellMonth, cellDay),
           firstDayOfWeek
         ),
@@ -231,6 +238,25 @@ class Calendar {
 
 // === helpers =======================================================
 
+function inDateRange(date: Date, start: Date | null, end: Date | null) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  const toNumber = (d: Date) =>
+    d.getFullYear() * 10000 + d.getMonth() * 10 + d.getDate();
+
+  const val = toNumber(date);
+
+  if (start === null) {
+    return val <= toNumber(end!);
+  } else if (end === null) {
+    return val >= toNumber(start!);
+  } else {
+    return val >= toNumber(start) && val <= toNumber(end);
+  }
+}
+
 function getDayCountOfMonth(year: number, month: number) {
   // we also allow month values less than 0 and greater than 11
   const n = year * 12 + month;
@@ -242,24 +268,4 @@ function getDayCountOfMonth(year: number, month: number) {
   }
 
   return year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0) ? 28 : 29;
-}
-
-function getCalendarWeek(date: Date, firstDayOfWeek: number) {
-  // Code is based on this solution here:
-  // https://stackoverflow.com/questions/23781366/date-get-week-number-for-custom-week-start-day
-  // TODO - check algorithm
-
-  const target = new Date(date);
-
-  // Replaced offset of (6) with (7 - firstDayOfWeek)
-  const dayNum = (date.getDay() + 7 - firstDayOfWeek) % 7;
-  target.setDate(target.getDate() - dayNum + 3);
-  const firstThursday = target.valueOf();
-  target.setMonth(0, 1);
-
-  if (target.getDay() !== 4) {
-    target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-  }
-
-  return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
 }

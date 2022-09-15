@@ -1,7 +1,7 @@
 import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, html, repeat, TemplateResult, when } from '../../utils/lit';
 import { Calendar } from './calendar';
-import { I18nController, I18nFacade } from '../../i18n/i18n';
+import { I18nController } from '../../i18n/i18n';
 
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
@@ -45,7 +45,13 @@ class DatePicker extends Component {
   highlightWeekend = false;
 
   @prop(Attrs.boolean)
-  disableWeekend = true;
+  disableWeekend = false;
+
+  @prop(/* Attrs.date */) // TODO!!!
+  minDate: Date | null = new Date(2022, 8, 11);
+
+  @prop(/* Attrs.date */) // TODO!!!
+  maxDate: Date | null = new Date(2023, 7, 27);
 
   @state
   private _view: View = 'month';
@@ -62,8 +68,11 @@ class DatePicker extends Component {
   @state
   private _activeMinute = new Date().getMinutes();
 
+  @state
+  private _selection = new Set<Date>();
+
   private _i18n = new I18nController(this);
-  private _calendar = new Calendar(this._getInitialCalendarOptions());
+  private _calendar = this._getCalendar();
 
   private _onPrevOrNextClick = (ev: MouseEvent) => {
     const signum = (ev.target! as HTMLElement).classList.contains('prev')
@@ -96,13 +105,13 @@ class DatePicker extends Component {
     this._activeMinute = (ev.target as SlRange).value;
   };
 
-  _onDayClick = (ev: MouseEvent) => {
+  _onDayClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
   };
 
-  _onMonthClick = (ev: MouseEvent) => {
+  _onMonthClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
@@ -112,7 +121,7 @@ class DatePicker extends Component {
     this._view = 'month';
   };
 
-  _onYearClick = (ev: MouseEvent) => {
+  _onYearClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
 
@@ -120,40 +129,31 @@ class DatePicker extends Component {
     this._view = 'year';
   };
 
-  _getCalendarLocalization(): Calendar.Localization {
-    return {
-      firstDayOfWeek: this._i18n.getFirstDayOfWeek(),
-      getCalendarWeek: this._i18n.getCalendarWeek,
-      weekendDays: this._i18n.getWeekendDays()
-    };
+  _getCalendar(): Calendar {
+    return new Calendar({
+      localization: {
+        firstDayOfWeek: this._i18n.getFirstDayOfWeek(),
+        getCalendarWeek: this._i18n.getCalendarWeek.bind(this._i18n),
+        weekendDays: this._i18n.getWeekendDays()
+      },
+
+      disableWeekend: this.disableWeekend,
+      alwaysShow42Days: true,
+      minDate: this.minDate,
+      maxDate: this.maxDate
+    });
   }
 
-  _getInitialCalendarOptions(): Calendar.Options {
-    return {
-      localization: this._getCalendarLocalization(),
-      disableWeekend: false,
-      alwaysShow42Days: true,
-      maxDate: null,
-      minDate: null
-    };
+  willUpdate() {
+    this._calendar = this._getCalendar();
   }
 
   render() {
-    let sheet: TemplateResult;
-
-    switch (this._view) {
-      case 'month':
-        sheet = this._renderMonthSheet();
-        break;
-
-      case 'year':
-        sheet = this._renderYearSheet();
-        break;
-
-      case 'decade':
-        sheet = this._renderDecadeSheet();
-        break;
-    }
+    const sheet = {
+      month: this._renderMonthSheet,
+      year: this._renderYearSheet,
+      decade: this._renderDecadeSheet
+    }[this._view].call(this);
 
     return html`
       <style></style>
@@ -263,6 +263,7 @@ class DatePicker extends Component {
       <div
         class=${classMap({
           'cell': true,
+          'cell--disabled': dayData.disabled,
           'cell--adjacent': dayData.adjacent,
           'cell--current': dayData.current,
           'cell--highlighted': this.highlightWeekend && dayData.weekend
@@ -293,8 +294,9 @@ class DatePicker extends Component {
   private _renderMonthCell(monthData: Calendar.MonthData) {
     return html`<div
       class=${classMap({
-        cell: true,
-        current: monthData.current
+        'cell': true,
+        'cell--disabled': monthData.disabled,
+        'cell--current': monthData.current
       })}
       data-year=${monthData.year}
       data-month=${monthData.year}
@@ -322,8 +324,9 @@ class DatePicker extends Component {
     return html`
       <div
         class=${classMap({
-          cell: true,
-          current: yearData.current
+          'cell': true,
+          'cell--disabled': yearData.disabled,
+          'cell--current': yearData.current
         })}
         data-year=${yearData.year}
         @click=${this._onYearClick}
@@ -359,9 +362,13 @@ class DatePicker extends Component {
       time = parts.map((it) => it.value).join('');
     }
 
-    return html`<div class="cp-time">
-      ${time}
-      ${!dayPeriod ? null : html`<span class="day-period">${dayPeriod}</span>`}
-    </div>`;
+    return html`
+      <div class="time">
+        ${time}
+        ${!dayPeriod
+          ? null
+          : html`<span class="day-period">${dayPeriod}</span>`}
+      </div>
+    `;
   }
 }

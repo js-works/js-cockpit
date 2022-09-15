@@ -128,11 +128,16 @@ export default css`
     box-sizing: border-box;
   }
 
+  .cell--disabled {
+    color: var(--sl-color-neutral-300);
+    cursor: not-allowed;
+  }
+
   .cell--highlighted {
     background-color: var(--sl-color-neutral-50);
   }
 
-  .cell--adjacent:not(:hover) {
+  .cell--adjacent:not(:.cell--disabled):not(:hover) {
     color: var(--sl-color-neutral-400);
   }
 
@@ -140,7 +145,7 @@ export default css`
     background-color: var(--sl-color-orange-100);
   }
 
-  .cell:hover {
+  .cell:hover:not(.cell--disabled) {
     background-color: var(--sl-color-primary-100);
   }
 
