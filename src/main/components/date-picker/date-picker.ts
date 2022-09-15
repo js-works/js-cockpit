@@ -2,6 +2,7 @@ import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, html, repeat, TemplateResult, when } from '../../utils/lit';
 import { Calendar } from './calendar';
 import { I18nController } from '../../i18n/i18n';
+import { LocalizeController } from '@shoelace-style/localize';
 
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
@@ -72,7 +73,48 @@ class DatePicker extends Component {
   private _selection = new Set<Date>();
 
   private _i18n = new I18nController(this);
+  private _localize = new LocalizeController(this);
   private _calendar = this._getCalendar();
+
+  private _getLocale() {
+    return this._localize.lang();
+  }
+
+  private _getActiveMonthName() {
+    return new Intl.DateTimeFormat(this._getLocale(), {
+      year: 'numeric',
+      month: 'long'
+    }).format(new Date(this._activeYear, this._activeMonth, 1));
+  }
+
+  private _getActiveYearName() {
+    return new Intl.DateTimeFormat(this._getLocale(), {
+      year: 'numeric'
+    }).format(new Date(this._activeYear, 0, 1));
+  }
+
+  private _getActiveDecadeName() {
+    const startYear = Math.floor(this._activeYear / 10) * 10;
+
+    return Intl.DateTimeFormat(this._i18n.getLocale(), {
+      year: 'numeric'
+    }).formatRange(new Date(startYear, 1, 1), new Date(startYear + 11, 1, 1));
+  }
+
+  _getCalendar(): Calendar {
+    return new Calendar({
+      localization: {
+        firstDayOfWeek: this._i18n.getFirstDayOfWeek(),
+        getCalendarWeek: this._i18n.getCalendarWeek.bind(this._i18n),
+        weekendDays: this._i18n.getWeekendDays()
+      },
+
+      disableWeekend: this.disableWeekend,
+      alwaysShow42Days: true,
+      minDate: this.minDate,
+      maxDate: this.maxDate
+    });
+  }
 
   private _onPrevOrNextClick = (ev: MouseEvent) => {
     const signum = (ev.target! as HTMLElement).classList.contains('prev')
@@ -105,13 +147,13 @@ class DatePicker extends Component {
     this._activeMinute = (ev.target as SlRange).value;
   };
 
-  _onDayClick = (ev: Event) => {
+  private _onDayClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
   };
 
-  _onMonthClick = (ev: Event) => {
+  private _onMonthClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
@@ -121,28 +163,13 @@ class DatePicker extends Component {
     this._view = 'month';
   };
 
-  _onYearClick = (ev: Event) => {
+  private _onYearClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
 
     this._activeYear = year;
     this._view = 'year';
   };
-
-  _getCalendar(): Calendar {
-    return new Calendar({
-      localization: {
-        firstDayOfWeek: this._i18n.getFirstDayOfWeek(),
-        getCalendarWeek: this._i18n.getCalendarWeek.bind(this._i18n),
-        weekendDays: this._i18n.getWeekendDays()
-      },
-
-      disableWeekend: this.disableWeekend,
-      alwaysShow42Days: true,
-      minDate: this.minDate,
-      maxDate: this.maxDate
-    });
-  }
 
   willUpdate() {
     this._calendar = this._getCalendar();
@@ -189,32 +216,16 @@ class DatePicker extends Component {
   }
 
   private _renderTitle() {
-    const view = this._view;
+    const title = {
+      month: this._getActiveMonthName,
+      year: this._getActiveYearName,
+      decade: this._getActiveDecadeName
+    }[this._view].call(this);
 
     const onClick =
-      view === 'decade'
+      this._view === 'decade'
         ? null
-        : () => (this._view = view === 'year' ? 'decade' : 'year');
-
-    let title = '';
-
-    switch (this._view) {
-      case 'month': {
-        const monthName = this._i18n.getMonthName(this._activeMonth);
-        title = `${monthName} ${this._activeYear}`;
-        break;
-      }
-
-      case 'year':
-        title = this._activeYear.toString();
-        break;
-
-      case 'decade': {
-        const startYear = Math.floor(this._activeYear / 10) * 10;
-        title = `${startYear} - ${startYear + 11}`;
-        break;
-      }
-    }
+        : () => (this._view = this._view === 'year' ? 'decade' : 'year');
 
     return html`<div class="title" @click=${onClick}>${title}</div>`;
   }
