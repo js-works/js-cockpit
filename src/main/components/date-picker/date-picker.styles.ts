@@ -86,8 +86,12 @@ export default css`
 
   .view-month {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     flex-grow: 1;
+  }
+
+  .view-month--with-week-numbers {
+    grid-template-columns: repeat(8, 1fr);
   }
 
   .view-year {
@@ -106,7 +110,7 @@ export default css`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 90%;
+    font-size: 85%;
     padding: 0 0 3px 0;
   }
 
@@ -176,7 +180,7 @@ export default css`
   .hour-slider,
   .minute-slider {
     --track-height: 2px;
-    --thumb-size: 0.8em;
+    --thumb-size: 14px;
     --track-color-active: var(--sl-color-primary-500);
     --track-color-inactive: var(--sl-color-neutral-200);
     margin: 0 1em 0 0;
