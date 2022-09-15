@@ -149,6 +149,14 @@ export default css`
     background-color: var(--sl-color-primary-100);
   }
 
+  .cell--selected {
+    background-color: var(--sl-color-primary-400);
+  }
+
+  .cell--selected:hover {
+    background-color: var(--sl-color-primary-500) !important;
+  }
+
   .week-number {
     display: flex;
     align-items: center;

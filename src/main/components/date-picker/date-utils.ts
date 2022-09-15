@@ -8,6 +8,7 @@
 export {
   getCalendarWeek,
   getFirstDayOfWeek,
+  getIsoDateString,
   getMonthName,
   getWeekendDays,
   getWeekdayName
@@ -141,4 +142,12 @@ function getMonthName(
   const date = new Date(1970, month, 1);
 
   return new Intl.DateTimeFormat(locale, { month: format }).format(date);
+}
+
+function getIsoDateString(year: number, month: number, day: number) {
+  const y = year.toString().padStart(4, '0');
+  const m = (month + 1).toString().padStart(2, '0');
+  const d = day.toString().padStart(2, '0');
+
+  return `${y}-${m}-${d}`;
 }

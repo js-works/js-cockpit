@@ -10,6 +10,7 @@ import { Calendar } from './calendar';
 import {
   getCalendarWeek,
   getFirstDayOfWeek,
+  getIsoDateString,
   getMonthName,
   getWeekdayName,
   getWeekendDays
@@ -88,8 +89,7 @@ class DatePicker extends LitElement {
   private _activeMinute = new Date().getMinutes();
 
   @state()
-  private _selection = new Set<Date>();
-
+  private _selectedDays = new Set<string>();
   private _localize = new LocalizeController(this);
   private _calendar = this._getCalendar();
 
@@ -167,6 +167,26 @@ class DatePicker extends LitElement {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
+    const day = parseInt(elem.getAttribute('data-day')!, 10);
+    const isoDate = getIsoDateString(year, month, day);
+
+    switch (this.type) {
+      case 'date':
+      case 'dateTime':
+        this._selectedDays.clear();
+        this._selectedDays.add(isoDate);
+        break;
+
+      case 'dates':
+        if (this._selectedDays.has(isoDate)) {
+          this._selectedDays.delete(isoDate);
+        } else {
+          this._selectedDays.add(isoDate);
+        }
+        break;
+    }
+
+    this.requestUpdate();
   };
 
   private _onMonthClick = (ev: Event) => {
@@ -208,25 +228,28 @@ class DatePicker extends LitElement {
           <a class="next" @click=${this._onPrevOrNextClick}>&#x1F862;</a>
         </div>
         <div class="sheet">${sheet}</div>
-        <div class="time-selector">
-          <div class="time">${this._renderTime()}</div>
-          <sl-range
-            class="hour-slider"
-            value=${this._activeHour}
-            min="0"
-            max="23"
-            tooltip="none"
-            @sl-change=${this._onHourChange}
-          ></sl-range>
-          <sl-range
-            class="minute-slider"
-            value=${this._activeMinute}
-            min="0"
-            max="59"
-            tooltip="none"
-            @sl-change=${this._onMinuteChange}
-          ></sl-range>
-        </div>
+        ${when(
+          this.type === 'dateTime' || this.type === 'time',
+          () => html` <div class="time-selector">
+            <div class="time">${this._renderTime()}</div>
+            <sl-range
+              class="hour-slider"
+              value=${this._activeHour}
+              min="0"
+              max="23"
+              tooltip="none"
+              @sl-change=${this._onHourChange}
+            ></sl-range>
+            <sl-range
+              class="minute-slider"
+              value=${this._activeMinute}
+              min="0"
+              max="59"
+              tooltip="none"
+              @sl-change=${this._onMinuteChange}
+            ></sl-range>
+          </div>`
+        )}
       </div>
     `;
   }
@@ -251,7 +274,7 @@ class DatePicker extends LitElement {
       this._activeYear,
       this._activeMonth
     );
-    console.log(view);
+
     return html`
       <div
         class=${classMap({
@@ -293,11 +316,15 @@ class DatePicker extends LitElement {
           'cell--disabled': dayData.disabled,
           'cell--adjacent': dayData.adjacent,
           'cell--current': dayData.current,
-          'cell--highlighted': this.highlightWeekend && dayData.weekend
+          'cell--highlighted': this.highlightWeekend && dayData.weekend,
+          'cell--selected': this._selectedDays.has(
+            getIsoDateString(dayData.year, dayData.month, dayData.day)
+          )
         })}
         data-year=${dayData.year}
         data-month=${dayData.month}
-        @click=${this._onDayClick}
+        data-day=${dayData.day}
+        @click=${dayData.disabled ? null : this._onDayClick}
       >
         ${dayData.day}
       </div>
