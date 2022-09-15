@@ -1,8 +1,19 @@
-import { elem, prop, state, Attrs, Component } from '../../utils/components';
-import { classMap, html, repeat, TemplateResult, when } from '../../utils/lit';
+import { LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators';
+import { html } from 'lit';
+import { classMap } from 'lit/directives/class-map';
+import { repeat } from 'lit/directives/repeat';
+import { when } from 'lit/directives/when';
 import { Calendar } from './calendar';
-import { I18nController } from '../../i18n/i18n';
 import { LocalizeController } from '@shoelace-style/localize';
+
+import {
+  getCalendarWeek,
+  getFirstDayOfWeek,
+  getMonthName,
+  getWeekdayName,
+  getWeekendDays
+} from './date-utils';
 
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
@@ -33,46 +44,46 @@ type View = 'month' | 'year' | 'decade';
 
 // === Calendar ======================================================
 
-@elem({
-  tag: 'cp-date-picker',
-  styles: calendarStyles,
-  uses: [SlRange]
-})
-class DatePicker extends Component {
-  @prop(Attrs.boolean)
+// dependencies of date picker component (to prevent too much tree shaking)
+void SlRange;
+
+@customElement('cp-date-picker')
+class DatePicker extends LitElement {
+  static styles = calendarStyles;
+
+  @property({ type: Boolean })
   showWeekNumbers = false;
 
-  @prop(Attrs.boolean)
+  @property({ type: Boolean })
   highlightWeekend = false;
 
-  @prop(Attrs.boolean)
+  @property({ type: Boolean })
   disableWeekend = false;
 
-  @prop(/* Attrs.date */) // TODO!!!
+  @property(/* Attrs.date */) // TODO!!!
   minDate: Date | null = new Date(2022, 8, 11);
 
-  @prop(/* Attrs.date */) // TODO!!!
+  @property(/* Attrs.date */) // TODO!!!
   maxDate: Date | null = new Date(2023, 7, 27);
 
-  @state
+  @state()
   private _view: View = 'month';
 
-  @state
+  @state()
   private _activeYear = new Date().getFullYear();
 
-  @state
+  @state()
   private _activeMonth = new Date().getMonth();
 
-  @state
+  @state()
   private _activeHour = new Date().getHours();
 
-  @state
+  @state()
   private _activeMinute = new Date().getMinutes();
 
-  @state
+  @state()
   private _selection = new Set<Date>();
 
-  private _i18n = new I18nController(this);
   private _localize = new LocalizeController(this);
   private _calendar = this._getCalendar();
 
@@ -81,32 +92,31 @@ class DatePicker extends Component {
   }
 
   private _getActiveMonthName() {
-    return new Intl.DateTimeFormat(this._getLocale(), {
-      year: 'numeric',
-      month: 'long'
-    }).format(new Date(this._activeYear, this._activeMonth, 1));
+    const date = new Date(this._activeYear, this._activeMonth, 1);
+    return this._localize.date(date, { year: 'numeric', month: 'long' });
   }
 
   private _getActiveYearName() {
-    return new Intl.DateTimeFormat(this._getLocale(), {
-      year: 'numeric'
-    }).format(new Date(this._activeYear, 0, 1));
+    const date = new Date(this._activeYear, 0, 1);
+    return this._localize.date(date, { year: 'numeric' });
   }
 
   private _getActiveDecadeName() {
     const startYear = Math.floor(this._activeYear / 10) * 10;
 
-    return Intl.DateTimeFormat(this._i18n.getLocale(), {
+    return Intl.DateTimeFormat(this._getLocale(), {
       year: 'numeric'
     }).formatRange(new Date(startYear, 1, 1), new Date(startYear + 11, 1, 1));
   }
 
-  _getCalendar(): Calendar {
+  private _getCalendar(): Calendar {
     return new Calendar({
       localization: {
-        firstDayOfWeek: this._i18n.getFirstDayOfWeek(),
-        getCalendarWeek: this._i18n.getCalendarWeek.bind(this._i18n),
-        weekendDays: this._i18n.getWeekendDays()
+        firstDayOfWeek: getFirstDayOfWeek(this._getLocale()),
+        weekendDays: getWeekendDays(this._getLocale()),
+
+        getCalendarWeek: (date: Date) =>
+          getCalendarWeek(this._getLocale(), date)
       },
 
       disableWeekend: this.disableWeekend,
@@ -249,7 +259,7 @@ class DatePicker extends Component {
           (idx) => idx,
           (idx) =>
             html`<div class="weekday">
-              ${this._i18n.getDayName(idx, 'short')}
+              ${getWeekdayName(this._getLocale(), idx, 'short')}
             </div>`
         )}
         ${repeat(
@@ -313,7 +323,7 @@ class DatePicker extends Component {
       data-month=${monthData.year}
       @click=${this._onMonthClick}
     >
-      ${this._i18n.getMonthName(monthData.month, 'short')}
+      ${getMonthName(this._getLocale(), monthData.month, 'short')}
     </div>`;
   }
 
@@ -352,7 +362,7 @@ class DatePicker extends Component {
     let time = '';
     let dayPeriod = '';
 
-    const parts = new Intl.DateTimeFormat(this._i18n.getLocale(), {
+    const parts = new Intl.DateTimeFormat(this._getLocale(), {
       hour: '2-digit',
       minute: '2-digit'
     }).formatToParts(date);
