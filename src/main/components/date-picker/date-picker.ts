@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
-import { Calendar } from './calendar';
 import { LocalizeController } from '@shoelace-style/localize';
+import { Calendar } from './calendar';
 
 import {
   getCalendarWeek,
@@ -51,6 +51,9 @@ void SlRange;
 class DatePicker extends LitElement {
   static styles = calendarStyles;
 
+  @property({ type: String })
+  type: DatePicker.Type = 'date';
+
   @property({ type: Boolean })
   showWeekNumbers = false;
 
@@ -59,6 +62,9 @@ class DatePicker extends LitElement {
 
   @property({ type: Boolean })
   disableWeekend = false;
+
+  @property({ type: Boolean })
+  variableDayCellCount = false;
 
   @property(/* Attrs.date */) // TODO!!!
   minDate: Date | null = new Date(2022, 8, 11);
@@ -120,7 +126,7 @@ class DatePicker extends LitElement {
       },
 
       disableWeekend: this.disableWeekend,
-      alwaysShow42Days: true,
+      alwaysShow42Days: !this.variableDayCellCount,
       minDate: this.minDate,
       maxDate: this.maxDate
     });
@@ -245,7 +251,7 @@ class DatePicker extends LitElement {
       this._activeYear,
       this._activeMonth
     );
-
+    console.log(view);
     return html`
       <div
         class=${classMap({

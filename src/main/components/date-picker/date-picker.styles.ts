@@ -137,7 +137,7 @@ export default css`
     background-color: var(--sl-color-neutral-50);
   }
 
-  .cell--adjacent:not(:.cell--disabled):not(:hover) {
+  .cell--adjacent:not(.cell--disabled):not(:hover) {
     color: var(--sl-color-neutral-400);
   }
 

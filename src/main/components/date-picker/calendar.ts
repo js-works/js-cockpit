@@ -215,7 +215,6 @@ class Calendar {
     const startYear = year - (year % 10);
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
-
     const years: Calendar.YearData[] = [];
 
     for (let cellYear = startYear; cellYear <= endYear; ++cellYear) {
@@ -243,8 +242,8 @@ function inDateRange(date: Date, start: Date | null, end: Date | null) {
     return true;
   }
 
-  const toNumber = (d: Date) =>
-    d.getFullYear() * 10000 + d.getMonth() * 10 + d.getDate();
+  const toNumber = (date: Date) =>
+    date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
 
   const val = toNumber(date);
 
