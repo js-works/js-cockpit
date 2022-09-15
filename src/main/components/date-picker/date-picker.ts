@@ -10,7 +10,10 @@ import { Calendar } from './calendar';
 import {
   getCalendarWeek,
   getFirstDayOfWeek,
-  getIsoDateString,
+  getYearMonthDayString,
+  getYearMonthString,
+  getYearString,
+  getYearWeekString,
   getMonthName,
   getWeekdayName,
   getWeekendDays
@@ -35,8 +38,12 @@ namespace DatePicker {
     | 'time'
     | 'dateTime'
     | 'dateRange'
+    | 'week'
+    | 'weeks'
     | 'month'
-    | 'year';
+    | 'months'
+    | 'year'
+    | 'years';
 }
 
 // === local types ===================================================
@@ -88,10 +95,12 @@ class DatePicker extends LitElement {
   @state()
   private _activeMinute = new Date().getMinutes();
 
-  @state()
   private _selectedDays = new Set<string>();
+  private _selectedMonths = new Set<string>();
+  private _selectedYears = new Set<string>();
+
   private _localize = new LocalizeController(this);
-  private _calendar = this._getCalendar();
+  private _calendar!: Calendar; // will be set on `willUpdate`
 
   private _getLocale() {
     return this._localize.lang();
@@ -133,7 +142,7 @@ class DatePicker extends LitElement {
   }
 
   private _onPrevOrNextClick = (ev: MouseEvent) => {
-    const signum = (ev.target! as HTMLElement).classList.contains('prev')
+    const signum = (ev.target as HTMLElement).classList.contains('prev')
       ? -1
       : 1;
 
@@ -168,21 +177,16 @@ class DatePicker extends LitElement {
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
     const day = parseInt(elem.getAttribute('data-day')!, 10);
-    const isoDate = getIsoDateString(year, month, day);
+    const dateString = getYearMonthDayString(year, month, day);
 
     switch (this.type) {
       case 'date':
       case 'dateTime':
-        this._selectedDays.clear();
-        this._selectedDays.add(isoDate);
+        toggleSetEntry(this._selectedDays, dateString, true);
         break;
 
       case 'dates':
-        if (this._selectedDays.has(isoDate)) {
-          this._selectedDays.delete(isoDate);
-        } else {
-          this._selectedDays.add(isoDate);
-        }
+        toggleSetEntry(this._selectedDays, dateString);
         break;
     }
 
@@ -197,6 +201,20 @@ class DatePicker extends LitElement {
     this._activeYear = year;
     this._activeMonth = month;
     this._view = 'month';
+
+    const monthString = getYearMonthString(year, month);
+
+    switch (this.type) {
+      case 'month':
+        toggleSetEntry(this._selectedMonths, monthString, true);
+        break;
+
+      case 'months':
+        toggleSetEntry(this._selectedMonths, monthString);
+        break;
+    }
+
+    this.requestUpdate();
   };
 
   private _onYearClick = (ev: Event) => {
@@ -205,10 +223,34 @@ class DatePicker extends LitElement {
 
     this._activeYear = year;
     this._view = 'year';
+
+    const yearString = getYearString(year);
+
+    switch (this.type) {
+      case 'year':
+        toggleSetEntry(this._selectedYears, yearString, true);
+        break;
+
+      case 'years':
+        toggleSetEntry(this._selectedYears, yearString);
+        break;
+    }
+
+    this.requestUpdate();
   };
 
   willUpdate() {
     this._calendar = this._getCalendar();
+
+    // TODO!
+    if (
+      (this.type === 'month' || this.type === 'months') &&
+      this._view === 'month'
+    ) {
+      this._view = 'year';
+    } else if (this.type === 'year' || this.type === 'years') {
+      this._view = 'decade';
+    }
   }
 
   render() {
@@ -218,37 +260,48 @@ class DatePicker extends LitElement {
       decade: this._renderDecadeSheet
     }[this._view].call(this);
 
+    const typeSnakeCase = this.type.replace(
+      /[A-Z]/g,
+      (it) => `-${it.toLowerCase()}`
+    );
+
     return html`
       <style></style>
-      <div class="base">
+      <div class="base base--type-${typeSnakeCase}">
         <input class="input" />
-        <div class="header">
-          <a class="prev" @click=${this._onPrevOrNextClick}>&#x1F860;</a>
-          <div class="title-container">${this._renderTitle()}</div>
-          <a class="next" @click=${this._onPrevOrNextClick}>&#x1F862;</a>
-        </div>
-        <div class="sheet">${sheet}</div>
         ${when(
+          this.type !== 'time',
+          () => html`
+            <div class="header">
+              <a class="prev" @click=${this._onPrevOrNextClick}>&#x1F860;</a>
+              <div class="title-container">${this._renderTitle()}</div>
+              <a class="next" @click=${this._onPrevOrNextClick}>&#x1F862;</a>
+            </div>
+            ${sheet}
+          `
+        )}${when(
           this.type === 'dateTime' || this.type === 'time',
-          () => html` <div class="time-selector">
-            <div class="time">${this._renderTime()}</div>
-            <sl-range
-              class="hour-slider"
-              value=${this._activeHour}
-              min="0"
-              max="23"
-              tooltip="none"
-              @sl-change=${this._onHourChange}
-            ></sl-range>
-            <sl-range
-              class="minute-slider"
-              value=${this._activeMinute}
-              min="0"
-              max="59"
-              tooltip="none"
-              @sl-change=${this._onMinuteChange}
-            ></sl-range>
-          </div>`
+          () => html`
+            <div class="time-selector">
+              <div class="time">${this._renderTime()}</div>
+              <sl-range
+                class="hour-slider"
+                value=${this._activeHour}
+                min="0"
+                max="23"
+                tooltip="none"
+                @sl-change=${this._onHourChange}
+              ></sl-range>
+              <sl-range
+                class="minute-slider"
+                value=${this._activeMinute}
+                min="0"
+                max="59"
+                tooltip="none"
+                @sl-change=${this._onMinuteChange}
+              ></sl-range>
+            </div>
+          `
         )}
       </div>
     `;
@@ -278,11 +331,12 @@ class DatePicker extends LitElement {
     return html`
       <div
         class=${classMap({
-          'view-month': true,
-          'view-month--with-week-numbers': this.showWeekNumbers
+          'sheet': true,
+          'sheet--month': true,
+          'sheet--month-with-week-numbers': this.showWeekNumbers
         })}
       >
-        ${when(this.showWeekNumbers, () => html` <div></div>`)}
+        ${when(this.showWeekNumbers, () => html`<div></div>`)}
         ${repeat(
           view.weekdays,
           (idx) => idx,
@@ -309,6 +363,10 @@ class DatePicker extends LitElement {
   }
 
   private _renderDayCell(dayData: Calendar.DayData) {
+    const selected = this._selectedDays.has(
+      getYearMonthDayString(dayData.year, dayData.month, dayData.day)
+    );
+
     return html`
       <div
         class=${classMap({
@@ -317,9 +375,7 @@ class DatePicker extends LitElement {
           'cell--adjacent': dayData.adjacent,
           'cell--current': dayData.current,
           'cell--highlighted': this.highlightWeekend && dayData.weekend,
-          'cell--selected': this._selectedDays.has(
-            getIsoDateString(dayData.year, dayData.month, dayData.day)
-          )
+          'cell--selected': selected
         })}
         data-year=${dayData.year}
         data-month=${dayData.month}
@@ -335,7 +391,7 @@ class DatePicker extends LitElement {
     const view = this._calendar.getYearView(this._activeYear);
 
     return html`
-      <div class="view-year">
+      <div class="sheet sheet--year">
         ${repeat(
           view.months,
           (monthData) => monthData.month,
@@ -346,25 +402,32 @@ class DatePicker extends LitElement {
   }
 
   private _renderMonthCell(monthData: Calendar.MonthData) {
-    return html`<div
-      class=${classMap({
-        'cell': true,
-        'cell--disabled': monthData.disabled,
-        'cell--current': monthData.current
-      })}
-      data-year=${monthData.year}
-      data-month=${monthData.year}
-      @click=${this._onMonthClick}
-    >
-      ${getMonthName(this._getLocale(), monthData.month, 'short')}
-    </div>`;
+    const selected = this._selectedMonths.has(
+      getYearMonthString(monthData.year, monthData.month)
+    );
+
+    return html`
+      <div
+        class=${classMap({
+          'cell': true,
+          'cell--disabled': monthData.disabled,
+          'cell--current': monthData.current,
+          'cell--selected': selected
+        })}
+        data-year=${monthData.year}
+        data-month=${monthData.month}
+        @click=${monthData.disabled ? null : this._onMonthClick}
+      >
+        ${getMonthName(this._getLocale(), monthData.month, 'short')}
+      </div>
+    `;
   }
 
   private _renderDecadeSheet() {
     const view = this._calendar.getDecadeView(this._activeYear);
 
     return html`
-      <div class="view-decade">
+      <div class="sheet sheet--decade">
         ${repeat(
           view.years,
           (monthData) => monthData.year,
@@ -375,15 +438,18 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearCell(yearData: Calendar.YearData) {
+    const selected = this._selectedYears.has(getYearString(yearData.year));
+
     return html`
       <div
         class=${classMap({
           'cell': true,
           'cell--disabled': yearData.disabled,
-          'cell--current': yearData.current
+          'cell--current': yearData.current,
+          'cell--selected': selected
         })}
         data-year=${yearData.year}
-        @click=${this._onYearClick}
+        @click=${yearData.disabled ? null : this._onYearClick}
       >
         ${yearData.year}
       </div>
@@ -424,5 +490,21 @@ class DatePicker extends LitElement {
           : html`<span class="day-period">${dayPeriod}</span>`}
       </div>
     `;
+  }
+}
+
+// === helpers =======================================================
+
+function toggleSetEntry<T>(values: Set<T>, value: T, clear = false) {
+  const hasValue = values.has(value);
+
+  if (clear) {
+    values.clear();
+  }
+
+  if (!hasValue) {
+    values.add(value);
+  } else if (!clear) {
+    values.delete(value);
   }
 }

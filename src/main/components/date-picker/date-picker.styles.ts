@@ -14,8 +14,6 @@ export default css`
     flex-direction: column;
     user-select: none;
     box-shadow: var(--sl-shadow-x-large);
-    min-width: 20rem;
-    min-height: 20rem;
   }
 
   .input {
@@ -53,15 +51,15 @@ export default css`
     padding-right: 0.75em;
   }
 
-  .title:not(.-disabled),
-  .prev:not(.-disabled),
-  .next:not(.-disabled) {
+  .title:not(.title--disabled),
+  .prev:not(.prev--disabled),
+  .next:not(.next--disabled) {
     cursor: pointer;
   }
 
-  .title:not(.-disabled):hover,
-  .prev:not(.-disabled):hover,
-  .next:not(.-disabled):hover {
+  .title:not(.title--disabled):hover,
+  .prev:not(.prev--disabled):hover,
+  .next:not(.next--disabled):hover {
     background-color: var(--sl-color-primary-600);
   }
 
@@ -71,36 +69,33 @@ export default css`
     opacity: 75%;
   }
 
-  .title.-disabled {
-    background-color: inherit;
-    cursor: default;
-  }
-
   .sheet {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     flex-grow: 1;
     padding: 0.5em;
+    min-width: 15rem;
+    min-height: 13rem;
   }
 
-  .view-month {
+  .sheet--month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     flex-grow: 1;
   }
 
-  .view-month--with-week-numbers {
+  .sheet--month-with-week-numbers {
     grid-template-columns: repeat(8, 1fr);
   }
 
-  .view-year {
+  .sheet--year {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;
   }
 
-  .view-decade {
+  .sheet--decade {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;
@@ -168,6 +163,10 @@ export default css`
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     padding: 0.125rem 0 0.75rem 0;
+  }
+
+  .base--type-time .time-selector {
+    padding: 0.5rem 0.25rem calc(1rem + 5px) 0;
   }
 
   .time {

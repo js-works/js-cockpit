@@ -12,7 +12,7 @@ const cal = new OldCalendar({});
 void (SideMenu2 || OldDateField || DatePicker);
 
 export const datePicker = () =>
-  '<cp-date-picker show-week-numbers highlight-weekend type="date"></cp-date-picker>';
+  '<cp-date-picker show-week-numbers highlight-weekend type="years"></cp-date-picker>';
 
 export const oldCalendar = () => cal.getElement();
 export const sideMenu2 = () => '<cp-side-menu2></cp-side-menu>';
