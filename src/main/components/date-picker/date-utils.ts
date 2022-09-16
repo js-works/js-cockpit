@@ -12,13 +12,14 @@ export {
   dateAttributeConverter,
   getCalendarWeek,
   getFirstDayOfWeek,
+  getHourMinuteString,
+  getMonthName,
+  getWeekendDays,
+  getWeekdayName,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
-  getYearWeekString,
-  getMonthName,
-  getWeekendDays,
-  getWeekdayName
+  getYearWeekString
 };
 
 // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
@@ -175,6 +176,13 @@ function getYearWeekString(year: number, week: number) {
 
 function getYearString(year: number) {
   return year.toString();
+}
+
+function getHourMinuteString(hour: number, minute: number) {
+  const h = hour.toString().padStart(2, '0');
+  const m = minute.toString().padStart(2, '0');
+
+  return `${h}:${m}`;
 }
 
 const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {

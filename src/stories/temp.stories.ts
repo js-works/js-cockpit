@@ -17,7 +17,8 @@ export const datePicker = () => `
       box-shadow: var(--sl-shadow-x-large);
     }
   </style>
-  <cp-date-picker id="date-picker" show-week-numbers min-date="2022-09-11" max-date="2022-09-22" highlight-weekend show-adjacent-days type="months"></cp-date-picker>
+  <cp-date-picker id="date-picker" show-week-numbers min-date="2022-09-11" max-date="2022-09-22" highlight-weekend show-adjacent-days type="time"></cp-date-picker>
+  <br/>
   <br/>
   <div id="info-box"></div>
   <script>

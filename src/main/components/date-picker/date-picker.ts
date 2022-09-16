@@ -14,7 +14,7 @@ import {
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
-  getYearWeekString,
+  getHourMinuteString,
   getMonthName,
   getWeekdayName,
   getWeekendDays
@@ -62,7 +62,20 @@ class DatePicker extends LitElement {
 
   @property({ type: String })
   get value() {
-    return Array.from(this._selection).sort().join(',');
+    if (this.type === 'dateTime') {
+      const dateString = Array.from(this._selection)[0];
+
+      const timeString = getHourMinuteString(
+        this._activeHour,
+        this._activeMinute
+      );
+
+      return !dateString ? '' : `${dateString}T${timeString}`;
+    } else if (this.type === 'time') {
+      return getHourMinuteString(this._activeHour, this._activeMinute);
+    } else {
+      return Array.from(this._selection).sort().join(',');
+    }
   }
 
   set value(value: string) {

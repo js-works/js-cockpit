@@ -170,7 +170,7 @@ export default css`
   }
 
   .base--type-time .time-selector {
-    padding: 0.5rem 0.25rem calc(1rem + 5px) 0;
+    padding: 1.125rem 0.25rem calc(1rem + 5px) 0;
   }
 
   .time {
