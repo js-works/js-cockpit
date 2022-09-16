@@ -82,6 +82,7 @@ export default css`
   .sheet--month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 1em;
     flex-grow: 1;
   }
 
@@ -134,6 +135,10 @@ export default css`
 
   .cell--adjacent:not(.cell--disabled):not(:hover) {
     color: var(--sl-color-neutral-400);
+  }
+
+  .cell--adjacent.cell--disabled {
+    color: var(--sl-color-neutral-200);
   }
 
   .cell--current {

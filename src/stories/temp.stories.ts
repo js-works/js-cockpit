@@ -12,14 +12,14 @@ const cal = new OldCalendar({});
 void (SideMenu2 || OldDateField || DatePicker);
 
 export const datePicker = () =>
-  '<cp-date-picker show-week-numbers highlight-weekend type="years"></cp-date-picker>';
+  '<cp-date-picker show-week-numbers min-date="2022-09-11" max-date="2022-09-22" highlight-weekend show-adjacent-days type="dates"></cp-date-picker>';
 
 export const oldCalendar = () => cal.getElement();
 export const sideMenu2 = () => '<cp-side-menu2></cp-side-menu>';
 
 export const dateField2 = () => `
   <sl-card style="max-width: 600px; width: 800px">
-    <cp-date-field label="Start date" show-week-numbers></cp-date-field>
+    <cp-date-field label="Start date" show-week-numbers show-adjacent-days></cp-date-field>
     <br/>
     <cp-date-field label="End date"></cp-date-field>
   </sl-card>

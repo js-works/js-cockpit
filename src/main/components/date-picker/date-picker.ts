@@ -8,6 +8,7 @@ import { LocalizeController } from '@shoelace-style/localize';
 import { Calendar } from './calendar';
 
 import {
+  dateAttributeConverter,
   getCalendarWeek,
   getFirstDayOfWeek,
   getYearMonthDayString,
@@ -37,9 +38,9 @@ namespace DatePicker {
     | 'dates'
     | 'time'
     | 'dateTime'
-    | 'dateRange'
-    | 'week'
-    | 'weeks'
+    // | 'dateRange'
+    // | 'week'
+    // | 'weeks'
     | 'month'
     | 'months'
     | 'year'
@@ -62,23 +63,26 @@ class DatePicker extends LitElement {
   @property({ type: String })
   type: DatePicker.Type = 'date';
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, attribute: 'show-week-number' })
   showWeekNumbers = false;
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, attribute: 'show-adjacent-days' })
+  showAdjacentDays = false;
+
+  @property({ type: Boolean, attribute: 'highlight-weekend' })
   highlightWeekend = false;
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, attribute: 'disable-weekend' })
   disableWeekend = false;
 
-  @property({ type: Boolean })
-  variableDayCellCount = false;
+  @property({ type: Boolean, attribute: 'fixed-day-count' })
+  fixedDayCount = false; // will be ignored if showAdjacentDays is false
 
-  @property(/* Attrs.date */) // TODO!!!
-  minDate: Date | null = new Date(2022, 8, 11);
+  @property({ converter: dateAttributeConverter, attribute: 'min-date' }) // TODO!!!
+  minDate: Date | null = null; //new Date(2022, 8, 11);
 
-  @property(/* Attrs.date */) // TODO!!!
-  maxDate: Date | null = new Date(2023, 7, 27);
+  @property({ converter: dateAttributeConverter, attribute: 'max-date' }) // TODO!!!
+  maxDate: Date | null = null; //new Date(2023, 6, 27);
 
   @state()
   private _view: View = 'month';
@@ -95,10 +99,7 @@ class DatePicker extends LitElement {
   @state()
   private _activeMinute = new Date().getMinutes();
 
-  private _selectedDays = new Set<string>();
-  private _selectedMonths = new Set<string>();
-  private _selectedYears = new Set<string>();
-
+  private _selection = new Set<string>();
   private _localize = new LocalizeController(this);
   private _calendar!: Calendar; // will be set on `willUpdate`
 
@@ -135,10 +136,31 @@ class DatePicker extends LitElement {
       },
 
       disableWeekend: this.disableWeekend,
-      alwaysShow42Days: !this.variableDayCellCount,
+      alwaysShow42Days: this.fixedDayCount && this.showAdjacentDays,
       minDate: this.minDate,
       maxDate: this.maxDate
     });
+  }
+
+  private _switchView(newView: View) {
+    if (this._view !== newView) {
+      this._selection.clear();
+      this._view = newView;
+    }
+  }
+
+  private _toggleSelected(value: string, clear = false) {
+    const hasValue = this._selection.has(value);
+
+    if (clear) {
+      this._selection.clear();
+    }
+
+    if (!hasValue) {
+      this._selection.add(value);
+    } else if (!clear) {
+      this._selection.delete(value);
+    }
   }
 
   private _onPrevOrNextClick = (ev: MouseEvent) => {
@@ -182,11 +204,11 @@ class DatePicker extends LitElement {
     switch (this.type) {
       case 'date':
       case 'dateTime':
-        toggleSetEntry(this._selectedDays, dateString, true);
+        this._toggleSelected(dateString, true);
         break;
 
       case 'dates':
-        toggleSetEntry(this._selectedDays, dateString);
+        this._toggleSelected(dateString);
         break;
     }
 
@@ -200,17 +222,17 @@ class DatePicker extends LitElement {
 
     this._activeYear = year;
     this._activeMonth = month;
-    this._view = 'month';
+    this._switchView('month');
 
     const monthString = getYearMonthString(year, month);
 
     switch (this.type) {
       case 'month':
-        toggleSetEntry(this._selectedMonths, monthString, true);
+        this._toggleSelected(monthString, true);
         break;
 
       case 'months':
-        toggleSetEntry(this._selectedMonths, monthString);
+        this._toggleSelected(monthString);
         break;
     }
 
@@ -222,17 +244,17 @@ class DatePicker extends LitElement {
     const year = parseInt(elem.getAttribute('data-year')!, 10);
 
     this._activeYear = year;
-    this._view = 'year';
+    this._switchView('year');
 
     const yearString = getYearString(year);
 
     switch (this.type) {
       case 'year':
-        toggleSetEntry(this._selectedYears, yearString, true);
+        this._toggleSelected(yearString, true);
         break;
 
       case 'years':
-        toggleSetEntry(this._selectedYears, yearString);
+        this._toggleSelected(yearString);
         break;
     }
 
@@ -247,9 +269,9 @@ class DatePicker extends LitElement {
       (this.type === 'month' || this.type === 'months') &&
       this._view === 'month'
     ) {
-      this._view = 'year';
+      this._switchView('year');
     } else if (this.type === 'year' || this.type === 'years') {
-      this._view = 'decade';
+      this._switchView('decade');
     }
   }
 
@@ -317,7 +339,7 @@ class DatePicker extends LitElement {
     const onClick =
       this._view === 'decade'
         ? null
-        : () => (this._view = this._view === 'year' ? 'decade' : 'year');
+        : () => this._switchView(this._view === 'year' ? 'decade' : 'year');
 
     return html`<div class="title" @click=${onClick}>${title}</div>`;
   }
@@ -363,7 +385,15 @@ class DatePicker extends LitElement {
   }
 
   private _renderDayCell(dayData: Calendar.DayData) {
-    const selected = this._selectedDays.has(
+    const highlighted = this.highlightWeekend && dayData.weekend;
+
+    if (!this.showAdjacentDays && dayData.adjacent) {
+      return html`
+        <div class=${classMap({ 'cell--highlighted': highlighted })}></div>
+      `;
+    }
+
+    const selected = this._selection.has(
       getYearMonthDayString(dayData.year, dayData.month, dayData.day)
     );
 
@@ -374,7 +404,7 @@ class DatePicker extends LitElement {
           'cell--disabled': dayData.disabled,
           'cell--adjacent': dayData.adjacent,
           'cell--current': dayData.current,
-          'cell--highlighted': this.highlightWeekend && dayData.weekend,
+          'cell--highlighted': highlighted,
           'cell--selected': selected
         })}
         data-year=${dayData.year}
@@ -402,7 +432,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderMonthCell(monthData: Calendar.MonthData) {
-    const selected = this._selectedMonths.has(
+    const selected = this._selection.has(
       getYearMonthString(monthData.year, monthData.month)
     );
 
@@ -438,7 +468,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearCell(yearData: Calendar.YearData) {
-    const selected = this._selectedYears.has(getYearString(yearData.year));
+    const selected = this._selection.has(getYearString(yearData.year));
 
     return html`
       <div
@@ -490,21 +520,5 @@ class DatePicker extends LitElement {
           : html`<span class="day-period">${dayPeriod}</span>`}
       </div>
     `;
-  }
-}
-
-// === helpers =======================================================
-
-function toggleSetEntry<T>(values: Set<T>, value: T, clear = false) {
-  const hasValue = values.has(value);
-
-  if (clear) {
-    values.clear();
-  }
-
-  if (!hasValue) {
-    values.add(value);
-  } else if (!clear) {
-    values.delete(value);
   }
 }

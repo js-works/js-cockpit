@@ -1,11 +1,15 @@
 // ***********************************************************************
-// ** What follows is mostly neither available in @sholace-style/localize
+// ** Locale information for "first day of week", or "weekend days", or
+// ** "week number" is mostly neither available in @sholace-style/localize
 // ** nor currently (September 2022) in Intl
 // ** (see https://github.com/tc39/proposal-intl-locale-info)
 // ** so we have to take care of that on our own
 // ***********************************************************************
 
+import { ComplexAttributeConverter } from 'lit';
+
 export {
+  dateAttributeConverter,
   getCalendarWeek,
   getFirstDayOfWeek,
   getYearMonthDayString,
@@ -172,3 +176,25 @@ function getYearWeekString(year: number, week: number) {
 function getYearString(year: number) {
   return year.toString();
 }
+
+const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
+  fromAttribute(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    return new Date(value);
+  },
+
+  toAttribute(date) {
+    if (!date) {
+      return '';
+    }
+
+    return getYearMonthDayString(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+  }
+};
