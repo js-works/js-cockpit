@@ -11,8 +11,24 @@ const cal = new OldCalendar({});
 
 void (SideMenu2 || OldDateField || DatePicker);
 
-export const datePicker = () =>
-  '<cp-date-picker show-week-numbers min-date="2022-09-11" max-date="2022-09-22" highlight-weekend show-adjacent-days type="dates"></cp-date-picker>';
+export const datePicker = () => `
+  <style>
+    #date-picker {
+      box-shadow: var(--sl-shadow-x-large);
+    }
+  </style>
+  <cp-date-picker id="date-picker" show-week-numbers min-date="2022-09-11" max-date="2022-09-22" highlight-weekend show-adjacent-days type="months"></cp-date-picker>
+  <br/>
+  <div id="info-box"></div>
+  <script>
+    const picker = document.querySelector('#date-picker')
+    const infoBox = document.querySelector('#info-box')
+
+    setInterval(() => {
+      infoBox.innerText = 'value: ' + picker.value
+    }, 500);
+  </script>
+`;
 
 export const oldCalendar = () => cal.getElement();
 export const sideMenu2 = () => '<cp-side-menu2></cp-side-menu>';

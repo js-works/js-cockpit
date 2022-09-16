@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
 import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
@@ -59,6 +59,15 @@ void SlRange;
 @customElement('cp-date-picker')
 class DatePicker extends LitElement {
   static styles = calendarStyles;
+
+  @property({ type: String })
+  get value() {
+    return Array.from(this._selection).sort().join(',');
+  }
+
+  set value(value: string) {
+    throw 'TODO'; // TODO!!!
+  }
 
   @property({ type: String })
   type: DatePicker.Type = 'date';
@@ -144,7 +153,6 @@ class DatePicker extends LitElement {
 
   private _switchView(newView: View) {
     if (this._view !== newView) {
-      this._selection.clear();
       this._view = newView;
     }
   }
@@ -220,48 +228,60 @@ class DatePicker extends LitElement {
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
 
-    this._activeYear = year;
-    this._activeMonth = month;
-    this._switchView('month');
+    if (this.type !== 'month' && this.type !== 'months') {
+      this._activeYear = year;
+      this._activeMonth = month;
+      this._switchView('month');
+    } else {
+      const monthString = getYearMonthString(year, month);
 
-    const monthString = getYearMonthString(year, month);
+      switch (this.type) {
+        case 'month':
+          this._toggleSelected(monthString, true);
+          break;
 
-    switch (this.type) {
-      case 'month':
-        this._toggleSelected(monthString, true);
-        break;
+        case 'months':
+          this._toggleSelected(monthString);
+          break;
+      }
 
-      case 'months':
-        this._toggleSelected(monthString);
-        break;
+      this.requestUpdate();
     }
-
-    this.requestUpdate();
   };
 
   private _onYearClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
 
-    this._activeYear = year;
-    this._switchView('year');
+    if (this.type !== 'year' && this.type !== 'years') {
+      this._activeYear = year;
+      this._switchView('year');
+    } else {
+      const yearString = getYearString(year);
 
-    const yearString = getYearString(year);
+      switch (this.type) {
+        case 'year':
+          this._toggleSelected(yearString, true);
+          break;
 
-    switch (this.type) {
-      case 'year':
-        this._toggleSelected(yearString, true);
-        break;
+        case 'years':
+          this._toggleSelected(yearString);
+          break;
+      }
 
-      case 'years':
-        this._toggleSelected(yearString);
-        break;
+      this.requestUpdate();
     }
-
-    this.requestUpdate();
   };
 
-  willUpdate() {
+  override update(changedProperties: PropertyValues) {
+    if (changedProperties.get('type')) {
+      this._selection.clear();
+    }
+
+    super.update(changedProperties);
+  }
+
+  override willUpdate() {
     this._calendar = this._getCalendar();
 
     // TODO!

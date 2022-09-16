@@ -13,7 +13,6 @@ export default css`
     display: flex;
     flex-direction: column;
     user-select: none;
-    box-shadow: var(--sl-shadow-x-large);
   }
 
   .input {
