@@ -104,6 +104,7 @@ class DatePicker extends LitElement {
       this._store.getActiveMonth(),
       1
     );
+
     return this._localize.date(date, { year: 'numeric', month: 'long' });
   }
 
@@ -138,7 +139,7 @@ class DatePicker extends LitElement {
   }
 
   private _onPrevOrNextClick = (ev: MouseEvent) => {
-    if ((ev.target as HTMLElement).classList.contains('prev')) {
+    if ((ev.target as HTMLElement).classList.contains('cal-prev')) {
       this._store.clickPrev();
     } else {
       this._store.clickNext();
@@ -204,25 +205,29 @@ class DatePicker extends LitElement {
 
     return html`
       <style></style>
-      <div class="base base--type-${typeSnakeCase}">
-        <input class="input" />
+      <div class="cal-base cal-base--type-${typeSnakeCase}">
+        <input class="cal-input" />
         ${when(
           this.type !== 'time',
           () => html`
-            <div class="header">
-              <a class="prev" @click=${this._onPrevOrNextClick}>&#x1F860;</a>
-              <div class="title-container">${this._renderTitle()}</div>
-              <a class="next" @click=${this._onPrevOrNextClick}>&#x1F862;</a>
+            <div class="cal-header">
+              <a class="cal-prev" @click=${this._onPrevOrNextClick}
+                >&#x1F860;</a
+              >
+              <div class="cal-title-container">${this._renderTitle()}</div>
+              <a class="cal-next" @click=${this._onPrevOrNextClick}
+                >&#x1F862;</a
+              >
             </div>
             ${sheet}
           `
         )}${when(
           this.type === 'dateTime' || this.type === 'time',
           () => html`
-            <div class="time-selector">
-              <div class="time">${this._renderTime()}</div>
+            <div class="cal-time-selector">
+              <div class="cal-time">${this._renderTime()}</div>
               <sl-range
-                class="hour-slider"
+                class="cal-hour-slider"
                 value=${this._store.getActiveHour()}
                 min="0"
                 max="23"
@@ -230,7 +235,7 @@ class DatePicker extends LitElement {
                 @sl-change=${this._onHourChange}
               ></sl-range>
               <sl-range
-                class="minute-slider"
+                class="cal-minute-slider"
                 value=${this._store.getActiveMinute()}
                 min="0"
                 max="59"
@@ -254,7 +259,7 @@ class DatePicker extends LitElement {
 
     const onClick = () => this._store.clickSceneSwitch();
 
-    return html`<div class="title" @click=${onClick}>${title}</div>`;
+    return html`<div class="cal-title" @click=${onClick}>${title}</div>`;
   }
 
   private _renderMonthSheet() {
@@ -266,9 +271,9 @@ class DatePicker extends LitElement {
     return html`
       <div
         class=${classMap({
-          'sheet': true,
-          'sheet--month': true,
-          'sheet--month-with-week-numbers': this.showWeekNumbers
+          'cal-sheet': true,
+          'cal-sheet--month': true,
+          'cal-sheet--month-with-week-numbers': this.showWeekNumbers
         })}
       >
         ${when(this.showWeekNumbers, () => html`<div></div>`)}
@@ -276,9 +281,11 @@ class DatePicker extends LitElement {
           view.weekdays,
           (idx) => idx,
           (idx) =>
-            html`<div class="weekday">
-              ${getWeekdayName(this._getLocale(), idx, 'short')}
-            </div>`
+            html`
+              <div class="cal-weekday">
+                ${getWeekdayName(this._getLocale(), idx, 'short')}
+              </div>
+            `
         )}
         ${repeat(
           view.days,
@@ -288,7 +295,9 @@ class DatePicker extends LitElement {
             return !this.showWeekNumbers || idx % 7 > 0
               ? cell
               : [
-                  html`<div class="week-number">${dayData.weekNumber}</div>`,
+                  html`<div class="cal-week-number">
+                    ${dayData.weekNumber}
+                  </div>`,
                   cell
                 ];
           }
@@ -302,7 +311,7 @@ class DatePicker extends LitElement {
 
     if (!this.showAdjacentDays && dayData.adjacent) {
       return html`
-        <div class=${classMap({ 'cell--highlighted': highlighted })}></div>
+        <div class=${classMap({ 'cal-cell--highlighted': highlighted })}></div>
       `;
     }
 
@@ -315,12 +324,12 @@ class DatePicker extends LitElement {
     return html`
       <div
         class=${classMap({
-          'cell': true,
-          'cell--disabled': dayData.disabled,
-          'cell--adjacent': dayData.adjacent,
-          'cell--current': dayData.current,
-          'cell--highlighted': highlighted,
-          'cell--selected': selected
+          'cal-cell': true,
+          'cal-cell--disabled': dayData.disabled,
+          'cal-cell--adjacent': dayData.adjacent,
+          'cal-cell--current': dayData.current,
+          'cal-cell--highlighted': highlighted,
+          'cal-cell--selected': selected
         })}
         data-year=${dayData.year}
         data-month=${dayData.month}
@@ -336,7 +345,7 @@ class DatePicker extends LitElement {
     const view = this._calendar.getYearView(this._store.getActiveYear());
 
     return html`
-      <div class="sheet sheet--year">
+      <div class="cal-sheet cal-sheet--year">
         ${repeat(
           view.months,
           (monthData) => monthData.month,
@@ -355,10 +364,10 @@ class DatePicker extends LitElement {
     return html`
       <div
         class=${classMap({
-          'cell': true,
-          'cell--disabled': monthData.disabled,
-          'cell--current': monthData.current,
-          'cell--selected': selected
+          'cal-cell': true,
+          'cal-cell--disabled': monthData.disabled,
+          'cal-cell--current': monthData.current,
+          'cal-cell--selected': selected
         })}
         data-year=${monthData.year}
         data-month=${monthData.month}
@@ -373,7 +382,7 @@ class DatePicker extends LitElement {
     const view = this._calendar.getDecadeView(this._store.getActiveYear());
 
     return html`
-      <div class="sheet sheet--decade">
+      <div class="cal-sheet cal-sheet--decade">
         ${repeat(
           view.years,
           (monthData) => monthData.year,
@@ -389,10 +398,10 @@ class DatePicker extends LitElement {
     return html`
       <div
         class=${classMap({
-          'cell': true,
-          'cell--disabled': yearData.disabled,
-          'cell--current': yearData.current,
-          'cell--selected': selected
+          'cal-cell': true,
+          'cal-cell--disabled': yearData.disabled,
+          'cal-cell--current': yearData.current,
+          'cal-cell--selected': selected
         })}
         data-year=${yearData.year}
         @click=${yearData.disabled ? null : this._onYearClick}
@@ -435,11 +444,11 @@ class DatePicker extends LitElement {
     }
 
     return html`
-      <div class="time">
+      <div class="cal-time">
         ${time}
         ${!dayPeriod
           ? null
-          : html`<span class="day-period">${dayPeriod}</span>`}
+          : html`<span class="cal-day-period">${dayPeriod}</span>`}
       </div>
     `;
   }

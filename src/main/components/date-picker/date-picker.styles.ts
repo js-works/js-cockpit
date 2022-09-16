@@ -8,14 +8,14 @@ export default css`
     display: inline-block;
   }
 
-  .base {
+  .cal-base {
     position: relative;
     display: flex;
     flex-direction: column;
     user-select: none;
   }
 
-  .input {
+  .cal-input {
     position: absolute;
     width: 0;
     height: 0;
@@ -26,49 +26,49 @@ export default css`
     z-index: -1;
   }
 
-  .header {
+  .cal-header {
     display: flex;
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-500);
   }
 
-  .title-container {
+  .cal-title-container {
     display: flex;
     flex-grow: 1;
     align-items: center;
     justify-content: center;
   }
 
-  .title,
-  .prev,
-  .next {
+  .cal-title,
+  .cal-prev,
+  .cal-next {
     padding: 5px 0.4rem;
   }
 
-  .title {
+  .cal-title {
     padding-left: 0.75em;
     padding-right: 0.75em;
   }
 
-  .title:not(.title--disabled),
-  .prev:not(.prev--disabled),
-  .next:not(.next--disabled) {
+  .cal-title:not(.cal-title--disabled),
+  .cal-prev:not(.cal-prev--disabled),
+  .cal-next:not(.cal-next--disabled) {
     cursor: pointer;
   }
 
-  .title:not(.title--disabled):hover,
-  .prev:not(.prev--disabled):hover,
-  .next:not(.next--disabled):hover {
+  .cal-title:not(.cal-title--disabled):hover,
+  .cal-prev:not(.cal-prev--disabled):hover,
+  .cal-next:not(.cal-next--disabled):hover {
     background-color: var(--sl-color-primary-600);
   }
 
-  .title:not(.-disabled):active,
-  .prev:not(.-disabled):active,
-  .next:not(.-disabled):active {
+  .cal-title:not(.cal-title---disabled):active,
+  .cal-prev:not(.cal-prev--disabled):active,
+  .cal-next:not(.cal-next--disabled):active {
     opacity: 75%;
   }
 
-  .sheet {
+  .cal-sheet {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -78,30 +78,30 @@ export default css`
     min-height: 13rem;
   }
 
-  .sheet--month {
+  .cal-sheet--month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: 1em;
     flex-grow: 1;
   }
 
-  .sheet--month-with-week-numbers {
+  .cal-sheet--month-with-week-numbers {
     grid-template-columns: repeat(8, 1fr);
   }
 
-  .sheet--year {
+  .cal-sheet--year {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;
   }
 
-  .sheet--decade {
+  .cal-sheet--decade {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;
   }
 
-  .weekday {
+  .cal-weekday {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,12 +109,12 @@ export default css`
     padding: 0 0 3px 0;
   }
 
-  .week-number {
+  .cal-week-number {
     font-size: 70%;
     opacity: 75%;
   }
 
-  .cell {
+  .cal-cell {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -123,57 +123,57 @@ export default css`
     box-sizing: border-box;
   }
 
-  .cell--disabled {
+  .cal-cell--disabled {
     color: var(--sl-color-neutral-300);
     cursor: not-allowed;
   }
 
-  .cell--highlighted {
+  .cal-cell--highlighted {
     background-color: var(--sl-color-neutral-50);
   }
 
-  .cell--adjacent:not(.cell--disabled):not(:hover) {
+  .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
     color: var(--sl-color-neutral-400);
   }
 
-  .cell--adjacent.cell--disabled {
+  .cal-cell--adjacent.cal-cell--disabled {
     color: var(--sl-color-neutral-200);
   }
 
-  .cell--current {
+  .cal-cell--current {
     background-color: var(--sl-color-orange-100);
   }
 
-  .cell:hover:not(.cell--disabled) {
+  .cal-cell:hover:not(.cal-cell--disabled) {
     background-color: var(--sl-color-primary-100);
   }
 
-  .cell--selected {
+  .cal-cell--selected {
     background-color: var(--sl-color-primary-400);
   }
 
-  .cell--selected:hover {
+  .cal-cell--selected:hover {
     background-color: var(--sl-color-primary-500) !important;
   }
 
-  .week-number {
+  .cal-week-number {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .time-selector {
+  .cal-time-selector {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     padding: 0.125rem 0 0.75rem 0;
   }
 
-  .base--type-time .time-selector {
+  .cal-base--type-time .cal-time-selector {
     padding: 1.125rem 0.25rem calc(1rem + 5px) 0;
   }
 
-  .time {
+  .cal-time {
     grid-column: 1;
     grid-row: 1 / span 2;
     align-self: center;
@@ -186,15 +186,15 @@ export default css`
     text-align: center;
   }
 
-  .day-period {
+  .cal-day-period {
     display: inline-block;
     font-size: 60%;
     width: 2em;
     text-align: left;
   }
 
-  .hour-slider,
-  .minute-slider {
+  .cal-hour-slider,
+  .cal-minute-slider {
     --track-height: 2px;
     --thumb-size: 14px;
     --track-color-active: var(--sl-color-primary-500);
