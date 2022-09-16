@@ -1,20 +1,17 @@
 import { LitElement, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
+import { customElement, property } from 'lit/decorators';
 import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { LocalizeController } from '@shoelace-style/localize';
 import { Calendar } from './calendar';
+import { DatePickerStore } from './date-picker-store';
 
 import {
   dateAttributeConverter,
   getCalendarWeek,
   getFirstDayOfWeek,
-  getYearMonthDayString,
-  getYearMonthString,
-  getYearString,
-  getHourMinuteString,
   getMonthName,
   getWeekdayName,
   getWeekendDays
@@ -62,20 +59,7 @@ class DatePicker extends LitElement {
 
   @property({ type: String })
   get value() {
-    if (this.type === 'dateTime') {
-      const dateString = Array.from(this._selection)[0];
-
-      const timeString = getHourMinuteString(
-        this._activeHour,
-        this._activeMinute
-      );
-
-      return !dateString ? '' : `${dateString}T${timeString}`;
-    } else if (this.type === 'time') {
-      return getHourMinuteString(this._activeHour, this._activeMinute);
-    } else {
-      return Array.from(this._selection).sort().join(',');
-    }
+    return this._store.getValue();
   }
 
   set value(value: string) {
@@ -106,22 +90,7 @@ class DatePicker extends LitElement {
   @property({ converter: dateAttributeConverter, attribute: 'max-date' }) // TODO!!!
   maxDate: Date | null = null; //new Date(2023, 6, 27);
 
-  @state()
-  private _view: View = 'month';
-
-  @state()
-  private _activeYear = new Date().getFullYear();
-
-  @state()
-  private _activeMonth = new Date().getMonth();
-
-  @state()
-  private _activeHour = new Date().getHours();
-
-  @state()
-  private _activeMinute = new Date().getMinutes();
-
-  private _selection = new Set<string>();
+  private _store = new DatePickerStore(() => this.requestUpdate());
   private _localize = new LocalizeController(this);
   private _calendar!: Calendar; // will be set on `willUpdate`
 
@@ -130,17 +99,21 @@ class DatePicker extends LitElement {
   }
 
   private _getActiveMonthName() {
-    const date = new Date(this._activeYear, this._activeMonth, 1);
+    const date = new Date(
+      this._store.getActiveYear(),
+      this._store.getActiveMonth(),
+      1
+    );
     return this._localize.date(date, { year: 'numeric', month: 'long' });
   }
 
   private _getActiveYearName() {
-    const date = new Date(this._activeYear, 0, 1);
+    const date = new Date(this._store.getActiveYear(), 0, 1);
     return this._localize.date(date, { year: 'numeric' });
   }
 
   private _getActiveDecadeName() {
-    const startYear = Math.floor(this._activeYear / 10) * 10;
+    const startYear = Math.floor(this._store.getActiveYear() / 10) * 10;
 
     return Intl.DateTimeFormat(this._getLocale(), {
       year: 'numeric'
@@ -164,55 +137,20 @@ class DatePicker extends LitElement {
     });
   }
 
-  private _switchView(newView: View) {
-    if (this._view !== newView) {
-      this._view = newView;
-    }
-  }
-
-  private _toggleSelected(value: string, clear = false) {
-    const hasValue = this._selection.has(value);
-
-    if (clear) {
-      this._selection.clear();
-    }
-
-    if (!hasValue) {
-      this._selection.add(value);
-    } else if (!clear) {
-      this._selection.delete(value);
-    }
-  }
-
   private _onPrevOrNextClick = (ev: MouseEvent) => {
-    const signum = (ev.target as HTMLElement).classList.contains('prev')
-      ? -1
-      : 1;
-
-    switch (this._view) {
-      case 'month': {
-        let n = this._activeYear * 12 + this._activeMonth + signum;
-        this._activeYear = Math.floor(n / 12);
-        this._activeMonth = n % 12;
-        return;
-      }
-
-      case 'year':
-        this._activeYear += signum;
-        return;
-
-      case 'decade':
-        this._activeYear += signum * 11;
-        return;
+    if ((ev.target as HTMLElement).classList.contains('prev')) {
+      this._store.clickPrev();
+    } else {
+      this._store.clickNext();
     }
   };
 
   private _onHourChange = (ev: Event) => {
-    this._activeHour = (ev.target as SlRange).value;
+    this._store.setActiveHour((ev.target as SlRange).value);
   };
 
   private _onMinuteChange = (ev: Event) => {
-    this._activeMinute = (ev.target as SlRange).value;
+    this._store.setActiveMinute((ev.target as SlRange).value);
   };
 
   private _onDayClick = (ev: Event) => {
@@ -220,20 +158,8 @@ class DatePicker extends LitElement {
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
     const day = parseInt(elem.getAttribute('data-day')!, 10);
-    const dateString = getYearMonthDayString(year, month, day);
 
-    switch (this.type) {
-      case 'date':
-      case 'dateTime':
-        this._toggleSelected(dateString, true);
-        break;
-
-      case 'dates':
-        this._toggleSelected(dateString);
-        break;
-    }
-
-    this.requestUpdate();
+    this._store.clickDay(year, month, day);
   };
 
   private _onMonthClick = (ev: Event) => {
@@ -241,79 +167,35 @@ class DatePicker extends LitElement {
     const year = parseInt(elem.getAttribute('data-year')!, 10);
     const month = parseInt(elem.getAttribute('data-month')!, 10);
 
-    if (this.type !== 'month' && this.type !== 'months') {
-      this._activeYear = year;
-      this._activeMonth = month;
-      this._switchView('month');
-    } else {
-      const monthString = getYearMonthString(year, month);
-
-      switch (this.type) {
-        case 'month':
-          this._toggleSelected(monthString, true);
-          break;
-
-        case 'months':
-          this._toggleSelected(monthString);
-          break;
-      }
-
-      this.requestUpdate();
-    }
+    this._store.clickMonth(year, month);
   };
 
   private _onYearClick = (ev: Event) => {
     const elem = ev.target as HTMLElement;
     const year = parseInt(elem.getAttribute('data-year')!, 10);
 
-    if (this.type !== 'year' && this.type !== 'years') {
-      this._activeYear = year;
-      this._switchView('year');
-    } else {
-      const yearString = getYearString(year);
-
-      switch (this.type) {
-        case 'year':
-          this._toggleSelected(yearString, true);
-          break;
-
-        case 'years':
-          this._toggleSelected(yearString);
-          break;
-      }
-
-      this.requestUpdate();
-    }
+    this._store.clickYear(year);
   };
 
   override update(changedProperties: PropertyValues) {
-    if (changedProperties.get('type')) {
-      this._selection.clear();
-    }
+    //if (changedProperties.get('type')) {
+    this._store.setSelectionMode(this.type);
+    //}
 
     super.update(changedProperties);
   }
 
   override willUpdate() {
     this._calendar = this._getCalendar();
-
-    // TODO!
-    if (
-      (this.type === 'month' || this.type === 'months') &&
-      this._view === 'month'
-    ) {
-      this._switchView('year');
-    } else if (this.type === 'year' || this.type === 'years') {
-      this._switchView('decade');
-    }
   }
 
   render() {
     const sheet = {
+      time: this._renderMonthSheet, // TODO!!!
       month: this._renderMonthSheet,
       year: this._renderYearSheet,
       decade: this._renderDecadeSheet
-    }[this._view].call(this);
+    }[this._store.getScene()].call(this);
 
     const typeSnakeCase = this.type.replace(
       /[A-Z]/g,
@@ -341,7 +223,7 @@ class DatePicker extends LitElement {
               <div class="time">${this._renderTime()}</div>
               <sl-range
                 class="hour-slider"
-                value=${this._activeHour}
+                value=${this._store.getActiveHour()}
                 min="0"
                 max="23"
                 tooltip="none"
@@ -349,7 +231,7 @@ class DatePicker extends LitElement {
               ></sl-range>
               <sl-range
                 class="minute-slider"
-                value=${this._activeMinute}
+                value=${this._store.getActiveMinute()}
                 min="0"
                 max="59"
                 tooltip="none"
@@ -364,23 +246,21 @@ class DatePicker extends LitElement {
 
   private _renderTitle() {
     const title = {
+      time: () => '', // TODO!!!
       month: this._getActiveMonthName,
       year: this._getActiveYearName,
       decade: this._getActiveDecadeName
-    }[this._view].call(this);
+    }[this._store.getScene()].call(this);
 
-    const onClick =
-      this._view === 'decade'
-        ? null
-        : () => this._switchView(this._view === 'year' ? 'decade' : 'year');
+    const onClick = () => this._store.clickSceneSwitch();
 
     return html`<div class="title" @click=${onClick}>${title}</div>`;
   }
 
   private _renderMonthSheet() {
     const view = this._calendar.getMonthView(
-      this._activeYear,
-      this._activeMonth
+      this._store.getActiveYear(),
+      this._store.getActiveMonth()
     );
 
     return html`
@@ -426,8 +306,10 @@ class DatePicker extends LitElement {
       `;
     }
 
-    const selected = this._selection.has(
-      getYearMonthDayString(dayData.year, dayData.month, dayData.day)
+    const selected = this._store.hasSelectedDay(
+      dayData.year,
+      dayData.month,
+      dayData.day
     );
 
     return html`
@@ -451,7 +333,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearSheet() {
-    const view = this._calendar.getYearView(this._activeYear);
+    const view = this._calendar.getYearView(this._store.getActiveYear());
 
     return html`
       <div class="sheet sheet--year">
@@ -465,8 +347,9 @@ class DatePicker extends LitElement {
   }
 
   private _renderMonthCell(monthData: Calendar.MonthData) {
-    const selected = this._selection.has(
-      getYearMonthString(monthData.year, monthData.month)
+    const selected = this._store.hasSelectedMonth(
+      monthData.year,
+      monthData.month
     );
 
     return html`
@@ -487,7 +370,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderDecadeSheet() {
-    const view = this._calendar.getDecadeView(this._activeYear);
+    const view = this._calendar.getDecadeView(this._store.getActiveYear());
 
     return html`
       <div class="sheet sheet--decade">
@@ -501,7 +384,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearCell(yearData: Calendar.YearData) {
-    const selected = this._selection.has(getYearString(yearData.year));
+    const selected = this._store.hasSelectedYear(yearData.year);
 
     return html`
       <div
@@ -520,7 +403,13 @@ class DatePicker extends LitElement {
   }
 
   private _renderTime() {
-    const date = new Date(1970, 0, 1, this._activeHour, this._activeMinute);
+    const date = new Date(
+      1970,
+      0,
+      1,
+      this._store.getActiveHour(),
+      this._store.getActiveMinute()
+    );
     let time = '';
     let dayPeriod = '';
 
