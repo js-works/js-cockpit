@@ -1,6 +1,8 @@
-export { DatePickerStore };
+import type { ReactiveControllerHost } from 'lit';
 
-namespace DatePickerStore {
+export { DatePickerController };
+
+namespace DatePickerController {
   export type SelectionMode =
     | 'date'
     | 'dates'
@@ -17,56 +19,48 @@ namespace DatePickerStore {
   export type Scene = 'month' | 'year' | 'decade' | 'time';
 }
 
-class DatePickerStore {
-  #selectionMode: DatePickerStore.SelectionMode = 'date';
+type SelectionMode = DatePickerController.SelectionMode;
+
+class DatePickerController {
+  #selectionMode: DatePickerController.SelectionMode = 'date';
   #selection = new Set<string>();
-  #scene: DatePickerStore.Scene = 'month';
+  #scene: DatePickerController.Scene = 'month';
   #activeYear = new Date().getFullYear();
   #activeMonth = new Date().getMonth();
   #activeDay = new Date().getDate();
   #activeHour = new Date().getHours();
   #activeMinute = new Date().getMinutes();
   #requestUpdate: () => void;
+  #getLocale: () => string;
+  #getNode: () => Node;
 
-  constructor(requestUpdate: () => void) {
-    this.#requestUpdate = requestUpdate;
-  }
+  constructor(
+    host: ReactiveControllerHost & HTMLElement,
+    getSelectionMode: () => SelectionMode,
+    getLocale: () => string
+  ) {
+    const innerController = {
+      hostUpdate: () => {
+        this.#selectionMode = getSelectionMode();
+      },
 
-  setSelectionMode(mode: DatePickerStore.SelectionMode) {
-    if (mode === this.#selectionMode) {
-      return;
-    }
+      hostUpdated: () => {
+        this.#addEventListeners();
+        host.removeController(innerController);
+      }
+    };
 
-    this.#selectionMode = mode;
-    this.#selection.clear();
-
-    switch (mode) {
-      case 'year':
-      case 'years':
-        this.#scene = 'decade';
-        break;
-
-      case 'month':
-      case 'months':
-        this.#scene = 'year';
-        break;
-
-      case 'time':
-        this.#scene = 'time';
-        break;
-
-      default:
-        this.#scene = 'month';
-    }
-
-    this.#requestUpdate();
+    host.addController(innerController);
+    this.#requestUpdate = () => host.requestUpdate();
+    this.#getNode = () => host.shadowRoot || host;
+    this.#getLocale = getLocale;
   }
 
   getSelectionMode() {
     return this.#selectionMode;
   }
 
-  getScene(): DatePickerStore.Scene {
+  getScene(): DatePickerController.Scene {
     return this.#scene;
   }
 
@@ -86,18 +80,8 @@ class DatePickerStore {
     return this.#activeHour;
   }
 
-  setActiveHour(hour: number) {
-    this.#activeHour = hour;
-    this.#requestUpdate();
-  }
-
   getActiveMinute() {
     return this.#activeMinute;
-  }
-
-  setActiveMinute(minute: number) {
-    this.#activeMinute = minute;
-    this.#requestUpdate();
   }
 
   hasSelectedYear(year: number) {
@@ -129,25 +113,110 @@ class DatePickerStore {
     }
   }
 
-  clickSceneSwitch() {
-    if (this.#scene === 'decade') {
-      throw new Error('Illegal operation ' + this.clickSceneSwitch.name);
+  getActiveMonthName() {
+    const date = new Date(this.#activeYear, this.#activeMonth, 1);
+
+    return new Intl.DateTimeFormat(this.#getLocale(), {
+      year: 'numeric',
+      month: 'long'
+    }).format(date);
+  }
+
+  getActiveYearName() {
+    const date = new Date(this.#activeYear, 0, 1);
+
+    return new Intl.DateTimeFormat(this.#getLocale(), {
+      year: 'numeric'
+    }).format(date);
+  }
+
+  getActiveDecadeName() {
+    const startYear = Math.floor(this.#activeYear / 10) * 10;
+
+    return Intl.DateTimeFormat(this.#getLocale(), {
+      year: 'numeric'
+    }).formatRange(new Date(startYear, 1, 1), new Date(startYear + 11, 1, 1));
+  }
+
+  #addEventListeners = () => {
+    this.#getNode().addEventListener('click', (ev: Event) => {
+      const target = ev.target;
+
+      if (!(target instanceof HTMLElement)) {
+        return;
+      }
+
+      const action = target.getAttribute('data-action');
+
+      if (!action) {
+        return;
+      }
+
+      switch (action) {
+        case 'prevClick':
+          this.#clickPrev();
+          break;
+
+        case 'nextClick':
+          this.#clickNext();
+          break;
+
+        case 'titleClick':
+          this.#clickTitle();
+          break;
+
+        case 'dayClick': {
+          const year = parseInt(target.getAttribute('data-year')!, 10);
+          const month = parseInt(target.getAttribute('data-month')!, 10);
+          const day = parseInt(target.getAttribute('data-day')!, 10);
+
+          this.#clickDay(year, month, day);
+          break;
+        }
+
+        case 'monthClick': {
+          const year = parseInt(target.getAttribute('data-year')!, 10);
+          const month = parseInt(target.getAttribute('data-month')!, 10);
+
+          this.#clickMonth(year, month);
+          break;
+        }
+
+        case 'yearClick': {
+          const year = parseInt(target.getAttribute('data-year')!, 10);
+
+          this.#clickYear(year);
+          break;
+        }
+      }
+    });
+  };
+
+  #toggleSelected = (value: string, clear = false) => {
+    const hasValue = this.#selection.has(value);
+
+    if (clear) {
+      this.#selection.clear();
     }
 
-    this.#scene = this.#scene === 'year' ? 'decade' : 'year';
+    if (!hasValue) {
+      this.#selection.add(value);
+    } else if (!clear) {
+      this.#selection.delete(value);
+    }
 
     this.#requestUpdate();
-  }
+  };
 
-  clickPrev() {
+  #clickPrev = () => {
     this.#clickPrevOrNext(-1);
-  }
+  };
 
-  clickNext() {
+  #clickNext = () => {
     this.#clickPrevOrNext(1);
-  }
+  };
 
-  #clickPrevOrNext(signum: number) {
+  #clickPrevOrNext = (signum: number) => {
     switch (this.#scene) {
       case 'month': {
         let n = this.#activeYear * 12 + this.#activeMonth + signum;
@@ -167,13 +236,58 @@ class DatePickerStore {
     }
 
     this.#requestUpdate();
-  }
+  };
 
-  clickDay(year: number, month: number, day: number) {
-    if (this.#scene !== 'month') {
-      throw new Error('Illegal operation: ' + this.clickDay.name);
+  #setSelectionMode = (mode: DatePickerController.SelectionMode) => {
+    if (mode === this.#selectionMode) {
+      return;
     }
 
+    this.#selectionMode = mode;
+    this.#selection.clear();
+
+    switch (mode) {
+      case 'year':
+      case 'years':
+        this.#scene = 'decade';
+        break;
+
+      case 'month':
+      case 'months':
+        this.#scene = 'year';
+        break;
+
+      case 'time':
+        this.#scene = 'time';
+        break;
+
+      default:
+        this.#scene = 'month';
+    }
+
+    this.#requestUpdate();
+  };
+
+  #setScene = (scene: DatePickerController.Scene) => {
+    this.#scene = scene;
+    this.#requestUpdate();
+  };
+
+  #setActiveHour = (hour: number) => {
+    this.#activeHour = hour;
+    this.#requestUpdate();
+  };
+
+  #setActiveMinute = (minute: number) => {
+    this.#activeMinute = minute;
+    this.#requestUpdate();
+  };
+
+  #clickTitle = () => {
+    this.#setScene(this.#scene === 'year' ? 'decade' : 'year');
+  };
+
+  #clickDay = (year: number, month: number, day: number) => {
     const dateString = getYearMonthDayString(year, month, day);
 
     switch (this.#selectionMode) {
@@ -188,9 +302,9 @@ class DatePickerStore {
     }
 
     this.#requestUpdate();
-  }
+  };
 
-  clickMonth(year: number, month: number) {
+  #clickMonth = (year: number, month: number) => {
     if (this.#selectionMode !== 'month' && this.#selectionMode !== 'months') {
       this.#activeYear = year;
       this.#activeMonth = month;
@@ -210,9 +324,9 @@ class DatePickerStore {
     }
 
     this.#requestUpdate();
-  }
+  };
 
-  clickYear(year: number) {
+  #clickYear = (year: number) => {
     if (this.#selectionMode !== 'year' && this.#selectionMode !== 'years') {
       this.#activeYear = year;
       this.#scene = 'year';
@@ -228,22 +342,6 @@ class DatePickerStore {
           this.#toggleSelected(yearString);
           break;
       }
-    }
-
-    this.#requestUpdate();
-  }
-
-  #toggleSelected = (value: string, clear = false) => {
-    const hasValue = this.#selection.has(value);
-
-    if (clear) {
-      this.#selection.clear();
-    }
-
-    if (!hasValue) {
-      this.#selection.add(value);
-    } else if (!clear) {
-      this.#selection.delete(value);
     }
 
     this.#requestUpdate();

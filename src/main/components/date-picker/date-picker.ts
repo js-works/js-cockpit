@@ -1,4 +1,4 @@
-import { LitElement, PropertyValues } from 'lit';
+import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
@@ -6,7 +6,7 @@ import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { LocalizeController } from '@shoelace-style/localize';
 import { Calendar } from './calendar';
-import { DatePickerStore } from './date-picker-store';
+import { DatePickerController } from './date-picker-controller';
 
 import {
   dateAttributeConverter,
@@ -30,18 +30,7 @@ export { DatePicker };
 // === exported types ==========================================
 
 namespace DatePicker {
-  export type Type =
-    | 'date'
-    | 'dates'
-    | 'time'
-    | 'dateTime'
-    // | 'dateRange'
-    // | 'week'
-    // | 'weeks'
-    | 'month'
-    | 'months'
-    | 'year'
-    | 'years';
+  export type SelectionMode = DatePickerController.SelectionMode;
 }
 
 // === local types ===================================================
@@ -59,7 +48,7 @@ class DatePicker extends LitElement {
 
   @property({ type: String })
   get value() {
-    return this._store.getValue();
+    return this._datePicker.getValue();
   }
 
   set value(value: string) {
@@ -67,7 +56,7 @@ class DatePicker extends LitElement {
   }
 
   @property({ type: String })
-  type: DatePicker.Type = 'date';
+  selectionMode: DatePicker.SelectionMode = 'date';
 
   @property({ type: Boolean, attribute: 'show-week-number' })
   showWeekNumbers = false;
@@ -90,39 +79,22 @@ class DatePicker extends LitElement {
   @property({ converter: dateAttributeConverter, attribute: 'max-date' }) // TODO!!!
   maxDate: Date | null = null; //new Date(2023, 6, 27);
 
-  private _store = new DatePickerStore(() => this.requestUpdate());
   private _localize = new LocalizeController(this);
+
+  private _datePicker = new DatePickerController(
+    this,
+    () => this.selectionMode,
+    () => this._localize.lang()
+  );
+
   private _calendar!: Calendar; // will be set on `willUpdate`
 
   private _getLocale() {
     return this._localize.lang();
   }
 
-  private _getActiveMonthName() {
-    const date = new Date(
-      this._store.getActiveYear(),
-      this._store.getActiveMonth(),
-      1
-    );
-
-    return this._localize.date(date, { year: 'numeric', month: 'long' });
-  }
-
-  private _getActiveYearName() {
-    const date = new Date(this._store.getActiveYear(), 0, 1);
-    return this._localize.date(date, { year: 'numeric' });
-  }
-
-  private _getActiveDecadeName() {
-    const startYear = Math.floor(this._store.getActiveYear() / 10) * 10;
-
-    return Intl.DateTimeFormat(this._getLocale(), {
-      year: 'numeric'
-    }).formatRange(new Date(startYear, 1, 1), new Date(startYear + 11, 1, 1));
-  }
-
-  private _getCalendar(): Calendar {
-    return new Calendar({
+  willUpdate() {
+    this._calendar = new Calendar({
       localization: {
         firstDayOfWeek: getFirstDayOfWeek(this._getLocale()),
         weekendDays: getWeekendDays(this._getLocale()),
@@ -138,109 +110,56 @@ class DatePicker extends LitElement {
     });
   }
 
-  private _onPrevOrNextClick = (ev: MouseEvent) => {
-    if ((ev.target as HTMLElement).classList.contains('cal-prev')) {
-      this._store.clickPrev();
-    } else {
-      this._store.clickNext();
-    }
-  };
-
-  private _onHourChange = (ev: Event) => {
-    this._store.setActiveHour((ev.target as SlRange).value);
-  };
-
-  private _onMinuteChange = (ev: Event) => {
-    this._store.setActiveMinute((ev.target as SlRange).value);
-  };
-
-  private _onDayClick = (ev: Event) => {
-    const elem = ev.target as HTMLElement;
-    const year = parseInt(elem.getAttribute('data-year')!, 10);
-    const month = parseInt(elem.getAttribute('data-month')!, 10);
-    const day = parseInt(elem.getAttribute('data-day')!, 10);
-
-    this._store.clickDay(year, month, day);
-  };
-
-  private _onMonthClick = (ev: Event) => {
-    const elem = ev.target as HTMLElement;
-    const year = parseInt(elem.getAttribute('data-year')!, 10);
-    const month = parseInt(elem.getAttribute('data-month')!, 10);
-
-    this._store.clickMonth(year, month);
-  };
-
-  private _onYearClick = (ev: Event) => {
-    const elem = ev.target as HTMLElement;
-    const year = parseInt(elem.getAttribute('data-year')!, 10);
-
-    this._store.clickYear(year);
-  };
-
-  override update(changedProperties: PropertyValues) {
-    //if (changedProperties.get('type')) {
-    this._store.setSelectionMode(this.type);
-    //}
-
-    super.update(changedProperties);
-  }
-
-  override willUpdate() {
-    this._calendar = this._getCalendar();
-  }
-
   render() {
-    const sheet = {
-      time: this._renderMonthSheet, // TODO!!!
-      month: this._renderMonthSheet,
-      year: this._renderYearSheet,
-      decade: this._renderDecadeSheet
-    }[this._store.getScene()].call(this);
+    const scene = this._datePicker.getScene();
 
-    const typeSnakeCase = this.type.replace(
+    const sheet =
+      scene === 'decade'
+        ? this._renderDecadeSheet()
+        : scene === 'year'
+        ? this._renderYearSheet()
+        : this._renderMonthSheet();
+
+    const typeSnakeCase = this.selectionMode.replace(
       /[A-Z]/g,
       (it) => `-${it.toLowerCase()}`
     );
 
     return html`
       <style></style>
+      ${Date.now()}
       <div class="cal-base cal-base--type-${typeSnakeCase}">
         <input class="cal-input" />
         ${when(
-          this.type !== 'time',
+          this.selectionMode !== 'time',
           () => html`
             <div class="cal-header">
-              <a class="cal-prev" @click=${this._onPrevOrNextClick}
-                >&#x1F860;</a
-              >
+              <a class="cal-prev" data-action="prevClick">&#x1F860;</a>
               <div class="cal-title-container">${this._renderTitle()}</div>
-              <a class="cal-next" @click=${this._onPrevOrNextClick}
-                >&#x1F862;</a
-              >
+              <a class="cal-next" data-action="nextClick">&#x1F862;</a>
             </div>
             ${sheet}
           `
         )}${when(
-          this.type === 'dateTime' || this.type === 'time',
+          this.selectionMode === 'dateTime' || this.selectionMode === 'time',
           () => html`
             <div class="cal-time-selector">
               <div class="cal-time">${this._renderTime()}</div>
               <sl-range
                 class="cal-hour-slider"
-                value=${this._store.getActiveHour()}
+                value=${this._datePicker.getActiveHour()}
                 min="0"
                 max="23"
                 tooltip="none"
-                @sl-change=${this._onHourChange}
+                @sl-change=${null /* TODO!!! */}
               ></sl-range>
               <sl-range
                 class="cal-minute-slider"
-                value=${this._store.getActiveMinute()}
+                value=${this._datePicker.getActiveMinute()}
                 min="0"
                 max="59"
                 tooltip="none"
-                @sl-change=${this._onMinuteChange}
+                @sl-change=${null /* TODO!!! */}
               ></sl-range>
             </div>
           `
@@ -250,22 +169,22 @@ class DatePicker extends LitElement {
   }
 
   private _renderTitle() {
-    const title = {
-      time: () => '', // TODO!!!
-      month: this._getActiveMonthName,
-      year: this._getActiveYearName,
-      decade: this._getActiveDecadeName
-    }[this._store.getScene()].call(this);
+    const scene = this._datePicker.getScene();
 
-    const onClick = () => this._store.clickSceneSwitch();
+    const title =
+      scene === 'decade'
+        ? this._datePicker.getActiveDecadeName()
+        : scene === 'year'
+        ? this._datePicker.getActiveYearName()
+        : this._datePicker.getActiveMonthName();
 
-    return html`<div class="cal-title" @click=${onClick}>${title}</div>`;
+    return html`<div class="cal-title" data-action="titleClick">${title}</div>`;
   }
 
   private _renderMonthSheet() {
     const view = this._calendar.getMonthView(
-      this._store.getActiveYear(),
-      this._store.getActiveMonth()
+      this._datePicker.getActiveYear(),
+      this._datePicker.getActiveMonth()
     );
 
     return html`
@@ -315,7 +234,7 @@ class DatePicker extends LitElement {
       `;
     }
 
-    const selected = this._store.hasSelectedDay(
+    const selected = this._datePicker.hasSelectedDay(
       dayData.year,
       dayData.month,
       dayData.day
@@ -334,7 +253,7 @@ class DatePicker extends LitElement {
         data-year=${dayData.year}
         data-month=${dayData.month}
         data-day=${dayData.day}
-        @click=${dayData.disabled ? null : this._onDayClick}
+        data-action="dayClick"
       >
         ${dayData.day}
       </div>
@@ -342,7 +261,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearSheet() {
-    const view = this._calendar.getYearView(this._store.getActiveYear());
+    const view = this._calendar.getYearView(this._datePicker.getActiveYear());
 
     return html`
       <div class="cal-sheet cal-sheet--year">
@@ -356,7 +275,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderMonthCell(monthData: Calendar.MonthData) {
-    const selected = this._store.hasSelectedMonth(
+    const selected = this._datePicker.hasSelectedMonth(
       monthData.year,
       monthData.month
     );
@@ -371,7 +290,7 @@ class DatePicker extends LitElement {
         })}
         data-year=${monthData.year}
         data-month=${monthData.month}
-        @click=${monthData.disabled ? null : this._onMonthClick}
+        data-action="monthClick"
       >
         ${getMonthName(this._getLocale(), monthData.month, 'short')}
       </div>
@@ -379,7 +298,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderDecadeSheet() {
-    const view = this._calendar.getDecadeView(this._store.getActiveYear());
+    const view = this._calendar.getDecadeView(this._datePicker.getActiveYear());
 
     return html`
       <div class="cal-sheet cal-sheet--decade">
@@ -393,7 +312,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderYearCell(yearData: Calendar.YearData) {
-    const selected = this._store.hasSelectedYear(yearData.year);
+    const selected = this._datePicker.hasSelectedYear(yearData.year);
 
     return html`
       <div
@@ -404,7 +323,7 @@ class DatePicker extends LitElement {
           'cal-cell--selected': selected
         })}
         data-year=${yearData.year}
-        @click=${yearData.disabled ? null : this._onYearClick}
+        data-action="yearClick"
       >
         ${yearData.year}
       </div>
@@ -416,8 +335,8 @@ class DatePicker extends LitElement {
       1970,
       0,
       1,
-      this._store.getActiveHour(),
-      this._store.getActiveMinute()
+      this._datePicker.getActiveHour(),
+      this._datePicker.getActiveMinute()
     );
     let time = '';
     let dayPeriod = '';
