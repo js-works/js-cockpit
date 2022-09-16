@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
-import { html } from 'lit';
+import { html, ComplexAttributeConverter } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
@@ -8,20 +8,11 @@ import { LocalizeController } from '@shoelace-style/localize';
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 
-import {
-  dateAttributeConverter,
-  getCalendarWeek,
-  getFirstDayOfWeek,
-  getMonthName,
-  getWeekdayName,
-  getWeekendDays
-} from './date-utils';
-
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
 
 // styles
-import calendarStyles from './date-picker.styles';
+import datePickerStyles from './date-picker.styles';
 
 // === exports =======================================================
 
@@ -33,9 +24,31 @@ namespace DatePicker {
   export type SelectionMode = DatePickerController.SelectionMode;
 }
 
-// === local types ===================================================
+// === converters ====================================================
 
-type View = 'month' | 'year' | 'decade';
+const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
+  fromAttribute(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    return new Date(value);
+  },
+
+  toAttribute(date) {
+    if (!date) {
+      return '';
+    }
+
+    return (
+      String(date.getFullYear()).padStart(4, '0') +
+      '-' +
+      String(date.getMonth()).padStart(2, '0') +
+      '-' +
+      String(date.getDate()).padStart(2, '0')
+    );
+  }
+};
 
 // === Calendar ======================================================
 
@@ -44,7 +57,7 @@ void SlRange;
 
 @customElement('cp-date-picker')
 class DatePicker extends LitElement {
-  static styles = calendarStyles;
+  static styles = datePickerStyles;
 
   @property({ type: String })
   get value() {
@@ -52,7 +65,7 @@ class DatePicker extends LitElement {
   }
 
   set value(value: string) {
-    throw 'TODO'; // TODO!!!
+    this._datePicker.setValue(value);
   }
 
   @property({ type: String })
@@ -73,34 +86,28 @@ class DatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'fixed-day-count' })
   fixedDayCount = false; // will be ignored if showAdjacentDays is false
 
-  @property({ converter: dateAttributeConverter, attribute: 'min-date' }) // TODO!!!
-  minDate: Date | null = null; //new Date(2022, 8, 11);
+  @property({ converter: dateAttributeConverter, attribute: 'min-date' })
+  minDate: Date | null = null;
 
-  @property({ converter: dateAttributeConverter, attribute: 'max-date' }) // TODO!!!
-  maxDate: Date | null = null; //new Date(2023, 6, 27);
+  @property({ converter: dateAttributeConverter, attribute: 'max-date' })
+  maxDate: Date | null = null;
 
   private _localize = new LocalizeController(this);
 
   private _datePicker = new DatePickerController(
     this,
-    () => this.selectionMode,
-    () => this._localize.lang()
+    () => this._localize.lang(),
+    () => this.selectionMode
   );
 
   private _calendar!: Calendar; // will be set on `willUpdate`
 
-  private _getLocale() {
-    return this._localize.lang();
-  }
-
   willUpdate() {
     this._calendar = new Calendar({
       localization: {
-        firstDayOfWeek: getFirstDayOfWeek(this._getLocale()),
-        weekendDays: getWeekendDays(this._getLocale()),
-
-        getCalendarWeek: (date: Date) =>
-          getCalendarWeek(this._getLocale(), date)
+        firstDayOfWeek: this._datePicker.getFirstDayOfWeek(),
+        weekendDays: this._datePicker.getWeekendDays(),
+        getCalendarWeek: (date: Date) => this._datePicker.getCalendarWeek(date)
       },
 
       disableWeekend: this.disableWeekend,
@@ -121,13 +128,11 @@ class DatePicker extends LitElement {
         : this._renderMonthSheet();
 
     const typeSnakeCase = this.selectionMode.replace(
-      /[A-Z]/g,
+      /[A-Z]xxxx/g,
       (it) => `-${it.toLowerCase()}`
     );
 
     return html`
-      <style></style>
-      ${Date.now()}
       <div class="cal-base cal-base--type-${typeSnakeCase}">
         <input class="cal-input" />
         ${when(
@@ -151,7 +156,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="23"
                 tooltip="none"
-                @sl-change=${null /* TODO!!! */}
+                data-action="hourChange"
               ></sl-range>
               <sl-range
                 class="cal-minute-slider"
@@ -159,7 +164,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="59"
                 tooltip="none"
-                @sl-change=${null /* TODO!!! */}
+                data-action="minuteChange"
               ></sl-range>
             </div>
           `
@@ -173,10 +178,10 @@ class DatePicker extends LitElement {
 
     const title =
       scene === 'decade'
-        ? this._datePicker.getActiveDecadeName()
+        ? this._datePicker.getDecadeTitle()
         : scene === 'year'
-        ? this._datePicker.getActiveYearName()
-        : this._datePicker.getActiveMonthName();
+        ? this._datePicker.getYearTitle()
+        : this._datePicker.getMonthTitle();
 
     return html`<div class="cal-title" data-action="titleClick">${title}</div>`;
   }
@@ -202,7 +207,7 @@ class DatePicker extends LitElement {
           (idx) =>
             html`
               <div class="cal-weekday">
-                ${getWeekdayName(this._getLocale(), idx, 'short')}
+                ${this._datePicker.getWeekdayName(idx, 'short')}
               </div>
             `
         )}
@@ -292,7 +297,7 @@ class DatePicker extends LitElement {
         data-month=${monthData.month}
         data-action="monthClick"
       >
-        ${getMonthName(this._getLocale(), monthData.month, 'short')}
+        ${this._datePicker.getMonthName(monthData.month, 'short')}
       </div>
     `;
   }
@@ -341,7 +346,7 @@ class DatePicker extends LitElement {
     let time = '';
     let dayPeriod = '';
 
-    const parts = new Intl.DateTimeFormat(this._getLocale(), {
+    const parts = new Intl.DateTimeFormat(this._localize.lang(), {
       hour: '2-digit',
       minute: '2-digit'
     }).formatToParts(date);
