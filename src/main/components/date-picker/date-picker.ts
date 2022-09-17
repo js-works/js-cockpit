@@ -1,6 +1,7 @@
 import { customElement, property } from 'lit/decorators';
 import { html, ComplexAttributeConverter, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map';
+import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { LocalizeController } from '@shoelace-style/localize';
@@ -98,6 +99,7 @@ class DatePicker extends LitElement {
     getSelectionMode: () => this.selectionMode
   });
 
+  private _inputRef = createRef<HTMLInputElement>();
   private _calendar!: Calendar; // will be set on `willUpdate`
 
   willUpdate() {
@@ -129,7 +131,7 @@ class DatePicker extends LitElement {
 
     return html`
       <div class="cal-base cal-base--type-${typeSnakeCase}">
-        <input class="cal-input" />
+        <input class="cal-input" ${ref(this._inputRef)} />
         ${when(
           this.selectionMode !== 'time',
           () => html`

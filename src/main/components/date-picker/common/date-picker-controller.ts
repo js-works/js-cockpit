@@ -376,6 +376,24 @@ class DatePickerController {
       ev.stopPropagation();
     });
 
+    node.addEventListener('mousedown', (ev: Event) => {
+      const target = ev.target;
+      let preventDefault = true;
+
+      if (target instanceof HTMLElement) {
+        const action = target.getAttribute('data-action');
+
+        if (action === 'hourChange' || action === 'minuteChange') {
+          preventDefault = false;
+        }
+      }
+
+      if (preventDefault) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    });
+
     node.addEventListener('click', (ev: Event) => {
       const target = ev.target;
 
@@ -426,6 +444,9 @@ class DatePickerController {
           break;
         }
       }
+
+      ev.preventDefault();
+      ev.stopPropagation();
     });
   };
 
