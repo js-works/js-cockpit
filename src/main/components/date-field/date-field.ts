@@ -1,21 +1,13 @@
-import {
-  afterInit,
-  afterUpdate,
-  elem,
-  prop,
-  state,
-  Attrs,
-  Component
-} from '../../utils/components';
-
-import { html, createRef, ref } from '../../utils/lit';
-import { I18nController, I18nFacade } from '../../i18n/i18n';
+import { elem, prop, state, Attrs, Component } from '../../utils/components';
+import { classMap, createRef, html, ref } from '../../utils/lit';
+import { I18nController } from '../../i18n/i18n';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
+import { DatePicker } from '../../components/date-picker/date-picker';
 
 // styles
 import dateFieldStyles from './date-field.styles';
@@ -33,12 +25,13 @@ import yearIcon from '../../icons/calendar.svg';
 
 @elem({
   tag: 'cp-date-field',
-  uses: [SlIcon, SlIconButton, SlInput, SlPopup],
+  uses: [DatePicker, SlIcon, SlIconButton, SlInput, SlPopup],
   styles: dateFieldStyles
 })
 export class DateField extends Component {
   private _i18n = new I18nController(this);
   private _inputRef = createRef<SlInput>();
+  private _pickerRef = createRef<DatePicker>();
 
   @prop(Attrs.string, true)
   selectionMode: 'date' | 'dateTime' | 'dateRange' | 'time' = 'date';
@@ -57,9 +50,6 @@ export class DateField extends Component {
 
   @prop
   selection: Date[] = [];
-
-  @prop(Attrs.boolean, true)
-  highlightWeekends = true;
 
   @prop(Attrs.boolean, true)
   showWeekNumbers = false;
@@ -85,9 +75,34 @@ export class DateField extends Component {
   @state
   private _pickerVisible = false;
 
-  constructor() {
-    super();
+  @state
+  private _value = '';
+
+  private _onInputClick() {
+    this._inputRef.value!.focus();
   }
+
+  private _onFocus() {
+    this._pickerVisible = true;
+  }
+
+  private _onBlur() {
+    this._pickerVisible = false;
+  }
+
+  private _onOkClick = () => {
+    this._value = this._pickerRef.value!.value;
+    this._pickerVisible = false;
+  };
+
+  private _onCancelClick = () => {
+    this._pickerVisible = false;
+  };
+
+  private _onClearClick = () => {
+    this._value = '';
+    this._pickerVisible = false;
+  };
 
   render() {
     const icon = {
@@ -114,16 +129,23 @@ export class DateField extends Component {
           <sl-input
             slot="anchor"
             class="sl-control"
+            value=${this._value}
             ?required=${this.required}
             ?disabled=${this.disabled}
-            @keydown=${this._onKeyDown}
+            readonly
+            @click=${this._onInputClick}
+            @sl-focus=${this._onFocus}
+            @sl-blur=${this._onBlur}
             ${ref(this._inputRef)}
+            class=${classMap({
+              'input': true,
+              'input--disabled': this.disabled
+            })}
           >
-            <sl-icon-button
+            <sl-icon
               slot="suffix"
               class="calendar-icon"
               src=${icon}
-              @click=${this._onTriggerClick}
             >
             </sl-icon-button>
             <span slot="label" class="label">${this.label}</span>
@@ -134,32 +156,33 @@ export class DateField extends Component {
               .selectionMode=${this.selectionMode}
               .showAdjacentDays=${this.showAdjacentDays}
               .showWeekNumbers=${this.showWeekNumbers}
+              .highlightWeekend=${this.highlightWeekend}
+              .disableWeekend=${this.disableWeekend}
               .minDate=${this.minDate}
               .maxDate=${this.minDate}
               .fixedDayCount=${this.fixedDayCount}
+              ${ref(this._pickerRef)}
             ></cp-date-picker>
             <div class="popup-footer">
-              <sl-button variant="text" class="button">Clear</sl-button>
-              <sl-button variant="text" class="button">Cancel</sl-button>
-              <sl-button variant="text" class="button">OK</sl-button>
+              <sl-button
+                variant="text"
+                class="button"
+                @click=${this._onClearClick}
+                >Clear</sl-button
+              >
+              <sl-button
+                variant="text"
+                class="button"
+                @click=${this._onCancelClick}
+                >Cancel</sl-button
+              >
+              <sl-button variant="text" class="button" @click=${this._onOkClick}
+                >OK</sl-button
+              >
             </div>
           </div>
         </sl-popup>
       </div>
     `;
   }
-
-  private _onKeyDown = (ev: KeyboardEvent) => {
-    const key = ev.key;
-
-    if (key === 'ArrowDown') {
-      this._pickerVisible = true;
-    }
-  };
-
-  private _onTriggerClick = () => {
-    if (!this._pickerVisible) {
-      this._pickerVisible = true;
-    }
-  };
 }

@@ -52,7 +52,7 @@ export const dateField2 = () => `
       highlight-weekend
       label="End date"
       fixed-day-count
-      selection-mode="date"
+      selection-mode="dateTime"
     >
     </cp-date-field>
   </sl-card>

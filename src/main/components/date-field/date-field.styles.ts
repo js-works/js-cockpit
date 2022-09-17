@@ -6,6 +6,12 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  .input:not(.input--disabled),
+  .input:not(.input--disabled)::part(input),
+  .input:not(.input-disabled)::part(suffix) {
+    cursor: pointer;
+  }
+
   .popup::part(popup) {
     z-index: 32000;
   }
@@ -15,9 +21,12 @@ export default css`
   }
 
   .popup-content {
-    box-shadow: var(--sl-shadow-large);
+    box-shadow: var(--sl-shadow-medium);
     border: 1px solid var(--sl-color-primary-500);
     border-radius: 0 0 4px 4px;
+  }
+
+  .date-picker {
   }
 
   .popup-footer {
@@ -26,8 +35,7 @@ export default css`
     justify-content: center;
     box-sizing: border-box;
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
-    background-color: var(--sl-color-primary-50);
-    border-top: 1px solid var(--sl-color-primary-400);
+    background-color: var(--sl-color-neutral-100);
     border-radius: 0 0 4px 4px;
   }
 
