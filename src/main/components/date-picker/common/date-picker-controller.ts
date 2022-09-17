@@ -342,14 +342,14 @@ class DatePickerController {
         return;
       }
 
-      const action = target.getAttribute('data-action');
+      const subject = target.getAttribute('data-subject');
 
-      if (!action) {
+      if (!subject) {
         return;
       }
 
-      switch (action) {
-        case 'hourChange':
+      switch (subject) {
+        case 'hour':
           this.#setActiveHour(
             parseInt(
               String((target as unknown as { value: string | number }).value),
@@ -360,7 +360,7 @@ class DatePickerController {
           this.#notifyChange();
           break;
 
-        case 'minuteChange':
+        case 'minute':
           this.#setActiveMinute(
             parseInt(
               String((target as unknown as { value: string | number }).value),
@@ -381,16 +381,16 @@ class DatePickerController {
       let preventDefault = true;
 
       if (target instanceof HTMLElement) {
-        const action = target.getAttribute('data-action');
+        const subject = target.getAttribute('data-subject');
 
-        if (action === 'hourChange' || action === 'minuteChange') {
+        if (subject === 'hour' || subject === 'minute') {
           preventDefault = false;
         }
       }
 
       if (preventDefault) {
-        ev.preventDefault();
-        ev.stopPropagation();
+        //ev.preventDefault();
+        //ev.stopPropagation();
       }
     });
 
@@ -401,26 +401,26 @@ class DatePickerController {
         return;
       }
 
-      const action = target.getAttribute('data-action');
+      const subject = target.getAttribute('data-subject');
 
-      if (!action) {
+      if (!subject) {
         return;
       }
 
-      switch (action) {
-        case 'prevClick':
+      switch (subject) {
+        case 'prev':
           this.#clickPrev();
           break;
 
-        case 'nextClick':
+        case 'next':
           this.#clickNext();
           break;
 
-        case 'titleClick':
+        case 'title':
           this.#clickTitle();
           break;
 
-        case 'dayClick': {
+        case 'day': {
           const year = parseInt(target.getAttribute('data-year')!, 10);
           const month = parseInt(target.getAttribute('data-month')!, 10);
           const day = parseInt(target.getAttribute('data-day')!, 10);
@@ -429,7 +429,7 @@ class DatePickerController {
           break;
         }
 
-        case 'monthClick': {
+        case 'month': {
           const year = parseInt(target.getAttribute('data-year')!, 10);
           const month = parseInt(target.getAttribute('data-month')!, 10);
 
@@ -437,7 +437,7 @@ class DatePickerController {
           break;
         }
 
-        case 'yearClick': {
+        case 'year': {
           const year = parseInt(target.getAttribute('data-year')!, 10);
 
           this.#clickYear(year);

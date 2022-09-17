@@ -136,9 +136,9 @@ class DatePicker extends LitElement {
           this.selectionMode !== 'time',
           () => html`
             <div class="cal-header">
-              <a class="cal-prev" data-action="prevClick">&#x1F860;</a>
+              <a class="cal-prev" data-subject="prev">&#x1F860;</a>
               <div class="cal-title-container">${this._renderTitle()}</div>
-              <a class="cal-next" data-action="nextClick">&#x1F862;</a>
+              <a class="cal-next" data-subject="next">&#x1F862;</a>
             </div>
             ${sheet}
           `
@@ -153,7 +153,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="23"
                 tooltip="none"
-                data-action="hourChange"
+                data-subject="hour"
               ></sl-range>
               <sl-range
                 class="cal-minute-slider"
@@ -161,7 +161,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="59"
                 tooltip="none"
-                data-action="minuteChange"
+                data-subject="minute"
               ></sl-range>
             </div>
           `
@@ -185,7 +185,7 @@ class DatePicker extends LitElement {
         'cal-title': true,
         'cal-title--disabled': this._datePicker.getScene() === 'decade'
       })}
-      data-action="titleClick"
+      data-subject="title"
     >
       ${title}
     </div>`;
@@ -263,7 +263,7 @@ class DatePicker extends LitElement {
         data-year=${dayData.year}
         data-month=${dayData.month}
         data-day=${dayData.day}
-        data-action="dayClick"
+        data-subject="day"
       >
         ${dayData.day}
       </div>
@@ -300,7 +300,7 @@ class DatePicker extends LitElement {
         })}
         data-year=${monthData.year}
         data-month=${monthData.month}
-        data-action="monthClick"
+        data-subject="month"
       >
         ${this._datePicker.getMonthName(monthData.month, 'short')}
       </div>
@@ -333,7 +333,7 @@ class DatePicker extends LitElement {
           'cal-cell--selected': selected
         })}
         data-year=${yearData.year}
-        data-action="yearClick"
+        data-subject="year"
       >
         ${yearData.year}
       </div>
