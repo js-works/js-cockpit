@@ -1,5 +1,5 @@
 import { css, unsafeCSS } from 'lit';
-import datePickerStyles from './common/date-picker.styles';
+import datePickerStyles from './common/date-picker.base.styles';
 
 export default css`
   ${unsafeCSS(datePickerStyles)}
@@ -39,6 +39,10 @@ export default css`
 
   .cal-cell--adjacent.cal-cell--disabled {
     color: var(--sl-color-neutral-200);
+  }
+
+  .cal-cell--adjacent.cal-cell--selected:not(:hover) {
+    color: var(--sl-color-neutral-800);
   }
 
   .cal-cell--current {

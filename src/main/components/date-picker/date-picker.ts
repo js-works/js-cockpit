@@ -11,7 +11,7 @@ import { DatePickerController } from './common/date-picker-controller';
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
 
 // styles
-import shoelaceDatePickerStyles from './shoelace.date-picker.styles';
+import shoelaceDatePickerStyles from './date-picker.shoelace.styles';
 
 // === exports =======================================================
 
@@ -103,12 +103,9 @@ class DatePicker extends LitElement {
 
   willUpdate() {
     this._calendar = new Calendar({
-      localization: {
-        firstDayOfWeek: this._datePicker.getFirstDayOfWeek(),
-        weekendDays: this._datePicker.getWeekendDays(),
-        getCalendarWeek: (date: Date) => this._datePicker.getCalendarWeek(date)
-      },
-
+      firstDayOfWeek: this._datePicker.getFirstDayOfWeek(),
+      weekendDays: this._datePicker.getWeekendDays(),
+      getCalendarWeek: (date: Date) => this._datePicker.getCalendarWeek(date),
       disableWeekend: this.disableWeekend,
       alwaysShow42Days: this.fixedDayCount && this.showAdjacentDays,
       minDate: this.minDate,
@@ -182,7 +179,15 @@ class DatePicker extends LitElement {
         ? this._datePicker.getYearTitle()
         : this._datePicker.getMonthTitle();
 
-    return html`<div class="cal-title" data-action="titleClick">${title}</div>`;
+    return html`<div
+      class=${classMap({
+        'cal-title': true,
+        'cal-title--disabled': this._datePicker.getScene() === 'decade'
+      })}
+      data-action="titleClick"
+    >
+      ${title}
+    </div>`;
   }
 
   private _renderMonthSheet() {

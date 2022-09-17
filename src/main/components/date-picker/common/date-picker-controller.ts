@@ -467,7 +467,11 @@ class DatePickerController {
   };
 
   #clickTitle = () => {
-    this.#setScene(this.#scene === 'year' ? 'decade' : 'year');
+    if (this.#scene !== 'month' && this.#scene !== 'year') {
+      return;
+    }
+
+    this.#setScene(this.#scene === 'month' ? 'year' : 'decade');
   };
 
   #clickDay = (year: number, month: number, day: number) => {

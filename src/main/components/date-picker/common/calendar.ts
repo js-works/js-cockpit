@@ -5,14 +5,10 @@ export { Calendar };
 // === exported types ================================================
 
 namespace Calendar {
-  export type Localization = Readonly<{
+  export type Options = Readonly<{
     firstDayOfWeek: number;
     weekendDays: readonly number[];
     getCalendarWeek: (date: Date, firstDayOfWeek: number) => number;
-  }>;
-
-  export type Options = Readonly<{
-    localization: Localization;
     minDate: Date | null;
     maxDate: Date | null;
     disableWeekend: boolean;
@@ -89,8 +85,7 @@ class Calendar {
     month = n % 12;
 
     const options = this.#options;
-    const localization = options.localization;
-    const firstDayOfWeek = localization.firstDayOfWeek;
+    const firstDayOfWeek = options.firstDayOfWeek;
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const now = new Date();
     const currYear = now.getFullYear();
@@ -143,7 +138,7 @@ class Calendar {
       }
 
       const cellDate = new Date(cellYear, cellMonth, cellDay);
-      const weekend = localization.weekendDays.includes(cellDate.getDay());
+      const weekend = options.weekendDays.includes(cellDate.getDay());
 
       const outOfMinMaxRange = !inDateRange(
         cellDate,
@@ -160,7 +155,7 @@ class Calendar {
         adjacent,
         weekend,
 
-        weekNumber: localization.getCalendarWeek(
+        weekNumber: options.getCalendarWeek(
           new Date(cellYear, cellMonth, cellDay),
           firstDayOfWeek
         ),
@@ -175,7 +170,7 @@ class Calendar {
     const weekdays: number[] = [];
 
     for (let i = 0; i < 7; ++i) {
-      weekdays.push((i + localization.firstDayOfWeek) % 7);
+      weekdays.push((i + options.firstDayOfWeek) % 7);
     }
 
     return {
@@ -189,7 +184,6 @@ class Calendar {
   }
 
   getYearView(year: number): Calendar.YearView {
-    const localization = this.#options.localization;
     const months: Calendar.MonthData[] = [];
     const currYear = new Date().getFullYear();
     const currMonth = new Date().getMonth();

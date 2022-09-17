@@ -114,8 +114,6 @@ export default /*css*/ `
     cursor: not-allowed;
   }
 
-
-
   .cal-week-number {
     display: flex;
     align-items: center;
