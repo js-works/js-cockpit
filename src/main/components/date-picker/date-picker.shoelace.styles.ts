@@ -8,6 +8,10 @@ export default css`
     font-family: var(--sl-font-sans);
   }
 
+  .cal-base {
+    background-color: var(--sl-color-neutral-0);
+  }
+
   .cal-header {
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-500);

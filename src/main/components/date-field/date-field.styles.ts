@@ -14,9 +14,26 @@ export default css`
     background-color: var(--sl-color-primary-500);
   }
 
-  .date-picker {
+  .popup-content {
     box-shadow: var(--sl-shadow-large);
     border: 1px solid var(--sl-color-primary-500);
     border-radius: 0 0 4px 4px;
+  }
+
+  .popup-footer {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+    background-color: var(--sl-color-primary-50);
+    border-top: 1px solid var(--sl-color-primary-400);
+    border-radius: 0 0 4px 4px;
+  }
+
+  .button::part(base) {
+    margin: 0;
+    height: auto;
+    line-height: unset;
   }
 `;

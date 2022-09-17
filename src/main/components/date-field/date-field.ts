@@ -128,15 +128,22 @@ export class DateField extends Component {
             </sl-icon-button>
             <span slot="label" class="label">${this.label}</span>
           </sl-input>
-          <cp-date-picker
-            class="date-picker"
-            .selectionMode=${this.selectionMode}
-            .showAdjacentDays=${this.showAdjacentDays}
-            .showWeekNumbers=${this.showWeekNumbers}
-            .minDate=${this.minDate}
-            .maxDate=${this.minDate}
-            .fixedDayCount=${this.fixedDayCount}
-          ></cp-date-picker>
+          <div class="popup-content">
+            <cp-date-picker
+              class="date-picker"
+              .selectionMode=${this.selectionMode}
+              .showAdjacentDays=${this.showAdjacentDays}
+              .showWeekNumbers=${this.showWeekNumbers}
+              .minDate=${this.minDate}
+              .maxDate=${this.minDate}
+              .fixedDayCount=${this.fixedDayCount}
+            ></cp-date-picker>
+            <div class="popup-footer">
+              <sl-button variant="text" class="button">Clear</sl-button>
+              <sl-button variant="text" class="button">Cancel</sl-button>
+              <sl-button variant="text" class="button">OK</sl-button>
+            </div>
+          </div>
         </sl-popup>
       </div>
     `;
