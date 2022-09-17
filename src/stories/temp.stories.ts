@@ -24,7 +24,7 @@ export const datePicker = () => `
     xmax-date="2022-09-22"
     highlight-weekend
     show-adjacent-days
-    selectionMode="dateTime"
+    selectionMode="time"
   ></cp-date-picker>
   <br />
   <br />

@@ -93,12 +93,18 @@ class DatePicker extends LitElement {
 
   private _localize = new LocalizeController(this);
 
-  private _datePicker = new DatePickerController(
-    this,
-    () => this._localize.lang(),
-    () => this.selectionMode
-  );
+  private _datePicker = new DatePickerController(this, {
+    getLocale: () => this._localize.lang(),
+    getSelectionMode: () => this.selectionMode
+  });
 
+  constructor() {
+    super();
+
+    this.addEventListener('change', () => {
+      console.log('juhu');
+    });
+  }
   private _calendar!: Calendar; // will be set on `willUpdate`
 
   willUpdate() {

@@ -79,16 +79,22 @@ class DatePickerController {
   #activeMinute = new Date().getMinutes();
   #requestUpdate: () => void;
   #getLocale: () => string;
+  #onChange: (() => void) | null;
   #getNode: () => Node;
+  #notifyTimeout: unknown = null;
 
   constructor(
     host: ReactiveControllerHost & HTMLElement,
-    getLocale: () => string,
-    getSelectionMode: () => SelectionMode
+
+    params: {
+      getLocale: () => string;
+      getSelectionMode: () => SelectionMode;
+      onChange?: () => void;
+    }
   ) {
     const innerController = {
       hostUpdate: () => {
-        this.#selectionMode = getSelectionMode();
+        this.#selectionMode = params.getSelectionMode();
       },
 
       hostUpdated: () => {
@@ -100,7 +106,8 @@ class DatePickerController {
     host.addController(innerController);
     this.#requestUpdate = () => host.requestUpdate();
     this.#getNode = () => host.shadowRoot || host;
-    this.#getLocale = getLocale;
+    this.#getLocale = params.getLocale;
+    this.#onChange = params.onChange || null;
   }
 
   getSelectionMode() {
@@ -285,8 +292,48 @@ class DatePickerController {
     }).format(date);
   }
 
+  #clearSelection() {
+    this.#selection.clear();
+    this.#notifyChange();
+  }
+
+  #addSelection(value: string) {
+    this.#selection.add(value);
+    this.#notifyChange();
+  }
+
+  #removeSelection(value: string) {
+    this.#selection.delete(value);
+    this.#notifyChange();
+  }
+
+  #notifyChange() {
+    if (this.#notifyTimeout !== null) {
+      return;
+    }
+
+    this.#notifyTimeout = setTimeout(() => {
+      this.#notifyTimeout = null;
+
+      this.#getNode().dispatchEvent(
+        new Event('change', { bubbles: true, composed: true })
+      );
+
+      if (this.#onChange) {
+        this.#onChange();
+      }
+    }, 50);
+  }
+
   #addEventListeners = () => {
     const node = this.#getNode();
+
+    node.addEventListener('change', (ev: Event) => {
+      if (ev.target !== this.#getNode()) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    });
 
     node.addEventListener('input', (ev: Event) => {
       const target = ev.target;
@@ -309,6 +356,8 @@ class DatePickerController {
               10
             )
           );
+
+          this.#notifyChange();
           break;
 
         case 'minuteChange':
@@ -318,8 +367,13 @@ class DatePickerController {
               10
             )
           );
+
+          this.#notifyChange();
           break;
       }
+
+      ev.preventDefault();
+      ev.stopPropagation();
     });
 
     node.addEventListener('click', (ev: Event) => {
@@ -379,13 +433,13 @@ class DatePickerController {
     const hasValue = this.#selection.has(value);
 
     if (clear) {
-      this.#selection.clear();
+      this.#clearSelection();
     }
 
     if (!hasValue) {
-      this.#selection.add(value);
+      this.#addSelection(value);
     } else if (!clear) {
-      this.#selection.delete(value);
+      this.#removeSelection(value);
     }
 
     this.#requestUpdate();
@@ -427,7 +481,7 @@ class DatePickerController {
     }
 
     this.#selectionMode = mode;
-    this.#selection.clear();
+    this.#clearSelection();
 
     switch (mode) {
       case 'year':
