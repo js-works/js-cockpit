@@ -20,11 +20,11 @@ export const datePicker = () => `
   <cp-date-picker
     id="date-picker"
     show-week-numbers
-    min-date="2022-09-11"
-    max-date="2022-09-22"
+    xmin-date="2022-09-11"
+    xmax-date="2022-09-22"
     highlight-weekend
     show-adjacent-days
-    selectionMode="time"
+    selectionMode="weeks"
   ></cp-date-picker>
   <br />
   <br />

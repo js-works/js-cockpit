@@ -1,9 +1,4 @@
-import { css } from 'lit';
-import componentStyles from '../../styles/component.styles';
-
-export default css`
-  ${componentStyles}
-
+export default /*css*/ ` 
   :host {
     display: inline-block;
   }
@@ -28,8 +23,6 @@ export default css`
 
   .cal-header {
     display: flex;
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-500);
   }
 
   .cal-title-container {
@@ -54,12 +47,6 @@ export default css`
   .cal-prev:not(.cal-prev--disabled),
   .cal-next:not(.cal-next--disabled) {
     cursor: pointer;
-  }
-
-  .cal-title:not(.cal-title--disabled):hover,
-  .cal-prev:not(.cal-prev--disabled):hover,
-  .cal-next:not(.cal-next--disabled):hover {
-    background-color: var(--sl-color-primary-600);
   }
 
   .cal-title:not(.cal-title---disabled):active,
@@ -124,37 +111,10 @@ export default css`
   }
 
   .cal-cell--disabled {
-    color: var(--sl-color-neutral-300);
     cursor: not-allowed;
   }
 
-  .cal-cell--highlighted {
-    background-color: var(--sl-color-neutral-50);
-  }
 
-  .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
-    color: var(--sl-color-neutral-400);
-  }
-
-  .cal-cell--adjacent.cal-cell--disabled {
-    color: var(--sl-color-neutral-200);
-  }
-
-  .cal-cell--current {
-    background-color: var(--sl-color-orange-100);
-  }
-
-  .cal-cell:hover:not(.cal-cell--disabled) {
-    background-color: var(--sl-color-primary-100);
-  }
-
-  .cal-cell--selected {
-    background-color: var(--sl-color-primary-400);
-  }
-
-  .cal-cell--selected:hover {
-    background-color: var(--sl-color-primary-500) !important;
-  }
 
   .cal-week-number {
     display: flex;
@@ -179,10 +139,7 @@ export default css`
     align-self: center;
     margin: 0 0.5em;
     font-size: 125%;
-
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic,
-      var(--sl-font-sans);
-
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, Helvetica, Arial, sans-serif;
     text-align: center;
   }
 
@@ -191,14 +148,5 @@ export default css`
     font-size: 60%;
     width: 2em;
     text-align: left;
-  }
-
-  .cal-hour-slider,
-  .cal-minute-slider {
-    --track-height: 2px;
-    --thumb-size: 14px;
-    --track-color-active: var(--sl-color-primary-500);
-    --track-color-inactive: var(--sl-color-neutral-200);
-    margin: 0 1em 0 0;
   }
 `;

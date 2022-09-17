@@ -8,9 +8,9 @@ namespace DatePickerController {
     | 'dates'
     | 'time'
     | 'dateTime'
-    // | 'dateRange'
-    // | 'week'
-    // | 'weeks'
+    | 'dateRange'
+    | 'week'
+    | 'weeks'
     | 'month'
     | 'months'
     | 'year'
@@ -140,7 +140,17 @@ class DatePickerController {
   }
 
   hasSelectedDay(year: number, month: number, day: number) {
-    return this.#selection.has(getYearMonthDayString(year, month, day));
+    const mode = this.#selectionMode;
+
+    if (mode === 'date' || mode === 'dates' || mode === 'dateTime') {
+      const value = this.#selectionMode;
+      return this.#selection.has(getYearMonthDayString(year, month, day));
+    } else if (mode === 'week' || mode === 'weeks') {
+      const weekNumber = this.getCalendarWeek(new Date(year, month, day));
+      return this.#selection.has(getYearWeekString(year, weekNumber));
+    }
+
+    return false;
   }
 
   getValue() {
@@ -461,17 +471,23 @@ class DatePickerController {
   };
 
   #clickDay = (year: number, month: number, day: number) => {
-    const dateString = getYearMonthDayString(year, month, day);
-
     switch (this.#selectionMode) {
       case 'date':
-      case 'dateTime':
-        this.#toggleSelected(dateString, true);
-        break;
-
       case 'dates':
-        this.#toggleSelected(dateString);
+      case 'dateTime': {
+        const dateString = getYearMonthDayString(year, month, day);
+
+        this.#toggleSelected(dateString, this.#selectionMode !== 'dates');
         break;
+      }
+
+      case 'week':
+      case 'weeks': {
+        const weekNumber = this.getCalendarWeek(new Date(year, month, day));
+        const weekString = getYearWeekString(year, weekNumber);
+        this.#toggleSelected(weekString, this.#selectionMode !== 'weeks');
+        break;
+      }
     }
 
     this.#requestUpdate();
@@ -538,14 +554,12 @@ function getYearMonthString(year: number, month: number) {
   return `${y}-${m}`;
 }
 
-/* Needed in future
 function getYearWeekString(year: number, week: number) {
   const y = year.toString().padStart(4, '0');
   const w = week.toString().padStart(2, '0');
 
   return `${y}-W${w}`;
 }
-*/
 
 function getYearString(year: number) {
   return year.toString();

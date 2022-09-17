@@ -27,4 +27,4 @@ linkElem.setAttribute(
 
 document.head.append(linkElem);
 
-document.documentElement.lang = 'de-DE';
+document.documentElement.lang = 'en-US';

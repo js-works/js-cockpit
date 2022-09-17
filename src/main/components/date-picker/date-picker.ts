@@ -1,18 +1,17 @@
-import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
-import { html, ComplexAttributeConverter } from 'lit';
+import { html, ComplexAttributeConverter, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { LocalizeController } from '@shoelace-style/localize';
-import { Calendar } from './calendar';
-import { DatePickerController } from './date-picker-controller';
+import { Calendar } from './common/calendar';
+import { DatePickerController } from './common/date-picker-controller';
 
 // custom elements
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range';
 
 // styles
-import datePickerStyles from './date-picker.styles';
+import shoelaceDatePickerStyles from './shoelace.date-picker.styles';
 
 // === exports =======================================================
 
@@ -57,7 +56,7 @@ void SlRange;
 
 @customElement('cp-date-picker')
 class DatePicker extends LitElement {
-  static styles = datePickerStyles;
+  static styles = shoelaceDatePickerStyles;
 
   @property({ type: String })
   get value() {
@@ -71,7 +70,7 @@ class DatePicker extends LitElement {
   @property({ type: String })
   selectionMode: DatePicker.SelectionMode = 'date';
 
-  @property({ type: Boolean, attribute: 'show-week-number' })
+  @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
   @property({ type: Boolean, attribute: 'show-adjacent-days' })
@@ -128,7 +127,7 @@ class DatePicker extends LitElement {
         : this._renderMonthSheet();
 
     const typeSnakeCase = this.selectionMode.replace(
-      /[A-Z]xxxx/g,
+      /[A-Z]/g,
       (it) => `-${it.toLowerCase()}`
     );
 
