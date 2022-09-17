@@ -10,7 +10,6 @@ import {
 
 import { html, createRef, ref } from '../../utils/lit';
 import { I18nController, I18nFacade } from '../../i18n/i18n';
-import { Calendar } from './calendar';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -20,7 +19,6 @@ import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
 
 // styles
 import dateFieldStyles from './date-field.styles';
-import datePickerStyles from './date-picker.styles';
 
 // icons
 import dateIcon from '../../icons/calendar3.svg';
@@ -39,12 +37,11 @@ import yearIcon from '../../icons/calendar.svg';
   styles: dateFieldStyles
 })
 export class DateField extends Component {
-  private _calendar: Calendar;
   private _i18n = new I18nController(this);
   private _inputRef = createRef<SlInput>();
 
   @prop(Attrs.string, true)
-  type: Calendar.Type = 'date';
+  selectionMode: 'date' | 'dateTime' | 'dateRange' | 'time' = 'date';
 
   @prop(Attrs.string, true)
   name = '';
@@ -67,65 +64,29 @@ export class DateField extends Component {
   @prop(Attrs.boolean, true)
   showWeekNumbers = false;
 
+  @prop(Attrs.boolean, true)
+  showAdjacentDays = false;
+
+  @prop(Attrs.boolean, true)
+  highlightWeekend = false;
+
+  @prop(Attrs.boolean, true)
+  disableWeekend = false;
+
+  @prop(Attrs.boolean, true)
+  fixedDayCount = false; // will be ignored if showAdjacentDays is false
+
+  @prop(Attrs.date, true)
+  minDate: Date | null = null;
+
+  @prop(Attrs.date, true)
+  maxDate: Date | null = null;
+
   @state
   private _pickerVisible = false;
 
   constructor() {
     super();
-
-    this._calendar = new Calendar({
-      getLocaleSettings,
-      className: 'picker',
-      styles: datePickerStyles.cssText,
-      onBlur: () => void (this._pickerVisible = false)
-    });
-
-    this._calendar.setButtons([
-      {
-        text: 'Clear',
-        onClick: () => this._calendar.clear()
-      },
-      {
-        text: 'Cancel',
-        onClick: () => {
-          this._calendar.setSelection(this.selection);
-        }
-      },
-      {
-        text: 'OK',
-        onClick: () => {
-          const newSelection = this._calendar.getSelection();
-          this.selection = newSelection;
-
-          this._inputRef.value!.value = this._formatSelection(
-            newSelection,
-            this.type
-          );
-
-          if (this.type === 'date') {
-            this._pickerVisible = false;
-          }
-        }
-      }
-    ]);
-
-    const updateCalendar = () => {
-      this._calendar.setLocale(this._i18n.getLocale());
-      this._calendar.setSelectionMode(this.type);
-      this._calendar.setHighlightWeekends(this.highlightWeekends);
-      this._calendar.setShowWeekNumbers(this.showWeekNumbers);
-      this._calendar.setSelection(this.selection);
-    };
-
-    afterInit(this, updateCalendar);
-
-    afterUpdate(this, () => {
-      updateCalendar();
-
-      if (this._pickerVisible) {
-        this._calendar.focus();
-      }
-    });
   }
 
   render() {
@@ -137,7 +98,7 @@ export class DateField extends Component {
       time: timeIcon,
       month: monthIcon,
       year: yearIcon
-    }[this.type];
+    }[this.selectionMode];
 
     return html`
       <div class="base" style="border: 1px green red">
@@ -167,7 +128,15 @@ export class DateField extends Component {
             </sl-icon-button>
             <span slot="label" class="label">${this.label}</span>
           </sl-input>
-          ${this._calendar.getElement()}
+          <cp-date-picker
+            class="date-picker"
+            .selectionMode=${this.selectionMode}
+            .showAdjacentDays=${this.showAdjacentDays}
+            .showWeekNumbers=${this.showWeekNumbers}
+            .minDate=${this.minDate}
+            .maxDate=${this.minDate}
+            .fixedDayCount=${this.fixedDayCount}
+          ></cp-date-picker>
         </sl-popup>
       </div>
     `;
@@ -178,7 +147,6 @@ export class DateField extends Component {
 
     if (key === 'ArrowDown') {
       this._pickerVisible = true;
-      this._calendar.focus();
     }
   };
 
@@ -186,107 +154,5 @@ export class DateField extends Component {
     if (!this._pickerVisible) {
       this._pickerVisible = true;
     }
-  };
-
-  private _formatSelection(selection: Date[], type: Calendar.Type): string {
-    if (selection.length === 0) {
-      return '';
-    }
-
-    switch (type) {
-      case 'date':
-        return this._i18n.formatDate(selection[0], {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric'
-        });
-
-      case 'dates': {
-        const tokens: string[] = [];
-
-        for (const date of [...selection].sort((a, b) =>
-          a.getTime() < b.getTime() ? -1 : 1
-        )) {
-          tokens.push(
-            this._i18n.formatDate(date, {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric'
-            })
-          );
-        }
-
-        return tokens.join(', ');
-      }
-
-      case 'dateRange': {
-        return selection
-          .slice(0, 2)
-          .map((date) =>
-            this._i18n.formatDate(date, {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric'
-            })
-          )
-          .join(' - ');
-      }
-
-      case 'dateTime': {
-        const date = selection[0];
-
-        const formattedDay = this._i18n.formatDate(date, {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric'
-        });
-
-        const formattedTime = this._i18n.formatDate(date, {
-          hour: 'numeric',
-          minute: 'numeric'
-        });
-
-        return `${formattedDay} ${formattedTime}`;
-      }
-
-      case 'time':
-        return this._i18n.formatDate(selection[0], {
-          hour: 'numeric',
-          minute: 'numeric'
-        });
-
-      case 'month':
-        return this._i18n.formatDate(selection[0], {
-          month: '2-digit',
-          year: 'numeric'
-        });
-
-      case 'year':
-        return this._i18n.formatDate(selection[0], {
-          year: 'numeric'
-        });
-
-      default:
-        throw new Error('Illegal selection mode');
-    }
-  }
-}
-
-function getLocaleSettings(locale: string): Calendar.LocaleSettings {
-  const i18n = new I18nFacade(() => locale);
-
-  let days = i18n.getDayNames('short');
-
-  if (days.some((day) => day.length > 5)) {
-    days = i18n.getDayNames('narrow');
-  }
-
-  return {
-    daysShort: days,
-    months: i18n.getMonthNames('long'),
-    monthsShort: i18n.getMonthNames('short'),
-    firstDayOfWeek: i18n.getFirstDayOfWeek() as Calendar.Weekday,
-    weekendDays: i18n.getWeekendDays() as Calendar.Weekday[],
-    getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date)
   };
 }

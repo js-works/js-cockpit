@@ -24,7 +24,7 @@ export const datePicker = () => `
     xmax-date="2022-09-22"
     highlight-weekend
     show-adjacent-days
-    selectionMode="time"
+    selectionMode="dateTime"
   ></cp-date-picker>
   <br />
   <br />
@@ -46,7 +46,15 @@ export const dateField2 = () => `
   <sl-card style="max-width: 600px; width: 800px">
     <cp-date-field label="Start date" show-week-numbers show-adjacent-days></cp-date-field>
     <br/>
-    <cp-date-field label="End date"></cp-date-field>
+    <cp-date-field
+      show-adjacent-days
+      show-week-numbers
+      highlight-weekend
+      label="End date"
+      fixed-day-count
+      selection-mode="dateTime"
+    >
+    </cp-date-field>
   </sl-card>
 `;
 

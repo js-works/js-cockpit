@@ -11,6 +11,12 @@ export default css`
   }
 
   .popup::part(arrow) {
-    background-color: var(--sl-color-primary-600);
+    background-color: var(--sl-color-primary-500);
+  }
+
+  .date-picker {
+    box-shadow: var(--sl-shadow-large);
+    border: 1px solid var(--sl-color-primary-500);
+    border-radius: 0 0 4px 4px;
   }
 `;

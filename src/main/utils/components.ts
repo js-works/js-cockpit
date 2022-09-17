@@ -74,6 +74,30 @@ const Attrs = {
   boolean: {
     toAttribute: (it: boolean | null) => (!it ? null : ''),
     fromAttribute: (it: string | null) => (it === null ? false : true)
+  },
+
+  date: {
+    toAttribute(date: Date | null) {
+      if (!date) {
+        return '';
+      }
+
+      return (
+        String(date.getFullYear()).padStart(4, '0') +
+        '-' +
+        String(date.getMonth()).padStart(2, '0') +
+        '-' +
+        String(date.getDate()).padStart(2, '0')
+      );
+    },
+
+    fromAttribute(value: string | null) {
+      if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return null;
+      }
+
+      return new Date(value);
+    }
   }
 };
 

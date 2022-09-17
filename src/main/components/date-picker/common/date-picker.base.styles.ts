@@ -93,7 +93,7 @@ export default /*css*/ `
     align-items: center;
     justify-content: center;
     font-size: 85%;
-    padding: 0 0 3px 0;
+    padding: 0 0 0.5em 0;
   }
 
   .cal-week-number {

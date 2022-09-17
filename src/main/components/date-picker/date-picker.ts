@@ -98,13 +98,6 @@ class DatePicker extends LitElement {
     getSelectionMode: () => this.selectionMode
   });
 
-  constructor() {
-    super();
-
-    this.addEventListener('change', () => {
-      console.log('juhu');
-    });
-  }
   private _calendar!: Calendar; // will be set on `willUpdate`
 
   willUpdate() {
