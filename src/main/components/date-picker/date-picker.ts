@@ -78,10 +78,10 @@ class DatePicker extends LitElement {
   showAdjacentDays = false;
 
   @property({ type: Boolean, attribute: 'highlight-weekend' })
-  highlightWeekend = false;
+  highlightWeekends = false;
 
   @property({ type: Boolean, attribute: 'disable-weekend' })
-  disableWeekend = false;
+  disableWeekends = false;
 
   @property({ type: Boolean, attribute: 'fixed-day-count' })
   fixedDayCount = false; // will be ignored if showAdjacentDays is false
@@ -107,7 +107,7 @@ class DatePicker extends LitElement {
       firstDayOfWeek: this._datePicker.getFirstDayOfWeek(),
       weekendDays: this._datePicker.getWeekendDays(),
       getCalendarWeek: (date: Date) => this._datePicker.getCalendarWeek(date),
-      disableWeekend: this.disableWeekend,
+      disableWeekends: this.disableWeekends,
       alwaysShow42Days: this.fixedDayCount && this.showAdjacentDays,
       minDate: this.minDate,
       maxDate: this.maxDate
@@ -236,7 +236,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderDayCell(dayData: Calendar.DayData) {
-    const highlighted = this.highlightWeekend && dayData.weekend;
+    const highlighted = this.highlightWeekends && dayData.weekend;
 
     if (!this.showAdjacentDays && dayData.adjacent) {
       return html`

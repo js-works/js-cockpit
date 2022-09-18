@@ -6,7 +6,7 @@ import { I18nController } from '../../i18n/i18n';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
-import SlPopup from '@shoelace-style/shoelace/dist/components/popup/popup';
+import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../../components/date-picker/date-picker';
 
 // styles
@@ -25,13 +25,14 @@ import yearIcon from '../../icons/calendar.svg';
 
 @elem({
   tag: 'cp-date-field',
-  uses: [DatePicker, SlIcon, SlIconButton, SlInput, SlPopup],
+  uses: [DatePicker, SlDropdown, SlIcon, SlIconButton, SlInput],
   styles: dateFieldStyles
 })
 export class DateField extends Component {
   private _i18n = new I18nController(this);
   private _inputRef = createRef<SlInput>();
   private _pickerRef = createRef<DatePicker>();
+  private _dropdownRef = createRef<SlDropdown>();
 
   @prop(Attrs.string, true)
   selectionMode: 'date' | 'dateTime' | 'dateRange' | 'time' = 'date';
@@ -58,10 +59,10 @@ export class DateField extends Component {
   showAdjacentDays = false;
 
   @prop(Attrs.boolean, true)
-  highlightWeekend = false;
+  highlightWeekends = false;
 
   @prop(Attrs.boolean, true)
-  disableWeekend = false;
+  disableWeekends = false;
 
   @prop(Attrs.boolean, true)
   fixedDayCount = false; // will be ignored if showAdjacentDays is false
@@ -73,35 +74,32 @@ export class DateField extends Component {
   maxDate: Date | null = null;
 
   @state
-  private _pickerVisible = false;
-
-  @state
   private _value = '';
 
   private _onInputClick() {
     this._inputRef.value!.focus();
   }
 
-  private _onFocus() {
-    this._pickerVisible = true;
-  }
-
-  private _onBlur() {
-    this._pickerVisible = false;
-  }
-
   private _onOkClick = () => {
     this._value = this._pickerRef.value!.value;
-    this._pickerVisible = false;
+    this._dropdownRef.value!.hide();
+  };
+
+  private _onInputKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key !== 'ArrowDown' || this._dropdownRef.value!.open) {
+      return;
+    }
+
+    this._dropdownRef.value!.show();
   };
 
   private _onCancelClick = () => {
-    this._pickerVisible = false;
+    this._dropdownRef.value!.hide();
   };
 
   private _onClearClick = () => {
     this._value = '';
-    this._pickerVisible = false;
+    this._dropdownRef.value!.hide();
   };
 
   render() {
@@ -116,38 +114,30 @@ export class DateField extends Component {
     }[this.selectionMode];
 
     return html`
-      <div class="base" style="border: 1px green red">
-        <sl-popup
+      <div class="base">
+        <sl-dropdown
           class="popup"
-          placement="bottom"
-          ?active=${this._pickerVisible}
-          distance=${5}
-          skidding=${0}
-          ?flip=${true}
-          ?arrow=${true}
+          placement="bottom-start"
+          distance=${3}
+          skidding=${3}
+          ${ref(this._dropdownRef)}
         >
           <sl-input
-            slot="anchor"
+            slot="trigger"
             class="sl-control"
             value=${this._value}
             ?required=${this.required}
             ?disabled=${this.disabled}
             readonly
             @click=${this._onInputClick}
-            @sl-focus=${this._onFocus}
-            @sl-blur=${this._onBlur}
+            @keydown=${this._onInputKeyDown}
             ${ref(this._inputRef)}
             class=${classMap({
               'input': true,
               'input--disabled': this.disabled
             })}
           >
-            <sl-icon
-              slot="suffix"
-              class="calendar-icon"
-              src=${icon}
-            >
-            </sl-icon-button>
+            <sl-icon slot="suffix" class="calendar-icon" src=${icon}> </sl-icon>
             <span slot="label" class="label">${this.label}</span>
           </sl-input>
           <div class="popup-content">
@@ -156,8 +146,8 @@ export class DateField extends Component {
               .selectionMode=${this.selectionMode}
               .showAdjacentDays=${this.showAdjacentDays}
               .showWeekNumbers=${this.showWeekNumbers}
-              .highlightWeekend=${this.highlightWeekend}
-              .disableWeekend=${this.disableWeekend}
+              .highlightWeekends=${this.highlightWeekends}
+              .disableWeekends=${this.disableWeekends}
               .minDate=${this.minDate}
               .maxDate=${this.minDate}
               .fixedDayCount=${this.fixedDayCount}
@@ -181,7 +171,7 @@ export class DateField extends Component {
               >
             </div>
           </div>
-        </sl-popup>
+        </sl-dropdown>
       </div>
     `;
   }

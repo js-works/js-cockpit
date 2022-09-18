@@ -11,7 +11,7 @@ namespace Calendar {
     getCalendarWeek: (date: Date, firstDayOfWeek: number) => number;
     minDate: Date | null;
     maxDate: Date | null;
-    disableWeekend: boolean;
+    disableWeekends: boolean;
     alwaysShow42Days: boolean;
   }>;
 
@@ -150,7 +150,7 @@ class Calendar {
         year: cellYear,
         month: cellMonth,
         day: cellDay,
-        disabled: (options.disableWeekend && weekend) || outOfMinMaxRange,
+        disabled: (options.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
         adjacent,
         weekend,

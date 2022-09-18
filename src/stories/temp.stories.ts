@@ -49,10 +49,10 @@ export const dateField2 = () => `
     <cp-date-field
       show-adjacent-days
       show-week-numbers
-      highlight-weekend
+      highlight-weekends
       label="End date"
       fixed-day-count
-      selection-mode="dateTime"
+      selection-mode="date"
     >
     </cp-date-field>
   </sl-card>

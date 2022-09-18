@@ -21,27 +21,29 @@ export default css`
   }
 
   .popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
     box-shadow: var(--sl-shadow-medium);
-    border: 1px solid var(--sl-color-primary-500);
+    width: 18rem;
     border-radius: 0 0 4px 4px;
-  }
-
-  .date-picker {
   }
 
   .popup-footer {
     display: flex;
     gap: 6px;
-    justify-content: center;
+    justify-content: flex-end;
     box-sizing: border-box;
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
-    background-color: var(--sl-color-neutral-100);
-    border-radius: 0 0 4px 4px;
   }
 
   .button::part(base) {
     margin: 0;
     height: auto;
     line-height: unset;
+  }
+
+  .button::part(label) {
+    padding: 0 0.5rem;
   }
 `;
