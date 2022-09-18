@@ -12,19 +12,11 @@ export default css`
     cursor: pointer;
   }
 
-  .popup::part(popup) {
-    z-index: 32000;
-  }
-
-  .popup::part(arrow) {
-    background-color: var(--sl-color-primary-500);
-  }
-
   .popup-content {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    box-shadow: var(--sl-shadow-medium);
+    box-shadow: var(--sl-shadow-large);
     width: 18rem;
     border-radius: 0 0 4px 4px;
   }
@@ -35,6 +27,18 @@ export default css`
     justify-content: flex-end;
     box-sizing: border-box;
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+  }
+
+  .date-picker::part(header) {
+    color: var(--sl-color-neutral-1000);
+    background-color: var(--sl-color-neutral-0);
+  }
+
+  .date-picker::part(prev-button):hover,
+  .date-picker::part(next-button):hover,
+  .date-picker::part(title):hover {
+    color: var(--sl-color-neutral-1000);
+    background-color: var(--sl-color-primary-200);
   }
 
   .button::part(base) {

@@ -135,10 +135,14 @@ class DatePicker extends LitElement {
         ${when(
           this.selectionMode !== 'time',
           () => html`
-            <div class="cal-header">
-              <a class="cal-prev" data-subject="prev">&#x1F860;</a>
+            <div class="cal-header" part="header">
+              <a class="cal-prev" data-subject="prev" part="prev-button"
+                >&#x1F860;</a
+              >
               <div class="cal-title-container">${this._renderTitle()}</div>
-              <a class="cal-next" data-subject="next">&#x1F862;</a>
+              <a class="cal-next" data-subject="next" part="next-button"
+                >&#x1F862;</a
+              >
             </div>
             ${sheet}
           `
@@ -181,6 +185,7 @@ class DatePicker extends LitElement {
         : this._datePicker.getMonthTitle();
 
     return html`<div
+      part="title"
       class=${classMap({
         'cal-title': true,
         'cal-title--disabled': this._datePicker.getScene() === 'decade'

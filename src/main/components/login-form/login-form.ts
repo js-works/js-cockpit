@@ -303,9 +303,9 @@ class LoginForm extends Component {
               ${ref(this._submitButtonRef)}
             >
               <div class="submit-button-content">
-                <span class="submit-button-text">
+                <div class="submit-button-text">
                   ${this._renderSubmitButtonText()}
-                </span>
+                </div>
                 ${!this._isLoading
                   ? null
                   : html`<sl-spinner

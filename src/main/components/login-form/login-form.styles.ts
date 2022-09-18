@@ -117,8 +117,18 @@ export default css`
     width: 100%;
   }
 
+  .submit-button-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
   .submit-button-text {
     font-size: 120%;
+  }
+
+  .submit-button::part(base) {
+    min-height: 2.5rem;
   }
 
   .submit-button-spinner {
