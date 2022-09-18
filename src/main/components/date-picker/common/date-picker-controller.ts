@@ -349,8 +349,8 @@ class DatePickerController {
       }
 
       switch (subject) {
-        case 'hour':
-          this.#setActiveHour(
+        case 'hours':
+          this.#setActiveHours(
             parseInt(
               String((target as unknown as { value: string | number }).value),
               10
@@ -360,8 +360,8 @@ class DatePickerController {
           this.#notifyChange();
           break;
 
-        case 'minute':
-          this.#setActiveMinute(
+        case 'minutes':
+          this.#setActiveMinutes(
             parseInt(
               String((target as unknown as { value: string | number }).value),
               10
@@ -531,12 +531,12 @@ class DatePickerController {
     this.#requestUpdate();
   };
 
-  #setActiveHour = (hour: number) => {
+  #setActiveHours = (hour: number) => {
     this.#activeHour = hour;
     this.#requestUpdate();
   };
 
-  #setActiveMinute = (minute: number) => {
+  #setActiveMinutes = (minute: number) => {
     this.#activeMinute = minute;
     this.#requestUpdate();
   };

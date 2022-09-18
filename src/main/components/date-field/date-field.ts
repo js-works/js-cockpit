@@ -119,7 +119,7 @@ export class DateField extends Component {
           class="popup"
           placement="bottom-start"
           distance=${3}
-          skidding=${3}
+          skidding=${0}
           ${ref(this._dropdownRef)}
         >
           <sl-input

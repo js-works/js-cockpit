@@ -68,7 +68,7 @@ class DatePicker extends LitElement {
     this._datePicker.setValue(value);
   }
 
-  @property({ type: String })
+  @property({ type: String, attribute: 'selection-mode' })
   selectionMode: DatePicker.SelectionMode = 'date';
 
   @property({ type: Boolean, attribute: 'show-week-numbers' })
@@ -77,10 +77,10 @@ class DatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'show-adjacent-days' })
   showAdjacentDays = false;
 
-  @property({ type: Boolean, attribute: 'highlight-weekend' })
+  @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;
 
-  @property({ type: Boolean, attribute: 'disable-weekend' })
+  @property({ type: Boolean, attribute: 'disable-weekends' })
   disableWeekends = false;
 
   @property({ type: Boolean, attribute: 'fixed-day-count' })
@@ -157,7 +157,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="23"
                 tooltip="none"
-                data-subject="hour"
+                data-subject="hours"
               ></sl-range>
               <sl-range
                 class="cal-minute-slider"
@@ -165,7 +165,7 @@ class DatePicker extends LitElement {
                 min="0"
                 max="59"
                 tooltip="none"
-                data-subject="minute"
+                data-subject="minutes"
               ></sl-range>
             </div>
           `

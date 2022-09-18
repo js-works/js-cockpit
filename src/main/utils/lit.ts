@@ -1,4 +1,4 @@
-export { html, LitElement } from 'lit';
+export { css, html, LitElement } from 'lit';
 
 export type {
   ReactiveController,
