@@ -70,7 +70,8 @@ let firstDayOfWeekByCountryCode: Map<string, number>;
 let weekendDaysByCountryCode: Map<string, Readonly<number[]>>;
 
 class DatePickerController {
-  #selectionMode: DatePickerController.SelectionMode = 'date';
+  #selectionMode: DatePickerController.SelectionMode;
+  #getSelectionMode: () => DatePickerController.SelectionMode;
   #selection = new Set<string>();
   #scene: DatePickerController.Scene = 'month';
   #activeYear = new Date().getFullYear();
@@ -92,18 +93,30 @@ class DatePickerController {
       onChange?: () => void;
     }
   ) {
+    let initialized = false;
+
     const innerController = {
       hostUpdate: () => {
-        this.#selectionMode = params.getSelectionMode();
+        const newSelectionMode = this.#getSelectionMode();
+
+        if (newSelectionMode !== this.#selectionMode) {
+          this.#setSelectionMode(newSelectionMode);
+        }
       },
 
       hostUpdated: () => {
+        if (initialized) {
+          return;
+        }
+
+        initialized = true;
         this.#addEventListeners();
-        host.removeController(innerController);
       }
     };
 
     host.addController(innerController);
+    this.#selectionMode = params.getSelectionMode();
+    this.#getSelectionMode = params.getSelectionMode;
     this.#requestUpdate = () => host.requestUpdate();
     this.#getNode = () => host.shadowRoot || host;
     this.#getLocale = params.getLocale;

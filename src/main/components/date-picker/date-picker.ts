@@ -130,6 +130,7 @@ class DatePicker extends LitElement {
     );
 
     return html`
+      ${Date.now()}
       <div class="cal-base cal-base--type-${typeSnakeCase}">
         <input class="cal-input" ${ref(this._inputRef)} />
         ${when(
