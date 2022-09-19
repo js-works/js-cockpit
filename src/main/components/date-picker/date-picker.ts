@@ -139,13 +139,21 @@ class DatePicker extends LitElement {
           this.selectionMode !== 'time',
           () => html`
             <div class="cal-header" part="header">
-              <a class="cal-prev" data-subject="prev" part="prev-button"
-                >&#x1F860;</a
-              >
+              <a class="cal-prev" data-subject="prev" part="prev-button">
+                ${when(
+                  this._localize.dir() === 'ltr',
+                  () => html`&#x1F860`,
+                  () => html`&#x1F862`
+                )}
+              </a>
               <div class="cal-title-container">${this._renderTitle()}</div>
-              <a class="cal-next" data-subject="next" part="next-button"
-                >&#x1F862;</a
-              >
+              <a class="cal-next" data-subject="next" part="next-button">
+                ${when(
+                  this._localize.dir() === 'ltr',
+                  () => html`&#x1F862`,
+                  () => html`&#x1F860`
+                )}
+              </a>
             </div>
             ${sheet}
           `

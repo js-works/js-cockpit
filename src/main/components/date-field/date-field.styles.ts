@@ -16,15 +16,13 @@ export default css`
   }
 
   .dropdown {
-    xwidth: 100%;
   }
 
   .popup-content {
     display: flex;
     flex-direction: column;
-    justify-content: stretch;
     box-shadow: var(--sl-shadow-large);
-    width: 18rem;
+    width: 20rem;
     border-radius: 0 0 4px 4px;
     background-color: var(--sl-color-neutral-0);
   }

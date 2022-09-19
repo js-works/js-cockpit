@@ -90,6 +90,7 @@ class DatePickerDemo extends Component {
             ?show-adjacent-days=${this._showAdjacentDays}
             ?fixed-day-count=${this._fixedDayCount}
             lang=${this._locale}
+            dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
           ></cp-date-picker>
           <div>Selection:</div>
           <div>${this._selectionValue}</div>

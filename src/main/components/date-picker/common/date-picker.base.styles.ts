@@ -55,7 +55,7 @@ export default /*css*/ `
   .cal-next:not(.cal-next--disabled):active {
     opacity: 75%;
   }
-
+  
   .cal-sheet {
     display: flex;
     flex-direction: column;
