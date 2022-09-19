@@ -41,7 +41,6 @@ export default /*css*/ `
   .cal-title {
     padding-left: 0.75em;
     padding-right: 0.75em;
-    text-transform: capitalize;
   }
 
   .cal-title:not(.cal-title--disabled),

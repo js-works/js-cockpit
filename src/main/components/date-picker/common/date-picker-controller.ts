@@ -197,10 +197,12 @@ class DatePickerController {
   getMonthTitle() {
     const date = new Date(this.#activeYear, this.#activeMonth, 1);
 
-    return new Intl.DateTimeFormat(this.#getLocale(), {
-      year: 'numeric',
-      month: 'long'
-    }).format(date);
+    return ucFirst(
+      new Intl.DateTimeFormat(this.#getLocale(), {
+        year: 'numeric',
+        month: 'long'
+      }).format(date)
+    );
   }
 
   getYearTitle() {
@@ -630,6 +632,18 @@ class DatePickerController {
 }
 
 // === helpers =======================================================
+
+function ucFirst(s: string): string {
+  const length = s.length;
+
+  if (length === 0) {
+    return s;
+  } else if (length === 1) {
+    return s.toUpperCase();
+  } else {
+    return s[0].toUpperCase() + s.slice(1);
+  }
+}
 
 function getYearMonthDayString(year: number, month: number, day: number) {
   const y = year.toString().padStart(4, '0');
