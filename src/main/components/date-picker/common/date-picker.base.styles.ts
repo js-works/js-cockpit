@@ -8,6 +8,7 @@ export default /*css*/ `
     display: flex;
     flex-direction: column;
     user-select: none;
+    min-width: 20rem;
   }
 
   .cal-input {
@@ -61,7 +62,6 @@ export default /*css*/ `
     align-items: stretch;
     flex-grow: 1;
     padding: 0.5em;
-    min-width: 15rem;
     min-height: 13rem;
   }
 
@@ -106,7 +106,7 @@ export default /*css*/ `
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    padding: 0.25em;
+    padding: 0.25em 0.75em;
     box-sizing: border-box;
     text-transform: capitalize;
   }

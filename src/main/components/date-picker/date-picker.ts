@@ -233,7 +233,7 @@ class DatePicker extends LitElement {
               ? cell
               : [
                   html`<div class="cal-week-number">
-                    ${dayData.weekNumber}
+                    ${this._datePicker.formatWeekNumber(dayData.weekNumber)}
                   </div>`,
                   cell
                 ];
@@ -273,7 +273,7 @@ class DatePicker extends LitElement {
         data-day=${dayData.day}
         data-subject="day"
       >
-        ${dayData.day}
+        ${this._datePicker.formatDay(dayData.day)}
       </div>
     `;
   }
@@ -343,7 +343,7 @@ class DatePicker extends LitElement {
         data-year=${yearData.year}
         data-subject="year"
       >
-        ${yearData.year}
+        ${this._datePicker.formatYear(yearData.year)}
       </div>
     `;
   }

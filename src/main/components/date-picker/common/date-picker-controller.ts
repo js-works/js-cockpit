@@ -273,6 +273,22 @@ class DatePickerController {
     return region ? firstDayOfWeekByCountryCode.get(region) ?? 1 : 1;
   }
 
+  formatDay(day: number) {
+    return Intl.DateTimeFormat(this.#getLocale(), { day: 'numeric' }).format(
+      new Date(1970, 0, day)
+    );
+  }
+
+  formatWeekNumber(weekNumber: number) {
+    return Intl.NumberFormat(this.#getLocale()).format(weekNumber);
+  }
+
+  formatYear(year: number) {
+    return Intl.DateTimeFormat(this.#getLocale(), { year: 'numeric' }).format(
+      new Date(year, 0, 1)
+    );
+  }
+
   getMonthName(month: number, format: 'long' | 'short' | 'narrow' = 'long') {
     const date = new Date(1970, month, 1);
 

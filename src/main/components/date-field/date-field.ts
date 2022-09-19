@@ -1,6 +1,8 @@
 import { elem, prop, state, Attrs, Component } from '../../utils/components';
 import { classMap, createRef, html, ref } from '../../utils/lit';
 import { I18nController } from '../../i18n/i18n';
+import { FormFieldController } from '../../controllers/form-field-controller';
+import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -23,17 +25,20 @@ import yearIcon from '../../icons/calendar.svg';
 
 // === types =========================================================
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'cp-date-field': DateField;
+  }
+}
+
+// === DateField =====================================================
+
 @elem({
   tag: 'cp-date-field',
   uses: [DatePicker, SlDropdown, SlIcon, SlIconButton, SlInput],
   styles: dateFieldStyles
 })
 export class DateField extends Component {
-  private _i18n = new I18nController(this);
-  private _inputRef = createRef<SlInput>();
-  private _pickerRef = createRef<DatePicker>();
-  private _dropdownRef = createRef<SlDropdown>();
-
   @prop(Attrs.string, true)
   selectionMode: 'date' | 'dateTime' | 'dateRange' | 'time' = 'date';
 
@@ -76,6 +81,22 @@ export class DateField extends Component {
   @state
   private _value = '';
 
+  private _i18n = new I18nController(this);
+  private _inputRef = createRef<SlInput>();
+  private _pickerRef = createRef<DatePicker>();
+  private _dropdownRef = createRef<SlDropdown>();
+
+  private _fieldValidator = new FieldValidator(
+    () => this._value,
+    () => this._i18n.getLocale(),
+    [FieldCheckers.required((value) => !this.required || !!value)]
+  );
+
+  private _formField = new FormFieldController(this, {
+    getValue: () => this._value,
+    validate: () => this._fieldValidator.validate()
+  });
+
   private _onInputClick() {
     this._inputRef.value!.focus();
   }
@@ -102,6 +123,19 @@ export class DateField extends Component {
     this._dropdownRef.value!.hide();
   };
 
+  private _onChange = () => this._formField.signalChange();
+
+  private _onFocus = () => {
+    //this._dropdownRef.value!.show();
+    this._formField.signalFocus();
+  };
+
+  private _onBlur = () => this._formField.signalBlur();
+
+  get validationMessage(): string {
+    return this._fieldValidator.validate() || '';
+  }
+
   render() {
     const icon = {
       date: dateIcon,
@@ -116,7 +150,7 @@ export class DateField extends Component {
     return html`
       <div class="base">
         <sl-dropdown
-          class="popup"
+          class="dropdown"
           placement="bottom-start"
           distance=${2}
           skidding=${2}
@@ -127,11 +161,13 @@ export class DateField extends Component {
             slot="trigger"
             class="sl-control"
             value=${this._value}
-            ?required=${this.required}
             ?disabled=${this.disabled}
             readonly
             @click=${this._onInputClick}
             @keydown=${this._onInputKeyDown}
+            @change=${this._onChange}
+            @focus=${this._onFocus}
+            @blur=${this._onBlur}
             ${ref(this._inputRef)}
             class=${classMap({
               'input': true,
@@ -139,7 +175,15 @@ export class DateField extends Component {
             })}
           >
             <sl-icon slot="suffix" class="calendar-icon" src=${icon}> </sl-icon>
-            <span slot="label" class="label">${this.label}</span>
+            <span
+              slot="label"
+              class=${classMap({
+                'sl-control-label': true,
+                'sl-control-label--required': this.required
+              })}
+            >
+              ${this.label}
+            </span>
           </sl-input>
           <div class="popup-content">
             <cp-date-picker

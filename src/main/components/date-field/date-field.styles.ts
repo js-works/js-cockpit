@@ -6,10 +6,17 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  .base {
+  }
+
   .input:not(.input--disabled),
   .input:not(.input--disabled)::part(input),
   .input:not(.input-disabled)::part(suffix) {
     cursor: pointer;
+  }
+
+  .dropdown {
+    xwidth: 100%;
   }
 
   .popup-content {

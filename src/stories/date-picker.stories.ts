@@ -20,7 +20,7 @@ const styles = css`
   }
 
   .first-column {
-    width: 18rem;
+    width: 20rem;
   }
 
   .second-column {
