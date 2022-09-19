@@ -41,6 +41,7 @@ export default /*css*/ `
   .cal-title {
     padding-left: 0.75em;
     padding-right: 0.75em;
+    text-transform: capitalize;
   }
 
   .cal-title:not(.cal-title--disabled),
@@ -68,7 +69,7 @@ export default /*css*/ `
   .cal-sheet--month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: 1em;
+    grid-template-rows: 1.25em;
     flex-grow: 1;
   }
 
@@ -93,7 +94,7 @@ export default /*css*/ `
     align-items: center;
     justify-content: center;
     font-size: 85%;
-    padding: 0 0 0.5em 0;
+    text-transform: capitalize;
   }
 
   .cal-week-number {
@@ -108,6 +109,7 @@ export default /*css*/ `
     cursor: pointer;
     padding: 0.25em;
     box-sizing: border-box;
+    text-transform: capitalize;
   }
 
   .cal-cell--disabled {

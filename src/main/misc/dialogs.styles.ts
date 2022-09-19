@@ -65,7 +65,7 @@ export default css`
   }
 
   .icon {
-    font-size: var(--sl-font-size-large);
+    font-size: var(--sl-font-size-x-large);
   }
 
   .icon.normal {

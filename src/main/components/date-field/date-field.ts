@@ -44,7 +44,7 @@ export class DateField extends Component {
   label = '';
 
   @prop(Attrs.boolean, true)
-  required = true;
+  required = false;
 
   @prop(Attrs.boolean, true)
   disabled = false;
@@ -118,8 +118,9 @@ export class DateField extends Component {
         <sl-dropdown
           class="popup"
           placement="bottom-start"
-          distance=${3}
-          skidding=${0}
+          distance=${2}
+          skidding=${2}
+          hoist
           ${ref(this._dropdownRef)}
         >
           <sl-input
@@ -156,6 +157,7 @@ export class DateField extends Component {
             <div class="popup-footer">
               <sl-button
                 variant="text"
+                size="small"
                 class="button"
                 @click=${this._onClearClick}
                 >Clear</sl-button
@@ -163,12 +165,19 @@ export class DateField extends Component {
               <sl-button
                 variant="text"
                 class="button"
+                size="small"
                 @click=${this._onCancelClick}
-                >Cancel</sl-button
               >
-              <sl-button variant="text" class="button" @click=${this._onOkClick}
-                >OK</sl-button
+                Cancel
+              </sl-button>
+              <sl-button
+                variant="text"
+                class="button"
+                size="small"
+                @click=${this._onOkClick}
               >
+                OK
+              </sl-button>
             </div>
           </div>
         </sl-dropdown>

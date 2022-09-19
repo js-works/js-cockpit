@@ -92,6 +92,9 @@ class DatePicker extends LitElement {
   @property({ converter: dateAttributeConverter, attribute: 'max-date' })
   maxDate: Date | null = null;
 
+  @property({ type: String, reflect: true })
+  lang = '';
+
   private _localize = new LocalizeController(this);
 
   private _datePicker = new DatePickerController(this, {
@@ -130,7 +133,6 @@ class DatePicker extends LitElement {
     );
 
     return html`
-      ${Date.now()}
       <div class="cal-base cal-base--type-${typeSnakeCase}">
         <input class="cal-input" ${ref(this._inputRef)} />
         ${when(

@@ -1,13 +1,11 @@
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { FocusTrap } from '@a11y/focus-trap';
 import { Form } from '../components/form/form';
 import { Message } from '../components/message/message';
 import { TextField } from '../components/text-field/text-field';
-
-import { html, render, TemplateResult } from 'lit';
+import { html, render, when, TemplateResult } from '../utils/lit';
 import { I18nController } from '../i18n/i18n';
 import { I18nFacade } from '../i18n/i18n';
 
@@ -43,7 +41,7 @@ void FocusTrap;
 
 type DialogConfig<T> = {
   type: 'normal' | 'success' | 'warning' | 'danger';
-  icon: string;
+  icon: string | null;
   title: string;
   message: string;
   width?: string | null;
@@ -355,7 +353,10 @@ function showDialog<T = void>(
         <focus-trap>
           <sl-dialog open class="dialog">
             <div slot="label" class="header">
-              <sl-icon class="icon"></sl-icon>
+              ${when(
+                params.icon !== null,
+                () => html`<sl-icon class="icon"></sl-icon>`
+              )}
               <div class="title"></div>
             </div>
             <div class="message"></div>
@@ -422,9 +423,11 @@ function showDialog<T = void>(
     emitResult(params.defaultResult);
   });
 
-  const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!;
-  icon.classList.add(`${params.type}`);
-  icon.src = params.icon;
+  if (params.icon) {
+    const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!;
+    icon.classList.add(`${params.type}`);
+    icon.src = params.icon;
+  }
 
   setText(dialogStyles.toString(), 'style');
 

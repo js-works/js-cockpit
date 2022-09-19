@@ -19,6 +19,7 @@ export default css`
     box-shadow: var(--sl-shadow-large);
     width: 18rem;
     border-radius: 0 0 4px 4px;
+    background-color: var(--sl-color-neutral-0);
   }
 
   .popup-footer {

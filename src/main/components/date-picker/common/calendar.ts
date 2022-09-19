@@ -127,7 +127,7 @@ class Calendar {
 
         if (cellDay > dayCountOfCurrMonth) {
           cellDay = cellDay - dayCountOfCurrMonth;
-          cellMonth = month === 11 ? 1 : month + 1;
+          cellMonth = month === 11 ? 0 : month + 1;
           cellYear = month === 11 ? year + 1 : year;
           adjacent = true;
         } else {

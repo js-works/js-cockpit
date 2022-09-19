@@ -62,7 +62,7 @@ class TextField extends Component {
   private _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._i18n.getLocale(),
-    [FieldCheckers.required((value) => !!value)]
+    [FieldCheckers.required((value) => !this.required || !!value)]
   );
 
   private _formField = new FormFieldController(this, {

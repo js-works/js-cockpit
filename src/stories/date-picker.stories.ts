@@ -1,5 +1,5 @@
-import { elem, Component } from '../main/utils/components';
-import { css, html, when } from '../main/utils/lit';
+import { elem, prop, Component } from '../main/utils/components';
+import { createRef, css, html, ref, when } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
 import { DatePicker, ThemeProvider } from 'js-cockpit';
 import { sharedTheme } from './shared/shared-theme';
@@ -28,6 +28,10 @@ const styles = css`
     flex-direction: column;
     gap: 4px;
   }
+
+  .mode-selector {
+    min-width: 12rem;
+  }
 `;
 
 @elem({
@@ -36,12 +40,15 @@ const styles = css`
   uses: [DatePicker, SlCheckbox, ThemeProvider]
 })
 class DatePickerDemo extends Component {
+  private _locale = 'en-US';
   private _selectionValue: string = '';
-  private _selectionMode = 'weeks';
+  private _selectionMode = 'date';
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
   private _showAdjacentDays = true;
+  private _fixedDayCount = false;
+  private _pickerRef = createRef<DatePicker>();
 
   private _onChange = (ev: Event) => {
     const target: any = ev.target;
@@ -51,7 +58,9 @@ class DatePickerDemo extends Component {
       return;
     }
 
-    if (subject === 'datePicker') {
+    if (subject === 'locale') {
+      this._locale = target.value;
+    } else if (subject === 'datePicker') {
       this._selectionValue = target.value;
     } else if (subject === 'selectionMode') {
       this._selectionMode = target.value;
@@ -79,17 +88,31 @@ class DatePickerDemo extends Component {
             ?disable-weekends=${this._disableWeekends}
             ?show-week-numbers=${this._showWeekNumbers}
             ?show-adjacent-days=${this._showAdjacentDays}
+            ?fixed-day-count=${this._fixedDayCount}
+            lang=${this._locale}
           ></cp-date-picker>
-          <div>Selection: ${this._selectionValue}</div>
+          <div>Selection:</div>
+          <div>${this._selectionValue}</div>
         </div>
         <div class="second-column">
+          <sl-select label="Locale" data-subject="locale" value=${this._locale}>
+            <sl-menu-item value="en-US">en-US</sl-menu-item>
+            <sl-menu-item value="en-GB">en-GB</sl-menu-item>
+            <sl-menu-item value="es-ES">es-ES</sl-menu-item>
+            <sl-menu-item value="fr-FR">fr-FR</sl-menu-item>
+            <sl-menu-item value="de-DE">de-DE</sl-menu-item>
+            <sl-menu-item value="it-IT">it-IT</sl-menu-item>
+            <sl-menu-item value="ar-SA">ar-SA</sl-menu-item>
+          </sl-select>
           <sl-select
+            class="mode-selector"
             data-subject="selectionMode"
             label="Selection mode"
             value=${this._selectionMode}
           >
             <sl-menu-item value="date">date</sl-menu-item>
             <sl-menu-item value="dates">dates</sl-menu-item>
+            <sl-menu-item value="dateRange">dateRange</sl-menu-item>
             <sl-menu-item value="dateTime">dateTime</sl-menu-item>
             <sl-menu-item value="time">time</sl-menu-item>
             <sl-menu-item value="week">week</sl-menu-item>
@@ -100,7 +123,14 @@ class DatePickerDemo extends Component {
             <sl-menu-item value="years">years</sl-menu-item>
           </sl-select>
           ${when(
-            this._selectionMode !== 'time',
+            [
+              'date',
+              'dates',
+              'dateRange',
+              'dateTime',
+              'week',
+              'weeks'
+            ].includes(this._selectionMode),
             () => html`
               <sl-checkbox
                 data-subject="showAdjacentDays"
@@ -126,6 +156,24 @@ class DatePickerDemo extends Component {
               >
                 show week numbers
               </sl-checkbox>
+              <sl-checkbox
+                data-subject="fixedDayCount"
+                ?checked=${this._fixedDayCount}
+              >
+                fixed day count
+              </sl-checkbox>
+              <cp-date-field
+                label="Min. date"
+                show-adjacent-days
+                show-week-numbers
+              >
+              </cp-date-field>
+              <cp-date-field
+                label="Max. date"
+                show-adjacent-days
+                show-week-numbers
+              >
+              </cp-date-field>
             `
           )}
         </div>
