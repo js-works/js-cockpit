@@ -146,7 +146,7 @@ class DatePicker extends LitElement {
                   () => html`&#x1F862`
                 )}
               </a>
-              <div class="cal-title-container">${this._renderTitle()}</div>
+              ${this._renderTitle()}
               <a class="cal-next" data-subject="next" part="next-button">
                 ${when(
                   this._localize.dir() === 'ltr',

@@ -26,13 +26,6 @@ export default /*css*/ `
     display: flex;
   }
 
-  .cal-title-container {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-  }
-
   .cal-title,
   .cal-prev,
   .cal-next {
@@ -42,6 +35,8 @@ export default /*css*/ `
   .cal-title {
     padding-left: 0.75em;
     padding-right: 0.75em;
+    text-align: center;
+    flex-grow: 1;
   }
 
   .cal-title:not(.cal-title--disabled),
