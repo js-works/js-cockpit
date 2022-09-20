@@ -14,6 +14,16 @@ const colorSecondary200 = 'var(--sl-color-orange-200)';
 
 const font = 'var(--sl-font-sans)';
 
+const sliderThumbBackgroundColor = 'var(--sl-color-neutral-0)';
+const sliderThumbBorderColor = 'var(--sl-color-neutral-400)';
+const sliderThumbBorderWidth = '1px';
+const sliderThumbBackgroundColorHover = sliderThumbBackgroundColor;
+const sliderThumbBorderColorHover = 'var(--sl-color-neutral-1000)';
+const sliderThumbBackgroundColorFocus = 'var(--sl-color-primary-600)';
+const sliderThumbBorderColorFocus = 'var(--sl-color-primary-600)';
+const sliderTrackHeight = '0.75px';
+const sliderTrackColor = 'var(--sl-color-neutral-400)';
+
 export default /*css*/ ` 
   :host {
     display: inline-block;
@@ -171,7 +181,6 @@ export default /*css*/ `
     background-color: ${colorPrimary500} !important;
   }
 
-
   .cal-week-number {
     display: flex;
     align-items: center;
@@ -210,13 +219,14 @@ export default /*css*/ `
   /* time sliders */
 
   input[type="range"] {
+    -webkit-appearance: none;
     appearance: none;
     outline: none;
     margin: 0.75em 0;
     width: 100%;
-    height: 0.125rem;
+    height: ${sliderTrackHeight};
     border-radius: 2px;
-    background-image: linear-gradient(#d0d0d0, #d0d0d0);
+    background-image: linear-gradient(${sliderTrackColor}, ${sliderTrackColor});
     background-size: 100% 100%;
     background-repeat: no-repeat;
     box-sizing: border-box;
@@ -225,23 +235,48 @@ export default /*css*/ `
 
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
+    appearance: none;
+    border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
     border-radius: 4px;
-    background: white;
-    border: 2px solid #ddd;
+    background-color: ${sliderThumbBackgroundColor};
+    border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 2px solid red;
+    height: 1.25em;
+    width: 1.25em;
+    border-radius: 4px;
+    background-color: ${sliderThumbBackgroundColor};
+    border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    border-color: #aaa;
+    background-color: ${sliderThumbBackgroundColorHover};
+    border-color: ${sliderThumbBorderColorHover};
+  }
+  
+  input[type="range"]::-moz-range-thumb:hover {
+    background-color: ${sliderThumbBackgroundColorHover};
+    border-color: ${sliderThumbBorderColorHover};
   }
   
   input[type="range"]:focus::-webkit-slider-thumb {
-    background-color: ${colorPrimary400};
-    border-color: ${colorPrimary500};
+    background-color: ${sliderThumbBackgroundColorFocus};
+    border-color: ${sliderThumbBorderColorFocus};
+  }
+  
+  input[type="range"]:focus::-moz-range-thumb {
+    background-color: ${sliderThumbBackgroundColorFocus};
+    border-color: ${sliderThumbBorderColorFocus};
   }
 
-  input[type=range]::-webkit-slider-runnable-track  {
+  input[type="range"]::-webkit-slider-runnable-track,
+  input[type="range"]::-moz-range-track {
     -webkit-appearance: none;
     box-shadow: none;
     border: none;
