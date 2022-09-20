@@ -81,7 +81,7 @@ class DatePickerController {
   #requestUpdate: () => void;
   #getLocale: () => string;
   #onChange: (() => void) | null;
-  #getNode: () => Node;
+  #getNode: () => HTMLElement | ShadowRoot;
   #notifyTimeout: unknown = null;
 
   constructor(
@@ -507,33 +507,31 @@ class DatePickerController {
 
   #clickPrevOrNext = (signum: number) => {
     const duration = 100;
-    const anim = (phase: 0 | 1) => {
-      const node = this.#getNode() as ShadowRoot;
-      const sheet = node.querySelector('.cal-sheet') as HTMLElement;
-      const offset = 100;
-      const opacityMin = 0;
+    const offset = 100;
+    const node = this.#getNode();
+    const sheet = node.querySelector('.cal-sheet') as HTMLElement;
+    const parent = sheet.parentElement!;
+    const oldParentOverflowValue = parent.style.overflow;
+    const oldSheetWidthValue = sheet.style.width;
+    const sheetWidth = sheet.offsetWidth;
 
-      /*
-      const keyframes =
-        phase === 0
-          ? [{ transform: `translateX(${signum}${offset}px)` }]
-          : [
-              { transform: `translateX(${-signum}${offset}px)` },
-              { transform: `translateX(0px)` }
-            ];
-      */
+    parent.style.overflow = 'hidden';
+    sheet.style.width = sheetWidth + 'px';
+    sheet.style.minWidth = sheetWidth + 'px';
+    sheet.style.maxWidth = sheetWidth + 'px';
 
+    const animate = (type: 'out' | 'in') => {
       const keyframes =
-        phase === 0
+        type === 'out'
           ? [
               {
-                opacity: opacityMin,
+                opacity: 0,
                 transform: `translateX(calc(${-signum}*${offset}px))`
               }
-            ] //
+            ]
           : [
               {
-                opacity: opacityMin,
+                opacity: 0,
                 transform: `translateX(calc(${signum}*${offset}px))`
               },
               {
@@ -547,8 +545,11 @@ class DatePickerController {
       });
     };
 
-    anim(0).finished.then(() => {
-      anim(1);
+    animate('out').finished.then(() => {
+      animate('in').finished.then(() => {
+        sheet.style.width = oldSheetWidthValue;
+        parent.style.overflow = oldParentOverflowValue;
+      });
 
       switch (this.#scene) {
         case 'month': {
