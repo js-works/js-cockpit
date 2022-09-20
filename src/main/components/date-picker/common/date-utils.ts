@@ -90,12 +90,20 @@ function getYearTitle(locale: string, year: number) {
   }).format(date);
 }
 
-function getDecadeTitle(locale: string, year: number) {
+function getDecadeTitle(
+  locale: string,
+  year: number,
+  yearCount = 10,
+  offset = 0
+) {
   const startYear = Math.floor(year / 10) * 10;
 
   return Intl.DateTimeFormat(locale, {
     year: 'numeric'
-  }).formatRange(new Date(startYear, 1, 1), new Date(startYear + 11, 1, 1));
+  }).formatRange(
+    new Date(startYear + offset, 1, 1),
+    new Date(startYear + offset + yearCount - 1, 1, 1)
+  );
 }
 
 function getLocaleInfo(locale: string): LocaleInfo {

@@ -178,7 +178,7 @@ class DatePickerController {
   }
 
   getDecadeTitle() {
-    return getDecadeTitle(this.#getLocale(), this.#activeYear);
+    return getDecadeTitle(this.#getLocale(), this.#activeYear, 12);
   }
 
   getCalendarWeek(date: Date) {
