@@ -506,25 +506,70 @@ class DatePickerController {
   };
 
   #clickPrevOrNext = (signum: number) => {
-    switch (this.#scene) {
-      case 'month': {
-        let n = this.#activeYear * 12 + this.#activeMonth + signum;
+    const duration = 100;
+    const anim = (phase: 0 | 1) => {
+      const node = this.#getNode() as ShadowRoot;
+      const sheet = node.querySelector('.cal-sheet') as HTMLElement;
+      const offset = 100;
+      const opacityMin = 0;
 
-        this.#activeYear = Math.floor(n / 12);
-        this.#activeMonth = n % 12;
-        break;
+      /*
+      const keyframes =
+        phase === 0
+          ? [{ transform: `translateX(${signum}${offset}px)` }]
+          : [
+              { transform: `translateX(${-signum}${offset}px)` },
+              { transform: `translateX(0px)` }
+            ];
+      */
+
+      const keyframes =
+        phase === 0
+          ? [
+              {
+                opacity: opacityMin,
+                transform: `translateX(calc(${-signum}*${offset}px))`
+              }
+            ] //
+          : [
+              {
+                opacity: opacityMin,
+                transform: `translateX(calc(${signum}*${offset}px))`
+              },
+              {
+                opacity: 1,
+                transform: `translateX(0px)`
+              }
+            ];
+
+      return sheet.animate(keyframes, {
+        duration
+      });
+    };
+
+    anim(0).finished.then(() => {
+      anim(1);
+
+      switch (this.#scene) {
+        case 'month': {
+          let n = this.#activeYear * 12 + this.#activeMonth + signum;
+
+          this.#activeYear = Math.floor(n / 12);
+          this.#activeMonth = n % 12;
+          break;
+        }
+
+        case 'year':
+          this.#activeYear += signum;
+          break;
+
+        case 'decade':
+          this.#activeYear += signum * 11;
+          break;
       }
 
-      case 'year':
-        this.#activeYear += signum;
-        break;
-
-      case 'decade':
-        this.#activeYear += signum * 11;
-        break;
-    }
-
-    this.#requestUpdate();
+      this.#requestUpdate();
+    });
   };
 
   #setSelectionMode = (mode: DatePickerController.SelectionMode) => {

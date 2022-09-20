@@ -9,6 +9,7 @@ export default /*css*/ `
     flex-direction: column;
     user-select: none;
     min-width: 20rem;
+    overflow: hidden; /* TODO!!! */
   }
 
   .cal-input {
@@ -29,7 +30,7 @@ export default /*css*/ `
   .cal-title,
   .cal-prev,
   .cal-next {
-    padding: 5px 0.4rem;
+    padding: 5px 0.75rem;
   }
 
   .cal-title {
