@@ -1,7 +1,7 @@
 import type { Translations } from '../../i18n/i18n';
 
 type Terms = Translations<{
-  'jsCockpit.datePicker': {
+  'jsCockpit.dateField': {
     cancel: string;
     clear: string;
     ok: string;

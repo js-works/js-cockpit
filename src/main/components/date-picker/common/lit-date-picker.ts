@@ -9,15 +9,15 @@ import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 
 // styles
-import baseDatePickerStyles from './base-date-picker.styles';
+import baseDatePickerStyles from './date-picker.base.styles';
 
 // === exports =======================================================
 
-export { LitBaseDatePicker };
+export { LitDatePicker };
 
 // === exported types ==========================================
 
-namespace LitBaseDatePicker {
+namespace LitDatePicker {
   export type SelectionMode = DatePickerController.SelectionMode;
 }
 
@@ -49,7 +49,7 @@ const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
 
 // === Calendar ======================================================
 
-abstract class LitBaseDatePicker extends LitElement {
+abstract class LitDatePicker extends LitElement {
   static styles = unsafeCSS(baseDatePickerStyles) as CSSResultGroup;
 
   @property({ type: String })
@@ -62,7 +62,7 @@ abstract class LitBaseDatePicker extends LitElement {
   }
 
   @property({ type: String, attribute: 'selection-mode' })
-  selectionMode: LitBaseDatePicker.SelectionMode = 'date';
+  selectionMode: LitDatePicker.SelectionMode = 'date';
 
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
@@ -92,7 +92,7 @@ abstract class LitBaseDatePicker extends LitElement {
   lang = '';
 
   @property({ type: String, reflect: true })
-  dir = 'ltr';
+  dir = '';
 
   private _datePicker = new DatePickerController(this, {
     getLocale: () => this._getLocale(),
@@ -170,22 +170,24 @@ abstract class LitBaseDatePicker extends LitElement {
           () => html`
             <div class="cal-time-selector">
               <div class="cal-time">${this._renderTime()}</div>
-              <sl-range
+              <input
+                type="range"
                 class="cal-hour-slider"
                 value=${this._datePicker.getActiveHour()}
                 min="0"
                 max="23"
                 tooltip="none"
                 data-subject="hours"
-              ></sl-range>
-              <sl-range
+              />
+              <input
+                type="range"
                 class="cal-minute-slider"
                 value=${this._datePicker.getActiveMinute()}
                 min="0"
                 max="59"
                 tooltip="none"
                 data-subject="minutes"
-              ></sl-range>
+              />
             </div>
           `
         )}

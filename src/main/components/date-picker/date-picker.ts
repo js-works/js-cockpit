@@ -1,11 +1,11 @@
 import { LocalizeController } from '@shoelace-style/localize';
-import { LitBaseDatePicker } from './common/lit-base-date-picker';
+import { LitDatePicker } from './common/lit-date-picker';
 import { customElement } from 'lit/decorators';
 import datePickerStyles from './date-picker.styles';
 
 @customElement('cp-date-picker')
-export class DatePicker extends LitBaseDatePicker {
-  static styles = [LitBaseDatePicker.styles, datePickerStyles];
+export class DatePicker extends LitDatePicker {
+  static styles = [LitDatePicker.styles, datePickerStyles];
 
   private _localize = new LocalizeController(this);
 

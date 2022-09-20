@@ -98,6 +98,7 @@ function getDecadeTitle(
 ) {
   const startYear = Math.floor(year / 10) * 10;
 
+  /** @ts-ignore */
   return Intl.DateTimeFormat(locale, {
     year: 'numeric'
   }).formatRange(

@@ -44,7 +44,7 @@
     "esbuild-sass-plugin": "^2.3.2",
     "faker": "5.5.3",
     "focus-trap": "^7.0.0",
-    "preact": "^10.10.6",
+    "preact": "^10.11.0",
     "prettier": "^2.7.1",
     "raw-loader": "^4.0.2",
     "remixicon": "^2.5.0",

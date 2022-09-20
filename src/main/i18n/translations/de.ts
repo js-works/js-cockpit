@@ -2,7 +2,7 @@ import { addToDict, FullTranslations } from '../i18n';
 
 const translations: FullTranslations<'jsCockpit'> = {
   de: {
-    'jsCockpit.datePicker': {
+    'jsCockpit.dateField': {
       cancel: 'Abbrechen',
       clear: 'Löschen',
       ok: 'OK'

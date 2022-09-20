@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import datePickerStyles from './common/base-date-picker.styles';
 
 export default css`
   :host {
