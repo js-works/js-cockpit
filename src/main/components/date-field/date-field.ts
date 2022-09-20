@@ -9,7 +9,7 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
-import { DatePicker } from '../../components/date-picker/date-picker';
+import { DatePicker } from '../date-picker/date-picker';
 
 // styles
 import dateFieldStyles from './date-field.styles';

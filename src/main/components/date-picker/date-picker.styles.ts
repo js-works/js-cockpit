@@ -1,9 +1,7 @@
-import { css, unsafeCSS } from 'lit';
-import datePickerStyles from './common/date-picker.base.styles';
+import { css } from 'lit';
+import datePickerStyles from './common/base-date-picker.styles';
 
 export default css`
-  ${unsafeCSS(datePickerStyles)}
-
   :host {
     font-family: var(--sl-font-sans);
   }
