@@ -49,7 +49,7 @@ export default css`
     color: var(--sl-color-neutral-800);
   }
 
-  .cal-cell--current {
+  .cal-cell--current.cal-cell--current-highlighted {
     background-color: var(--sl-color-orange-100);
   }
 

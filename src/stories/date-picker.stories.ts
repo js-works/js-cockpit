@@ -43,12 +43,12 @@ class DatePickerDemo extends Component {
   private _locale = 'en-US';
   private _selectionValue: string = '';
   private _selectionMode = 'date';
+  private _highlightToday = true;
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
   private _showAdjacentDays = true;
   private _fixedDayCount = false;
-  private _pickerRef = createRef<DatePicker>();
 
   private _onChange = (ev: Event) => {
     const target: any = ev.target;
@@ -84,6 +84,7 @@ class DatePickerDemo extends Component {
           <cp-date-picker
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
+            ?highlight-today=${this._highlightToday}
             ?highlight-weekends=${this._highlightWeekends}
             ?disable-weekends=${this._disableWeekends}
             ?show-week-numbers=${this._showWeekNumbers}
@@ -138,6 +139,12 @@ class DatePickerDemo extends Component {
                 ?checked=${this._showAdjacentDays}
               >
                 show adjacent days
+              </sl-checkbox>
+              <sl-checkbox
+                data-subject="highlightToday"
+                ?checked=${this._highlightToday}
+              >
+                highlight today
               </sl-checkbox>
               <sl-checkbox
                 data-subject="highlightWeekends"

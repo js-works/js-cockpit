@@ -77,6 +77,9 @@ class DatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'show-adjacent-days' })
   showAdjacentDays = false;
 
+  @property({ type: Boolean, attribute: 'highlight-today' })
+  highlightToday = false;
+
   @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;
 
@@ -252,6 +255,7 @@ class DatePicker extends LitElement {
   }
 
   private _renderDayCell(dayData: Calendar.DayData) {
+    const currentHighlighted = this.highlightToday && dayData.current;
     const highlighted = this.highlightWeekends && dayData.weekend;
 
     if (!this.showAdjacentDays && dayData.adjacent) {
@@ -273,6 +277,7 @@ class DatePicker extends LitElement {
           'cal-cell--disabled': dayData.disabled,
           'cal-cell--adjacent': dayData.adjacent,
           'cal-cell--current': dayData.current,
+          'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--highlighted': highlighted,
           'cal-cell--selected': selected
         })}
@@ -306,12 +311,15 @@ class DatePicker extends LitElement {
       monthData.month
     );
 
+    const currentHighlighted = monthData.current && this.highlightToday;
+
     return html`
       <div
         class=${classMap({
           'cal-cell': true,
           'cal-cell--disabled': monthData.disabled,
           'cal-cell--current': monthData.current,
+          'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         })}
         data-year=${monthData.year}
@@ -339,6 +347,7 @@ class DatePicker extends LitElement {
 
   private _renderYearCell(yearData: Calendar.YearData) {
     const selected = this._datePicker.hasSelectedYear(yearData.year);
+    const currentHighlighted = this.highlightToday && yearData.current;
 
     return html`
       <div
@@ -346,6 +355,7 @@ class DatePicker extends LitElement {
           'cal-cell': true,
           'cal-cell--disabled': yearData.disabled,
           'cal-cell--current': yearData.current,
+          'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         })}
         data-year=${yearData.year}
