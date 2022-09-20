@@ -1,7 +1,9 @@
+import { css } from 'lit';
+import { customElement } from 'lit/decorators';
 import { LocalizeController } from '@shoelace-style/localize';
 import { LitDatePicker } from './common/lit-date-picker';
-import { customElement } from 'lit/decorators';
-import datePickerStyles from './date-picker.styles';
+
+const datePickerStyles = css``;
 
 @customElement('cp-date-picker')
 export class DatePicker extends LitDatePicker {

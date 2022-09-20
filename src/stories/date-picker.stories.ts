@@ -42,7 +42,7 @@ const styles = css`
 class DatePickerDemo extends Component {
   private _locale = 'en-US';
   private _selectionValue: string = '';
-  private _selectionMode = 'date';
+  private _selectionMode = 'dateTime';
   private _highlightToday = true;
   private _highlightWeekends = true;
   private _disableWeekends = false;
