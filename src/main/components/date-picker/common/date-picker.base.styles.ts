@@ -58,7 +58,6 @@ export default /*css*/ `
     flex-grow: 1;
     padding: 0.5em;
     min-height: 13rem;
-    box-sizing: border-box;
   }
 
   .cal-sheet--month {

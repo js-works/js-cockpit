@@ -512,13 +512,8 @@ class DatePickerController {
     const sheet = node.querySelector('.cal-sheet') as HTMLElement;
     const parent = sheet.parentElement!;
     const oldParentOverflowValue = parent.style.overflow;
-    const oldSheetWidthValue = sheet.style.width;
-    const sheetWidth = sheet.offsetWidth;
 
     parent.style.overflow = 'hidden';
-    sheet.style.width = sheetWidth + 'px';
-    sheet.style.minWidth = sheetWidth + 'px';
-    sheet.style.maxWidth = sheetWidth + 'px';
 
     const animate = (type: 'out' | 'in') => {
       const keyframes =
@@ -536,7 +531,7 @@ class DatePickerController {
               },
               {
                 opacity: 1,
-                transform: `translateX(0px)`
+                transform: `translateX(0)`
               }
             ];
 
@@ -547,7 +542,6 @@ class DatePickerController {
 
     animate('out').finished.then(() => {
       animate('in').finished.then(() => {
-        sheet.style.width = oldSheetWidthValue;
         parent.style.overflow = oldParentOverflowValue;
       });
 
