@@ -1,35 +1,39 @@
-const colorPrimary100 = 'var(--sl-color-primary-100)';
-const colorPrimary300 = 'var(--sl-color-primary-300)';
-const colorPrimary400 = 'var(--sl-color-primary-400)';
-const colorPrimary500 = 'var(--sl-color-primary-500)';
-const colorPrimary600 = 'var(--sl-color-primary-600)';
-const colorNeutral000 = 'var(--sl-color-neutral-0)';
-const colorNeutral050 = 'var(--sl-color-neutral-50)';
-const colorNeutral100 = 'var(--sl-color-neutral-100)';
-const colorNeutral200 = 'var(--sl-color-neutral-200)';
-const colorNeutral300 = 'var(--sl-color-neutral-300)';
-const colorNeutral400 = 'var(--sl-color-neutral-400)';
-const colorNeutral800 = 'var(--sl-color-neutral-800)';
-const colorSecondary200 = 'var(--sl-color-orange-200)';
+const fontFamily = 'var(--sl-font-sans)';
+const color = 'var(--sl-color-neutral-1000)';
+const backgroundColor = 'var(--sl-color-neutral-0)';
 
-const font = 'var(--sl-font-sans)';
+const headerColor = 'var(--sl-color-neutral-0)';
+const headerBackgroundColor = 'var(--sl-color-primary-500)';
+const headerButtonBackgroundColorHover = 'var(--sl-color-primary-600)';
+const headerButtonBackgroundColorActive = 'var(--sl-color-primary-700)';
+
+const cellHover = 'var(--sl-color-primary-100)';
+const cellDisabledColor = 'var(--sl-color-neutral-300)';
+const cellHighlightedBackgroundColor = 'var(-sl-color-neutral-50)';
+const cellAdjacentColor = 'var(--sl-color-neutral-400)';
+const cellAdjacentDisabledColor = 'var(--sl-color-neutral-200)';
+const cellAdjacentSelected = 'var(--sl-color-neutral-800)';
+const cellCurrentHighlightedBackgroundColor = 'var(--sl-color-orange-200)';
+const cellSelectedBackgroundColor = 'var(--sl-color-primary-600)';
+const cellSelectedHoverBackgroundColor = 'var(--sl-color-primary-500)';
 
 const sliderThumbBackgroundColor = 'var(--sl-color-neutral-0)';
 const sliderThumbBorderColor = 'var(--sl-color-neutral-400)';
 const sliderThumbBorderWidth = '1px';
+const sliderThumbBorderRadius = '4px';
 const sliderThumbBackgroundColorHover = sliderThumbBackgroundColor;
 const sliderThumbBorderColorHover = 'var(--sl-color-neutral-1000)';
 const sliderThumbBackgroundColorFocus = 'var(--sl-color-primary-600)';
 const sliderThumbBorderColorFocus = 'var(--sl-color-primary-600)';
-const sliderTrackHeight = '0.75px';
 const sliderTrackColor = 'var(--sl-color-neutral-400)';
 
 export default /*css*/ ` 
   :host {
     display: inline-block;
-    font-family: ${font};
+    color: ${color};
+    background-color: ${backgroundColor}; 
+    font-family: ${fontFamily};
   }
-
 
   .cal-base {
     position: relative;
@@ -37,7 +41,6 @@ export default /*css*/ `
     flex-direction: column;
     user-select: none;
     min-width: 20rem;
-    background-color: ${colorNeutral000}; 
   }
 
   .cal-input {
@@ -53,8 +56,8 @@ export default /*css*/ `
 
   .cal-header {
     display: flex;
-    color: ${colorNeutral000};
-    background-color: ${colorPrimary500};
+    color: ${headerColor};
+    background-color: ${headerBackgroundColor};
   }
 
   .cal-title,
@@ -80,13 +83,13 @@ export default /*css*/ `
   .cal-prev:not(.cal-prev--disabled):hover,
   .cal-next:not(.cal-next--disabled):hover {
     cursor: pointer;
-    background-color: ${colorPrimary600};
+    background-color: ${headerButtonBackgroundColorHover};
   }
 
   .cal-title:not(.cal-title---disabled):active,
   .cal-prev:not(.cal-prev--disabled):active,
   .cal-next:not(.cal-next--disabled):active {
-    opacity: 75%;
+    background-color: ${headerButtonBackgroundColorActive};
   }
   
   .cal-sheet {
@@ -146,39 +149,39 @@ export default /*css*/ `
 
   .cal-cell--disabled {
     cursor: not-allowed;
-    color: ${colorNeutral300};
+    color: ${cellDisabledColor};
   }
   
   .cal-cell--highlighted {
-    background-color: ${colorNeutral050};
+    background-color: ${cellHighlightedBackgroundColor};
   }
   
   .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
-    color: ${colorNeutral400}
+    color: ${cellAdjacentColor}
   }
   
   .cal-cell--adjacent.cal-cell--disabled {
-    color: ${colorNeutral200};
+    color: ${cellAdjacentDisabledColor};
   }
   
   .cal-cell--adjacent.cal-cell--selected:not(:hover) {
-    color: ${colorNeutral800};
+    color: ${cellAdjacentSelected};
   }
   
-  .cal-cell--current.cal-cell--current-highlighted {
-    background-color: ${colorSecondary200};
+  .cal-cell--current-highlighted {
+    background-color: ${cellCurrentHighlightedBackgroundColor};
   }
   
   .cal-cell:hover:not(.cal-cell--disabled) {
-    background-color: ${colorPrimary100};
+    background-color: ${cellHover}
   }
   
   .cal-cell--selected {
-    background-color: ${colorPrimary600};
+    background-color: ${cellSelectedBackgroundColor};
   }
 
   .cal-cell--selected:hover {
-    background-color: ${colorPrimary500} !important;
+    background-color: ${cellSelectedHoverBackgroundColor} !important;
   }
 
   .cal-week-number {
@@ -204,7 +207,7 @@ export default /*css*/ `
     align-self: center;
     margin: 0 0.5em;
     font-size: 125%;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${font};
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${fontFamily};
     text-align: center;
   }
 
@@ -222,12 +225,13 @@ export default /*css*/ `
     -webkit-appearance: none;
     appearance: none;
     outline: none;
-    margin: 0.75em 0;
+    margin: 0.5em 0;
     width: 100%;
-    height: ${sliderTrackHeight};
-    border-radius: 2px;
+    height: 0.75px; 
+    padding: 0.5em 0;
     background-image: linear-gradient(${sliderTrackColor}, ${sliderTrackColor});
-    background-size: 100% 100%;
+    background-position: 0 50%;
+    background-size: 100% 1px;
     background-repeat: no-repeat;
     box-sizing: border-box;
     cursor: pointer;
@@ -239,7 +243,7 @@ export default /*css*/ `
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: 4px;
+    border-radius: ${sliderThumbBorderRadius};
     background-color: ${sliderThumbBackgroundColor};
     border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
   }
@@ -250,7 +254,7 @@ export default /*css*/ `
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: 4px;
+    border-radius: ${sliderThumbBorderRadius};
     background-color: ${sliderThumbBackgroundColor};
     border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
   }
