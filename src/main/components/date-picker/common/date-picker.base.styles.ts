@@ -1,19 +1,58 @@
+type Vars = {
+  fontFamily: string;
+  fontSize: string;
+  color: string;
+  backgroundColor: string;
+  navColor: string;
+  navBackgroundColor: string;
+  navHoverBackgroundColor: string;
+  navActiveBackgroundColor: string;
+  navElevatedColor: string;
+  navElevatedBackgroundColor: string;
+  navElevatedHoverBackgroundColor: string;
+  navElevatedActiveBackgroundColor: string;
+  cellHoverBackgroundColor: string;
+  cellDisabledColor: string;
+  cellHighlightedBackgroundColor: string;
+  cellAdjacentColor: string;
+  cellAdjacentDisabledColor: string;
+  cellAdjacentSelectedColor: string;
+  cellCurrentHighlightedBackgroundColor: string;
+  cellSelectedBackgroundColor: string;
+  cellSelectedHoverBackgroundColor: string;
+  sliderThumbBackgroundColor: string;
+  sliderThumbBorderColor: string;
+  sliderThumbBorderWidth: string;
+  sliderThumbBorderRadius: string;
+  sliderThumbHoverBackgroundColor: string;
+  sliderThumbHoverBorderColor: string;
+  sliderThumbFocusBackgroundColor: string;
+  sliderThumbFocusBorderColor: string;
+  sliderTrackColor: string;
+};
+
 const fontFamily = 'var(--sl-font-sans)';
+const fontSize = 'var(--sl-font-size-medium)';
 const color = 'var(--sl-color-neutral-1000)';
-const backgroundColor = 'var(--sl-color-neutral-0)';
+const backgroundColor = 'transparent';
 
-const headerColor = 'var(--sl-color-neutral-0)';
-const headerBackgroundColor = 'var(--sl-color-primary-500)';
-const headerButtonBackgroundColorHover = 'var(--sl-color-primary-600)';
-const headerButtonBackgroundColorActive = 'var(--sl-color-primary-700)';
+const navColor = 'var(--sl-color-neutral-1000)';
+const navBackgroundColor = 'transparent';
+const navHoverBackgroundColor = 'var(--sl-color-primary-300)';
+const navActiveBackgroundColor = 'var(--sl-color-primary-400)';
 
-const cellHover = 'var(--sl-color-primary-100)';
+const navElevatedColor = 'var(--sl-color-neutral-0)';
+const navElevatedBackgroundColor = 'var(--sl-color-primary-500)';
+const navElevatedHoverBackgroundColor = 'var(--sl-color-primary-600)';
+const navElevatedActiveBackgroundColor = 'var(--sl-color-primary-700)';
+
+const cellHoverBackgroundColor = 'var(--sl-color-primary-100)';
 const cellDisabledColor = 'var(--sl-color-neutral-300)';
 const cellHighlightedBackgroundColor = 'var(-sl-color-neutral-50)';
 const cellAdjacentColor = 'var(--sl-color-neutral-400)';
 const cellAdjacentDisabledColor = 'var(--sl-color-neutral-200)';
-const cellAdjacentSelected = 'var(--sl-color-neutral-800)';
-const cellCurrentHighlightedBackgroundColor = 'var(--sl-color-orange-200)';
+const cellAdjacentSelectedColor = 'var(--sl-color-neutral-800)';
+const cellCurrentHighlightedBackgroundColor = 'var(--sl-color-orange-500)';
 const cellSelectedBackgroundColor = 'var(--sl-color-primary-600)';
 const cellSelectedHoverBackgroundColor = 'var(--sl-color-primary-500)';
 
@@ -21,10 +60,10 @@ const sliderThumbBackgroundColor = 'var(--sl-color-neutral-0)';
 const sliderThumbBorderColor = 'var(--sl-color-neutral-400)';
 const sliderThumbBorderWidth = '1px';
 const sliderThumbBorderRadius = '4px';
-const sliderThumbBackgroundColorHover = sliderThumbBackgroundColor;
-const sliderThumbBorderColorHover = 'var(--sl-color-neutral-1000)';
-const sliderThumbBackgroundColorFocus = 'var(--sl-color-primary-600)';
-const sliderThumbBorderColorFocus = 'var(--sl-color-primary-600)';
+const sliderThumbHoverBackgroundColor = sliderThumbBackgroundColor;
+const sliderThumbHoverBorderColor = 'var(--sl-color-neutral-1000)';
+const sliderThumbFocusBackgroundColor = 'var(--sl-color-primary-600)';
+const sliderThumbFocusBorderColor = 'var(--sl-color-primary-600)';
 const sliderTrackColor = 'var(--sl-color-neutral-400)';
 
 export default /*css*/ ` 
@@ -33,6 +72,7 @@ export default /*css*/ `
     color: ${color};
     background-color: ${backgroundColor}; 
     font-family: ${fontFamily};
+    font-size: ${fontSize}
   }
 
   .cal-base {
@@ -54,10 +94,15 @@ export default /*css*/ `
     z-index: -1;
   }
 
-  .cal-header {
+  .cal-nav {
     display: flex;
-    color: ${headerColor};
-    background-color: ${headerBackgroundColor};
+    color: ${navColor};
+    background-color: ${navBackgroundColor};
+  }
+  
+  .cal-nav--elevated {
+    color: ${navElevatedColor};
+    background-color: ${navElevatedBackgroundColor};
   }
 
   .cal-title,
@@ -82,14 +127,25 @@ export default /*css*/ `
   .cal-title:not(.cal-title--disabled):hover,
   .cal-prev:not(.cal-prev--disabled):hover,
   .cal-next:not(.cal-next--disabled):hover {
-    cursor: pointer;
-    background-color: ${headerButtonBackgroundColorHover};
+    background-color: ${navHoverBackgroundColor};
   }
 
-  .cal-title:not(.cal-title---disabled):active,
+  .cal-title:not(.cal-title--disabled):active,
   .cal-prev:not(.cal-prev--disabled):active,
   .cal-next:not(.cal-next--disabled):active {
-    background-color: ${headerButtonBackgroundColorActive};
+    background-color: ${navActiveBackgroundColor};
+  }
+  
+  .cal-nav--elevated .cal-title:not(.cal-title--disabled):hover,
+  .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):hover,
+  .cal-nav--elevated .cal-next:not(.cal-next--disabled):hover {
+    background-color: ${navElevatedHoverBackgroundColor};
+  }
+
+  .cal-nav--elevated .cal-title:not(.cal-title--disabled):active,
+  .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):active,
+  .cal-nav--elevated .cal-next:not(.cal-next--disabled):active {
+    background-color: ${navElevatedActiveBackgroundColor};
   }
   
   .cal-sheet {
@@ -165,7 +221,7 @@ export default /*css*/ `
   }
   
   .cal-cell--adjacent.cal-cell--selected:not(:hover) {
-    color: ${cellAdjacentSelected};
+    color: ${cellAdjacentSelectedColor};
   }
   
   .cal-cell--current-highlighted {
@@ -173,7 +229,7 @@ export default /*css*/ `
   }
   
   .cal-cell:hover:not(.cal-cell--disabled) {
-    background-color: ${cellHover}
+    background-color: ${cellHoverBackgroundColor}
   }
   
   .cal-cell--selected {
@@ -226,7 +282,6 @@ export default /*css*/ `
     appearance: none;
     outline: none;
     margin: 0.5em 0;
-    width: 100%;
     height: 0.75px; 
     padding: 0.5em 0;
     background-image: linear-gradient(${sliderTrackColor}, ${sliderTrackColor});
@@ -235,6 +290,7 @@ export default /*css*/ `
     background-repeat: no-repeat;
     box-sizing: border-box;
     cursor: pointer;
+    background-color: ${backgroundColor};
   }
 
   input[type="range"]::-webkit-slider-thumb {
@@ -260,23 +316,23 @@ export default /*css*/ `
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    background-color: ${sliderThumbBackgroundColorHover};
-    border-color: ${sliderThumbBorderColorHover};
+    background-color: ${sliderThumbHoverBackgroundColor};
+    border-color: ${sliderThumbHoverBorderColor};
   }
   
   input[type="range"]::-moz-range-thumb:hover {
-    background-color: ${sliderThumbBackgroundColorHover};
-    border-color: ${sliderThumbBorderColorHover};
+    background-color: ${sliderThumbHoverBackgroundColor};
+    border-color: ${sliderThumbHoverBorderColor};
   }
   
   input[type="range"]:focus::-webkit-slider-thumb {
-    background-color: ${sliderThumbBackgroundColorFocus};
-    border-color: ${sliderThumbBorderColorFocus};
+    background-color: ${sliderThumbFocusBackgroundColor};
+    border-color: ${sliderThumbFocusBorderColor};
   }
   
   input[type="range"]:focus::-moz-range-thumb {
-    background-color: ${sliderThumbBackgroundColorFocus};
-    border-color: ${sliderThumbBorderColorFocus};
+    background-color: ${sliderThumbFocusBackgroundColor};
+    border-color: ${sliderThumbFocusBorderColor};
   }
 
   input[type="range"]::-webkit-slider-runnable-track,

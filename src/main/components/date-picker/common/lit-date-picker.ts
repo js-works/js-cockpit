@@ -64,6 +64,9 @@ abstract class LitDatePicker extends LitElement {
   @property({ type: String, attribute: 'selection-mode' })
   selectionMode: LitDatePicker.SelectionMode = 'date';
 
+  @property({ type: Boolean, attribute: 'elevate-navigation' })
+  elevateNavigation = false;
+
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
@@ -146,7 +149,13 @@ abstract class LitDatePicker extends LitElement {
         ${when(
           this.selectionMode !== 'time',
           () => html`
-            <div class="cal-header" part="header">
+            <div
+              class=${classMap({
+                'cal-nav': true,
+                'cal-nav--elevated': this.elevateNavigation
+              })}
+              part="navigation"
+            >
               <a class="cal-prev" data-subject="prev" part="prev-button">
                 ${when(
                   this._getDirection() === 'ltr',

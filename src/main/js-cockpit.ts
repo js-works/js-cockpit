@@ -2,6 +2,7 @@
 export { ActionBar } from './components/action-bar/action-bar';
 export { AppLayout } from './components/app-layout/app-layout';
 export { Brand } from './components/brand/brand';
+export { Card } from './components/card/card';
 export { Cockpit } from './components/cockpit/cockpit';
 export { DataExplorer } from './components/data-explorer/data-explorer';
 export { DataForm } from './components/data-form/data-form';

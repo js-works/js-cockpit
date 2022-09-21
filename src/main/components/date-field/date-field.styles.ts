@@ -35,18 +35,6 @@ export default css`
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
   }
 
-  .date-picker::part(header) {
-    color: var(--sl-color-neutral-1000);
-    background-color: var(--sl-color-neutral-0);
-  }
-
-  .date-picker::part(prev-button):hover,
-  .date-picker::part(next-button):hover,
-  .date-picker::part(title):hover {
-    color: var(--sl-color-neutral-1000);
-    background-color: var(--sl-color-primary-200);
-  }
-
   .button::part(base) {
     margin: 0;
     height: auto;
