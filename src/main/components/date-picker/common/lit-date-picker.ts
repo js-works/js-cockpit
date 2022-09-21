@@ -1,4 +1,4 @@
-import { html, unsafeCSS, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import type { ComplexAttributeConverter, CSSResultGroup } from 'lit';
 import { property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
@@ -7,9 +7,6 @@ import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
-
-// styles
-import baseDatePickerStyles from './date-picker.base.styles';
 
 // === exports =======================================================
 
@@ -50,8 +47,6 @@ const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
 // === Calendar ======================================================
 
 abstract class LitDatePicker extends LitElement {
-  static styles = unsafeCSS(baseDatePickerStyles) as CSSResultGroup;
-
   @property({ type: String })
   get value() {
     return this._datePicker.getValue();

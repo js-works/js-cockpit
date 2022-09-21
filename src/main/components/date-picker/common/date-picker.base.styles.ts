@@ -1,4 +1,4 @@
-type Vars = {
+export type Tokens = {
   fontFamily: string;
   fontSize: string;
   color: string;
@@ -31,48 +31,14 @@ type Vars = {
   sliderTrackColor: string;
 };
 
-const fontFamily = 'var(--sl-font-sans)';
-const fontSize = 'var(--sl-font-size-medium)';
-const color = 'var(--sl-color-neutral-1000)';
-const backgroundColor = 'transparent';
-
-const navColor = 'var(--sl-color-neutral-1000)';
-const navBackgroundColor = 'transparent';
-const navHoverBackgroundColor = 'var(--sl-color-primary-300)';
-const navActiveBackgroundColor = 'var(--sl-color-primary-400)';
-
-const navElevatedColor = 'var(--sl-color-neutral-0)';
-const navElevatedBackgroundColor = 'var(--sl-color-primary-500)';
-const navElevatedHoverBackgroundColor = 'var(--sl-color-primary-600)';
-const navElevatedActiveBackgroundColor = 'var(--sl-color-primary-700)';
-
-const cellHoverBackgroundColor = 'var(--sl-color-primary-100)';
-const cellDisabledColor = 'var(--sl-color-neutral-300)';
-const cellHighlightedBackgroundColor = 'var(-sl-color-neutral-50)';
-const cellAdjacentColor = 'var(--sl-color-neutral-400)';
-const cellAdjacentDisabledColor = 'var(--sl-color-neutral-200)';
-const cellAdjacentSelectedColor = 'var(--sl-color-neutral-800)';
-const cellCurrentHighlightedBackgroundColor = 'var(--sl-color-orange-500)';
-const cellSelectedBackgroundColor = 'var(--sl-color-primary-600)';
-const cellSelectedHoverBackgroundColor = 'var(--sl-color-primary-500)';
-
-const sliderThumbBackgroundColor = 'var(--sl-color-neutral-0)';
-const sliderThumbBorderColor = 'var(--sl-color-neutral-400)';
-const sliderThumbBorderWidth = '1px';
-const sliderThumbBorderRadius = '4px';
-const sliderThumbHoverBackgroundColor = sliderThumbBackgroundColor;
-const sliderThumbHoverBorderColor = 'var(--sl-color-neutral-1000)';
-const sliderThumbFocusBackgroundColor = 'var(--sl-color-primary-600)';
-const sliderThumbFocusBorderColor = 'var(--sl-color-primary-600)';
-const sliderTrackColor = 'var(--sl-color-neutral-400)';
-
-export default /*css*/ ` 
+export function createStyles(t: Tokens) {
+  return /*css*/ ` 
   :host {
     display: inline-block;
-    color: ${color};
-    background-color: ${backgroundColor}; 
-    font-family: ${fontFamily};
-    font-size: ${fontSize}
+    color: ${t.color};
+    background-color: ${t.backgroundColor}; 
+    font-family: ${t.fontFamily};
+    font-size: ${t.fontSize}
   }
 
   .cal-base {
@@ -96,13 +62,13 @@ export default /*css*/ `
 
   .cal-nav {
     display: flex;
-    color: ${navColor};
-    background-color: ${navBackgroundColor};
+    color: ${t.navColor};
+    background-color: ${t.navBackgroundColor};
   }
   
   .cal-nav--elevated {
-    color: ${navElevatedColor};
-    background-color: ${navElevatedBackgroundColor};
+    color: ${t.navElevatedColor};
+    background-color: ${t.navElevatedBackgroundColor};
   }
 
   .cal-title,
@@ -127,25 +93,25 @@ export default /*css*/ `
   .cal-title:not(.cal-title--disabled):hover,
   .cal-prev:not(.cal-prev--disabled):hover,
   .cal-next:not(.cal-next--disabled):hover {
-    background-color: ${navHoverBackgroundColor};
+    background-color: ${t.navHoverBackgroundColor};
   }
 
   .cal-title:not(.cal-title--disabled):active,
   .cal-prev:not(.cal-prev--disabled):active,
   .cal-next:not(.cal-next--disabled):active {
-    background-color: ${navActiveBackgroundColor};
+    background-color: ${t.navActiveBackgroundColor};
   }
   
   .cal-nav--elevated .cal-title:not(.cal-title--disabled):hover,
   .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):hover,
   .cal-nav--elevated .cal-next:not(.cal-next--disabled):hover {
-    background-color: ${navElevatedHoverBackgroundColor};
+    background-color: ${t.navElevatedHoverBackgroundColor};
   }
 
   .cal-nav--elevated .cal-title:not(.cal-title--disabled):active,
   .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):active,
   .cal-nav--elevated .cal-next:not(.cal-next--disabled):active {
-    background-color: ${navElevatedActiveBackgroundColor};
+    background-color: ${t.navElevatedActiveBackgroundColor};
   }
   
   .cal-sheet {
@@ -205,39 +171,39 @@ export default /*css*/ `
 
   .cal-cell--disabled {
     cursor: not-allowed;
-    color: ${cellDisabledColor};
+    color: ${t.cellDisabledColor};
   }
   
   .cal-cell--highlighted {
-    background-color: ${cellHighlightedBackgroundColor};
+    background-color: ${t.cellHighlightedBackgroundColor};
   }
   
   .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
-    color: ${cellAdjacentColor}
+    color: ${t.cellAdjacentColor}
   }
   
   .cal-cell--adjacent.cal-cell--disabled {
-    color: ${cellAdjacentDisabledColor};
+    color: ${t.cellAdjacentDisabledColor};
   }
   
   .cal-cell--adjacent.cal-cell--selected:not(:hover) {
-    color: ${cellAdjacentSelectedColor};
+    color: ${t.cellAdjacentSelectedColor};
   }
   
   .cal-cell--current-highlighted {
-    background-color: ${cellCurrentHighlightedBackgroundColor};
+    background-color: ${t.cellCurrentHighlightedBackgroundColor};
   }
   
   .cal-cell:hover:not(.cal-cell--disabled) {
-    background-color: ${cellHoverBackgroundColor}
+    background-color: ${t.cellHoverBackgroundColor}
   }
   
   .cal-cell--selected {
-    background-color: ${cellSelectedBackgroundColor};
+    background-color: ${t.cellSelectedBackgroundColor};
   }
 
   .cal-cell--selected:hover {
-    background-color: ${cellSelectedHoverBackgroundColor} !important;
+    background-color: ${t.cellSelectedHoverBackgroundColor} !important;
   }
 
   .cal-week-number {
@@ -263,7 +229,7 @@ export default /*css*/ `
     align-self: center;
     margin: 0 0.5em;
     font-size: 125%;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${fontFamily};
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${t.fontFamily};
     text-align: center;
   }
 
@@ -284,13 +250,13 @@ export default /*css*/ `
     margin: 0.5em 0;
     height: 0.75px; 
     padding: 0.5em 0;
-    background-image: linear-gradient(${sliderTrackColor}, ${sliderTrackColor});
+    background-image: linear-gradient(${t.sliderTrackColor}, ${t.sliderTrackColor});
     background-position: 0 50%;
     background-size: 100% 1px;
     background-repeat: no-repeat;
     box-sizing: border-box;
     cursor: pointer;
-    background-color: ${backgroundColor};
+    background-color: ${t.backgroundColor};
   }
 
   input[type="range"]::-webkit-slider-thumb {
@@ -299,9 +265,9 @@ export default /*css*/ `
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: ${sliderThumbBorderRadius};
-    background-color: ${sliderThumbBackgroundColor};
-    border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
+    border-radius: ${t.sliderThumbBorderRadius};
+    background-color: ${t.sliderThumbBackgroundColor};
+    border: ${t.sliderThumbBorderWidth} solid ${t.sliderThumbBorderColor};
   }
   
   input[type="range"]::-moz-range-thumb {
@@ -310,29 +276,29 @@ export default /*css*/ `
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: ${sliderThumbBorderRadius};
-    background-color: ${sliderThumbBackgroundColor};
-    border: ${sliderThumbBorderWidth} solid ${sliderThumbBorderColor};
+    border-radius: ${t.sliderThumbBorderRadius};
+    background-color: ${t.sliderThumbBackgroundColor};
+    border: ${t.sliderThumbBorderWidth} solid ${t.sliderThumbBorderColor};
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    background-color: ${sliderThumbHoverBackgroundColor};
-    border-color: ${sliderThumbHoverBorderColor};
+    background-color: ${t.sliderThumbHoverBackgroundColor};
+    border-color: ${t.sliderThumbHoverBorderColor};
   }
   
   input[type="range"]::-moz-range-thumb:hover {
-    background-color: ${sliderThumbHoverBackgroundColor};
-    border-color: ${sliderThumbHoverBorderColor};
+    background-color: ${t.sliderThumbHoverBackgroundColor};
+    border-color: ${t.sliderThumbHoverBorderColor};
   }
   
   input[type="range"]:focus::-webkit-slider-thumb {
-    background-color: ${sliderThumbFocusBackgroundColor};
-    border-color: ${sliderThumbFocusBorderColor};
+    background-color: ${t.sliderThumbFocusBackgroundColor};
+    border-color: ${t.sliderThumbFocusBorderColor};
   }
   
   input[type="range"]:focus::-moz-range-thumb {
-    background-color: ${sliderThumbFocusBackgroundColor};
-    border-color: ${sliderThumbFocusBorderColor};
+    background-color: ${t.sliderThumbFocusBackgroundColor};
+    border-color: ${t.sliderThumbFocusBorderColor};
   }
 
   input[type="range"]::-webkit-slider-runnable-track,
@@ -343,3 +309,4 @@ export default /*css*/ `
     background: transparent;
   }
 `;
+}
