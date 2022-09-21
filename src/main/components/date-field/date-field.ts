@@ -20,6 +20,7 @@ import datesIcon from '../../icons/calendar3.svg';
 import timeIcon from '../../icons/clock.svg';
 import dateTimeIcon from '../../icons/calendar3.svg';
 import dateRangeIcon from '../../icons/calendar-range.svg';
+import weekIcon from '../../icons/calendar.svg';
 import monthIcon from '../../icons/calendar.svg';
 import yearIcon from '../../icons/calendar.svg';
 
@@ -143,6 +144,7 @@ export class DateField extends Component {
       dateRange: dateRangeIcon,
       dateTime: dateTimeIcon,
       time: timeIcon,
+      week: weekIcon,
       month: monthIcon,
       year: yearIcon
     }[this.selectionMode];

@@ -6,7 +6,7 @@ import { sharedTheme } from './shared/shared-theme';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 
 export default {
-  title: 'date picker'
+  title: 'date components'
 };
 
 export const datePicker = () => h('date-picker-demo');

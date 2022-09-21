@@ -1,4 +1,4 @@
-export type Tokens = {
+export type DatePickerTokens = {
   fontFamily: string;
   fontSize: string;
   color: string;
@@ -18,6 +18,7 @@ export type Tokens = {
   cellAdjacentDisabledColor: string;
   cellAdjacentSelectedColor: string;
   cellCurrentHighlightedBackgroundColor: string;
+  cellSelectedColor: string;
   cellSelectedBackgroundColor: string;
   cellSelectedHoverBackgroundColor: string;
   sliderThumbBackgroundColor: string;
@@ -31,14 +32,14 @@ export type Tokens = {
   sliderTrackColor: string;
 };
 
-export function createStyles(t: Tokens) {
+export function createDatePickerStyles(tokens: DatePickerTokens) {
   return /*css*/ ` 
   :host {
     display: inline-block;
-    color: ${t.color};
-    background-color: ${t.backgroundColor}; 
-    font-family: ${t.fontFamily};
-    font-size: ${t.fontSize}
+    color: ${tokens.color};
+    background-color: ${tokens.backgroundColor}; 
+    font-family: ${tokens.fontFamily};
+    font-size: ${tokens.fontSize}
   }
 
   .cal-base {
@@ -62,13 +63,13 @@ export function createStyles(t: Tokens) {
 
   .cal-nav {
     display: flex;
-    color: ${t.navColor};
-    background-color: ${t.navBackgroundColor};
+    color: ${tokens.navColor};
+    background-color: ${tokens.navBackgroundColor};
   }
   
   .cal-nav--elevated {
-    color: ${t.navElevatedColor};
-    background-color: ${t.navElevatedBackgroundColor};
+    color: ${tokens.navElevatedColor};
+    background-color: ${tokens.navElevatedBackgroundColor};
   }
 
   .cal-title,
@@ -93,25 +94,25 @@ export function createStyles(t: Tokens) {
   .cal-title:not(.cal-title--disabled):hover,
   .cal-prev:not(.cal-prev--disabled):hover,
   .cal-next:not(.cal-next--disabled):hover {
-    background-color: ${t.navHoverBackgroundColor};
+    background-color: ${tokens.navHoverBackgroundColor};
   }
 
   .cal-title:not(.cal-title--disabled):active,
   .cal-prev:not(.cal-prev--disabled):active,
   .cal-next:not(.cal-next--disabled):active {
-    background-color: ${t.navActiveBackgroundColor};
+    background-color: ${tokens.navActiveBackgroundColor};
   }
   
   .cal-nav--elevated .cal-title:not(.cal-title--disabled):hover,
   .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):hover,
   .cal-nav--elevated .cal-next:not(.cal-next--disabled):hover {
-    background-color: ${t.navElevatedHoverBackgroundColor};
+    background-color: ${tokens.navElevatedHoverBackgroundColor};
   }
 
   .cal-nav--elevated .cal-title:not(.cal-title--disabled):active,
   .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):active,
   .cal-nav--elevated .cal-next:not(.cal-next--disabled):active {
-    background-color: ${t.navElevatedActiveBackgroundColor};
+    background-color: ${tokens.navElevatedActiveBackgroundColor};
   }
   
   .cal-sheet {
@@ -171,39 +172,40 @@ export function createStyles(t: Tokens) {
 
   .cal-cell--disabled {
     cursor: not-allowed;
-    color: ${t.cellDisabledColor};
+    color: ${tokens.cellDisabledColor};
   }
   
   .cal-cell--highlighted {
-    background-color: ${t.cellHighlightedBackgroundColor};
+    background-color: ${tokens.cellHighlightedBackgroundColor};
   }
   
   .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
-    color: ${t.cellAdjacentColor}
+    color: ${tokens.cellAdjacentColor}
   }
   
   .cal-cell--adjacent.cal-cell--disabled {
-    color: ${t.cellAdjacentDisabledColor};
+    color: ${tokens.cellAdjacentDisabledColor};
   }
   
   .cal-cell--adjacent.cal-cell--selected:not(:hover) {
-    color: ${t.cellAdjacentSelectedColor};
+    color: ${tokens.cellAdjacentSelectedColor};
   }
   
   .cal-cell--current-highlighted {
-    background-color: ${t.cellCurrentHighlightedBackgroundColor};
+    background-color: ${tokens.cellCurrentHighlightedBackgroundColor};
   }
   
   .cal-cell:hover:not(.cal-cell--disabled) {
-    background-color: ${t.cellHoverBackgroundColor}
+    background-color: ${tokens.cellHoverBackgroundColor}
   }
   
   .cal-cell--selected {
-    background-color: ${t.cellSelectedBackgroundColor};
+    color: ${tokens.cellSelectedColor};
+    background-color: ${tokens.cellSelectedBackgroundColor};
   }
 
   .cal-cell--selected:hover {
-    background-color: ${t.cellSelectedHoverBackgroundColor} !important;
+    background-color: ${tokens.cellSelectedHoverBackgroundColor} !important;
   }
 
   .cal-week-number {
@@ -229,7 +231,7 @@ export function createStyles(t: Tokens) {
     align-self: center;
     margin: 0 0.5em;
     font-size: 125%;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${t.fontFamily};
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${tokens.fontFamily};
     text-align: center;
   }
 
@@ -250,13 +252,13 @@ export function createStyles(t: Tokens) {
     margin: 0.5em 0;
     height: 0.75px; 
     padding: 0.5em 0;
-    background-image: linear-gradient(${t.sliderTrackColor}, ${t.sliderTrackColor});
+    background-image: linear-gradient(${tokens.sliderTrackColor}, ${tokens.sliderTrackColor});
     background-position: 0 50%;
     background-size: 100% 1px;
     background-repeat: no-repeat;
     box-sizing: border-box;
     cursor: pointer;
-    background-color: ${t.backgroundColor};
+    background-color: ${tokens.backgroundColor};
   }
 
   input[type="range"]::-webkit-slider-thumb {
@@ -265,9 +267,9 @@ export function createStyles(t: Tokens) {
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: ${t.sliderThumbBorderRadius};
-    background-color: ${t.sliderThumbBackgroundColor};
-    border: ${t.sliderThumbBorderWidth} solid ${t.sliderThumbBorderColor};
+    border-radius: ${tokens.sliderThumbBorderRadius};
+    background-color: ${tokens.sliderThumbBackgroundColor};
+    border: ${tokens.sliderThumbBorderWidth} solid ${tokens.sliderThumbBorderColor};
   }
   
   input[type="range"]::-moz-range-thumb {
@@ -276,29 +278,29 @@ export function createStyles(t: Tokens) {
     border: 2px solid red;
     height: 1.25em;
     width: 1.25em;
-    border-radius: ${t.sliderThumbBorderRadius};
-    background-color: ${t.sliderThumbBackgroundColor};
-    border: ${t.sliderThumbBorderWidth} solid ${t.sliderThumbBorderColor};
+    border-radius: ${tokens.sliderThumbBorderRadius};
+    background-color: ${tokens.sliderThumbBackgroundColor};
+    border: ${tokens.sliderThumbBorderWidth} solid ${tokens.sliderThumbBorderColor};
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    background-color: ${t.sliderThumbHoverBackgroundColor};
-    border-color: ${t.sliderThumbHoverBorderColor};
+    background-color: ${tokens.sliderThumbHoverBackgroundColor};
+    border-color: ${tokens.sliderThumbHoverBorderColor};
   }
   
   input[type="range"]::-moz-range-thumb:hover {
-    background-color: ${t.sliderThumbHoverBackgroundColor};
-    border-color: ${t.sliderThumbHoverBorderColor};
+    background-color: ${tokens.sliderThumbHoverBackgroundColor};
+    border-color: ${tokens.sliderThumbHoverBorderColor};
   }
   
   input[type="range"]:focus::-webkit-slider-thumb {
-    background-color: ${t.sliderThumbFocusBackgroundColor};
-    border-color: ${t.sliderThumbFocusBorderColor};
+    background-color: ${tokens.sliderThumbFocusBackgroundColor};
+    border-color: ${tokens.sliderThumbFocusBorderColor};
   }
   
   input[type="range"]:focus::-moz-range-thumb {
-    background-color: ${t.sliderThumbFocusBackgroundColor};
-    border-color: ${t.sliderThumbFocusBorderColor};
+    background-color: ${tokens.sliderThumbFocusBackgroundColor};
+    border-color: ${tokens.sliderThumbFocusBorderColor};
   }
 
   input[type="range"]::-webkit-slider-runnable-track,

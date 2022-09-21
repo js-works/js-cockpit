@@ -2,9 +2,13 @@ import { unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators';
 import { LocalizeController } from '@shoelace-style/localize';
 import { LitDatePicker } from './common/lit-date-picker';
-import { Tokens, createStyles } from './common/date-picker.base.styles';
 
-const tokens: Tokens = {
+import {
+  DatePickerTokens,
+  createDatePickerStyles
+} from './common/date-picker-styling';
+
+const tokens: DatePickerTokens = {
   fontFamily: 'var(--sl-font-sans)',
   fontSize: 'var(--sl-font-size-medium)',
   color: 'var(--sl-color-neutral-1000)',
@@ -24,6 +28,7 @@ const tokens: Tokens = {
   cellAdjacentDisabledColor: 'var(--sl-color-neutral-200)',
   cellAdjacentSelectedColor: 'var(--sl-color-neutral-800)',
   cellCurrentHighlightedBackgroundColor: 'var(--sl-color-orange-500)',
+  cellSelectedColor: 'var(--sl-color-neutral-0)',
   cellSelectedBackgroundColor: 'var(--sl-color-primary-600)',
   cellSelectedHoverBackgroundColor: 'var(--sl-color-primary-500)',
   sliderThumbBackgroundColor: 'var(--sl-color-neutral-0)',
@@ -39,7 +44,7 @@ const tokens: Tokens = {
 
 @customElement('cp-date-picker')
 export class DatePicker extends LitDatePicker {
-  static styles = unsafeCSS(createStyles(tokens));
+  static styles = unsafeCSS(createDatePickerStyles(tokens));
 
   private _localize = new LocalizeController(this);
 

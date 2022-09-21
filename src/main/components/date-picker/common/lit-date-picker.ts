@@ -1,5 +1,5 @@
 import { html, LitElement } from 'lit';
-import type { ComplexAttributeConverter, CSSResultGroup } from 'lit';
+import type { ComplexAttributeConverter } from 'lit';
 import { property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
