@@ -218,7 +218,9 @@ export function createDatePickerStyles(tokens: DatePickerTokens) {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
+    column-gap: 0.75rem;
     padding: 0.125rem 0 0.75rem 0;
+    margin: 0 1rem;
   }
 
   .cal-base--type-time .cal-time-selector {
@@ -229,7 +231,6 @@ export function createDatePickerStyles(tokens: DatePickerTokens) {
     grid-column: 1;
     grid-row: 1 / span 2;
     align-self: center;
-    margin: 0 0.5em;
     font-size: 125%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, ${tokens.fontFamily};
     text-align: center;

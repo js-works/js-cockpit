@@ -156,6 +156,7 @@ export class DateField extends Component {
           placement="bottom-start"
           distance=${2}
           skidding=${2}
+          .containingElement=${this}
           hoist
           ${ref(this._dropdownRef)}
         >
@@ -199,32 +200,33 @@ export class DateField extends Component {
               .maxDate=${this.minDate}
               .fixedDayCount=${this.fixedDayCount}
               ${ref(this._pickerRef)}
-            ></cp-date-picker>
-            <div class="popup-footer">
-              <sl-button
-                variant="text"
-                size="small"
-                class="button"
-                @click=${this._onClearClick}
-                >Clear</sl-button
-              >
-              <sl-button
-                variant="text"
-                class="button"
-                size="small"
-                @click=${this._onCancelClick}
-              >
-                Cancel
-              </sl-button>
-              <sl-button
-                variant="text"
-                class="button"
-                size="small"
-                @click=${this._onOkClick}
-              >
-                OK
-              </sl-button>
-            </div>
+            >
+              <div slot="footer" class="popup-footer">
+                <sl-button
+                  variant="text"
+                  size="small"
+                  class="button"
+                  @click=${this._onClearClick}
+                  >Clear</sl-button
+                >
+                <sl-button
+                  variant="text"
+                  class="button"
+                  size="small"
+                  @click=${this._onCancelClick}
+                >
+                  Cancel
+                </sl-button>
+                <sl-button
+                  variant="text"
+                  class="button"
+                  size="small"
+                  @click=${this._onOkClick}
+                >
+                  OK
+                </sl-button>
+              </div>
+            </cp-date-picker>
           </div>
         </sl-dropdown>
       </div>

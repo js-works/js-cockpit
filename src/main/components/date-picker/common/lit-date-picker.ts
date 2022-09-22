@@ -195,6 +195,9 @@ abstract class LitDatePicker extends LitElement {
             </div>
           `
         )}
+        <div>
+          <slot name="footer"></slot>
+        </div>
       </div>
     `;
   }

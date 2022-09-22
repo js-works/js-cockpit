@@ -47,11 +47,17 @@ class DatePickerDemo extends Component {
           <cp-date-field label="Date"></cp-date-field>
 
           <cp-date-field
-            label="Date + Time"
+            label="Date and time"
             selection-mode="dateTime"
           ></cp-date-field>
 
           <cp-date-field label="Time" selection-mode="time"></cp-date-field>
+
+          <cp-date-field
+            label="Date range"
+            selection-mode="dateRange"
+          ></cp-date-field>
+
           <cp-date-field label="Month" selection-mode="month"></cp-date-field>
           <cp-date-field
             label="Week"
