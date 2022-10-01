@@ -7,7 +7,7 @@ import {
   getMonthName,
   getWeekdayName,
   getWeekendDays
-} from './date-utils';
+} from './calendar-utils';
 
 export { CalendarLocalizer };
 

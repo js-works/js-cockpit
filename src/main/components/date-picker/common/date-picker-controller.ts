@@ -10,7 +10,7 @@ import {
   getYearString,
   getYearTitle,
   getYearWeekString
-} from './date-utils';
+} from './calendar-utils';
 
 export { DatePickerController };
 
@@ -45,7 +45,7 @@ class DatePickerController extends CalendarLocalizer {
   #requestUpdate: () => void;
   #onChange: (() => void) | null;
   #getNode: () => HTMLElement | ShadowRoot;
-  #notifyTimeout: unknown = null;
+  #notifyTimeoutId: unknown = null;
 
   constructor(
     host: ReactiveControllerHost & HTMLElement,
@@ -190,12 +190,12 @@ class DatePickerController extends CalendarLocalizer {
   }
 
   #notifyChange() {
-    if (this.#notifyTimeout !== null) {
+    if (this.#notifyTimeoutId !== null) {
       return;
     }
 
-    this.#notifyTimeout = setTimeout(() => {
-      this.#notifyTimeout = null;
+    this.#notifyTimeoutId = setTimeout(() => {
+      this.#notifyTimeoutId = null;
 
       this.#getNode().dispatchEvent(
         new Event('change', { bubbles: true, composed: true })
