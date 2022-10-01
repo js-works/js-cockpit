@@ -23,7 +23,7 @@ const tokens: DatePickerTokens = {
   navElevatedActiveBackgroundColor: 'var(--sl-color-primary-700)',
   cellHoverBackgroundColor: 'var(--sl-color-primary-100)',
   cellDisabledColor: 'var(--sl-color-neutral-300)',
-  cellHighlightedBackgroundColor: 'var(-sl-color-neutral-50)',
+  cellHighlightedBackgroundColor: 'var(--sl-color-neutral-50)',
   cellAdjacentColor: 'var(--sl-color-neutral-400)',
   cellAdjacentDisabledColor: 'var(--sl-color-neutral-200)',
   cellAdjacentSelectedColor: 'var(--sl-color-neutral-800)',

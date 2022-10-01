@@ -98,7 +98,7 @@ class DatePickerDemo extends Component {
               dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
             ></cp-date-picker>
             <div>Selection:</div>
-            <div>${this._selectionValue}</div>
+            <div>${this._selectionValue.replaceAll(',', ', ')}</div>
           </div>
           <div class="second-column">
             <sl-select

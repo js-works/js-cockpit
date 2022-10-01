@@ -50,6 +50,7 @@ namespace DataExplorer {
     text: string;
     actionId: string;
     type: 'general' | 'single-row' | 'multi-row';
+    variant?: 'default' | 'primary';
   };
 
   export type ActionGroup = {
@@ -237,6 +238,7 @@ class DataExplorer extends Component {
           kind: 'action',
           actionId: '',
           text: it.text,
+          variant: it.variant || 'default',
           disabled:
             (it.type === 'single-row' && this._numSelectedRows !== 1) ||
             (it.type === 'multi-row' && this._numSelectedRows === 0)
@@ -245,6 +247,7 @@ class DataExplorer extends Component {
         return {
           kind: 'action-group',
           text: it.text,
+          variant: 'default',
           actions: it.actions.map((it) => ({
             kind: 'action',
             text: it.text,

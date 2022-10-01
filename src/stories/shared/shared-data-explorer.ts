@@ -83,8 +83,9 @@ export class SharedDataExplorer extends Component {
       .actions=${[
         {
           kind: 'action',
-          text: 'New',
+          text: '+ New',
           type: 'general',
+          variant: 'primary',
           actionId: ''
         },
         {

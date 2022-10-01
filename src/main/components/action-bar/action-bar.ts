@@ -22,6 +22,7 @@ namespace ActionBar {
     kind: 'action';
     text: string;
     actionId: string;
+    variant?: 'default' | 'primary';
     disabled?: boolean;
   };
 
@@ -66,7 +67,7 @@ class ActionBar extends Component {
                 : html`
                     <sl-button
                       class="button"
-                      variant="primary"
+                      variant=${it.variant || 'default'}
                       size="small"
                       ?disabled=${it.disabled}
                       ?pill=${this.pill}
@@ -86,7 +87,7 @@ class ActionBar extends Component {
                     <sl-dropdown class="button">
                       <sl-button
                         slot="trigger"
-                        variant="primary"
+                        variant="default"
                         size="small"
                         caret
                         ?disabled=${disabled}

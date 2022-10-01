@@ -4,7 +4,6 @@ export {
   formatDay,
   formatWeekNumber,
   formatYear,
-  getCalendarWeek,
   getDecadeTitle,
   getFirstDayOfWeek,
   getHourMinuteString,
@@ -12,6 +11,7 @@ export {
   getMonthTitle,
   getWeekdayName,
   getWeekendDays,
+  getWeekNumber,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
@@ -118,7 +118,7 @@ function getLocaleInfo(locale: string): LocaleInfo {
   return info!;
 }
 
-function getCalendarWeek(locale: string, date: Date) {
+function getWeekNumber(locale: string, date: Date) {
   // Code is based on this solution here:
   // https://stackoverflow.com/questions/23781366/date-get-week-number-for-custom-week-start-day
   // TODO - check algorithm

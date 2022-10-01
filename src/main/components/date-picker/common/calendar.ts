@@ -8,7 +8,7 @@ namespace Calendar {
   export type Options = Readonly<{
     firstDayOfWeek: number;
     weekendDays: readonly number[];
-    getCalendarWeek: (date: Date, firstDayOfWeek: number) => number;
+    getWeekNumber: (date: Date, firstDayOfWeek: number) => number;
     minDate: Date | null;
     maxDate: Date | null;
     disableWeekends: boolean;
@@ -155,7 +155,7 @@ class Calendar {
         adjacent,
         weekend,
 
-        weekNumber: options.getCalendarWeek(
+        weekNumber: options.getWeekNumber(
           new Date(cellYear, cellMonth, cellDay),
           firstDayOfWeek
         ),

@@ -115,7 +115,7 @@ abstract class LitDatePicker extends LitElement {
     this._calendar = new Calendar({
       firstDayOfWeek: this._datePicker.getFirstDayOfWeek(),
       weekendDays: this._datePicker.getWeekendDays(),
-      getCalendarWeek: (date: Date) => this._datePicker.getCalendarWeek(date),
+      getWeekNumber: (date: Date) => this._datePicker.getWeekNumber(date),
       disableWeekends: this.disableWeekends,
       alwaysShow42Days: this.fixedDayCount && this.showAdjacentDays,
       minDate: this.minDate,

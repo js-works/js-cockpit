@@ -1,17 +1,10 @@
 import type { ReactiveControllerHost } from 'lit';
+import { CalendarLocalizer } from './calendar-localizer';
 
 import {
-  formatDay,
-  formatWeekNumber,
-  formatYear,
-  getCalendarWeek,
   getDecadeTitle,
-  getFirstDayOfWeek,
   getHourMinuteString,
-  getMonthName,
   getMonthTitle,
-  getWeekdayName,
-  getWeekendDays,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
@@ -40,7 +33,7 @@ namespace DatePickerController {
 
 type SelectionMode = DatePickerController.SelectionMode;
 
-class DatePickerController {
+class DatePickerController extends CalendarLocalizer {
   #selectionMode: DatePickerController.SelectionMode;
   #getSelectionMode: () => DatePickerController.SelectionMode;
   #selection = new Set<string>();
@@ -50,7 +43,6 @@ class DatePickerController {
   #activeHour = new Date().getHours();
   #activeMinute = new Date().getMinutes();
   #requestUpdate: () => void;
-  #getLocale: () => string;
   #onChange: (() => void) | null;
   #getNode: () => HTMLElement | ShadowRoot;
   #notifyTimeout: unknown = null;
@@ -61,9 +53,15 @@ class DatePickerController {
     params: {
       getLocale: () => string;
       getSelectionMode: () => SelectionMode;
+      getWeekNumber?: ((date: Date) => number) | null;
       onChange?: () => void;
     }
   ) {
+    super({
+      getLocale: params.getLocale,
+      getWeekNumber: params.getWeekNumber || null
+    });
+
     let initialized = false;
 
     const innerController = {
@@ -90,7 +88,6 @@ class DatePickerController {
     this.#getSelectionMode = params.getSelectionMode;
     this.#requestUpdate = () => host.requestUpdate();
     this.#getNode = () => host.shadowRoot || host;
-    this.#getLocale = params.getLocale;
     this.#onChange = params.onChange || null;
   }
 
@@ -137,7 +134,7 @@ class DatePickerController {
       const value = this.#selectionMode;
       return this.#selection.has(getYearMonthDayString(year, month, day));
     } else if (mode === 'week' || mode === 'weeks') {
-      const weekNumber = this.getCalendarWeek(new Date(year, month, day));
+      const weekNumber = this.getWeekNumber(new Date(year, month, day));
       return this.#selection.has(getYearWeekString(year, weekNumber));
     }
 
@@ -166,51 +163,15 @@ class DatePickerController {
   }
 
   getMonthTitle() {
-    return getMonthTitle(
-      this.#getLocale(),
-      this.#activeYear,
-      this.#activeMonth
-    );
+    return getMonthTitle(this.getLocale(), this.#activeYear, this.#activeMonth);
   }
 
   getYearTitle() {
-    return getYearTitle(this.#getLocale(), this.#activeYear);
+    return getYearTitle(this.getLocale(), this.#activeYear);
   }
 
   getDecadeTitle() {
-    return getDecadeTitle(this.#getLocale(), this.#activeYear, 12);
-  }
-
-  getCalendarWeek(date: Date) {
-    return getCalendarWeek(this.#getLocale(), date);
-  }
-
-  getFirstDayOfWeek(): number {
-    return getFirstDayOfWeek(this.#getLocale());
-  }
-
-  formatDay(day: number) {
-    return formatDay(this.#getLocale(), day);
-  }
-
-  formatWeekNumber(weekNumber: number) {
-    return formatWeekNumber(this.#getLocale(), weekNumber);
-  }
-
-  formatYear(year: number) {
-    return formatYear(this.#getLocale(), year);
-  }
-
-  getMonthName(month: number, format: 'long' | 'short' | 'narrow' = 'long') {
-    return getMonthName(this.#getLocale(), month, format);
-  }
-
-  getWeekendDays(): Readonly<number[]> {
-    return getWeekendDays(this.#getLocale());
-  }
-
-  getWeekdayName(day: number, format: 'long' | 'short' | 'narrow' = 'long') {
-    return getWeekdayName(this.#getLocale(), day, format);
+    return getDecadeTitle(this.getLocale(), this.#activeYear, 12);
   }
 
   #clearSelection() {
@@ -523,7 +484,7 @@ class DatePickerController {
 
       case 'week':
       case 'weeks': {
-        const weekNumber = this.getCalendarWeek(new Date(year, month, day));
+        const weekNumber = this.getWeekNumber(new Date(year, month, day));
         const weekString = getYearWeekString(year, weekNumber);
         this.#toggleSelected(weekString, this.#selectionMode !== 'weeks');
         break;
