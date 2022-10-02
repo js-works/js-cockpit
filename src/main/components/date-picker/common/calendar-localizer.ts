@@ -13,14 +13,16 @@ export { CalendarLocalizer };
 
 class CalendarLocalizer {
   #getLocale: () => string;
+  #getDirection: () => 'ltr' | 'rtl';
   #getWeekNumber: (date: Date) => number;
 
   constructor(params: {
     getLocale: () => string;
+    getDirection: () => 'ltr' | 'rtl';
     getWeekNumber?: ((date: Date) => number) | null;
   }) {
     this.#getLocale = params.getLocale;
-
+    this.#getDirection = params.getDirection;
     this.#getWeekNumber =
       params.getWeekNumber ||
       ((date) => getWeekNumber(this.#getLocale(), date));
@@ -28,6 +30,10 @@ class CalendarLocalizer {
 
   getLocale(): string {
     return this.#getLocale();
+  }
+
+  getDirection(): 'ltr' | 'rtl' {
+    return this.#getDirection();
   }
 
   getWeekNumber(date: Date) {

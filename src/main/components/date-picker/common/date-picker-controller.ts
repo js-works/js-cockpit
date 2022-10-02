@@ -52,6 +52,7 @@ class DatePickerController extends CalendarLocalizer {
 
     params: {
       getLocale: () => string;
+      getDirection: () => 'ltr' | 'rtl';
       getSelectionMode: () => SelectionMode;
       getWeekNumber?: ((date: Date) => number) | null;
       onChange?: () => void;
@@ -59,6 +60,7 @@ class DatePickerController extends CalendarLocalizer {
   ) {
     super({
       getLocale: params.getLocale,
+      getDirection: params.getDirection,
       getWeekNumber: params.getWeekNumber || null
     });
 
