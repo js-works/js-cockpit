@@ -88,6 +88,8 @@ abstract class LitDatePicker extends LitElement {
   @property({ type: String, reflect: true })
   dir = '';
 
+  private _getLocale: () => string;
+  private _getDirection: () => 'ltr' | 'rtl';
   private _datePicker: DatePickerController;
 
   constructor(params: {
@@ -96,17 +98,19 @@ abstract class LitDatePicker extends LitElement {
   }) {
     super();
 
+    this._getLocale = params.getLocale;
+    this._getDirection = params.getDirection;
+
     this._datePicker = new DatePickerController(this, {
       getLocale: params.getLocale,
-      getDirection: params.getDirection,
       getSelectionMode: () => this.selectionMode
     });
   }
 
   render() {
     return renderDatePicker(
-      this._datePicker.getLocale(),
-      this._datePicker.getDirection(),
+      this._getLocale(),
+      this._getDirection(),
       this,
       this._datePicker
     );

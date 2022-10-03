@@ -32,7 +32,6 @@ type SelectionMode = DatePickerController.SelectionMode;
 
 class DatePickerController {
   #getLocale: () => string;
-  #getDirection: () => 'ltr' | 'rtl';
   #getWeekNumber: (date: Date) => number;
   #selectionMode: DatePickerController.SelectionMode;
   #getSelectionMode: () => DatePickerController.SelectionMode;
@@ -52,14 +51,12 @@ class DatePickerController {
 
     params: {
       getLocale: () => string;
-      getDirection: () => 'ltr' | 'rtl';
       getSelectionMode: () => SelectionMode;
       getWeekNumber?: ((date: Date) => number) | null;
       onChange?: () => void;
     }
   ) {
     this.#getLocale = params.getLocale;
-    this.#getDirection = params.getDirection;
     this.#getWeekNumber =
       params.getWeekNumber ||
       ((date) => getWeekNumber(this.#getLocale(), date));
@@ -90,18 +87,6 @@ class DatePickerController {
     this.#requestUpdate = () => host.requestUpdate();
     this.#getNode = () => host.shadowRoot || host;
     this.#onChange = params.onChange || null;
-  }
-
-  getLocale() {
-    return this.#getLocale();
-  }
-
-  getDirection() {
-    return this.#getDirection();
-  }
-
-  getSelectionMode() {
-    return this.#selectionMode;
   }
 
   getScene(): DatePickerController.Scene {
