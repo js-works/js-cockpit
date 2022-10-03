@@ -1,5 +1,4 @@
 import type { ReactiveControllerHost } from 'lit';
-import { CalendarLocalizer } from './calendar-localizer';
 
 import {
   getDecadeTitle,
@@ -9,7 +8,8 @@ import {
   getYearMonthString,
   getYearString,
   getYearTitle,
-  getYearWeekString
+  getYearWeekString,
+  getWeekNumber
 } from './calendar-utils';
 
 export { DatePickerController };
@@ -33,7 +33,10 @@ namespace DatePickerController {
 
 type SelectionMode = DatePickerController.SelectionMode;
 
-class DatePickerController extends CalendarLocalizer {
+class DatePickerController {
+  #getLocale: () => string;
+  #getDirection: () => 'ltr' | 'rtl';
+  #getWeekNumber: (date: Date) => number;
   #selectionMode: DatePickerController.SelectionMode;
   #getSelectionMode: () => DatePickerController.SelectionMode;
   #selection = new Set<string>();
@@ -58,12 +61,11 @@ class DatePickerController extends CalendarLocalizer {
       onChange?: () => void;
     }
   ) {
-    super({
-      getLocale: params.getLocale,
-      getDirection: params.getDirection,
-      getWeekNumber: params.getWeekNumber || null
-    });
-
+    this.#getLocale = params.getLocale;
+    this.#getDirection = params.getDirection;
+    this.#getWeekNumber =
+      params.getWeekNumber ||
+      ((date) => getWeekNumber(this.#getLocale(), date));
     let initialized = false;
 
     const innerController = {
@@ -91,6 +93,14 @@ class DatePickerController extends CalendarLocalizer {
     this.#requestUpdate = () => host.requestUpdate();
     this.#getNode = () => host.shadowRoot || host;
     this.#onChange = params.onChange || null;
+  }
+
+  getLocale() {
+    return this.#getLocale();
+  }
+
+  getDirection() {
+    return this.#getDirection();
   }
 
   getSelectionMode() {
@@ -136,7 +146,7 @@ class DatePickerController extends CalendarLocalizer {
       const value = this.#selectionMode;
       return this.#selection.has(getYearMonthDayString(year, month, day));
     } else if (mode === 'week' || mode === 'weeks') {
-      const weekNumber = this.getWeekNumber(new Date(year, month, day));
+      const weekNumber = this.#getWeekNumber(new Date(year, month, day));
       return this.#selection.has(getYearWeekString(year, weekNumber));
     }
 
@@ -165,15 +175,19 @@ class DatePickerController extends CalendarLocalizer {
   }
 
   getMonthTitle() {
-    return getMonthTitle(this.getLocale(), this.#activeYear, this.#activeMonth);
+    return getMonthTitle(
+      this.#getLocale(),
+      this.#activeYear,
+      this.#activeMonth
+    );
   }
 
   getYearTitle() {
-    return getYearTitle(this.getLocale(), this.#activeYear);
+    return getYearTitle(this.#getLocale(), this.#activeYear);
   }
 
   getDecadeTitle() {
-    return getDecadeTitle(this.getLocale(), this.#activeYear, 12);
+    return getDecadeTitle(this.#getLocale(), this.#activeYear, 12);
   }
 
   #clearSelection() {
@@ -486,7 +500,7 @@ class DatePickerController extends CalendarLocalizer {
 
       case 'week':
       case 'weeks': {
-        const weekNumber = this.getWeekNumber(new Date(year, month, day));
+        const weekNumber = this.#getWeekNumber(new Date(year, month, day));
         const weekString = getYearWeekString(year, weekNumber);
         this.#toggleSelected(weekString, this.#selectionMode !== 'weeks');
         break;

@@ -12,28 +12,28 @@ import {
 export { CalendarLocalizer };
 
 class CalendarLocalizer {
-  #getLocale: () => string;
-  #getDirection: () => 'ltr' | 'rtl';
-  #getWeekNumber: (date: Date) => number;
+  readonly #locale: string;
+  readonly #direction: 'ltr' | 'rtl';
+  readonly #getWeekNumber: (date: Date) => number;
 
   constructor(params: {
-    getLocale: () => string;
-    getDirection: () => 'ltr' | 'rtl';
+    locale: string;
+    direction: 'ltr' | 'rtl';
     getWeekNumber?: ((date: Date) => number) | null;
   }) {
-    this.#getLocale = params.getLocale;
-    this.#getDirection = params.getDirection;
+    this.#locale = params.locale;
+    this.#direction = params.direction;
+
     this.#getWeekNumber =
-      params.getWeekNumber ||
-      ((date) => getWeekNumber(this.#getLocale(), date));
+      params.getWeekNumber || ((date) => getWeekNumber(this.#locale, date));
   }
 
   getLocale(): string {
-    return this.#getLocale();
+    return this.#locale;
   }
 
   getDirection(): 'ltr' | 'rtl' {
-    return this.#getDirection();
+    return this.#direction;
   }
 
   getWeekNumber(date: Date) {
@@ -41,30 +41,30 @@ class CalendarLocalizer {
   }
 
   getFirstDayOfWeek(): number {
-    return getFirstDayOfWeek(this.#getLocale());
+    return getFirstDayOfWeek(this.#locale);
   }
 
   formatDay(day: number) {
-    return formatDay(this.#getLocale(), day);
+    return formatDay(this.#locale, day);
   }
 
   formatWeekNumber(weekNumber: number) {
-    return formatWeekNumber(this.#getLocale(), weekNumber);
+    return formatWeekNumber(this.#locale, weekNumber);
   }
 
   formatYear(year: number) {
-    return formatYear(this.#getLocale(), year);
+    return formatYear(this.#locale, year);
   }
 
   getMonthName(month: number, format: 'long' | 'short' | 'narrow' = 'long') {
-    return getMonthName(this.#getLocale(), month, format);
+    return getMonthName(this.#locale, month, format);
   }
 
   getWeekendDays(): Readonly<number[]> {
-    return getWeekendDays(this.#getLocale());
+    return getWeekendDays(this.#locale);
   }
 
   getWeekdayName(day: number, format: 'long' | 'short' | 'narrow' = 'long') {
-    return getWeekdayName(this.#getLocale(), day, format);
+    return getWeekdayName(this.#locale, day, format);
   }
 }

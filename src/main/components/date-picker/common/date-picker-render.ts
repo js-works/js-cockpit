@@ -4,6 +4,7 @@ import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
+import { CalendarLocalizer } from './calendar-localizer';
 
 // === exports =======================================================
 
@@ -27,13 +28,20 @@ type DatePickerProps = {
 // === Calendar ======================================================
 
 function renderDatePicker(
+  locale: string,
+  direction: 'ltr' | 'rtl',
   props: DatePickerProps,
   datePicker: DatePickerController
 ) {
+  const i18n = new CalendarLocalizer({
+    locale,
+    direction
+  });
+
   const calendar = new Calendar({
-    firstDayOfWeek: datePicker.getFirstDayOfWeek(),
-    weekendDays: datePicker.getWeekendDays(),
-    getWeekNumber: (date: Date) => datePicker.getWeekNumber(date),
+    firstDayOfWeek: i18n.getFirstDayOfWeek(),
+    weekendDays: i18n.getWeekendDays(),
+    getWeekNumber: (date: Date) => i18n.getWeekNumber(date),
     disableWeekends: props.disableWeekends,
     alwaysShow42Days: props.fixedDayCount && props.showAdjacentDays,
     minDate: props.minDate,
@@ -69,7 +77,7 @@ function renderDatePicker(
             >
               <a class="cal-prev" data-subject="prev" part="prev-button">
                 ${when(
-                  datePicker.getDirection() === 'ltr',
+                  i18n.getDirection() === 'ltr',
                   () => html`&#x1F860`,
                   () => html`&#x1F862`
                 )}
@@ -77,7 +85,7 @@ function renderDatePicker(
               ${renderTitle()}
               <a class="cal-next" data-subject="next" part="next-button">
                 ${when(
-                  datePicker.getDirection() === 'ltr',
+                  i18n.getDirection() === 'ltr',
                   () => html`&#x1F862`,
                   () => html`&#x1F860`
                 )}
@@ -161,7 +169,7 @@ function renderDatePicker(
           (idx) =>
             html`
               <div class="cal-weekday">
-                ${datePicker.getWeekdayName(idx, 'short')}
+                ${i18n.getWeekdayName(idx, 'short')}
               </div>
             `
         )}
@@ -174,7 +182,7 @@ function renderDatePicker(
               ? cell
               : [
                   html`<div class="cal-week-number">
-                    ${datePicker.formatWeekNumber(dayData.weekNumber)}
+                    ${i18n.formatWeekNumber(dayData.weekNumber)}
                   </div>`,
                   cell
                 ];
@@ -216,7 +224,7 @@ function renderDatePicker(
         data-day=${dayData.day}
         data-subject="day"
       >
-        ${datePicker.formatDay(dayData.day)}
+        ${i18n.formatDay(dayData.day)}
       </div>
     `;
   }
@@ -256,7 +264,7 @@ function renderDatePicker(
         data-month=${monthData.month}
         data-subject="month"
       >
-        ${datePicker.getMonthName(monthData.month, 'short')}
+        ${i18n.getMonthName(monthData.month, 'short')}
       </div>
     `;
   }
@@ -291,7 +299,7 @@ function renderDatePicker(
         data-year=${yearData.year}
         data-subject="year"
       >
-        ${datePicker.formatYear(yearData.year)}
+        ${i18n.formatYear(yearData.year)}
       </div>
     `;
   }
@@ -307,7 +315,7 @@ function renderDatePicker(
     let time = '';
     let dayPeriod = '';
 
-    const parts = new Intl.DateTimeFormat(datePicker.getLocale(), {
+    const parts = new Intl.DateTimeFormat(i18n.getLocale(), {
       hour: '2-digit',
       minute: '2-digit'
     }).formatToParts(date);

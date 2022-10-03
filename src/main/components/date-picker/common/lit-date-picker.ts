@@ -104,6 +104,11 @@ abstract class LitDatePicker extends LitElement {
   }
 
   render() {
-    return renderDatePicker(this, this._datePicker);
+    return renderDatePicker(
+      this._datePicker.getLocale(),
+      this._datePicker.getDirection(),
+      this,
+      this._datePicker
+    );
   }
 }
