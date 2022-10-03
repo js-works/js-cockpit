@@ -131,10 +131,13 @@ function renderDatePicker(
 
     const title =
       scene === 'decade'
-        ? datePicker.getDecadeTitle()
+        ? i18n.getDecadeTitle(datePicker.getActiveYear(), 12)
         : scene === 'year'
-        ? datePicker.getYearTitle()
-        : datePicker.getMonthTitle();
+        ? i18n.getYearTitle(datePicker.getActiveYear())
+        : i18n.getMonthTitle(
+            datePicker.getActiveYear(),
+            datePicker.getActiveMonth()
+          );
 
     return html`<div
       part="title"

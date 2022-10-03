@@ -67,4 +67,49 @@ class CalendarLocalizer {
   getWeekdayName(day: number, format: 'long' | 'short' | 'narrow' = 'long') {
     return getWeekdayName(this.#locale, day, format);
   }
+
+  getMonthTitle(year: number, month: number) {
+    const date = new Date(year, month, 1);
+
+    return ucFirst(
+      new Intl.DateTimeFormat(this.#locale, {
+        year: 'numeric',
+        month: 'long'
+      }).format(date)
+    );
+  }
+
+  getYearTitle(year: number) {
+    const date = new Date(year, 0, 1);
+
+    return new Intl.DateTimeFormat(this.#locale, {
+      year: 'numeric'
+    }).format(date);
+  }
+
+  getDecadeTitle(year: number, yearCount = 10, offset = 0) {
+    const startYear = Math.floor(year / 10) * 10;
+
+    return Intl.DateTimeFormat(this.#locale, {
+      year: 'numeric'
+      /* @ts-ignore */ // TODO!!!
+    }).formatRange(
+      new Date(startYear + offset, 1, 1),
+      new Date(startYear + offset + yearCount - 1, 1, 1)
+    );
+  }
+}
+
+// === helpers =======================================================
+
+function ucFirst(s: string): string {
+  const length = s.length;
+
+  if (length === 0) {
+    return s;
+  } else if (length === 1) {
+    return s.toUpperCase();
+  } else {
+    return s[0].toUpperCase() + s.slice(1);
+  }
 }

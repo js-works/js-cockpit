@@ -4,18 +4,15 @@ export {
   formatDay,
   formatWeekNumber,
   formatYear,
-  getDecadeTitle,
   getFirstDayOfWeek,
   getHourMinuteString,
   getMonthName,
-  getMonthTitle,
   getWeekdayName,
   getWeekendDays,
   getWeekNumber,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
-  getYearTitle,
   getYearWeekString
 };
 
@@ -70,42 +67,6 @@ const weekendData: Record<string, string> = {
 const localeInfoMap = new Map<string, LocaleInfo>();
 let firstDayOfWeekByCountryCode: Map<string, number>;
 let weekendDaysByCountryCode: Map<string, Readonly<number[]>>;
-
-function getMonthTitle(locale: string, year: number, month: number) {
-  const date = new Date(year, month, 1);
-
-  return ucFirst(
-    new Intl.DateTimeFormat(locale, {
-      year: 'numeric',
-      month: 'long'
-    }).format(date)
-  );
-}
-
-function getYearTitle(locale: string, year: number) {
-  const date = new Date(year, 0, 1);
-
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric'
-  }).format(date);
-}
-
-function getDecadeTitle(
-  locale: string,
-  year: number,
-  yearCount = 10,
-  offset = 0
-) {
-  const startYear = Math.floor(year / 10) * 10;
-
-  return Intl.DateTimeFormat(locale, {
-    year: 'numeric'
-    /* @ts-ignore */ // TODO!!!
-  }).formatRange(
-    new Date(startYear + offset, 1, 1),
-    new Date(startYear + offset + yearCount - 1, 1, 1)
-  );
-}
 
 function getLocaleInfo(locale: string): LocaleInfo {
   let info = localeInfoMap.get(locale);
@@ -215,18 +176,6 @@ function getWeekdayName(
 }
 
 // === helpers =======================================================
-
-function ucFirst(s: string): string {
-  const length = s.length;
-
-  if (length === 0) {
-    return s;
-  } else if (length === 1) {
-    return s.toUpperCase();
-  } else {
-    return s[0].toUpperCase() + s.slice(1);
-  }
-}
 
 function getYearMonthDayString(year: number, month: number, day: number) {
   const y = year.toString().padStart(4, '0');

@@ -1,13 +1,10 @@
 import type { ReactiveControllerHost } from 'lit';
 
 import {
-  getDecadeTitle,
   getHourMinuteString,
-  getMonthTitle,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
-  getYearTitle,
   getYearWeekString,
   getWeekNumber
 } from './calendar-utils';
@@ -172,22 +169,6 @@ class DatePickerController {
 
   setValue(value: string) {
     throw 'TODO'; // TODO!!!
-  }
-
-  getMonthTitle() {
-    return getMonthTitle(
-      this.#getLocale(),
-      this.#activeYear,
-      this.#activeMonth
-    );
-  }
-
-  getYearTitle() {
-    return getYearTitle(this.#getLocale(), this.#activeYear);
-  }
-
-  getDecadeTitle() {
-    return getDecadeTitle(this.#getLocale(), this.#activeYear, 12);
   }
 
   #clearSelection() {
