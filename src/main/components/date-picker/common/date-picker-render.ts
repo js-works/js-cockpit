@@ -212,10 +212,16 @@ function renderDatePicker(
       `;
     }
 
+    const weekString = getYearWeekString(
+      dayData.year, // TODO!!!!!!!!!!!!!
+      dayData.weekNumber // TODO!!!!!!!
+    );
+
     const selected = datePicker.hasSelectedDay(
       dayData.year,
       dayData.month,
-      dayData.day
+      dayData.day,
+      weekString
     );
 
     return html`
@@ -234,10 +240,7 @@ function renderDatePicker(
           dayData.month,
           dayData.day
         )}
-        data-week=${getYearWeekString(
-          dayData.year, // TODO!!!!!!!!!!!!!
-          dayData.weekNumber // TODO!!!!!!!
-        )}
+        data-week=${weekString}
         data-subject="day"
       >
         ${i18n.formatDay(dayData.day)}

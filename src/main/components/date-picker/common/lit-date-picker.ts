@@ -102,7 +102,6 @@ abstract class LitDatePicker extends LitElement {
     this._getDirection = params.getDirection;
 
     this._datePicker = new DatePickerController(this, {
-      getLocale: params.getLocale,
       getSelectionMode: () => this.selectionMode
     });
   }

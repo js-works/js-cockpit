@@ -4,9 +4,7 @@ import {
   getHourMinuteString,
   getYearMonthDayString,
   getYearMonthString,
-  getYearString,
-  getYearWeekString,
-  getWeekNumber
+  getYearString
 } from './calendar-utils';
 
 export { DatePickerController };
@@ -31,8 +29,6 @@ namespace DatePickerController {
 type SelectionMode = DatePickerController.SelectionMode;
 
 class DatePickerController {
-  #getLocale: () => string;
-  #getWeekNumber: (date: Date) => number;
   #selectionMode: DatePickerController.SelectionMode;
   #getSelectionMode: () => DatePickerController.SelectionMode;
   #selection = new Set<string>();
@@ -50,16 +46,10 @@ class DatePickerController {
     host: ReactiveControllerHost & HTMLElement,
 
     params: {
-      getLocale: () => string;
       getSelectionMode: () => SelectionMode;
-      getWeekNumber?: ((date: Date) => number) | null;
       onChange?: () => void;
     }
   ) {
-    this.#getLocale = params.getLocale;
-    this.#getWeekNumber =
-      params.getWeekNumber ||
-      ((date) => getWeekNumber(this.#getLocale(), date));
     let initialized = false;
 
     const innerController = {
@@ -121,15 +111,14 @@ class DatePickerController {
     return this.#selection.has(getYearMonthString(year, month));
   }
 
-  hasSelectedDay(year: number, month: number, day: number) {
+  hasSelectedDay(year: number, month: number, day: number, week: string) {
     const mode = this.#selectionMode;
 
     if (mode === 'date' || mode === 'dates' || mode === 'dateTime') {
       const value = this.#selectionMode;
       return this.#selection.has(getYearMonthDayString(year, month, day));
     } else if (mode === 'week' || mode === 'weeks') {
-      const weekNumber = this.#getWeekNumber(new Date(year, month, day));
-      return this.#selection.has(getYearWeekString(year, weekNumber));
+      return this.#selection.has(week);
     }
 
     return false;
@@ -290,7 +279,9 @@ class DatePickerController {
             .split('-')
             .map((it) => parseInt(it, 10));
 
-          this.#clickDay(year, month - 1, day);
+          const week = target.getAttribute('data-week')!;
+
+          this.#clickDay(year, month - 1, day, week);
           break;
         }
 
@@ -456,7 +447,7 @@ class DatePickerController {
     this.#setScene(this.#scene === 'month' ? 'year' : 'decade');
   };
 
-  #clickDay = (year: number, month: number, day: number) => {
+  #clickDay = (year: number, month: number, day: number, week: string) => {
     switch (this.#selectionMode) {
       case 'date':
       case 'dates':
@@ -469,9 +460,7 @@ class DatePickerController {
 
       case 'week':
       case 'weeks': {
-        const weekNumber = this.#getWeekNumber(new Date(year, month, day));
-        const weekString = getYearWeekString(year, weekNumber);
-        this.#toggleSelected(weekString, this.#selectionMode !== 'weeks');
+        this.#toggleSelected(week, this.#selectionMode !== 'weeks');
         break;
       }
     }
