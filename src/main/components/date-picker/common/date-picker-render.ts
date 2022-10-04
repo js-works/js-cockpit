@@ -6,6 +6,13 @@ import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
 
+import {
+  getYearMonthDayString,
+  getYearMonthString,
+  getYearString,
+  getYearWeekString
+} from './calendar-utils';
+
 // === exports =======================================================
 
 export { renderDatePicker };
@@ -222,9 +229,15 @@ function renderDatePicker(
           'cal-cell--highlighted': highlighted,
           'cal-cell--selected': selected
         })}
-        data-year=${dayData.year}
-        data-month=${dayData.month}
-        data-day=${dayData.day}
+        data-date=${getYearMonthDayString(
+          dayData.year,
+          dayData.month,
+          dayData.day
+        )}
+        data-week=${getYearWeekString(
+          dayData.year, // TODO!!!!!!!!!!!!!
+          dayData.weekNumber // TODO!!!!!!!
+        )}
         data-subject="day"
       >
         ${i18n.formatDay(dayData.day)}
@@ -263,8 +276,7 @@ function renderDatePicker(
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         })}
-        data-year=${monthData.year}
-        data-month=${monthData.month}
+        data-month=${getYearMonthString(monthData.year, monthData.month)}
         data-subject="month"
       >
         ${i18n.getMonthName(monthData.month, 'short')}
@@ -299,7 +311,7 @@ function renderDatePicker(
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         })}
-        data-year=${yearData.year}
+        data-year=${getYearString(yearData.year)}
         data-subject="year"
       >
         ${i18n.formatYear(yearData.year)}

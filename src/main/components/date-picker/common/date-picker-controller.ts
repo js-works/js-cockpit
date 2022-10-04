@@ -285,19 +285,22 @@ class DatePickerController {
           break;
 
         case 'day': {
-          const year = parseInt(target.getAttribute('data-year')!, 10);
-          const month = parseInt(target.getAttribute('data-month')!, 10);
-          const day = parseInt(target.getAttribute('data-day')!, 10);
+          const [year, month, day] = target
+            .getAttribute('data-date')!
+            .split('-')
+            .map((it) => parseInt(it, 10));
 
-          this.#clickDay(year, month, day);
+          this.#clickDay(year, month - 1, day);
           break;
         }
 
         case 'month': {
-          const year = parseInt(target.getAttribute('data-year')!, 10);
-          const month = parseInt(target.getAttribute('data-month')!, 10);
+          const [year, month] = target
+            .getAttribute('data-month')!
+            .split('-')
+            .map((it) => parseInt(it, 10));
 
-          this.#clickMonth(year, month);
+          this.#clickMonth(year, month - 1);
           break;
         }
 
