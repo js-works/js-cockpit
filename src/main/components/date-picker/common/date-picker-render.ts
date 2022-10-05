@@ -27,6 +27,7 @@ type DatePickerProps = {
   highlightToday: boolean;
   highlightWeekends: boolean;
   disableWeekends: boolean;
+  enableCenturyView: boolean;
   fixedDayCount: boolean;
   minDate: Date | null;
   maxDate: Date | null;
@@ -59,7 +60,9 @@ function renderDatePicker(
     const scene = datePicker.getScene();
 
     const sheet =
-      scene === 'decade'
+      scene === 'century'
+        ? renderCenturySheet()
+        : scene === 'decade'
         ? renderDecadeSheet()
         : scene === 'year'
         ? renderYearSheet()
@@ -135,24 +138,28 @@ function renderDatePicker(
 
   function renderTitle() {
     const scene = datePicker.getScene();
+    const activeYear = datePicker.getActiveYear();
 
     const title =
-      scene === 'decade'
-        ? i18n.getDecadeTitle(datePicker.getActiveYear(), 12)
+      scene === 'century'
+        ? i18n.getCenturyTitle(activeYear, 12)
+        : scene === 'decade'
+        ? i18n.getDecadeTitle(activeYear, 12)
         : scene === 'year'
-        ? i18n.getYearTitle(datePicker.getActiveYear())
-        : i18n.getMonthTitle(
-            datePicker.getActiveYear(),
-            datePicker.getActiveMonth()
-          );
+        ? i18n.getYearTitle(activeYear)
+        : i18n.getMonthTitle(activeYear, datePicker.getActiveMonth());
+
+    const disabled =
+      datePicker.getScene() === 'century' ||
+      (datePicker.getScene() === 'decade' && !props.enableCenturyView);
 
     return html`<div
       part="title"
       class=${classMap({
         'cal-title': true,
-        'cal-title--disabled': datePicker.getScene() === 'decade'
+        'cal-title--disabled': disabled
       })}
-      data-subject="title"
+      data-subject=${when(!disabled, () => 'title')}
     >
       ${title}
     </div>`;
@@ -318,6 +325,39 @@ function renderDatePicker(
         data-subject="year"
       >
         ${i18n.formatYear(yearData.year)}
+      </div>
+    `;
+  }
+
+  function renderCenturySheet() {
+    const view = calendar.getCenturyView(datePicker.getActiveYear());
+
+    return html`
+      <div class="cal-sheet cal-sheet--century">
+        ${repeat(
+          view.decades,
+          (decadeData) => decadeData.firstYear,
+          (decadeData, idx) => renderDecadeCell(decadeData)
+        )}
+      </div>
+    `;
+  }
+
+  function renderDecadeCell(decadeData: Calendar.DecadeData) {
+    const currentHighlighted = props.highlightToday && decadeData.current;
+
+    return html`
+      <div
+        class=${classMap({
+          'cal-cell': true,
+          'cal-cell--disabled': decadeData.disabled,
+          'cal-cell--current': decadeData.current,
+          'cal-cell--current-highlighted': currentHighlighted
+        })}
+        data-year=${getYearString(decadeData.firstYear)}
+        data-subject="decade"
+      >
+        ${i18n.getDecadeTitle(decadeData.firstYear, 10)}
       </div>
     `;
   }

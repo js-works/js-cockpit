@@ -135,13 +135,9 @@ export function createDatePickerStyles(tokens: DatePickerTokens) {
     grid-template-columns: repeat(8, 1fr);
   }
 
-  .cal-sheet--year {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    flex-grow: 1;
-  }
-
-  .cal-sheet--decade {
+  .cal-sheet--year, 
+  .cal-sheet--decade,
+  .cal-sheet--century {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1;

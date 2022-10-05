@@ -40,6 +40,13 @@ namespace Calendar {
     disabled: boolean;
   }>;
 
+  export type DecadeData = Readonly<{
+    firstYear: number;
+    lastYear: number;
+    current: boolean; // true if current decade, else false
+    disabled: boolean;
+  }>;
+
   export type MonthView = Readonly<{
     year: number;
     month: number; // 0 -> january, ..., 11 -> december
@@ -62,6 +69,12 @@ namespace Calendar {
     years: readonly YearData[];
     prevDecadeDisabled: boolean;
     nextDecadeDisabled: boolean;
+  }>;
+
+  export type CenturyView = Readonly<{
+    decades: readonly DecadeData[];
+    prevCenturyDisabled: boolean;
+    nextCenturyDisabled: boolean;
   }>;
 }
 
@@ -225,6 +238,29 @@ class Calendar {
       years,
       prevDecadeDisabled: false, // TODO!!!
       nextDecadeDisabled: false // TODO!!!
+    };
+  }
+
+  getCenturyView(year: number): Calendar.CenturyView {
+    const startYear = year - (year % 100);
+    const endYear = startYear + 119;
+
+    const currYear = new Date().getFullYear();
+    const decades: Calendar.DecadeData[] = [];
+
+    for (let cellYear = startYear; cellYear <= endYear; cellYear += 10) {
+      decades.push({
+        current: cellYear <= currYear && cellYear + 10 > currYear,
+        firstYear: cellYear,
+        lastYear: cellYear + 9,
+        disabled: false // TODO!!!!!!!!!
+      });
+    }
+
+    return {
+      decades,
+      prevCenturyDisabled: false, // TODO!!!
+      nextCenturyDisabled: false // TODO!!!
     };
   }
 }

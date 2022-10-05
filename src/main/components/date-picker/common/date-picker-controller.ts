@@ -23,7 +23,7 @@ namespace DatePickerController {
     | 'year'
     | 'years';
 
-  export type Scene = 'month' | 'year' | 'decade' | 'time';
+  export type Scene = 'month' | 'year' | 'decade' | 'century' | 'time';
 }
 
 type SelectionMode = DatePickerController.SelectionMode;
@@ -301,6 +301,13 @@ class DatePickerController {
           this.#clickYear(year);
           break;
         }
+
+        case 'decade': {
+          const year = parseInt(target.getAttribute('data-year')!, 10);
+
+          this.#clickDecade(year);
+          break;
+        }
       }
 
       ev.preventDefault();
@@ -386,7 +393,11 @@ class DatePickerController {
           break;
 
         case 'decade':
-          this.#activeYear += signum * 11;
+          this.#activeYear += signum * 10;
+          break;
+
+        case 'century':
+          this.#activeYear += signum * 100;
           break;
       }
 
@@ -440,11 +451,21 @@ class DatePickerController {
   };
 
   #clickTitle = () => {
-    if (this.#scene !== 'month' && this.#scene !== 'year') {
+    if (
+      this.#scene !== 'month' &&
+      this.#scene !== 'year' &&
+      this.#scene !== 'decade'
+    ) {
       return;
     }
 
-    this.#setScene(this.#scene === 'month' ? 'year' : 'decade');
+    this.#setScene(
+      this.#scene === 'month'
+        ? 'year'
+        : this.#scene === 'year'
+        ? 'decade'
+        : 'century'
+    );
   };
 
   #clickDay = (year: number, month: number, day: number, week: string) => {
@@ -508,6 +529,13 @@ class DatePickerController {
       }
     }
 
+    this.#requestUpdate();
+  };
+
+  #clickDecade = (firstYear: number) => {
+    console.log(111);
+    this.#activeYear = firstYear;
+    this.#scene = 'decade';
     this.#requestUpdate();
   };
 }

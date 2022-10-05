@@ -49,6 +49,7 @@ class DatePickerDemo extends Component {
   private _disableWeekends = false;
   private _showWeekNumbers = true;
   private _showAdjacentDays = true;
+  private _enableCenturyView = false;
   private _fixedDayCount = false;
 
   private _onChange = (ev: Event) => {
@@ -93,6 +94,7 @@ class DatePickerDemo extends Component {
               ?disable-weekends=${this._disableWeekends}
               ?show-week-numbers=${this._showWeekNumbers}
               ?show-adjacent-days=${this._showAdjacentDays}
+              ?enable-century-view=${this._enableCenturyView}
               ?fixed-day-count=${this._fixedDayCount}
               lang=${this._locale}
               dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
@@ -177,6 +179,12 @@ class DatePickerDemo extends Component {
                   ?checked=${this._showWeekNumbers}
                 >
                   show week numbers
+                </sl-checkbox>
+                <sl-checkbox
+                  data-subject="enableCenturyView"
+                  ?checked=${this._enableCenturyView}
+                >
+                  enable century view
                 </sl-checkbox>
                 <sl-checkbox
                   data-subject="fixedDayCount"

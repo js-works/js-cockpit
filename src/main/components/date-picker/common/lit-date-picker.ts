@@ -73,6 +73,9 @@ abstract class LitDatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'disable-weekends' })
   disableWeekends = false;
 
+  @property({ type: Boolean, attribute: 'enable-century-view' })
+  enableCenturyView = false;
+
   @property({ type: Boolean, attribute: 'fixed-day-count' })
   fixedDayCount = false; // will be ignored if showAdjacentDays is false
 

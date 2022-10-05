@@ -98,6 +98,11 @@ class CalendarLocalizer {
       new Date(startYear + offset + yearCount - 1, 1, 1)
     );
   }
+
+  getCenturyTitle(year: number, decadeCount = 10, offset = 0) {
+    const startYear = Math.floor(year / 100) * 100;
+    return this.getDecadeTitle(startYear, decadeCount * 10, offset * 10);
+  }
 }
 
 // === helpers =======================================================
