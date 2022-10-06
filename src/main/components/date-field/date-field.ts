@@ -201,32 +201,32 @@ export class DateField extends Component {
               .fixedDayCount=${this.fixedDayCount}
               ${ref(this._pickerRef)}
             >
-              <div slot="footer" class="popup-footer">
-                <sl-button
-                  variant="text"
-                  size="small"
-                  class="button"
-                  @click=${this._onClearClick}
-                  >Clear</sl-button
-                >
-                <sl-button
-                  variant="text"
-                  class="button"
-                  size="small"
-                  @click=${this._onCancelClick}
-                >
-                  Cancel
-                </sl-button>
-                <sl-button
-                  variant="text"
-                  class="button"
-                  size="small"
-                  @click=${this._onOkClick}
-                >
-                  OK
-                </sl-button>
-              </div>
             </cp-date-picker>
+            <div class="popup-footer">
+              <sl-button
+                variant="text"
+                size="small"
+                class="button"
+                @click=${this._onClearClick}
+                >Clear</sl-button
+              >
+              <sl-button
+                variant="text"
+                class="button"
+                size="small"
+                @click=${this._onCancelClick}
+              >
+                Cancel
+              </sl-button>
+              <sl-button
+                variant="text"
+                class="button"
+                size="small"
+                @click=${this._onOkClick}
+              >
+                OK
+              </sl-button>
+            </div>
           </div>
         </sl-dropdown>
       </div>

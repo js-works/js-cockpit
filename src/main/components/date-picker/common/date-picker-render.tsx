@@ -1,10 +1,60 @@
-import { html } from 'lit';
-import { classMap } from 'lit/directives/class-map';
-import { repeat } from 'lit/directives/repeat';
-import { when } from 'lit/directives/when';
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
+
+import { createElement, render } from 'preact';
+
+const h = createElement as any;
+
+type VElement = HTMLElement;
+type VNode = null | number | string | VElement | VNode[];
+type Attrs = Record<string, string | number | null>;
+
+const [a, div, input, span] = ['a', 'div', 'input', 'span'].map((tag) =>
+  h.bind(null, tag)
+);
+
+/*
+function h(
+  type: string,
+  attrs: Attrs | null = null,
+  ...children: VNode[]
+): VElement {
+  const ret = document.createElement(type);
+
+  if (attrs) {
+    for (const key of Object.keys(attrs)) {
+      const value = attrs[key];
+
+      if (value !== null) {
+        ret.setAttribute(key, String(attrs[key]));
+      }
+    }
+  }
+
+  for (const child of children.flat()) {
+    if (typeof child === 'number' || typeof child === 'string') {
+      ret.append(document.createTextNode(String(child)));
+    } else if (child instanceof Element) {
+      ret.append(child);
+    }
+  }
+
+  return ret;
+}
+*/
+
+function classMap(classes: Record<string, unknown>): string {
+  const arr: string[] = [];
+
+  for (const key of Object.keys(classes)) {
+    if (classes[key]) {
+      arr.push(key);
+    }
+  }
+
+  return arr.join(' ');
+}
 
 import {
   getYearMonthDayString,
@@ -73,67 +123,51 @@ function renderDatePicker(
       (it) => `-${it.toLowerCase()}`
     );
 
-    return html`
-      <div class="cal-base cal-base--type-${typeSnakeCase}">
-        ${when(
-          props.selectionMode !== 'time',
-          () => html`
-            <div
-              class=${classMap({
+    return div(
+      { class: `cal-base cal-base--type-${typeSnakeCase}` },
+      props.selectionMode === 'time'
+        ? null
+        : div(
+            {
+              class: classMap({
                 'cal-nav': true,
                 'cal-nav--elevated': props.elevateNavigation
-              })}
-              part="navigation"
-            >
-              <a class="cal-prev" data-subject="prev" part="prev-button">
-                ${when(
-                  i18n.getDirection() === 'ltr',
-                  () => html`&#x1F860`,
-                  () => html`&#x1F862`
-                )}
-              </a>
-              ${renderTitle()}
-              <a class="cal-next" data-subject="next" part="next-button">
-                ${when(
-                  i18n.getDirection() === 'ltr',
-                  () => html`&#x1F862`,
-                  () => html`&#x1F860`
-                )}
-              </a>
-            </div>
-            ${sheet}
-          `
-        )}${when(
-          props.selectionMode === 'dateTime' || props.selectionMode === 'time',
-          () => html`
-            <div class="cal-time-selector">
-              <div class="cal-time">${renderTime()}</div>
-              <input
-                type="range"
-                class="cal-hour-slider"
-                value=${datePicker.getActiveHour()}
-                min="0"
-                max="23"
-                tooltip="none"
-                data-subject="hours"
-              />
-              <input
-                type="range"
-                class="cal-minute-slider"
-                value=${datePicker.getActiveMinute()}
-                min="0"
-                max="59"
-                tooltip="none"
-                data-subject="minutes"
-              />
-            </div>
-          `
-        )}
-        <div>
-          <slot name="footer"></slot>
-        </div>
-      </div>
-    `;
+              })
+            },
+            a(
+              { 'class': 'cal-prev', 'data-subject': 'prev' },
+              i18n.getDirection() === 'ltr' ? '\u{1F860}' : '\u{1F862}'
+            ),
+            renderTitle(),
+            a(
+              { 'class': 'cal-next', 'data-subject': 'next' },
+              i18n.getDirection() === 'ltr' ? '\u{1F862}' : '\u{1F860}'
+            )
+          ),
+      props.selectionMode === 'time' ? null : sheet,
+      props.selectionMode !== 'dateTime' && props.selectionMode !== 'time'
+        ? null
+        : div(
+            { class: 'cal-time-selector' },
+            div({ class: 'cal-time' }, renderTime()),
+            input({
+              'type': 'range',
+              'class': 'cal-hour-slider',
+              'value': datePicker.getActiveHour(),
+              'min': '0',
+              'max': '23',
+              'data-subject': 'hours'
+            }),
+            input({
+              'type': 'range',
+              'class': 'cal-minute-slider',
+              'value': datePicker.getActiveMinute(),
+              'min': 0,
+              'max': 59,
+              'data-subject': 'minutes'
+            })
+          )
+    );
   }
 
   function renderTitle() {
@@ -153,16 +187,16 @@ function renderDatePicker(
       datePicker.getScene() === 'century' ||
       (datePicker.getScene() === 'decade' && !props.enableCenturyView);
 
-    return html`<div
-      part="title"
-      class=${classMap({
-        'cal-title': true,
-        'cal-title--disabled': disabled
-      })}
-      data-subject=${when(!disabled, () => 'title')}
-    >
-      ${title}
-    </div>`;
+    return div(
+      {
+        'class': classMap({
+          'cal-title': true,
+          'cal-title--disabled': disabled
+        }),
+        'data-subject': disabled ? null : 'title'
+      },
+      title
+    );
   }
 
   function renderMonthSheet() {
@@ -171,42 +205,32 @@ function renderDatePicker(
       datePicker.getActiveMonth()
     );
 
-    return html`
-      <div
-        class=${classMap({
+    return div(
+      {
+        class: classMap({
           'cal-sheet': true,
           'cal-sheet--month': true,
           'cal-sheet--month-with-week-numbers': props.showWeekNumbers
-        })}
-      >
-        ${when(props.showWeekNumbers, () => html`<div></div>`)}
-        ${repeat(
-          view.weekdays,
-          (idx) => idx,
-          (idx) =>
-            html`
-              <div class="cal-weekday">
-                ${i18n.getWeekdayName(idx, 'short')}
-              </div>
-            `
-        )}
-        ${repeat(
-          view.days,
-          (dayData) => dayData.month * 100 + dayData.day,
-          (dayData, idx) => {
-            const cell = renderDayCell(dayData);
-            return !props.showWeekNumbers || idx % 7 > 0
-              ? cell
-              : [
-                  html`<div class="cal-week-number">
-                    ${i18n.formatWeekNumber(dayData.weekNumber)}
-                  </div>`,
-                  cell
-                ];
-          }
-        )}
-      </div>
-    `;
+        })
+      },
+
+      props.showWeekNumbers ? div() : null,
+      view.weekdays.map((idx) =>
+        div({ class: 'cal-weekday' }, i18n.getWeekdayName(idx, 'short'))
+      ),
+      view.days.flatMap((dayData, idx) => {
+        const cell = renderDayCell(dayData);
+        return !props.showWeekNumbers || idx % 7 > 0
+          ? cell
+          : [
+              div(
+                { class: 'cal-week-number' },
+                i18n.formatWeekNumber(dayData.weekNumber)
+              ),
+              cell
+            ];
+      })
+    );
   }
 
   function renderDayCell(dayData: Calendar.DayData) {
@@ -214,9 +238,11 @@ function renderDatePicker(
     const highlighted = props.highlightWeekends && dayData.weekend;
 
     if (!props.showAdjacentDays && dayData.adjacent) {
-      return html`
-        <div class=${classMap({ 'cal-cell--highlighted': highlighted })}></div>
-      `;
+      return div({
+        class: classMap({
+          'cal-cell--highlighted': highlighted
+        })
+      });
     }
 
     const weekString = getYearWeekString(
@@ -231,9 +257,9 @@ function renderDatePicker(
       weekString
     );
 
-    return html`
-      <div
-        class=${classMap({
+    return div(
+      {
+        'class': classMap({
           'cal-cell': true,
           'cal-cell--disabled': dayData.disabled,
           'cal-cell--adjacent': dayData.adjacent,
@@ -241,32 +267,26 @@ function renderDatePicker(
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--highlighted': highlighted,
           'cal-cell--selected': selected
-        })}
-        data-date=${getYearMonthDayString(
+        }),
+        'data-date': getYearMonthDayString(
           dayData.year,
           dayData.month,
           dayData.day
-        )}
-        data-week=${weekString}
-        data-subject="day"
-      >
-        ${i18n.formatDay(dayData.day)}
-      </div>
-    `;
+        ),
+        'data-week': weekString,
+        'data-subject': 'day'
+      },
+      i18n.formatDay(dayData.day)
+    );
   }
 
   function renderYearSheet() {
     const view = calendar.getYearView(datePicker.getActiveYear());
 
-    return html`
-      <div class="cal-sheet cal-sheet--year">
-        ${repeat(
-          view.months,
-          (monthData) => monthData.month,
-          (monthData, idx) => renderMonthCell(monthData)
-        )}
-      </div>
-    `;
+    return div(
+      { class: 'cal-sheet cal-sheet--year' },
+      view.months.map((monthData) => renderMonthCell(monthData))
+    );
   }
 
   function renderMonthCell(monthData: Calendar.MonthData) {
@@ -277,89 +297,76 @@ function renderDatePicker(
 
     const currentHighlighted = monthData.current && props.highlightToday;
 
-    return html`
-      <div
-        class=${classMap({
+    return div(
+      {
+        'class': classMap({
           'cal-cell': true,
           'cal-cell--disabled': monthData.disabled,
           'cal-cell--current': monthData.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
-        })}
-        data-month=${getYearMonthString(monthData.year, monthData.month)}
-        data-subject="month"
-      >
-        ${i18n.getMonthName(monthData.month, 'short')}
-      </div>
-    `;
+        }),
+        'data-month': getYearMonthString(monthData.year, monthData.month),
+        'data-subject': 'month'
+      },
+      i18n.getMonthName(monthData.month, 'short')
+    );
   }
 
   function renderDecadeSheet() {
     const view = calendar.getDecadeView(datePicker.getActiveYear());
 
-    return html`
-      <div class="cal-sheet cal-sheet--decade">
-        ${repeat(
-          view.years,
-          (monthData) => monthData.year,
-          (monthData, idx) => renderYearCell(monthData)
-        )}
-      </div>
-    `;
+    return div(
+      { class: 'cal-sheet cal-sheet--decade' },
+      view.years.map((monthData, idx) => renderYearCell(monthData))
+    );
   }
 
   function renderYearCell(yearData: Calendar.YearData) {
     const selected = datePicker.hasSelectedYear(yearData.year);
     const currentHighlighted = props.highlightToday && yearData.current;
 
-    return html`
-      <div
-        class=${classMap({
+    return div(
+      {
+        'class': classMap({
           'cal-cell': true,
           'cal-cell--disabled': yearData.disabled,
           'cal-cell--current': yearData.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
-        })}
-        data-year=${getYearString(yearData.year)}
-        data-subject="year"
-      >
-        ${i18n.formatYear(yearData.year)}
-      </div>
-    `;
+        }),
+        'data-year': getYearString(yearData.year),
+        'data-subject': 'year'
+      },
+      i18n.formatYear(yearData.year)
+    );
   }
 
   function renderCenturySheet() {
     const view = calendar.getCenturyView(datePicker.getActiveYear());
 
-    return html`
-      <div class="cal-sheet cal-sheet--century">
-        ${repeat(
-          view.decades,
-          (decadeData) => decadeData.firstYear,
-          (decadeData, idx) => renderDecadeCell(decadeData)
-        )}
-      </div>
-    `;
+    return div(
+      { class: 'cal-sheet cal-sheet--century' },
+      view.decades.map((decadeData, idx) => renderDecadeCell(decadeData))
+    );
   }
 
   function renderDecadeCell(decadeData: Calendar.DecadeData) {
     const currentHighlighted = props.highlightToday && decadeData.current;
 
-    return html`
-      <div
-        class=${classMap({
+    return div(
+      {
+        'class': classMap({
           'cal-cell': true,
           'cal-cell--disabled': decadeData.disabled,
           'cal-cell--current': decadeData.current,
           'cal-cell--current-highlighted': currentHighlighted
-        })}
-        data-year=${getYearString(decadeData.firstYear)}
-        data-subject="decade"
-      >
-        ${i18n.getDecadeTitle(decadeData.firstYear, 10)}
-      </div>
-    `;
+        }),
+        'data-year': getYearString(decadeData.firstYear),
+        'data-subject': 'decade'
+      },
+      i18n.getDecadeTitle(decadeData.firstYear, 10)
+    );
   }
 
   function renderTime() {
@@ -394,14 +401,11 @@ function renderDatePicker(
       time = parts.map((it) => it.value).join('');
     }
 
-    return html`
-      <div class="cal-time">
-        ${time}
-        ${!dayPeriod
-          ? null
-          : html`<span class="cal-day-period">${dayPeriod}</span>`}
-      </div>
-    `;
+    return div(
+      { class: 'cal-time' },
+      time,
+      !dayPeriod ? null : span({ class: 'cal-day-period' }, dayPeriod)
+    );
   }
 
   return render();
