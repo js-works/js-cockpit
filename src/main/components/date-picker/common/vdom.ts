@@ -27,7 +27,7 @@ function h(tagName: string, attrs: Attrs | null = null, ...children: VNode[]) {
 
 function renderToString(vnode: VNode): string {
   const tokens: string[] = [];
-  const push = (...xs: string[]): void => xs.forEach((x) => tokens.push(x));
+  const push = tokens.push.bind(tokens);
   const encodedEntities = /["&<]/g;
 
   const entityReplacements: Record<string, string> = {
@@ -45,31 +45,30 @@ function renderToString(vnode: VNode): string {
     }
 
     if (typeof vnode === 'string') {
-      return push(vnode);
+      push(vnode);
     } else if (typeof vnode === 'number') {
-      return push(String(vnode));
+      push(String(vnode));
     } else if (Array.isArray(vnode)) {
-      return vnode.forEach(process);
-    }
+      vnode.forEach(process);
+    } else {
+      push('<', vnode.tagName);
 
-    push('<', vnode.tagName);
-
-    if (vnode.attrs) {
-      for (const [k, v] of Object.entries(vnode.attrs)) {
-        if (v === null) {
-          continue;
+      if (vnode.attrs) {
+        for (const [k, v] of Object.entries(vnode.attrs)) {
+          if (v !== null) {
+            push(' ', k, '="', encodeEntities(String(v)), '"');
+          }
         }
-
-        push(' ', k, '="', encodeEntities(String(v)), '"');
       }
-    }
 
-    push('>');
-    vnode.children.forEach(process);
-    push('</', vnode.tagName, '>');
+      push('>');
+      vnode.children.forEach(process);
+      push('</', vnode.tagName, '>');
+    }
   };
 
   process(vnode);
+
   return tokens.join('');
 }
 

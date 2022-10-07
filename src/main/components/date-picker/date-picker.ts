@@ -1,12 +1,54 @@
-import { unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators';
+import { html, unsafeCSS, LitElement } from 'lit';
+import type { ComplexAttributeConverter } from 'lit';
+import { customElement, property } from 'lit/decorators';
+import { unsafeHTML } from 'lit/directives/unsafe-html';
+import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize';
-import { LitDatePicker } from './common/lit-date-picker';
+import { DatePickerController } from './common/date-picker-controller';
+import { renderDatePicker } from './common/date-picker-render';
+import { renderToString } from './common/vdom';
+import type { VNode } from './common/vdom';
 
 import {
   DatePickerTokens,
   createDatePickerStyles
 } from './common/date-picker-styling';
+
+// === exports =======================================================
+
+export { DatePicker };
+
+// === exported types ==========================================
+
+namespace LitDatePicker {
+  export type SelectionMode = DatePickerController.SelectionMode;
+}
+
+// === converters ====================================================
+
+const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
+  fromAttribute(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    return new Date(value);
+  },
+
+  toAttribute(date) {
+    if (!date) {
+      return '';
+    }
+
+    return (
+      String(date.getFullYear()).padStart(4, '0') +
+      '-' +
+      String(date.getMonth()).padStart(2, '0') +
+      '-' +
+      String(date.getDate()).padStart(2, '0')
+    );
+  }
+};
 
 const tokens: DatePickerTokens = {
   fontFamily: 'var(--sl-font-sans)',
@@ -43,15 +85,97 @@ const tokens: DatePickerTokens = {
 };
 
 @customElement('cp-date-picker')
-export class DatePicker extends LitDatePicker {
+class DatePicker extends LitElement {
+  @property({ type: String })
+  get value() {
+    return this._datePicker.getValue();
+  }
+
+  set value(value: string) {
+    this._datePicker.setValue(value);
+  }
+
+  @property({ type: String, attribute: 'selection-mode' })
+  selectionMode: LitDatePicker.SelectionMode = 'date';
+
+  @property({ type: Boolean, attribute: 'elevate-navigation' })
+  elevateNavigation = false;
+
+  @property({ type: Boolean, attribute: 'show-week-numbers' })
+  showWeekNumbers = false;
+
+  @property({ type: Boolean, attribute: 'show-adjacent-days' })
+  showAdjacentDays = false;
+
+  @property({ type: Boolean, attribute: 'highlight-today' })
+  highlightToday = false;
+
+  @property({ type: Boolean, attribute: 'highlight-weekends' })
+  highlightWeekends = false;
+
+  @property({ type: Boolean, attribute: 'disable-weekends' })
+  disableWeekends = false;
+
+  @property({ type: Boolean, attribute: 'enable-century-view' })
+  enableCenturyView = false;
+
+  @property({ type: Boolean, attribute: 'fixed-day-count' })
+  fixedDayCount = false; // will be ignored if showAdjacentDays is false
+
+  @property({ converter: dateAttributeConverter, attribute: 'min-date' })
+  minDate: Date | null = null;
+
+  @property({ converter: dateAttributeConverter, attribute: 'max-date' })
+  maxDate: Date | null = null;
+
+  @property({ type: String, reflect: true })
+  lang = '';
+
+  @property({ type: String, reflect: true })
+  dir = '';
+
+  private _datePicker: DatePickerController;
+  private _content: VNode = null;
+  private _containerRef = createRef<HTMLDivElement>();
+
   static styles = unsafeCSS(createDatePickerStyles(tokens));
 
   private _localize = new LocalizeController(this);
 
   constructor() {
-    super({
-      getLocale: () => this._localize.lang(),
-      getDirection: () => (this._localize.dir() === 'rtl' ? 'rtl' : 'ltr')
+    super();
+
+    this._datePicker = new DatePickerController(this, {
+      getSelectionMode: () => this.selectionMode
     });
+  }
+
+  private _renderVElement() {
+    return renderDatePicker(
+      this._localize.lang(),
+      this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
+      this,
+      this._datePicker
+    );
+  }
+
+  shouldUpdate() {
+    const oldContent = this._content;
+    this._content = this._renderVElement();
+
+    if (!this.hasUpdated) {
+      return true;
+    }
+
+    this._containerRef.value!.innerHTML = renderToString(this._content);
+    return false;
+  }
+
+  render() {
+    return html`
+      <div ${ref(this._containerRef)}>
+        ${unsafeHTML(renderToString(this._content))}
+      </div>
+    `;
   }
 }
