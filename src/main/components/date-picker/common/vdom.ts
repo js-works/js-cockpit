@@ -199,6 +199,7 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
+  /*
   return (elem) => {
     elem.innerHTML = '';
     const content = render(newVTree);
@@ -209,8 +210,7 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
       elem.replaceChildren(content);
     }
   };
-
-  /*
+*/
   if (newVTree === null || (Array.isArray(newVTree) && newVTree.length === 0)) {
     return ($node) => {
       $node.innerHTML = '';
@@ -233,28 +233,33 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     }
   }
 
+  const xxxoldVTree: any = oldVTree;
+  const xxxnewVTree: any = newVTree;
 
-  if (oldVTree!.tagName !== newVTree!.tagName) {
+  if (xxxoldVTree!.tagName !== xxxnewVTree!.tagName) {
     // TODO!!!
     // we assume that they are totally different and
     // will not attempt to find the differences.
     // simply render the newVTree and mount it.
     return ($node) => {
-      const $newNode = render(newVTree);
+      const $newNode: any = render(newVTree);
       $node.replaceWith($newNode);
       return $newNode;
     };
   }
 
   // TODO!!!
-  const patchAttrs = diffAttrs(oldVTree!.attrs!, newVTree!.attrs!);
-  const patchChildren = diffChildren(oldVTree!.children, newVTree!.children);
+  const patchAttrs = diffAttrs(xxxoldVTree!.attrs!, xxxnewVTree!.attrs!);
+  const patchChildren = diffChildren(
+    xxxoldVTree!.children,
+    xxxnewVTree!.children
+  );
 
   return ($node) => {
     patchAttrs($node);
     patchChildren($node);
     return $node;
   };
-
-  */
 }
+
+// cSpell:words vnode
