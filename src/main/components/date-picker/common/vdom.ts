@@ -199,7 +199,16 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
-  return () => {};
+  return (elem) => {
+    elem.innerHTML = '';
+    const content = render(newVTree);
+
+    if (Array.isArray(content)) {
+      elem.replaceChildren(...content);
+    } else {
+      elem.replaceChildren(content);
+    }
+  };
 
   /*
   if (newVTree === null || (Array.isArray(newVTree) && newVTree.length === 0)) {

@@ -6,7 +6,7 @@ import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize';
 import { DatePickerController } from './common/date-picker-controller';
 import { renderDatePicker } from './common/date-picker-render';
-import { renderToString } from './common/vdom';
+import { diff, renderToString } from './common/vdom';
 import type { VNode } from './common/vdom';
 
 import {
@@ -174,7 +174,8 @@ class DatePicker extends LitElement {
       container.firstChild.remove();
     }
 
-    this._containerRef.value!.innerHTML = renderToString(this._content);
+    const patch = diff(oldContent, this._content);
+    patch(container);
     return false;
   }
 
