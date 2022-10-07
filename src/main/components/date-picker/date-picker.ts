@@ -167,15 +167,20 @@ class DatePicker extends LitElement {
       return true;
     }
 
+    const container = this._containerRef.value!;
+
+    // remove Lit comment, if present
+    if (container.firstChild?.nodeType === Node.COMMENT_NODE) {
+      container.firstChild.remove();
+    }
+
     this._containerRef.value!.innerHTML = renderToString(this._content);
     return false;
   }
 
   render() {
-    return html`
-      <div ${ref(this._containerRef)}>
-        ${unsafeHTML(renderToString(this._content))}
-      </div>
-    `;
+    const htmlContent = unsafeHTML(renderToString(this._content));
+
+    return html`<div ${ref(this._containerRef)}>${htmlContent}</div>`;
   }
 }
