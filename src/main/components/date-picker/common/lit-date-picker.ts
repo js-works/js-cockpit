@@ -3,7 +3,7 @@ import type { ComplexAttributeConverter } from 'lit';
 import { property } from 'lit/decorators';
 import { DatePickerController } from './date-picker-controller';
 import { renderDatePicker } from './date-picker-render';
-import { render } from 'preact';
+import { render, renderToString } from './vdom';
 
 // === exports =======================================================
 
@@ -112,16 +112,24 @@ abstract class LitDatePicker extends LitElement {
   }
 
   shouldUpdate() {
-    let content: HTMLElement;
-
-    content = renderDatePicker(
+    const content = renderDatePicker(
       this._getLocale(),
       this._getDirection(),
       this,
       this._datePicker
-    ) as unknown as HTMLElement;
+    );
 
-    render(content, this._elem);
+    this._elem.innerHTML = renderToString(content);
+
+    /*
+    const result = render(content);
+
+    if (Array.isArray(result)) {
+      this._elem.replaceChildren(...result);
+    } else {
+      this._elem.replaceChildren(result);
+    }
+    */
 
     return !this.hasUpdated;
   }

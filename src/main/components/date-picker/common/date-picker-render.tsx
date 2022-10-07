@@ -1,10 +1,7 @@
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
-
-import { createElement, render } from 'preact';
-
-const h = createElement as any;
+import { h } from './vdom';
 
 type VElement = HTMLElement;
 type VNode = null | number | string | VElement | VNode[];

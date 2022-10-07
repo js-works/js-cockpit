@@ -2,7 +2,7 @@ export { h, diff, render, renderToString };
 export type { VElement, VNode };
 
 type Attrs = Record<string, string | number | null>;
-type Patch = (elem: HTMLElement) => HTMLElement | Text | undefined;
+type Patch = (elem: HTMLElement) => void;
 
 type VElement = {
   tagName: string;
@@ -10,7 +10,12 @@ type VElement = {
   children: VNode[];
 };
 
-type VNode = null | string | VElement | (null | string | VElement)[];
+type VNode =
+  | null
+  | string
+  | number
+  | VElement
+  | (null | string | number | VElement)[];
 
 function h(tagName: string, attrs: Attrs | null = null, ...children: VNode[]) {
   return {
@@ -21,60 +26,101 @@ function h(tagName: string, attrs: Attrs | null = null, ...children: VNode[]) {
 }
 
 function renderToString(vnode: VNode): string {
-  return '';
+  const tokens: string[] = [];
+  const push = (...xs: string[]): void => xs.forEach((x) => tokens.push(x));
+  const encodedEntities = /["&<]/g;
 
-  /*
-  if (vnode === null) {
-    return '';
-  }
+  const entityReplacements: Record<string, string> = {
+    '"': '&quot;',
+    '&': '&amp;',
+    '<': '&lt;'
+  };
 
-  if (typeof vnode === 'string') {
-    return vnode;
-  } else if (typeof vnode === 'number') {
-    return String(vnode);
-  }
+  const encodeEntities = (s: string) =>
+    s.replaceAll(encodedEntities, (ch) => entityReplacements[ch]);
 
-  const elem = renderElem(vnode); // TODO!!!
+  const process = (vnode: VNode): void => {
+    if (vnode === null) {
+      return;
+    }
 
-  return elem.outerHTML;
-  */
+    if (typeof vnode === 'string') {
+      return push(vnode);
+    } else if (typeof vnode === 'number') {
+      return push(String(vnode));
+    } else if (Array.isArray(vnode)) {
+      return vnode.forEach(process);
+    }
+
+    push('<', vnode.tagName);
+
+    if (vnode.attrs) {
+      for (const [k, v] of Object.entries(vnode.attrs)) {
+        if (v === null) {
+          continue;
+        }
+
+        push(' ', k, '="', encodeEntities(String(v)), '"');
+      }
+    }
+
+    push('>');
+    vnode.children.forEach(process);
+    push('</', vnode.tagName, '>');
+  };
+
+  process(vnode);
+  return tokens.join('');
 }
 
 function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
   const elem = document.createElement(tagName);
 
   if (attrs) {
-    for (const [key, value] of Object.entries(attrs)) {
-      if (value !== null) {
-        elem.setAttribute(key, String(value));
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v !== null) {
+        elem.setAttribute(k, String(v));
       }
     }
   }
 
-  for (const child of children) {
-    if (child !== null) {
-      elem.appendChild(render(child));
+  for (const child of children.flat()) {
+    if (child !== null && child !== '') {
+      const content = render(child);
+
+      if (Array.isArray(content)) {
+        elem.append(...content);
+      } else {
+        elem.append(content);
+      }
     }
   }
 
   return elem;
 }
 
-function render(vnode: VNode): HTMLElement | Text {
+function render(vnode: VNode): HTMLElement | Text | (HTMLElement | Text)[] {
   if (typeof vnode === 'string' || typeof vnode === 'number') {
     return document.createTextNode(String(vnode));
   } else if (vnode === null) {
     return document.createTextNode('');
   }
 
+  if (Array.isArray(vnode)) {
+    return vnode.map((it) => render(it) as any); // TODO!!!
+  }
+
   return renderElem(vnode);
 }
 
-function zip(xs: unknown[], ys: unknown[]) {
-  const zipped = [];
-  for (let i = 0; i < Math.min(xs.length, ys.length); i++) {
+function zip<T1, T2>(xs: T1[], ys: T2[]): [T1, T2][] {
+  const zipped: [T1, T2][] = [];
+  const len = Math.min(xs.length, ys.length);
+
+  for (let i = 0; i < len; i++) {
     zipped.push([xs[i], ys[i]]);
   }
+
   return zipped;
 }
 
@@ -120,9 +166,18 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 
   const additionalPatches: Patch[] = [];
 
-  for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
+  for (const additionalVChild of newVChildren
+    .slice(oldVChildren.length)
+    .flat()) {
     additionalPatches.push(($node) => {
-      $node.appendChild(render(additionalVChild));
+      const content = render(additionalVChild);
+
+      if (Array.isArray(content)) {
+        $node.append(...content);
+      } else {
+        $node.append(content);
+      }
+
       return $node;
     });
   }
@@ -139,37 +194,37 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
     for (const patch of additionalPatches) {
       patch($parent);
     }
+
     return $parent;
   };
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
-  // let's assume oldVTree is not undefined!
-  if (newVTree === undefined) {
+  return () => {};
+
+  /*
+  if (newVTree === null || (Array.isArray(newVTree) && newVTree.length === 0)) {
     return ($node) => {
-      $node.remove();
-      return undefined;
+      $node.innerHTML = '';
     };
   }
 
   if (typeof oldVTree === 'string' || typeof newVTree === 'string') {
     if (oldVTree !== newVTree) {
-      // could be 2 cases:
-      // 1. both trees are string and they have different values
-      // 2. one of the trees is text node and
-      //    the other one is elem node
-      // Either case, we will just render(newVTree)!
       return ($node) => {
-        const $newNode = render(newVTree);
-        $node.replaceWith($newNode);
-        return $newNode;
+        const content = render(newVTree);
+
+        if (Array.isArray(content)) {
+          $node.replaceChildren(...content);
+        } else {
+          $node.replaceChildren(content);
+        }
       };
     } else {
-      // this means that both trees are string
-      // and they have the same values
       return ($node) => $node;
     }
   }
+
 
   if (oldVTree!.tagName !== newVTree!.tagName) {
     // TODO!!!
@@ -192,4 +247,6 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     patchChildren($node);
     return $node;
   };
+
+  */
 }
