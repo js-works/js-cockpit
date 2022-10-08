@@ -150,38 +150,33 @@ class DatePicker extends LitElement {
     });
   }
 
-  private _renderVElement() {
-    return renderDatePicker(
+  shouldUpdate() {
+    const oldContent = this._content;
+
+    this._content = renderDatePicker(
       this._localize.lang(),
       this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
       this,
       this._datePicker
     );
-  }
-
-  shouldUpdate() {
-    const oldContent = this._content;
-    this._content = this._renderVElement();
 
     if (!this.hasUpdated) {
       return true;
     }
 
-    const container = this._containerRef.value!;
+    diff(
+      oldContent,
+      this._content
+    )(this._containerRef.value!.firstElementChild!);
 
-    // remove Lit comment, if present
-    if (container.firstChild?.nodeType === Node.COMMENT_NODE) {
-      container.firstChild.remove();
-    }
-
-    const patch = diff(oldContent, this._content);
-    patch(container.firstElementChild!);
     return false;
   }
 
   render() {
-    const htmlContent = unsafeHTML(renderToString(this._content));
-
-    return html`<div ${ref(this._containerRef)}>${htmlContent}</div>`;
+    return html`
+      <div ${ref(this._containerRef)}>
+        ${unsafeHTML(renderToString(this._content))}
+      </div>
+    `;
   }
 }

@@ -1,7 +1,10 @@
+// Code is based on this article here - many thanks to Jason Yu:
+// https://dev.to/ycmjason/building-a-simple-virtual-dom-from-scratch-3d05
+
 export { h, diff, render, renderToString };
 export type { VElement, VNode };
 
-type Attrs = Record<string, string | number | null>;
+type Attrs = Record<string, string | number | null | undefined>;
 type Patch = (elem: Element) => Element | Text;
 
 type VElement = {
@@ -10,7 +13,7 @@ type VElement = {
   children: VNode[];
 };
 
-type VNode = undefined | null | string | number | VElement;
+type VNode = string | number | VElement | null | undefined;
 
 function h(
   tagName: string,
@@ -78,7 +81,7 @@ function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
 
   if (attrs) {
     for (const [k, v] of Object.entries(attrs)) {
-      if (v !== null) {
+      if (v != null) {
         elem.setAttribute(k, String(v));
       }
     }
