@@ -1,5 +1,3 @@
-import type { ReactiveControllerHost } from 'lit';
-
 import {
   getHourMinuteString,
   getYearMonthDayString,
@@ -26,11 +24,8 @@ namespace DatePickerController {
   export type Scene = 'month' | 'year' | 'decade' | 'century' | 'time';
 }
 
-type SelectionMode = DatePickerController.SelectionMode;
-
 class DatePickerController {
   #selectionMode: DatePickerController.SelectionMode;
-  #getSelectionMode: () => DatePickerController.SelectionMode;
   #selection = new Set<string>();
   #scene: DatePickerController.Scene = 'month';
   #activeYear = new Date().getFullYear();
@@ -43,40 +38,36 @@ class DatePickerController {
   #notifyTimeoutId: unknown = null;
 
   constructor(
-    host: ReactiveControllerHost & HTMLElement,
-
+    element: HTMLElement,
     params: {
-      getSelectionMode: () => SelectionMode;
+      requestUpdate: () => void;
+      onChange?: () => void;
+    }
+  );
+
+  constructor(
+    element: HTMLElement & { requestUpdate: () => void },
+    params: {
+      onChange?: () => void;
+    }
+  );
+
+  constructor(
+    element: HTMLElement & { requestUpdate?: () => void },
+    params: {
+      requestUpdate?: () => void;
       onChange?: () => void;
     }
   ) {
-    let initialized = false;
+    this.#selectionMode = 'date';
 
-    const innerController = {
-      hostUpdate: () => {
-        const newSelectionMode = this.#getSelectionMode();
+    this.#requestUpdate = params.requestUpdate
+      ? params.requestUpdate
+      : () => element.requestUpdate!();
 
-        if (newSelectionMode !== this.#selectionMode) {
-          this.#setSelectionMode(newSelectionMode);
-        }
-      },
-
-      hostUpdated: () => {
-        if (initialized) {
-          return;
-        }
-
-        initialized = true;
-        this.#addEventListeners();
-      }
-    };
-
-    host.addController(innerController);
-    this.#selectionMode = params.getSelectionMode();
-    this.#getSelectionMode = params.getSelectionMode;
-    this.#requestUpdate = () => host.requestUpdate();
-    this.#getNode = () => host.shadowRoot || host;
+    this.#getNode = () => element.shadowRoot || element;
     this.#onChange = params.onChange || null;
+    setTimeout(() => this.#addEventListeners());
   }
 
   getScene(): DatePickerController.Scene {
@@ -161,16 +152,12 @@ class DatePickerController {
   }
 
   #notifyChange() {
-    if (this.#notifyTimeoutId !== null) {
+    if (!this.#onChange || this.#notifyTimeoutId !== null) {
       return;
     }
 
     this.#notifyTimeoutId = setTimeout(() => {
       this.#notifyTimeoutId = null;
-
-      this.#getNode().dispatchEvent(
-        new Event('change', { bubbles: true, composed: true })
-      );
 
       if (this.#onChange) {
         this.#onChange();
@@ -405,7 +392,7 @@ class DatePickerController {
     });
   };
 
-  #setSelectionMode = (mode: DatePickerController.SelectionMode) => {
+  setSelectionMode = (mode: DatePickerController.SelectionMode) => {
     if (mode === this.#selectionMode) {
       return;
     }

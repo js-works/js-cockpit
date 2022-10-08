@@ -16,7 +16,7 @@ export { DatePicker };
 
 // === exported types ==========================================
 
-namespace LitDatePicker {
+namespace DatePicker {
   export type SelectionMode = DatePickerController.SelectionMode;
 }
 
@@ -98,7 +98,7 @@ class DatePicker extends LitElement {
   }
 
   @property({ type: String, attribute: 'selection-mode' })
-  selectionMode: LitDatePicker.SelectionMode = 'date';
+  selectionMode: DatePicker.SelectionMode = 'date';
 
   @property({ type: Boolean, attribute: 'elevate-navigation' })
   elevateNavigation = false;
@@ -145,12 +145,17 @@ class DatePicker extends LitElement {
     super();
 
     this._datePicker = new DatePickerController(this, {
-      getSelectionMode: () => this.selectionMode
+      onChange: this._onChange
     });
   }
 
+  private _onChange = () => {
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  };
+
   shouldUpdate() {
     const oldContent = this._content;
+    this._datePicker.setSelectionMode(this.selectionMode);
 
     this._content = renderDatePicker(
       this._localize.lang(),
