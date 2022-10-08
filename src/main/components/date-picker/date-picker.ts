@@ -175,7 +175,7 @@ class DatePicker extends LitElement {
     }
 
     const patch = diff(oldContent, this._content);
-    patch(container);
+    patch(container.firstElementChild!);
     return false;
   }
 

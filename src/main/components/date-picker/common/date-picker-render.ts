@@ -11,36 +11,6 @@ const [a, div, input, span] = ['a', 'div', 'input', 'span'].map((tag) =>
   h.bind(null, tag)
 );
 
-/*
-function h(
-  type: string,
-  attrs: Attrs | null = null,
-  ...children: VNode[]
-): VElement {
-  const ret = document.createElement(type);
-
-  if (attrs) {
-    for (const key of Object.keys(attrs)) {
-      const value = attrs[key];
-
-      if (value !== null) {
-        ret.setAttribute(key, String(attrs[key]));
-      }
-    }
-  }
-
-  for (const child of children.flat()) {
-    if (typeof child === 'number' || typeof child === 'string') {
-      ret.append(document.createTextNode(String(child)));
-    } else if (child instanceof Element) {
-      ret.append(child);
-    }
-  }
-
-  return ret;
-}
-*/
-
 function classMap(classes: Record<string, unknown>): string {
   const arr: string[] = [];
 
@@ -132,12 +102,18 @@ function renderDatePicker(
               })
             },
             a(
-              { 'class': 'cal-prev', 'data-subject': 'prev' },
+              {
+                'class': 'cal-prev',
+                'data-subject': 'prev'
+              },
               i18n.getDirection() === 'ltr' ? '\u{1F860}' : '\u{1F862}'
             ),
             renderTitle(),
             a(
-              { 'class': 'cal-next', 'data-subject': 'next' },
+              {
+                'class': 'cal-next',
+                'data-subject': 'next'
+              },
               i18n.getDirection() === 'ltr' ? '\u{1F862}' : '\u{1F860}'
             )
           ),
@@ -151,8 +127,8 @@ function renderDatePicker(
               'type': 'range',
               'class': 'cal-hour-slider',
               'value': datePicker.getActiveHour(),
-              'min': '0',
-              'max': '23',
+              'min': 0,
+              'max': 23,
               'data-subject': 'hours'
             }),
             input({

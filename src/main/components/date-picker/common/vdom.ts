@@ -2,7 +2,7 @@ export { h, diff, render, renderToString };
 export type { VElement, VNode };
 
 type Attrs = Record<string, string | number | null>;
-type Patch = (elem: HTMLElement) => void;
+type Patch = (elem: Element) => Element | Text;
 
 type VElement = {
   tagName: string;
@@ -10,18 +10,17 @@ type VElement = {
   children: VNode[];
 };
 
-type VNode =
-  | null
-  | string
-  | number
-  | VElement
-  | (null | string | number | VElement)[];
+type VNode = undefined | null | string | number | VElement;
 
-function h(tagName: string, attrs: Attrs | null = null, ...children: VNode[]) {
+function h(
+  tagName: string,
+  attrs: Attrs | null = null,
+  ...children: (VNode | VNode[])[]
+): VElement {
   return {
     tagName,
     attrs,
-    children
+    children: children.flat()
   };
 }
 
@@ -40,7 +39,7 @@ function renderToString(vnode: VNode): string {
     s.replaceAll(encodedEntities, (ch) => entityReplacements[ch]);
 
   const process = (vnode: VNode): void => {
-    if (vnode === null) {
+    if (vnode == null) {
       return;
     }
 
@@ -48,8 +47,6 @@ function renderToString(vnode: VNode): string {
       push(vnode);
     } else if (typeof vnode === 'number') {
       push(String(vnode));
-    } else if (Array.isArray(vnode)) {
-      vnode.forEach(process);
     } else {
       push('<', vnode.tagName);
 
@@ -72,6 +69,10 @@ function renderToString(vnode: VNode): string {
   return tokens.join('');
 }
 
+function render(velem: VElement): HTMLElement {
+  return renderElem(velem);
+}
+
 function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
   const elem = document.createElement(tagName);
 
@@ -85,28 +86,18 @@ function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
 
   for (const child of children.flat()) {
     if (child !== null && child !== '') {
-      const content = render(child);
-
-      if (Array.isArray(content)) {
-        elem.append(...content);
-      } else {
-        elem.append(content);
-      }
+      elem.append(renderNode(child));
     }
   }
 
   return elem;
 }
 
-function render(vnode: VNode): HTMLElement | Text | (HTMLElement | Text)[] {
-  if (typeof vnode === 'string' || typeof vnode === 'number') {
-    return document.createTextNode(String(vnode));
-  } else if (vnode === null) {
+function renderNode(vnode: VNode): HTMLElement | Text {
+  if (vnode == null) {
     return document.createTextNode('');
-  }
-
-  if (Array.isArray(vnode)) {
-    return vnode.map((it) => render(it) as any); // TODO!!!
+  } else if (typeof vnode === 'string' || typeof vnode === 'number') {
+    return document.createTextNode(String(vnode));
   }
 
   return renderElem(vnode);
@@ -114,9 +105,8 @@ function render(vnode: VNode): HTMLElement | Text | (HTMLElement | Text)[] {
 
 function zip<T1, T2>(xs: T1[], ys: T2[]): [T1, T2][] {
   const zipped: [T1, T2][] = [];
-  const len = Math.min(xs.length, ys.length);
 
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < Math.min(xs.length, ys.length); i++) {
     zipped.push([xs[i], ys[i]]);
   }
 
@@ -127,15 +117,12 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   const patches: Patch[] = [];
 
   for (const [k, v] of Object.entries(newAttrs)) {
-    patches.push(($node) => {
-      if (v !== null) {
+    if (v !== null) {
+      patches.push(($node) => {
         $node.setAttribute(k, String(v));
-      } else {
-        $node.removeAttribute(k);
-      }
-
-      return $node;
-    });
+        return $node;
+      });
+    }
   }
 
   for (const k in oldAttrs) {
@@ -151,32 +138,20 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
     for (const patch of patches) {
       patch($node);
     }
-
     return $node;
   };
 }
 
 function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   const childPatches: Patch[] = [];
-
   oldVChildren.forEach((oldVChild, i) => {
     childPatches.push(diff(oldVChild, newVChildren[i]));
   });
 
   const additionalPatches: Patch[] = [];
-
-  for (const additionalVChild of newVChildren
-    .slice(oldVChildren.length)
-    .flat()) {
+  for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
     additionalPatches.push(($node) => {
-      const content = render(additionalVChild);
-
-      if (Array.isArray(content)) {
-        $node.append(...content);
-      } else {
-        $node.append(content);
-      }
-
+      $node.appendChild(renderNode(additionalVChild));
       return $node;
     });
   }
@@ -186,74 +161,61 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
       childPatches,
       $parent.childNodes as any
     )) {
-      // TODO!!!!
-      (patch as any)($child); // TODO!!!
+      // TODO!!!
+      patch($child as any); // TODO!!!
     }
 
     for (const patch of additionalPatches) {
       patch($parent);
     }
-
     return $parent;
   };
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
-  /*
-  return (elem) => {
-    elem.innerHTML = '';
-    const content = render(newVTree);
-
-    if (Array.isArray(content)) {
-      elem.replaceChildren(...content);
-    } else {
-      elem.replaceChildren(content);
-    }
-  };
-*/
-  if (newVTree === null || (Array.isArray(newVTree) && newVTree.length === 0)) {
+  // TODO!!! ???
+  if (oldVTree == null) {
     return ($node) => {
-      $node.innerHTML = '';
+      const content = renderNode(newVTree);
+      $node.replaceWith(content);
+      return content;
     };
   }
 
-  if (typeof oldVTree === 'string' || typeof newVTree === 'string') {
+  if (newVTree == null) {
+    return ($node) => {
+      $node.remove();
+      return document.createTextNode(''); // TODO!!!
+    };
+  }
+
+  if (
+    typeof oldVTree === 'string' ||
+    typeof oldVTree === 'number' ||
+    typeof newVTree === 'string' ||
+    typeof newVTree === 'number'
+  ) {
     if (oldVTree !== newVTree) {
       return ($node) => {
-        const content = render(newVTree);
-
-        if (Array.isArray(content)) {
-          $node.replaceChildren(...content);
-        } else {
-          $node.replaceChildren(content);
-        }
+        const $newNode = renderNode(newVTree);
+        $node.replaceWith($newNode);
+        return $newNode;
       };
     } else {
       return ($node) => $node;
     }
   }
 
-  const xxxoldVTree: any = oldVTree;
-  const xxxnewVTree: any = newVTree;
-
-  if (xxxoldVTree!.tagName !== xxxnewVTree!.tagName) {
-    // TODO!!!
-    // we assume that they are totally different and
-    // will not attempt to find the differences.
-    // simply render the newVTree and mount it.
+  if (oldVTree.tagName !== newVTree.tagName) {
     return ($node) => {
-      const $newNode: any = render(newVTree);
+      const $newNode = render(newVTree);
       $node.replaceWith($newNode);
       return $newNode;
     };
   }
 
-  // TODO!!!
-  const patchAttrs = diffAttrs(xxxoldVTree!.attrs!, xxxnewVTree!.attrs!);
-  const patchChildren = diffChildren(
-    xxxoldVTree!.children,
-    xxxnewVTree!.children
-  );
+  const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
+  const patchChildren = diffChildren(oldVTree.children, newVTree.children);
 
   return ($node) => {
     patchAttrs($node);
@@ -262,4 +224,4 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
   };
 }
 
-// cSpell:words vnode
+// cSpell:words velem vnode
