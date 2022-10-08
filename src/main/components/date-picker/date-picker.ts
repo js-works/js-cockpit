@@ -1,4 +1,4 @@
-import { html, unsafeCSS, LitElement } from 'lit';
+import { css, html, unsafeCSS, LitElement } from 'lit';
 import type { ComplexAttributeConverter } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { unsafeHTML } from 'lit/directives/unsafe-html';
@@ -8,11 +8,7 @@ import { DatePickerController } from './common/date-picker-controller';
 import { renderDatePicker } from './common/date-picker-render';
 import { diff, renderToString } from './common/vdom';
 import type { VNode } from './common/vdom';
-
-import {
-  DatePickerTokens,
-  createDatePickerStyles
-} from './common/date-picker-styling';
+import datePickerBaseStyles from './common/date-picker.styles';
 
 // === exports =======================================================
 
@@ -50,42 +46,48 @@ const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
   }
 };
 
-const tokens: DatePickerTokens = {
-  fontFamily: 'var(--sl-font-sans)',
-  fontSize: 'var(--sl-font-size-medium)',
-  color: 'var(--sl-color-neutral-1000)',
-  backgroundColor: 'transparent',
-  navColor: 'var(--sl-color-neutral-1000)',
-  navBackgroundColor: 'transparent',
-  navHoverBackgroundColor: 'var(--sl-color-primary-300)',
-  navActiveBackgroundColor: 'var(--sl-color-primary-400)',
-  navElevatedColor: 'var(--sl-color-neutral-0)',
-  navElevatedBackgroundColor: 'var(--sl-color-primary-500)',
-  navElevatedHoverBackgroundColor: 'var(--sl-color-primary-600)',
-  navElevatedActiveBackgroundColor: 'var(--sl-color-primary-700)',
-  cellHoverBackgroundColor: 'var(--sl-color-primary-100)',
-  cellDisabledColor: 'var(--sl-color-neutral-300)',
-  cellHighlightedBackgroundColor: 'var(--sl-color-neutral-50)',
-  cellAdjacentColor: 'var(--sl-color-neutral-400)',
-  cellAdjacentDisabledColor: 'var(--sl-color-neutral-200)',
-  cellAdjacentSelectedColor: 'var(--sl-color-neutral-800)',
-  cellCurrentHighlightedBackgroundColor: 'var(--sl-color-neutral-200)',
-  cellSelectedColor: 'var(--sl-color-neutral-0)',
-  cellSelectedBackgroundColor: 'var(--sl-color-primary-600)',
-  cellSelectedHoverBackgroundColor: 'var(--sl-color-primary-500)',
-  sliderThumbBackgroundColor: 'var(--sl-color-neutral-0)',
-  sliderThumbBorderColor: 'var(--sl-color-neutral-400)',
-  sliderThumbBorderWidth: '1px',
-  sliderThumbBorderRadius: '4px',
-  sliderThumbHoverBackgroundColor: 'var(--sl-color-neutral-0)',
-  sliderThumbHoverBorderColor: 'var(--sl-color-neutral-1000)',
-  sliderThumbFocusBackgroundColor: 'var(--sl-color-primary-600)',
-  sliderThumbFocusBorderColor: 'var(--sl-color-primary-600)',
-  sliderTrackColor: 'var(--sl-color-neutral-400)'
-};
+const datePickerCustomStyles = css`
+  .base {
+    --cal-font-family: var(--sl-font-sans);
+    --cal-font-size: var(--sl-font-size-medium);
+    --cal-color: var(--sl-color-neutral-1000);
+    --cal-backgroundColor: transparent;
+    --cal-nav-color: var(--sl-color-neutral-1000);
+    --cal-nav-background-color: transparent;
+    --cal-nav-hover-background-color: var(--sl-color-primary-300);
+    --cal-nav-active-background-color: var(--sl-color-primary-400);
+    --cal-nav-elevated-color: var(--sl-color-neutral-0);
+    --cal-nav-elevated-background-color: var(--sl-color-primary-500);
+    --cal-nav-elevated-hover-background-color: var(--sl-color-primary-600);
+    --cal-nav-elevated-active-background-color: var(--sl-color-primary-700);
+    --cal-cell-hover-background-color: var(--sl-color-primary-100);
+    --cal-cell-disabled-color: var(--sl-color-neutral-300);
+    --cal-cell-highlighted-background-color: var(--sl-color-neutral-50);
+    --cal-cell-adjacent-color: var(--sl-color-neutral-400);
+    --cal-cell-adjacent-disabled-color: var(--sl-color-neutral-200);
+    --cal-cell-adjacent-selected-color: var(--sl-color-neutral-800);
+    --cal-cell-current-highlighted-background-color: var(
+      --sl-color-neutral-200
+    );
+    --cal-cell-selected-color: var(--sl-color-neutral-0);
+    --cal-cell-selected-background-color: var(--sl-color-primary-600);
+    --cal-cell-selected-hover-background-color: var(--sl-color-primary-500);
+    --cal-slider-thumb-background-color: var(--sl-color-neutral-0);
+    --cal-slider-thumb-border-color: var(--sl-color-neutral-400);
+    --cal-slider-thumb-border-width: 1px;
+    --cal-slider-thumb-border-radius: 4px;
+    --cal-slider-thumb-hover-background-color: var(--sl-color-neutral-0);
+    --cal-slider-thumb-hover-border-color: var(--sl-color-neutral-1000);
+    --cal-slider-thumb-focus-background-color: var(--sl-color-primary-600);
+    --cal-slider-thumb-focus-border-color: var(--sl-color-primary-600);
+    --cal-slider-track-color: var(--sl-color-neutral-400);
+  }
+`;
 
 @customElement('cp-date-picker')
 class DatePicker extends LitElement {
+  static styles = [unsafeCSS(datePickerBaseStyles), datePickerCustomStyles];
+
   @property({ type: String })
   get value() {
     return this._datePicker.getValue();
@@ -137,9 +139,6 @@ class DatePicker extends LitElement {
   private _datePicker: DatePickerController;
   private _content: VNode = null;
   private _containerRef = createRef<HTMLDivElement>();
-
-  static styles = unsafeCSS(createDatePickerStyles(tokens));
-
   private _localize = new LocalizeController(this);
 
   constructor() {
@@ -174,7 +173,7 @@ class DatePicker extends LitElement {
 
   render() {
     return html`
-      <div ${ref(this._containerRef)}>
+      <div class="base" ${ref(this._containerRef)}>
         ${unsafeHTML(renderToString(this._content))}
       </div>
     `;
