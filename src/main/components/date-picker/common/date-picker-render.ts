@@ -3,10 +3,6 @@ import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
 import { h } from './vdom';
 
-type VElement = HTMLElement;
-type VNode = null | number | string | VElement | VNode[];
-type Attrs = Record<string, string | number | null>;
-
 const [a, div, input, span] = ['a', 'div', 'input', 'span'].map((tag) =>
   h.bind(null, tag)
 );
@@ -383,3 +379,5 @@ function renderDatePicker(
 
   return render();
 }
+
+// cSpell:words vdom

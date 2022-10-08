@@ -25,46 +25,49 @@ namespace DatePickerController {
 }
 
 class DatePickerController {
-  #selectionMode: DatePickerController.SelectionMode;
-  #selection = new Set<string>();
-  #scene: DatePickerController.Scene = 'month';
+  #oldSelectionMode: DatePickerController.SelectionMode;
+  readonly #getSelectionMode: () => DatePickerController.SelectionMode;
+  readonly #_selection = new Set<string>();
+  readonly #requestUpdate: () => void;
+  readonly #onChange: (() => void) | null;
+  readonly #getNode: () => HTMLElement | ShadowRoot;
+
+  #_scene: DatePickerController.Scene = 'month';
   #activeYear = new Date().getFullYear();
   #activeMonth = new Date().getMonth();
   #activeHour = new Date().getHours();
   #activeMinute = new Date().getMinutes();
-  #requestUpdate: () => void;
-  #onChange: (() => void) | null;
-  #getNode: () => HTMLElement | ShadowRoot;
   #notifyTimeoutId: unknown = null;
+
+  get #selectionMode() {
+    return this.#checkSelectionMode();
+  }
+
+  get #selection() {
+    this.#checkSelectionMode();
+    return this.#_selection;
+  }
+
+  get #scene() {
+    this.#checkSelectionMode();
+    return this.#_scene;
+  }
+
+  set #scene(value: DatePickerController.Scene) {
+    this.#_scene = value;
+  }
 
   constructor(
     element: HTMLElement,
     params: {
+      getSelectionMode: () => DatePickerController.SelectionMode;
       requestUpdate: () => void;
       onChange?: () => void;
     }
-  );
-
-  constructor(
-    element: HTMLElement & { requestUpdate: () => void },
-    params: {
-      onChange?: () => void;
-    }
-  );
-
-  constructor(
-    element: HTMLElement & { requestUpdate?: () => void },
-    params: {
-      requestUpdate?: () => void;
-      onChange?: () => void;
-    }
   ) {
-    this.#selectionMode = 'date';
-
-    this.#requestUpdate = params.requestUpdate
-      ? params.requestUpdate
-      : () => element.requestUpdate!();
-
+    this.#oldSelectionMode = params.getSelectionMode();
+    this.#getSelectionMode = params.getSelectionMode;
+    this.#requestUpdate = params.requestUpdate;
     this.#getNode = () => element.shadowRoot || element;
     this.#onChange = params.onChange || null;
     setTimeout(() => this.#addEventListeners());
@@ -327,80 +330,42 @@ class DatePickerController {
   };
 
   #clickPrevOrNext = (signum: number) => {
-    const duration = 100;
-    const offset = 100;
-    const node = this.#getNode();
-    const sheet = node.querySelector('.cal-sheet') as HTMLElement;
-    const parent = sheet.parentElement!;
-    const oldParentOverflowValue = parent.style.overflow;
+    switch (this.#scene) {
+      case 'month': {
+        let n = this.#activeYear * 12 + this.#activeMonth + signum;
 
-    parent.style.overflow = 'hidden';
-
-    const animate = (type: 'out' | 'in') => {
-      const keyframes =
-        type === 'out'
-          ? [
-              {
-                opacity: 0,
-                transform: `translateX(calc(${-signum}*${offset}px))`
-              }
-            ]
-          : [
-              {
-                opacity: 0,
-                transform: `translateX(calc(${signum}*${offset}px))`
-              },
-              {
-                opacity: 1,
-                transform: `translateX(0)`
-              }
-            ];
-
-      return sheet.animate(keyframes, {
-        duration
-      });
-    };
-
-    animate('out').finished.then(() => {
-      animate('in').finished.then(() => {
-        parent.style.overflow = oldParentOverflowValue;
-      });
-
-      switch (this.#scene) {
-        case 'month': {
-          let n = this.#activeYear * 12 + this.#activeMonth + signum;
-
-          this.#activeYear = Math.floor(n / 12);
-          this.#activeMonth = n % 12;
-          break;
-        }
-
-        case 'year':
-          this.#activeYear += signum;
-          break;
-
-        case 'decade':
-          this.#activeYear += signum * 10;
-          break;
-
-        case 'century':
-          this.#activeYear += signum * 100;
-          break;
+        this.#activeYear = Math.floor(n / 12);
+        this.#activeMonth = n % 12;
+        break;
       }
 
-      this.#requestUpdate();
-    });
-  };
+      case 'year':
+        this.#activeYear += signum;
+        break;
 
-  setSelectionMode = (mode: DatePickerController.SelectionMode) => {
-    if (mode === this.#selectionMode) {
-      return;
+      case 'decade':
+        this.#activeYear += signum * 10;
+        break;
+
+      case 'century':
+        this.#activeYear += signum * 100;
+        break;
     }
 
-    this.#selectionMode = mode;
+    this.#requestUpdate();
+  };
+
+  #checkSelectionMode = () => {
+    const selectionMode = this.#getSelectionMode();
+
+    if (selectionMode === this.#oldSelectionMode) {
+      return selectionMode;
+    }
+
+    this.#oldSelectionMode = selectionMode;
     this.#clearSelection();
 
-    switch (mode) {
+    switch (selectionMode) {
       case 'year':
       case 'years':
         this.#scene = 'decade';
@@ -420,6 +385,7 @@ class DatePickerController {
     }
 
     this.#requestUpdate();
+    return selectionMode;
   };
 
   #setScene = (scene: DatePickerController.Scene) => {

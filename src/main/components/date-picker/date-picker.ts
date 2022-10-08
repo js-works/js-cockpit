@@ -137,7 +137,7 @@ class DatePicker extends LitElement {
   dir = '';
 
   private _datePicker: DatePickerController;
-  private _content: VNode = null;
+  private _pickerVNode: VNode = null;
   private _containerRef = createRef<HTMLDivElement>();
   private _localize = new LocalizeController(this);
 
@@ -145,6 +145,8 @@ class DatePicker extends LitElement {
     super();
 
     this._datePicker = new DatePickerController(this, {
+      requestUpdate: () => this.requestUpdate(),
+      getSelectionMode: () => this.selectionMode,
       onChange: this._onChange
     });
   }
@@ -154,10 +156,9 @@ class DatePicker extends LitElement {
   };
 
   shouldUpdate() {
-    const oldContent = this._content;
-    this._datePicker.setSelectionMode(this.selectionMode);
+    const oldPickerVNode = this._pickerVNode;
 
-    this._content = renderDatePicker(
+    this._pickerVNode = renderDatePicker(
       this._localize.lang(),
       this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
       this,
@@ -169,8 +170,8 @@ class DatePicker extends LitElement {
     }
 
     diff(
-      oldContent,
-      this._content
+      oldPickerVNode,
+      this._pickerVNode
     )(this._containerRef.value!.firstElementChild!);
 
     return false;
@@ -179,7 +180,7 @@ class DatePicker extends LitElement {
   render() {
     return html`
       <div class="base" ${ref(this._containerRef)}>
-        ${unsafeHTML(renderToString(this._content))}
+        ${unsafeHTML(renderToString(this._pickerVNode))}
       </div>
     `;
   }
