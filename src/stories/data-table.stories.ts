@@ -1,8 +1,7 @@
 import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { DataTable, ThemeProvider } from 'js-cockpit';
-import { sharedTheme } from './shared/shared-theme';
+import { DataTable } from 'js-cockpit';
 
 export default {
   title: 'data-table'
@@ -102,20 +101,18 @@ const data = [
 
 @elem({
   tag: 'data-table-demo',
-  uses: [DataTable, ThemeProvider]
+  uses: [DataTable]
 })
 class DataTableDemo extends Component {
   render() {
     return html`
-      <cp-theme-provider .theme=${sharedTheme}>
-        <div>
-          <cp-data-table
-            bordered
-            .columns=${columns}
-            .data=${[...data, ...data]}
-          ></cp-data-table>
-        </div>
-      </cp-theme-provider>
+      <div>
+        <cp-data-table
+          bordered
+          .columns=${columns}
+          .data=${[...data, ...data]}
+        ></cp-data-table>
+      </div>
     `;
   }
 }

@@ -1,7 +1,6 @@
 import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { sharedTheme } from './shared/shared-theme';
 
 import {
   showApproveDialog,
@@ -13,8 +12,7 @@ import {
   showSuccessDialog,
   showWarnDialog,
   TextField,
-  DateField,
-  ThemeProvider
+  DateField
 } from 'js-cockpit';
 
 export default {
@@ -41,8 +39,7 @@ const styles = `
 
 @elem({
   tag: 'dialogs-demo',
-  styles: styles,
-  uses: [ThemeProvider]
+  styles: styles
 })
 class DialogsDemo extends Component {
   private _onInfoClick = () => {
@@ -211,5 +208,4 @@ class DialogsDemo extends Component {
   }
 }
 
-export const dialogs = () =>
-  h('cp-theme-provider', { theme: sharedTheme }, h('dialogs-demo'));
+export const dialogs = () => h('dialogs-demo');

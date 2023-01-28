@@ -47,7 +47,7 @@ class Cockpit extends Component {
             <slot name="subheader-end"></slot>
           </div>
         </div>
-        <cp-theme-provider class="col1" style="background-color: yellow">
+        <div class="col1" style="background-color: yellow">
           <div class="sidebar-start">
             <slot name="sidebar-start"></slot>
           </div>
@@ -57,7 +57,7 @@ class Cockpit extends Component {
           <div class="sidebar-end">
             <slot name="sidebar-end"></slot>
           </div>
-        </cp-theme-provider>
+        </div>
         <div class="col2">
           <div class="main-start">
             <slot name="main-start"></slot>

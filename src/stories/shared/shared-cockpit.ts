@@ -1,11 +1,9 @@
 import { h } from '../../main/utils/dom';
-import { sharedTheme } from '../shared/shared-theme';
 import { elem, Component } from '../../main/utils/components';
 import { html } from '../../main/utils/lit';
 
 import {
   showInfoDialog,
-  loadTheme,
   Brand,
   Cockpit,
   DataForm,
@@ -23,8 +21,6 @@ import {
 export default {
   title: 'cockpit'
 };
-
-loadTheme(sharedTheme);
 
 // ===============================================================================
 
@@ -115,55 +111,53 @@ export class SharedCockpit extends Component {
     };
 
     return html`
-      <cp-theme-provider .theme=${sharedTheme}>
-        <cp-cockpit>
-          <cp-brand
-            slot="header-start"
-            headline="my-company"
-            text="Back Office"
-            logo="default"
-            bicolor
-          ></cp-brand>
-          <cp-nav-menu
-            slot="header"
-            .items=${[
-              {
-                itemId: '1',
-                text: 'Dashboard'
-              },
-              {
-                itemId: '2',
-                text: 'User management'
-              },
-              {
-                itemId: '3',
-                text: 'Catalog'
-              },
-              {
-                itemId: '4',
-                text: 'CMS'
-              }
-            ]}
-            active-item="2"
+      <cp-cockpit>
+        <cp-brand
+          slot="header-start"
+          headline="my-company"
+          text="Back Office"
+          logo="default"
+          bicolor
+        ></cp-brand>
+        <cp-nav-menu
+          slot="header"
+          .items=${[
+            {
+              itemId: '1',
+              text: 'Dashboard'
+            },
+            {
+              itemId: '2',
+              text: 'User management'
+            },
+            {
+              itemId: '3',
+              text: 'Catalog'
+            },
+            {
+              itemId: '4',
+              text: 'CMS'
+            }
+          ]}
+          active-item="2"
+          @cp-action=${notImplementedHandler}
+        ></cp-nav-menu>
+        <cp-user-menu
+          slot="header-end"
+          user-name="Jane Doe"
+          @cp-logout=${notImplementedHandler}
+        ></cp-user-menu>
+        <div slot="sidebar" class="full-height">
+          <cp-side-menu
+            header-text="User management"
+            .menu=${menu}
+            active-item="price-calculation"
             @cp-action=${notImplementedHandler}
-          ></cp-nav-menu>
-          <cp-user-menu
-            slot="header-end"
-            user-name="Jane Doe"
-            @cp-logout=${notImplementedHandler}
-          ></cp-user-menu>
-          <div slot="sidebar" class="full-height">
-            <cp-side-menu
-              header-text="User management"
-              .menu=${menu}
-              active-item="price-calculation"
-              @cp-action=${notImplementedHandler}
-              collapse-mode="manual"
-            ></cp-side-menu>
-          </div>
-          <div slot="main" class="full-height"><slot></slot></div>
-        </cp-cockpit>
-      </cp-theme-provider>
+            collapse-mode="manual"
+          ></cp-side-menu>
+        </div>
+        <div slot="main" class="full-height"><slot></slot></div>
+      </cp-cockpit>
     `;
   }
 }

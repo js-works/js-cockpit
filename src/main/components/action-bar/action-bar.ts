@@ -6,7 +6,7 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlButtonGroup from '@shoelace-style/shoelace/dist/components/button-group/button-group';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
 // styles
 import actionBarStyles from './action-bar.styles';
@@ -41,7 +41,7 @@ namespace ActionBar {
 @elem({
   tag: 'cp-action-bar',
   styles: actionBarStyles,
-  uses: [SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem]
+  uses: [SlButton, SlButtonGroup, SlDropdown, SlMenu, SlOption]
 })
 class ActionBar extends Component {
   @prop
@@ -101,9 +101,9 @@ class ActionBar extends Component {
                           (_, idx) => idx,
                           (it) => {
                             return html`
-                              <sl-menu-item ?disabled=${it.disabled}>
+                              <sl-option ?disabled=${it.disabled}>
                                 ${it.text}
-                              </sl-menu-item>
+                              </sl-option>
                             `;
                           }
                         )}

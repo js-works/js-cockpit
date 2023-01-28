@@ -54,7 +54,7 @@
   width: 5rem;
 }
 
-sl-menu-item::part(label) {
+sl-option::part(label) {
   min-width: 1.5rem;
   text-align: center;
 }

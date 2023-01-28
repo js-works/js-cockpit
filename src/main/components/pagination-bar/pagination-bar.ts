@@ -22,7 +22,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
 // styles
 import paginationBarStyles from './pagination-bar.css';
@@ -62,7 +62,7 @@ type AuxData = {
 @elem({
   tag: 'cp-pagination-bar',
   styles: paginationBarStyles,
-  uses: [SlButton, SlIcon, SlInput, SlIconButton, SlMenuItem, SlSelect]
+  uses: [SlButton, SlIcon, SlInput, SlIconButton, SlOption, SlSelect]
 })
 class PaginationBar extends Component {
   @prop({ attr: Attrs.number })
@@ -262,7 +262,7 @@ class PaginationBar extends Component {
             pageSizes,
             (idx) => idx,
             (pageSize) =>
-              html`<sl-menu-item value=${pageSize}>${pageSize}</sl-menu-item>`
+              html`<sl-option value=${pageSize}>${pageSize}</sl-option>`
           )}
         </sl-select>
       </div>

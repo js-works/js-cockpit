@@ -16,7 +16,7 @@ import { ActionEvent } from '../../events/action-event';
 // custom elements
 import SlDetails from '@shoelace-style/shoelace/dist/components/details/details';
 import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 import SlTree from '@shoelace-style/shoelace/dist/components/tree/tree';
 import SlTreeItem from '@shoelace-style/shoelace/dist/components/tree-item/tree-item';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';

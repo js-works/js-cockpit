@@ -1,4 +1,3 @@
 {
-  "upgrade": true,
-  "reject": ["faker", "@types/faker", "sass-loader", "typescript", "ts-loader"]
+  "upgrade": true
 }

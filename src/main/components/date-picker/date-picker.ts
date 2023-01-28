@@ -1,9 +1,9 @@
 import { css, html, unsafeCSS, LitElement } from 'lit';
 import type { ComplexAttributeConverter } from 'lit';
-import { customElement, property } from 'lit/decorators';
-import { unsafeHTML } from 'lit/directives/unsafe-html';
-import { createRef, ref } from 'lit/directives/ref';
-import { LocalizeController } from '@shoelace-style/localize';
+import { customElement, property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { createRef, ref } from 'lit/directives/ref.js';
+import { LocalizeController } from '@shoelace-style/localize/dist/index.js';
 import { DatePickerController } from './common/date-picker-controller';
 import { renderDatePicker } from './common/date-picker-render';
 import { diff, renderToString } from './common/vdom';

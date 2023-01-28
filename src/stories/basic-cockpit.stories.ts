@@ -1,7 +1,6 @@
 import { afterConnect, bind, elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { sharedTheme } from './shared/shared-theme';
 import { SharedDataExplorer } from './shared/shared-data-explorer';
 import { SharedDataForm } from './shared/shared-data-form';
 import { showInfoDialog, BasicCockpit } from 'js-cockpit';

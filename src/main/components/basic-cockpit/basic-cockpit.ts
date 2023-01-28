@@ -23,7 +23,7 @@ import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider'
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
 // icons
 import avatarIcon from '../../icons/person-fill.svg';
@@ -99,7 +99,7 @@ namespace BasicCockpit {
 @elem({
   tag: 'cp-basic-cockpit',
   styles: basicCockpitStyles,
-  uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlMenuItem]
+  uses: [SlButton, SlDivider, SlDropdown, SlIcon, SlMenu, SlOption]
 })
 class BasicCockpit extends Component {
   @prop
@@ -224,10 +224,8 @@ class BasicCockpit extends Component {
       ${repeat(
         config.userMenu.items,
         (it) =>
-          html`<sl-menu-item
-            data-action=${it.action}
-            @click=${this._onItemClick}
-            >${it.text}</sl-menu-item
+          html`<sl-option data-action=${it.action} @click=${this._onItemClick}
+            >${it.text}</sl-option
           >`
       )}
     `;
@@ -246,9 +244,9 @@ class BasicCockpit extends Component {
         <sl-menu class="user-menu-items">
           ${userMenuItems}
           <sl-divider></sl-divider>
-          <sl-menu-item data-action="logOut" @click=${this._onItemClick}>
+          <sl-option data-action="logOut" @click=${this._onItemClick}>
             Log out
-          </sl-menu-item>
+          </sl-option>
         </sl-menu>
       </drop-down>
     `;

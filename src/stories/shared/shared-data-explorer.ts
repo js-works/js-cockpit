@@ -1,17 +1,10 @@
 import { bind, elem, Component } from '../../main/utils/components';
 import { html } from '../../main/utils/lit';
 
-import {
-  AppLayout,
-  DataExplorer,
-  SearchBox,
-  ThemeProvider,
-  Theme,
-  TextField
-} from 'js-cockpit';
+import { AppLayout, DataExplorer, SearchBox } from 'js-cockpit';
 
 // @ts-ignore
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 const columns: DataExplorer.Column[] = [
   {

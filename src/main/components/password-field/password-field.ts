@@ -103,7 +103,7 @@ class PasswordField extends Component {
         <sl-input
           type="password"
           name=${this.name}
-          toggle-password
+          password-toggle
           class="input sl-control"
           size=${this.size}
           @keydown=${this._onKeyDown}

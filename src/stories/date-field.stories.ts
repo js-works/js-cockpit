@@ -1,8 +1,7 @@
 import { elem, prop, Component } from '../main/utils/components';
 import { css, html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { Card, DateField, ThemeProvider } from 'js-cockpit';
-import { sharedTheme } from './shared/shared-theme';
+import { Card, DateField } from 'js-cockpit';
 
 export default {
   title: 'date components'
@@ -36,7 +35,7 @@ const styles = css`
 @elem({
   tag: 'date-field-demo',
   styles: () => styles,
-  uses: [Card, DateField, ThemeProvider]
+  uses: [Card, DateField]
 })
 class DatePickerDemo extends Component {
   render() {

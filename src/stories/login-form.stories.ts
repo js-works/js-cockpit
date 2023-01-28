@@ -1,7 +1,6 @@
 import { elem, Component } from '../main/utils/components';
 import { html } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { sharedTheme } from './shared/shared-theme';
 
 import {
   Brand,
@@ -9,8 +8,7 @@ import {
   EmailField,
   LoginForm,
   PasswordField,
-  TextField,
-  ThemeProvider
+  TextField
 } from 'js-cockpit';
 
 export default {
@@ -21,15 +19,7 @@ export const loginForm = () => h('login-form-demo');
 
 @elem({
   tag: 'login-form-demo',
-  uses: [
-    Brand,
-    DateField,
-    EmailField,
-    LoginForm,
-    TextField,
-    PasswordField,
-    ThemeProvider
-  ]
+  uses: [Brand, DateField, EmailField, LoginForm, TextField, PasswordField]
 })
 class LoginFormDemo extends Component {
   private _processSubmit = async (data: any) => {
@@ -48,33 +38,31 @@ class LoginFormDemo extends Component {
 
   render() {
     return html`
-      <cp-theme-provider .theme=${sharedTheme}>
-        <cp-login-form
-          full-size
-          enable-remember-login
-          enable-registration
-          enable-forgot-password
-          .processSubmit=${this._processSubmit}
-        >
-          <cp-brand
-            slot="header"
-            size="small"
-            headline="My Company"
-            text="Back Office"
-            bicolor
-            flat
-          ></cp-brand>
-          <cp-brand
-            slot="form-fields-start"
-            size="large"
-            headline="My Company"
-            text="Back Office"
-            logo="default"
-            bicolor
-          ></cp-brand>
-          <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
-        </cp-login-form>
-      </cp-theme-provider>
+      <cp-login-form
+        full-size
+        enable-remember-login
+        enable-registration
+        enable-forgot-password
+        .processSubmit=${this._processSubmit}
+      >
+        <cp-brand
+          slot="header"
+          size="small"
+          headline="My Company"
+          text="Back Office"
+          bicolor
+          flat
+        ></cp-brand>
+        <cp-brand
+          slot="form-fields-start"
+          size="large"
+          headline="My Company"
+          text="Back Office"
+          logo="default"
+          bicolor
+        ></cp-brand>
+        <div slot="footer">&copy; 2022, My Company - All rights reserved</div>
+      </cp-login-form>
     `;
   }
 }

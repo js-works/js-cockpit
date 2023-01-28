@@ -1,8 +1,7 @@
 import { elem, prop, Component } from '../main/utils/components';
 import { createRef, css, html, ref, when } from '../main/utils/lit';
 import { h } from '../main/utils/dom';
-import { Card, DatePicker, ThemeProvider } from 'js-cockpit';
-import { sharedTheme } from './shared/shared-theme';
+import { Card, DatePicker } from 'js-cockpit';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 
 export default {
@@ -37,7 +36,7 @@ const styles = css`
 @elem({
   tag: 'date-picker-demo',
   styles: () => styles,
-  uses: [DatePicker, Card, SlCheckbox, ThemeProvider]
+  uses: [DatePicker, Card, SlCheckbox]
 })
 class DatePickerDemo extends Component {
   private _locale = 'en-US';
@@ -108,13 +107,13 @@ class DatePickerDemo extends Component {
               data-subject="locale"
               value=${this._locale}
             >
-              <sl-menu-item value="en-US">en-US</sl-menu-item>
-              <sl-menu-item value="en-GB">en-GB</sl-menu-item>
-              <sl-menu-item value="es-ES">es-ES</sl-menu-item>
-              <sl-menu-item value="fr-FR">fr-FR</sl-menu-item>
-              <sl-menu-item value="de-DE">de-DE</sl-menu-item>
-              <sl-menu-item value="it-IT">it-IT</sl-menu-item>
-              <sl-menu-item value="ar-SA">ar-SA</sl-menu-item>
+              <sl-option value="en-US">en-US</sl-option>
+              <sl-option value="en-GB">en-GB</sl-option>
+              <sl-option value="es-ES">es-ES</sl-option>
+              <sl-option value="fr-FR">fr-FR</sl-option>
+              <sl-option value="de-DE">de-DE</sl-option>
+              <sl-option value="it-IT">it-IT</sl-option>
+              <sl-option value="ar-SA">ar-SA</sl-option>
             </sl-select>
             <sl-select
               class="mode-selector"
@@ -122,17 +121,17 @@ class DatePickerDemo extends Component {
               label="Selection mode"
               value=${this._selectionMode}
             >
-              <sl-menu-item value="date">date</sl-menu-item>
-              <sl-menu-item value="dates">dates</sl-menu-item>
-              <sl-menu-item value="dateRange">dateRange</sl-menu-item>
-              <sl-menu-item value="dateTime">dateTime</sl-menu-item>
-              <sl-menu-item value="time">time</sl-menu-item>
-              <sl-menu-item value="week">week</sl-menu-item>
-              <sl-menu-item value="weeks">weeks</sl-menu-item>
-              <sl-menu-item value="month">month</sl-menu-item>
-              <sl-menu-item value="months">months</sl-menu-item>
-              <sl-menu-item value="year">year</sl-menu-item>
-              <sl-menu-item value="years">years</sl-menu-item>
+              <sl-option value="date">date</sl-option>
+              <sl-option value="dates">dates</sl-option>
+              <sl-option value="dateRange">dateRange</sl-option>
+              <sl-option value="dateTime">dateTime</sl-option>
+              <sl-option value="time">time</sl-option>
+              <sl-option value="week">week</sl-option>
+              <sl-option value="weeks">weeks</sl-option>
+              <sl-option value="month">month</sl-option>
+              <sl-option value="months">months</sl-option>
+              <sl-option value="year">year</sl-option>
+              <sl-option value="years">years</sl-option>
             </sl-select>
             ${when(
               [

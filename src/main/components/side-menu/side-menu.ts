@@ -16,7 +16,7 @@ import { ActionEvent } from '../../events/action-event';
 // custom elements
 import SlDetails from '@shoelace-style/shoelace/dist/components/details/details';
 import SlMenu from '@shoelace-style/shoelace/dist/components/menu/menu';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
 // styles
 import sideMenuStyles from './side-menu.css';
@@ -58,7 +58,7 @@ namespace SideMenu {
 @elem({
   tag: 'cp-side-menu',
   styles: sideMenuStyles,
-  uses: [SlDetails, SlMenu, SlMenuItem]
+  uses: [SlDetails, SlMenu, SlOption]
 })
 class SideMenu extends Component {
   @prop({ attr: Attrs.string })

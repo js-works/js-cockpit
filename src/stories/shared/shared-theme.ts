@@ -1,20 +1,38 @@
-import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit';
-import { initI18n } from 'js-localize';
+//import { ColorSchemes, Theme, ThemeMods } from 'js-cockpit';
+//import { initI18n } from 'js-localize';
 
-export const sharedTheme = new Theme([
-  ThemeMods.colors(ColorSchemes.skyBlue),
-  ThemeMods.modern(),
-  ThemeMods.compact()
-  //ThemeMods.dark(true)
-  /*
-  (tokens) => ({
-    'input-border-color': 'var(--sl-color-neutral-200)',
-    'input-border-color-hover': 'var(--sl-color-neutral-400)',
-    'input-background-color': 'var(--sl-color-neutral-200)',
-    'input-background-color-hover': 'var(--sl-color-neutral-200)',
-  })
-    */
-]);
+import {
+  loadTheme,
+  ColorSetups,
+  customizeTheme,
+  ThemeModifiers
+} from 'shoelace-themes';
+
+const theme = customizeTheme(
+  ThemeModifiers.builder() //
+    .colors(ColorSetups.bostonBlue)
+    .compact()
+    .modern()
+    .build()
+);
+
+const styleElem = document.createElement('style');
+
+styleElem.innerText = `
+  :root {
+    --on: inherit;
+    --off: ;
+    --theme: light;
+    --label-align-vertical: var(--on);
+    --label-align-horizontal: var(--off);
+    --label-align-horizontal-width: 8rem;
+    --label-align-horizontal-gap: 1.25rem;
+  }
+`;
+
+document.head.append(styleElem);
+
+loadTheme(theme, ':root');
 
 const linkElem = document.createElement('link');
 linkElem.setAttribute('rel', 'stylesheet');
