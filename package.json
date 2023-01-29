@@ -1,11 +1,14 @@
 {
   "name": "js-cockpit",
-  "version": "0.0.42",
+  "version": "0.0.47",
   "description": "",
   "type": "module",
-  "main": "./dist/js-cockpit.cjs.js",
-  "module": "./dist/js-cockpit.esm.js",
-  "types": "./dist/types/js-cockpit.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/js-cockpit.mjs",
+      "types": "./dist/types/js-cockpit.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],

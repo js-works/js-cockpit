@@ -143,6 +143,7 @@ export default css`
     display: flex;
     gap: 2rem;
     justify-content: center;
+    margin-top: 0.4em;
   }
 
   .link {

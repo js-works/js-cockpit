@@ -17,39 +17,37 @@ build().catch((e) => {
 async function build() {
   await rm('./dist', { recursive: true, force: true });
 
-  for (const format of ['esm' /*, 'cjs'*/]) {
-    const outfile = `./dist/js-cockpit.${format}.js`;
+  const outfile = `./dist/js-cockpit.mjs`;
 
-    await esbuild.build({
-      entryPoints: ['./src/main/js-cockpit.ts'],
-      bundle: true,
-      outfile,
-      tsconfig: './tsconfig.build.json',
-      target: 'esnext',
-      minify: true,
-      sourcemap: true,
-      format,
-      loader: { '.svg': 'dataurl' /*, '.css': 'text'*/ },
-      external: [
-        'lit',
-        '@floating-ui/dom',
-        '@shoelace-style/localize',
-        '@shoelace-style/shoelace/*'
-      ],
-      define: {
-        'process.env.NODE_ENV': '"production"'
-      },
+  await esbuild.build({
+    entryPoints: ['./src/main/js-cockpit.ts'],
+    bundle: true,
+    outfile,
+    tsconfig: './tsconfig.build.json',
+    target: 'esnext',
+    minify: true,
+    sourcemap: true,
+    format: 'esm',
+    loader: { '.svg': 'dataurl' /*, '.css': 'text'*/ },
+    external: [
+      'lit',
+      '@floating-ui/dom',
+      '@shoelace-style/localize',
+      '@shoelace-style/shoelace/*'
+    ],
+    define: {
+      'process.env.NODE_ENV': '"production"'
+    },
 
-      plugins: [
-        sassPlugin({
-          type: 'css-text',
-          outputStyle: 'compressed'
-        })
-      ]
-    });
+    plugins: [
+      sassPlugin({
+        type: 'css-text',
+        outputStyle: 'compressed'
+      })
+    ]
+  });
 
-    await createBrotliFile(outfile, outfile + '.br');
-  }
+  await createBrotliFile(outfile, outfile + '.br');
 
   execSync(
     'tsc -p tsconfig.build.json --emitDeclarationOnly -d --declarationDir dist/types',
